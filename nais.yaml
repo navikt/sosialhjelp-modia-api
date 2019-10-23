@@ -1,0 +1,59 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: sosialhjelp-modia-api
+  namespace: {{namespace}}
+  labels:
+    team: digisos
+spec:
+  image: docker.pkg.github.com/navikt/sosialhjelp-modia-api/sosialhjelp-modia-api:{{version}}
+  port: 8080
+  liveness:
+    path: /sosialhjelp/modia-api/internal/isAlive
+    initialDelay: 20
+    timeout: 1
+    periodSeconds: 5
+    failureThreshold: 10
+  readiness:
+    path: /sosialhjelp/modia-api/internal/isReady
+    initialDelay: 20
+    timeout: 1
+  prometheus:
+    enabled: true
+    path: /sosialhjelp/modia-api/actuator/prometheus
+  replicas:
+    min: 1
+    max: 4
+  webproxy: true
+  vault:
+    enabled: true
+    paths:
+      - kvPath: {{application_vault_path}}
+        mountPath: /var/run/secrets/nais.io/vault
+      - kvPath: {{virksomhetssertifikat_vault_path}}
+        mountPath: /var/run/secrets/nais.io/virksomhetssertifikat
+  ingresses: {{{ingresses}}}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  env:
+    - name: FIKS_DIGISOS_ENDPOINT_URL
+      value: {{fiks_digisos_endpoint_url}}
+    - name: FIKS_DOKUMENTLAGER_ENDPOINT_URL
+      value: {{fiks_dokumentlager_endpoint_url}}
+    - name: FIKS_SVAR_UT_ENDPOINT_URL
+      value: {{fiks_svar_ut_endpoint_url}}
+    - name: NORG_ENDPOINT_URL
+      value: {{norg_endpoint_url}}
+    - name: ID_PORTEN_TOKEN_URL
+      value: {{id_porten_token_url}}
+    - name: ID_PORTEN_CONFIG_URL
+      value: {{id_porten_config_url}}
+    - name: ID_PORTEN_CLIENT_ID
+      value: {{id_porten_client_id}}
+    - name: ID_PORTEN_SCOPE
+      value: {{id_porten_scope}}

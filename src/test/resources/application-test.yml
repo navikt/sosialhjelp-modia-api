@@ -1,0 +1,28 @@
+#properties to use in integration tests
+
+spring:
+  main:
+    banner-mode: 'off'
+
+server:
+  servlet:
+    context-path: '/sosialhjelp/innsyn-api'
+
+client:
+  fiks_digisos_endpoint_url: 'http://localhost:51234'
+  fiks_svar_ut_endpoint_url: 'svar-ut.com' # https://test.svarut.ks.no/forsendelse/{id}/{nr}
+  fiks_dokumentlager_endpoint_url: 'http://localhost:51234' # https://minside.fiks.test.ks.no/dokumentlager/nedlasting/{id}
+  norg_endpoint_url: 'http://localhost:51234'
+  fiks_integrasjonid: "id"
+  fiks_integrasjonid_kommune: "idkom"
+  fiks_integrasjonpassord: "pwd"
+  fiks_integrasjonpassord_kommune: "pwdcom"
+  idPortenTokenUrl: "test"
+  idPortenClientId: "test"
+  idPortenScope: "test"
+  idPortenConfigUrl: "https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration"
+
+innsyn:
+  vedlegg:
+    virusscan:
+      enabled: false
