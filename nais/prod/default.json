@@ -1,0 +1,17 @@
+{
+	"namespace": "default",
+	"ingresses": [
+		"https://sosialhjelp-modia-api.nais.oera.no/sosialhjelp/modia-api",
+		"https://www.nav.no/sosialhjelp/modia-api"
+	],
+	"fiks_digisos_endpoint_url": "https://api.fiks.test.ks.no",
+	"fiks_dokumentlager_endpoint_url": "https://minside.fiks.test.ks.no",
+	"fiks_svar_ut_endpoint_url": "https://test.svarut.ks.no",
+	"norg_endpoint_url": "https://api-gw.oera.no/norg2/api/v1",
+	"virksomhetssertifikat_vault_path": "/kv/prod/sbs/sosialhjelp-modia-api/default",
+	"application_vault_path": "/kv/prod/sbs/sosialhjelp-modia-api/default",
+	"id_porten_token_url": "https://oidc.difi.no/idporten-oidc-provider/token",
+	"id_porten_config_url": "https://oidc.difi.no/idporten-oidc-provider/.well-known/openid-configuration",
+	"id_porten_client_id": "bd520e59-6e01-4669-a7c8-f68fa2cac362",
+	"id_porten_scope": "ks:fiks"
+}
