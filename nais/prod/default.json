@@ -6,7 +6,7 @@
 	],
 	"fiks_digisos_endpoint_url": "https://api.fiks.ks.no",
 	"fiks_dokumentlager_endpoint_url": "https://minside.fiks.ks.no",
-	"norg_endpoint_url": "https://api-gw.oera.no/norg2/api/v1",
+	"norg_endpoint_url": "https://app.adeo.no/norg2/api/v1",
 	"virksomhetssertifikat_vault_path": "/kv/prod/sbs/sosialhjelp-modia-api/default",
 	"application_vault_path": "/kv/prod/sbs/sosialhjelp-modia-api/default",
 	"id_porten_token_url": "https://oidc.difi.no/idporten-oidc-provider/token",
