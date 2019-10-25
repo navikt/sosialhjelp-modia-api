@@ -1,19 +1,16 @@
 package no.nav.sbl.sosialhjelpmodiaapi.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtakFattet
-import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.*
-import no.nav.sbl.sosialhjelpmodiaapi.hentUrlFraFilreferanse
 import no.nav.sbl.sosialhjelpmodiaapi.saksstatus.DEFAULT_TITTEL
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 
-fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet, clientProperties: ClientProperties) {
+fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
 
     val utfallString = hendelse.utfall?.utfall?.name
     val utfall = if (utfallString == null) null else UtfallVedtak.valueOf(utfallString)
-    val vedtaksfilUrl = hentUrlFraFilreferanse(clientProperties, hendelse.vedtaksfil.referanse)
 
-    val vedtakFattet = Vedtak(utfall, vedtaksfilUrl)
+    val vedtakFattet = Vedtak(utfall)
 
     val sakForReferanse = saker.firstOrNull { it.referanse == hendelse.saksreferanse }
     if (sakForReferanse != null) {
@@ -33,5 +30,5 @@ fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet, clientProperties: Cli
     val sak = saker.first { it.referanse == hendelse.saksreferanse }
     val beskrivelse = "${sak.tittel ?: DEFAULT_TITTEL} er ferdig behandlet"
 
-    historikk.add(Hendelse(beskrivelse, toLocalDateTime(hendelse.hendelsestidspunkt), vedtaksfilUrl))
+    historikk.add(Hendelse(beskrivelse, toLocalDateTime(hendelse.hendelsestidspunkt)))
 }

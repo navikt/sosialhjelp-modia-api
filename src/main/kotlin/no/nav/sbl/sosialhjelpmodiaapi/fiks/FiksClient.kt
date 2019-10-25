@@ -7,7 +7,7 @@ interface FiksClient {
 
     fun hentDigisosSak(digisosId: String, sporingsId: String): DigisosSak
 
-    fun hentAlleDigisosSaker(token: String, sporingsId: String): List<DigisosSak>
+    fun hentAlleDigisosSaker(sporingsId: String): List<DigisosSak>
 
     fun hentKommuneInfo(kommunenummer: String): KommuneInfo
 

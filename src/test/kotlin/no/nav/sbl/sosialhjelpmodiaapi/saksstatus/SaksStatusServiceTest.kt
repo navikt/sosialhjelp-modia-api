@@ -5,14 +5,18 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.sosialhjelpmodiaapi.domain.*
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
+import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class SaksStatusServiceTest {
+    private val fiksClient: FiksClient = mockk()
     private val eventService: EventService = mockk()
 
-    private val service = SaksStatusService(eventService)
+    private val service = SaksStatusService(fiksClient, eventService)
+
+    private val mockDigisosSak: DigisosSak = mockk()
 
     private val token = "token"
 
@@ -22,7 +26,9 @@ internal class SaksStatusServiceTest {
 
     @BeforeEach
     fun init() {
-        clearMocks(eventService)
+        clearMocks(fiksClient, eventService)
+
+        every { fiksClient.hentDigisosSak(any(), any()) } returns mockDigisosSak
     }
 
     @Test
@@ -55,7 +61,6 @@ internal class SaksStatusServiceTest {
         assertThat(response).hasSize(1)
         assertThat(response[0].status).isEqualTo(SaksStatus.UNDER_BEHANDLING)
         assertThat(response[0].tittel).isEqualTo(tittel)
-        assertThat(response[0].vedtaksfilUrlList).isNull()
     }
 
     @Test
@@ -65,10 +70,7 @@ internal class SaksStatusServiceTest {
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING,
                 tittel = tittel,
-                vedtak = mutableListOf(Vedtak(
-                        utfall = UtfallVedtak.INNVILGET,
-                        vedtaksFilUrl = vedtaksfilUrl
-                )),
+                vedtak = mutableListOf(Vedtak(utfall = UtfallVedtak.INNVILGET)),
                 utbetalinger = mutableListOf(),
                 vilkar = mutableListOf()
         ))
@@ -81,8 +83,6 @@ internal class SaksStatusServiceTest {
         assertThat(response).hasSize(1)
         assertThat(response[0].status).isEqualTo(SaksStatus.FERDIGBEHANDLET)
         assertThat(response[0].tittel).isEqualTo(tittel)
-        assertThat(response[0].vedtaksfilUrlList).hasSize(1)
-        assertThat(response[0].vedtaksfilUrlList?.get(0)).isEqualTo(vedtaksfilUrl)
     }
 
     @Test
@@ -92,10 +92,7 @@ internal class SaksStatusServiceTest {
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING,
                 tittel = DEFAULT_TITTEL,
-                vedtak = mutableListOf(Vedtak(
-                        utfall = UtfallVedtak.INNVILGET,
-                        vedtaksFilUrl = vedtaksfilUrl
-                )),
+                vedtak = mutableListOf(Vedtak(utfall = UtfallVedtak.INNVILGET)),
                 utbetalinger = mutableListOf(),
                 vilkar = mutableListOf()
         ))
@@ -108,8 +105,6 @@ internal class SaksStatusServiceTest {
         assertThat(response).hasSize(1)
         assertThat(response[0].status).isEqualTo(SaksStatus.FERDIGBEHANDLET)
         assertThat(response[0].tittel).isEqualTo(DEFAULT_TITTEL)
-        assertThat(response[0].vedtaksfilUrlList).hasSize(1)
-        assertThat(response[0].vedtaksfilUrlList?.get(0)).isEqualTo(vedtaksfilUrl)
     }
 
     @Test
@@ -121,12 +116,8 @@ internal class SaksStatusServiceTest {
                         saksStatus = SaksStatus.UNDER_BEHANDLING,
                         tittel = tittel,
                         vedtak = mutableListOf(
-                                Vedtak(
-                                        utfall = UtfallVedtak.INNVILGET,
-                                        vedtaksFilUrl = vedtaksfilUrl),
-                                Vedtak(
-                                        utfall = UtfallVedtak.INNVILGET,
-                                        vedtaksFilUrl = vedtaksfilUrl)),
+                                Vedtak(utfall = UtfallVedtak.INNVILGET),
+                                Vedtak(utfall = UtfallVedtak.INNVILGET)),
                         utbetalinger = mutableListOf(),
                         vilkar = mutableListOf()),
                 Sak(
@@ -147,8 +138,5 @@ internal class SaksStatusServiceTest {
         assertThat(response).hasSize(2)
         assertThat(response[0].tittel).isEqualTo(tittel)
         assertThat(response[1].tittel).isEqualTo(DEFAULT_TITTEL)
-
-        assertThat(response[0].vedtaksfilUrlList).hasSize(2)
-        assertThat(response[1].vedtaksfilUrlList).isNull()
     }
 }

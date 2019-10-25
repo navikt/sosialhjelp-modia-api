@@ -15,10 +15,9 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 internal class OppgaveServiceTest {
-
-    private val eventService: EventService = mockk()
     private val fiksClient: FiksClient = mockk()
-    private val service = OppgaveService(eventService, fiksClient)
+    private val eventService: EventService = mockk()
+    private val service = OppgaveService(fiksClient, eventService)
 
     private val mockDigisosSak: DigisosSak = mockk()
     private val mockEttersendtInfoNAV: EttersendtInfoNAV = mockk()
@@ -32,8 +31,6 @@ internal class OppgaveServiceTest {
     private val type4 = "pengebinge"
     private val tillegg4 = "Onkel Skrue penger"
     private val tidspunktForKrav = LocalDateTime.now().minusDays(5)
-    private val tidspunktFoerKrav = LocalDateTime.now().minusDays(7)
-    private val tidspunktEtterKrav = LocalDateTime.now().minusDays(3)
     private val frist = LocalDateTime.now()
     private val frist2 = LocalDateTime.now().plusDays(1)
     private val frist3 = LocalDateTime.now().plusDays(2)

@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/innsyn/")
 class UtbetalingerController(private val utbetalingerService: UtbetalingerService) {
 
-    @GetMapping("{fiksDigisosId}/utbetalinger")
-    fun hentUtbetalinger(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<UtbetalingerResponse> {
+    @GetMapping("utbetalinger")
+    fun hentUtbetalinger(@RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<List<UtbetalingerResponse>> {
         // Gitt innlogget bruker
-        return ResponseEntity.ok().body(utbetalingerService.hentUtbetalinger(fiksDigisosId, token))
+        return ResponseEntity.ok().body(utbetalingerService.hentUtbetalinger(token))
     }
 
 }

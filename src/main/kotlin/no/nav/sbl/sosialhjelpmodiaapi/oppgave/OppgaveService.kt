@@ -8,21 +8,16 @@ import org.springframework.stereotype.Component
 
 
 @Component
-class OppgaveService(private val eventService: EventService,
-                     private val fiksClient: FiksClient) {
-
-    companion object {
-        val log by logger()
-    }
+class OppgaveService(private val fiksClient: FiksClient,
+                     private val eventService: EventService) {
 
     fun hentOppgaver(fiksDigisosId: String, token: String): List<OppgaveResponse> {
-        val model = eventService.createModel(fiksDigisosId, token)
+        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)
+        val model = eventService.createModel(digisosSak, token)
 
         if (model.oppgaver.isEmpty()) {
             return emptyList()
         }
-
-        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)
 
         val oppgaveResponseList = model.oppgaver.sortedBy { it.innsendelsesfrist }
                 .map {
@@ -34,6 +29,10 @@ class OppgaveService(private val eventService: EventService,
                 }
         log.info("Hentet ${oppgaveResponseList.size} oppgaver for fiksDigisosId=$fiksDigisosId")
         return oppgaveResponseList
+    }
+
+    companion object {
+        val log by logger()
     }
 
 }

@@ -44,8 +44,7 @@ data class Sak(
 )
 
 data class Vedtak(
-        var utfall: UtfallVedtak?,
-        var vedtaksFilUrl: String
+        var utfall: UtfallVedtak?
 )
 
 data class Utbetaling(
@@ -72,11 +71,8 @@ data class Vilkar(
 data class Hendelse(
         // type som felt?
         val tittel: String,
-        val tidspunkt: LocalDateTime,
-        val url: String?
-) {
-    constructor(tittel: String, tidspunkt: LocalDateTime) : this(tittel, tidspunkt, null)
-}
+        val tidspunkt: LocalDateTime
+)
 
 enum class SoknadsStatus {
     MOTTATT, UNDER_BEHANDLING, FERDIGBEHANDLET, BEHANDLES_IKKE

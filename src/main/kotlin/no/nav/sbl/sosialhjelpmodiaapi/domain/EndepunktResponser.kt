@@ -10,14 +10,12 @@ data class SoknadsStatusResponse(
 
 data class SaksStatusResponse(
         val tittel: String,
-        val status: SaksStatus?,
-        val vedtaksfilUrlList: List<String>?
+        val status: SaksStatus?
 )
 
 data class HendelseResponse(
         val tidspunkt: String,
-        val beskrivelse: String,
-        val filUrl: String?
+        val beskrivelse: String
 )
 
 data class OppgaveResponse(
@@ -28,6 +26,7 @@ data class OppgaveResponse(
 )
 
 data class UtbetalingerResponse(
+        val fiksDigisosId: String,
         val utbetalinger: MutableList<UtbetalingerManedResponse>
 )
 

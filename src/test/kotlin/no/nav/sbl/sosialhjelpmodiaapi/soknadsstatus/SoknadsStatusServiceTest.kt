@@ -1,29 +1,34 @@
 package no.nav.sbl.sosialhjelpmodiaapi.soknadsstatus
 
-import io.mockk.clearMocks
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatusResponse
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
+import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class SoknadsStatusServiceTest {
 
+    private val fiksClient: FiksClient = mockk()
     private val eventService: EventService = mockk()
 
-    private val service = SoknadsStatusService(eventService)
+    private val service = SoknadsStatusService(fiksClient, eventService)
 
+    private val mockDigisosSak: DigisosSak = mockk()
     private val mockInternalDigisosSoker: InternalDigisosSoker = mockk()
 
     private val token = "token"
 
     @BeforeEach
     fun init() {
-        clearMocks(eventService, mockInternalDigisosSoker)
+        clearAllMocks()
+        every { fiksClient.hentDigisosSak(any(), any()) } returns mockDigisosSak
     }
 
     @Test

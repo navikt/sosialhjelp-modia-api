@@ -89,13 +89,13 @@ class FiksClientImpl(clientProperties: ClientProperties,
         }
     }
 
-    override fun hentAlleDigisosSaker(token: String, sporingId: String): List<DigisosSak> {
+    override fun hentAlleDigisosSaker(sporingsId: String): List<DigisosSak> {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
         val headers = setIntegrasjonHeaders("Bearer ${virksomhetsToken.token}")
 
         val url = "$baseUrl/digisos/api/nav/v1/soknader"
-        val uriComponents = UriComponentsBuilder.fromHttpUrl(url).queryParam("sporingsId", sporingId).build()
+        val uriComponents = UriComponentsBuilder.fromHttpUrl(url).queryParam("sporingsId", sporingsId).build()
         try {
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), typeRef<List<String>>())
 

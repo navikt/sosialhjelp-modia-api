@@ -26,12 +26,10 @@ import java.time.format.DateTimeFormatter
 
 internal class EventServiceTest {
 
-    private val clientProperties: ClientProperties = mockk(relaxed = true)
     private val innsynService: InnsynService = mockk()
     private val norgClient: NorgClient = mockk()
-    private val fiksClient: FiksClient = mockk()
 
-    private val service = EventService(clientProperties, innsynService, norgClient, fiksClient)
+    private val service = EventService(innsynService, norgClient)
 
     private val mockDigisosSak: DigisosSak = mockk()
     private val mockJsonDigisosSoker: JsonDigisosSoker = mockk()
@@ -55,9 +53,6 @@ internal class EventServiceTest {
     private val dokumenttype = "dokumentasjonstype"
     private val tilleggsinfo = "ekstra info"
 
-    private val vedleggKrevesDokumenttype = "faktura"
-    private val vedleggKrevesTilleggsinfo = "strom"
-
     private val navKontor = "1337"
 
     private val now = ZonedDateTime.now()
@@ -76,7 +71,7 @@ internal class EventServiceTest {
     @BeforeEach
     fun init() {
         clearMocks(innsynService, mockJsonDigisosSoker, mockJsonSoknad)
-        every { fiksClient.hentDigisosSak(any(), any()) } returns mockDigisosSak
+        every { mockDigisosSak.fiksDigisosId } returns "123"
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
@@ -115,7 +110,7 @@ internal class EventServiceTest {
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns null
         every { innsynService.hentOriginalSoknad(any(), any(), any()) } returns null
 
-        val model = service.createModel("123", "token")
+        val model = service.createModel(mockDigisosSak, "token")
 
         assertThat(model).isNotNull
         assertThat(model.status).isNull()
@@ -127,7 +122,7 @@ internal class EventServiceTest {
         every { mockDigisosSak.digisosSoker } returns null
         every { innsynService.hentJsonDigisosSoker(any(), null, any()) } returns null
 
-        val model = service.createModel("123", "token")
+        val model = service.createModel(mockDigisosSak, "token")
 
         assertThat(model).isNotNull
         assertThat(model.historikk).hasSize(1)
@@ -139,7 +134,7 @@ internal class EventServiceTest {
         fun `soknadsStatus SENDT`() {
             every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns null
 
-            val model = service.createModel("123", "token")
+            val model = service.createModel(mockDigisosSak, "token")
 
             assertThat(model).isNotNull
             assertThat(model.historikk).hasSize(1)
@@ -159,7 +154,7 @@ internal class EventServiceTest {
                                     SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
                             ))
 
-            val model = service.createModel("123", "token")
+            val model = service.createModel(mockDigisosSak, "token")
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
@@ -181,7 +176,7 @@ internal class EventServiceTest {
                                     SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2)
                             ))
 
-            val model = service.createModel("123", "token")
+            val model = service.createModel(mockDigisosSak, "token")
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -205,7 +200,7 @@ internal class EventServiceTest {
                                     SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_3)
                             ))
 
-            val model = service.createModel("123", "token")
+            val model = service.createModel(mockDigisosSak, "token")
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.FERDIGBEHANDLET)
@@ -233,7 +228,7 @@ internal class EventServiceTest {
                                     SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3)
                             ))
 
-            val model = service.createModel("123", "token")
+            val model = service.createModel(mockDigisosSak, "token")
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -264,7 +259,7 @@ internal class EventServiceTest {
                                     SAK1_UTEN_SAKS_STATUS_ELLER_TITTEL.withHendelsestidspunkt(tidspunkt_3)
                             ))
 
-            val model = service.createModel("123", "token")
+            val model = service.createModel(mockDigisosSak, "token")
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -296,7 +291,7 @@ internal class EventServiceTest {
                                     SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_4)
                             ))
 
-            val model = service.createModel("123", "token")
+            val model = service.createModel(mockDigisosSak, "token")
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -312,12 +307,10 @@ internal class EventServiceTest {
 
             val vedtak = sak.vedtak.last()
             assertThat(vedtak.utfall).isEqualTo(UtfallVedtak.INNVILGET)
-            assertThat(vedtak.vedtaksFilUrl).contains("/dokumentlager/nedlasting/$dokumentlagerId_1")
 
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(toLocalDateTime(tidspunkt_4))
             assertThat(hendelse.tittel).contains("$tittel_1 er ferdig behandlet")
-            assertThat(hendelse.url).contains("/dokumentlager/nedlasting/$dokumentlagerId_1")
         }
 
         @Test
@@ -332,7 +325,7 @@ internal class EventServiceTest {
                                     SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3)
                             ))
 
-            val model = service.createModel("123", "token")
+            val model = service.createModel(mockDigisosSak, "token")
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -348,12 +341,10 @@ internal class EventServiceTest {
 
             val vedtak = sak.vedtak.last()
             assertThat(vedtak.utfall).isEqualTo(UtfallVedtak.INNVILGET)
-            assertThat(vedtak.vedtaksFilUrl).contains("/dokumentlager/nedlasting/$dokumentlagerId_1")
 
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(toLocalDateTime(tidspunkt_3))
             assertThat(hendelse.tittel).contains("$DEFAULT_TITTEL er ferdig behandlet")
-            assertThat(hendelse.url).contains("/dokumentlager/nedlasting/$dokumentlagerId_1")
         }
 
         @Test
@@ -369,7 +360,7 @@ internal class EventServiceTest {
                                     SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_4)
                             ))
 
-            val model = service.createModel("123", "token")
+            val model = service.createModel(mockDigisosSak, "token")
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -386,12 +377,10 @@ internal class EventServiceTest {
 
             val vedtak = sak.vedtak.last()
             assertThat(vedtak.utfall).isEqualTo(UtfallVedtak.INNVILGET)
-            assertThat(vedtak.vedtaksFilUrl).contains("/dokumentlager/nedlasting/$dokumentlagerId_1")
 
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(toLocalDateTime(tidspunkt_3))
             assertThat(hendelse.tittel).contains("$DEFAULT_TITTEL er ferdig behandlet")
-            assertThat(hendelse.url).contains("/dokumentlager/nedlasting/$dokumentlagerId_1")
         }
 
         @Test
@@ -408,7 +397,7 @@ internal class EventServiceTest {
                                     SAK1_VEDTAK_FATTET_AVSLATT.withHendelsestidspunkt(tidspunkt_5)
                             ))
 
-            val model = service.createModel("123", "token")
+            val model = service.createModel(mockDigisosSak, "token")
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -423,11 +412,9 @@ internal class EventServiceTest {
 
             val vedtak = sak.vedtak[0]
             assertThat(vedtak.utfall).isEqualTo(UtfallVedtak.INNVILGET)
-            assertThat(vedtak.vedtaksFilUrl).contains("/dokumentlager/nedlasting/$dokumentlagerId_1")
 
             val vedtak2 = sak.vedtak[1]
             assertThat(vedtak2.utfall).isEqualTo(UtfallVedtak.AVSLATT)
-            assertThat(vedtak2.vedtaksFilUrl).contains("/dokumentlager/nedlasting/$dokumentlagerId_2")
         }
 
         @Test
@@ -443,7 +430,7 @@ internal class EventServiceTest {
                                     SAK1_VEDTAK_FATTET_UTEN_UTFALL.withHendelsestidspunkt(tidspunkt_4)
                             ))
 
-            val model = service.createModel("123", "token")
+            val model = service.createModel(mockDigisosSak, "token")
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -458,12 +445,10 @@ internal class EventServiceTest {
 
             val vedtak = sak.vedtak[0]
             assertThat(vedtak.utfall).isNull()
-            assertThat(vedtak.vedtaksFilUrl).contains("/dokumentlager/nedlasting/$dokumentlagerId_1")
 
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(toLocalDateTime(tidspunkt_4))
             assertThat(hendelse.tittel).contains("$DEFAULT_TITTEL er ferdig behandlet")
-            assertThat(hendelse.url).contains("/dokumentlager/nedlasting/$dokumentlagerId_1")
         }
     }
 
@@ -483,7 +468,7 @@ internal class EventServiceTest {
                                     DOKUMENTASJONETTERSPURT.withHendelsestidspunkt(tidspunkt_3)
                             ))
 
-            val model = service.createModel("123", "token")
+            val model = service.createModel(mockDigisosSak, "token")
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -500,7 +485,6 @@ internal class EventServiceTest {
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(toLocalDateTime(tidspunkt_3))
             assertThat(hendelse.tittel).contains("Veileder har oppdatert dine dokumentasjonskrav: 1 vedlegg mangler")
-            assertThat(hendelse.url).contains("/dokumentlager/nedlasting/$dokumentlagerId_1")
         }
 
         @Test
@@ -515,7 +499,7 @@ internal class EventServiceTest {
                                     DOKUMENTASJONETTERSPURT_TOM_DOKUMENT_LISTE.withHendelsestidspunkt(tidspunkt_3)
                             ))
 
-            val model = service.createModel("123", "token")
+            val model = service.createModel(mockDigisosSak, "token")
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -526,7 +510,6 @@ internal class EventServiceTest {
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(toLocalDateTime(tidspunkt_3))
             assertThat(hendelse.tittel).contains("Veileder har oppdatert dine dokumentasjonskrav: Ingen vedlegg mangler")
-            assertThat(hendelse.url).isNull()
         }
     }
 
@@ -542,7 +525,7 @@ internal class EventServiceTest {
                                 FORELOPIGSVAR.withHendelsestidspunkt(tidspunkt_3)
                         ))
 
-        val model = service.createModel("123", "token")
+        val model = service.createModel(mockDigisosSak, "token")
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -552,7 +535,6 @@ internal class EventServiceTest {
         val hendelse = model.historikk.last()
         assertThat(hendelse.tidspunkt).isEqualTo(toLocalDateTime(tidspunkt_3))
         assertThat(hendelse.tittel).contains("Du har fått et brev om saksbehandlingstiden for søknaden din")
-        assertThat(hendelse.url).contains("/forsendelse/$svarUtId/$svarUtNr")
     }
 
     private fun resetHendelser() {

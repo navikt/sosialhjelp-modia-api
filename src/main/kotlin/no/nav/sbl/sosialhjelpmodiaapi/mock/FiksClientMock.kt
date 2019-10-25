@@ -19,7 +19,7 @@ class FiksClientMock : FiksClient {
     private val innsynMap = mutableMapOf<String, DigisosSak>()
     private val dokumentMap = mutableMapOf<String, Any>()
 
-    override fun hentDigisosSak(digisosId: String, token: String): DigisosSak {
+    override fun hentDigisosSak(digisosId: String, sporingsId: String): DigisosSak {
         return innsynMap.getOrElse(digisosId, {
             val default = defaultDigisosSak.copyDigisosSokerWithNewMetadataId(UUID.randomUUID().toString())
             innsynMap[digisosId] = default
@@ -27,7 +27,7 @@ class FiksClientMock : FiksClient {
         })
     }
 
-    override fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>, token: String): Any {
+    override fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>, sporingsId: String): Any {
         return when (requestedClass) {
             JsonDigisosSoker::class.java -> dokumentMap.getOrElse(dokumentlagerId, {
                 val default = digisosSoker
@@ -61,7 +61,7 @@ class FiksClientMock : FiksClient {
         }
     }
 
-    override fun hentAlleDigisosSaker(token: String, sporingsId: String): List<DigisosSak> {
+    override fun hentAlleDigisosSaker(sporingsId: String): List<DigisosSak> {
         return innsynMap.values.toList()
     }
 
