@@ -8,9 +8,7 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.filreferanse.JsonDokumentlager
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.filreferanse.JsonSvarUtFilreferanse
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.*
 import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
-import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.*
-import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.innsyn.InnsynService
 import no.nav.sbl.sosialhjelpmodiaapi.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.saksstatus.DEFAULT_TITTEL

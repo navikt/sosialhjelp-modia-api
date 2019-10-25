@@ -4,7 +4,6 @@ import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DokumentInfo
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.time.temporal.ChronoUnit
 
 internal class HendelseServiceTest {
     private val fiksClient: FiksClient = mockk()

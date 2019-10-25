@@ -27,8 +27,6 @@ internal class FiksClientTest {
 
     private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenService)
 
-    private val id = "123"
-
     @BeforeEach
     fun init() {
         clearMocks(restTemplate)

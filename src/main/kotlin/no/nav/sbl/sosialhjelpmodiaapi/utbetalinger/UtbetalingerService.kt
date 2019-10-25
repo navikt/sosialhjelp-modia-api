@@ -24,7 +24,7 @@ class UtbetalingerService(private val fiksClient: FiksClient,
             return emptyList()
         }
 
-        val responseList: List<UtbetalingerResponse> = digisosSaker.map {
+        return digisosSaker.map {
             val model = eventService.createModel(it, token)
             val utbetalingerResponse = UtbetalingerResponse(it.fiksDigisosId, mutableListOf())
             val utbetalingerPerManed = TreeMap<String, MutableList<Utbetaling>>()
@@ -46,8 +46,8 @@ class UtbetalingerService(private val fiksClient: FiksClient,
                     }
 
             utbetalingerPerManed.entries
-                    .forEach {
-                        val alleUtbetalingene = it.value
+                    .forEach { utbetalingPrMnd ->
+                        val alleUtbetalingene = utbetalingPrMnd.value
                                 .map { utbetaling ->
                                     UtbetalingResponse(
                                             utbetaling.beskrivelse,
@@ -57,7 +57,7 @@ class UtbetalingerService(private val fiksClient: FiksClient,
                                                     .map { vilkar -> VilkarResponse(vilkar.beskrivelse, vilkar.oppfyllt) } as MutableList<VilkarResponse>)
                                 }
                         utbetalingerResponse.utbetalinger.add(UtbetalingerManedResponse(
-                                it.key,
+                                utbetalingPrMnd.key,
                                 alleUtbetalingene.toMutableList(),
                                 alleUtbetalingene
                                         .map { t -> t.belop }
@@ -66,8 +66,6 @@ class UtbetalingerService(private val fiksClient: FiksClient,
 
             utbetalingerResponse
         }
-
-        return responseList
     }
 
     private fun monthToString(localDate: LocalDate?) =

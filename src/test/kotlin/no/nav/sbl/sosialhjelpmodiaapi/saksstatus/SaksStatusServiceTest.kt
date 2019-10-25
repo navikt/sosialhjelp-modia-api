@@ -22,7 +22,6 @@ internal class SaksStatusServiceTest {
 
     private val tittel = "tittel"
     private val referanse = "referanse"
-    private val vedtaksfilUrl = "url"
 
     @BeforeEach
     fun init() {

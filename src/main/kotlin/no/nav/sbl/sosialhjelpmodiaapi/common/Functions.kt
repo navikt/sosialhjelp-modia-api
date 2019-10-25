@@ -4,7 +4,6 @@ import io.ktor.client.features.ClientRequestException
 import kotlinx.coroutines.delay
 import kotlin.reflect.KClass
 
-private class Common
 
 internal suspend fun <T> retry(
         callName: String,

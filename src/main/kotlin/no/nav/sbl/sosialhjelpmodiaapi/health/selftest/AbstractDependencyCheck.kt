@@ -81,7 +81,7 @@ abstract class AbstractDependencyCheck(
                     address = address,
                     result = Result.OK,
                     errorMessage = null,
-                    responseTime = "${responseTime.toString()} ms",
+                    responseTime = "$responseTime ms",
                     throwable = null
             )
         }

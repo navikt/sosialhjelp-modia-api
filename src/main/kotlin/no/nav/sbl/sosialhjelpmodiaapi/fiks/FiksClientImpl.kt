@@ -129,30 +129,6 @@ class FiksClientImpl(clientProperties: ClientProperties,
         }
     }
 
-    private fun createHttpEntityOfString(body: String, name: String): HttpEntity<Any> {
-        return createHttpEntity(body, name, null, "text/plain;charset=UTF-8")
-    }
-
-    private fun createHttpEntity(body: Any, name: String, filename: String?, contentType: String): HttpEntity<Any> {
-        val headerMap = LinkedMultiValueMap<String, String>()
-        val builder: ContentDisposition.Builder = ContentDisposition
-                .builder("form-data")
-                .name(name)
-        val contentDisposition: ContentDisposition = if (filename == null) builder.build() else builder.filename(filename).build()
-
-        headerMap.add(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString())
-        headerMap.add(HttpHeaders.CONTENT_TYPE, contentType)
-        return HttpEntity(body, headerMap)
-    }
-
-    private fun serialiser(@NonNull metadata: Any): String {
-        try {
-            return objectMapper.writeValueAsString(metadata)
-        } catch (e: JsonProcessingException) {
-            throw RuntimeException("Feil under serialisering av metadata", e)
-        }
-    }
-
     private fun setIntegrasjonHeaders(token: String): HttpHeaders {
         val headers = HttpHeaders()
         headers.accept = singletonList(MediaType.APPLICATION_JSON)
@@ -162,9 +138,3 @@ class FiksClientImpl(clientProperties: ClientProperties,
         return headers
     }
 }
-
-data class VedleggMetadata(
-        val filnavn: String?,
-        val mimetype: String?,
-        val storrelse: Long
-)
