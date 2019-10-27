@@ -4,8 +4,6 @@
     "https://sosialhjelp-modia-api.nais.oera-q.local/sosialhjelp/modia-api"
   ],
   "fiks_digisos_endpoint_url": "https://api.fiks.test.ks.no",
-  "fiks_dokumentlager_endpoint_url": "https://minside.fiks.test.ks.no",
-  "fiks_svar_ut_endpoint_url": "https://test.svarut.ks.no",
   "norg_endpoint_url": "https://app-q0.adeo.no/norg2/api/v1",
   "virksomhetssertifikat_vault_path": "/secret/virksomhetssertifikat/preprod/shared",
   "application_vault_path": "/kv/preprod/sbs/sosialhjelp-modia-api/default",

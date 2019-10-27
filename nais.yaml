@@ -43,10 +43,6 @@ spec:
   env:
     - name: FIKS_DIGISOS_ENDPOINT_URL
       value: {{fiks_digisos_endpoint_url}}
-    - name: FIKS_DOKUMENTLAGER_ENDPOINT_URL
-      value: {{fiks_dokumentlager_endpoint_url}}
-    - name: FIKS_SVAR_UT_ENDPOINT_URL
-      value: {{fiks_svar_ut_endpoint_url}}
     - name: NORG_ENDPOINT_URL
       value: {{norg_endpoint_url}}
     - name: ID_PORTEN_TOKEN_URL

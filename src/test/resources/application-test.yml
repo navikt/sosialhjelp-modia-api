@@ -6,8 +6,6 @@ spring:
 
 client:
   fiks_digisos_endpoint_url: 'fiks-digisos.com'
-  fiks_svar_ut_endpoint_url: 'svar-ut.com'
-  fiks_dokumentlager_endpoint_url: 'dokumentlager.com'
   norg_endpoint_url: 'http://localhost:51234'
   fiks_integrasjonid: "id"
   fiks_integrasjonid_kommune: "idkom"
