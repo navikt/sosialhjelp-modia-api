@@ -38,3 +38,15 @@ fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
 fun isRunningInProd(): Boolean {
     return System.getenv(NAIS_CLUSTER_NAME) == "prod-fss" && System.getenv(NAIS_NAMESPACE) == "default"
 }
+
+fun resolveSrvUser(): String {
+    return getProperty("app_username") // FIXME
+}
+
+fun resolveSrvPassword(): String {
+    return getProperty("app_password") // FIXME
+}
+
+private fun getProperty(propertyName: String): String {
+    return System.getProperty(propertyName, System.getenv(propertyName))
+}

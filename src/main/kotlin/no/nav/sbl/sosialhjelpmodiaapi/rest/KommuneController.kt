@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/innsyn/kommune")
 class KommuneController(private val kommuneService: KommuneService) {
 
+    // TODO: kan fjernes (sammen med kommuneservice etc)?
+
     @GetMapping("/{fiksDigisosId}")
     fun hentKommuneInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<String>{
         val kommuneStatus = kommuneService.hentKommuneStatus(fiksDigisosId, token)

@@ -15,6 +15,8 @@ class HendelseController(val hendelseService: HendelseService) {
 
     @GetMapping("/{fiksDigisosId}/hendelser", produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     fun hentHendelser(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<List<HendelseResponse>> {
+        // TODO: sjekk tilgang via abac
+
         val hendelser = hendelseService.hentHendelser(fiksDigisosId, token)
         return ResponseEntity.ok(hendelser)
     }

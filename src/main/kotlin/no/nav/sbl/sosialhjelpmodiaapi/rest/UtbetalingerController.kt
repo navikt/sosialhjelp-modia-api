@@ -15,7 +15,8 @@ class UtbetalingerController(private val utbetalingerService: UtbetalingerServic
 
     @GetMapping("utbetalinger")
     fun hentUtbetalinger(@RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<List<UtbetalingerResponse>> {
-        // Gitt innlogget bruker
+        // TODO: sjekk tilgang abac
+
         return ResponseEntity.ok().body(utbetalingerService.hentUtbetalinger(token))
     }
 
