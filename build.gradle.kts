@@ -29,6 +29,7 @@ val tikaVersion = "1.22"
 val pdfBoxVersion = "2.0.16"
 val fiksKrypteringVersion = "1.0.7"
 val kotlinTestVersion = "1.3.50"
+val abacAttributeConstantsVersion = "3.3.13"
 
 val mainClass = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
 
@@ -105,6 +106,8 @@ dependencies {
     implementation("org.apache.tika:tika-core:$tikaVersion")
     implementation("org.apache.pdfbox:preflight:$pdfBoxVersion")
     implementation("no.ks.fiks:kryptering:$fiksKrypteringVersion")
+
+    implementation("no.nav.abac.policies:abac-attribute-constants:$abacAttributeConstantsVersion")
 
     //spesifikke versjoner oppgradert etter ønske fra snyk
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion")
