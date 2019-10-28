@@ -14,6 +14,27 @@
 
     <logger name="no.nav.sbl.sosialhjelpmodiaapi" level="INFO"/>
 
+
+    <appender name="abac-audit-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/log/abac-audit.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/log/abac-audit.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>1</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{ISO8601} ${applicationName} %level %mdc %m%n%rEx</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="abac-audit-async-file" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="abac-audit-file"/>
+    </appender>
+
+    <logger name="AuditLogger" additivity="false">
+        <appender-ref ref="abac-audit-async-file"/>
+    </logger>
+
     <springProfile name="!(local | mock)">
         <root level="INFO">
             <appender-ref ref="stdout_json"/>
