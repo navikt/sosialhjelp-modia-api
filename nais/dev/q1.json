@@ -4,6 +4,8 @@
     "https://sosialhjelp-modia-api-q1.nais.oera-q.local/sosialhjelp/modia-api",
     "https://www-q1.nav.no/sosialhjelp/modia-api"
   ],
+  "abac_pdp_endpoint_url": "https://wasapp-q1.adeo.no/asm-pdp/authorize",
+  "abac_pdp_endpoint_description": "The XACML JSON Endpoint for evaluating attributes against policies",
   "fiks_digisos_endpoint_url": "https://api.fiks.test.ks.no",
   "norg_endpoint_url": "https://app-q1.adeo.no/norg2/api/v1",
   "virksomhetssertifikat_vault_path": "/secret/virksomhetssertifikat/preprod/shared",

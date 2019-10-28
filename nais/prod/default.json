@@ -4,6 +4,7 @@
     "https://sosialhjelp-modia-api.nais.oera.no/sosialhjelp/modia-api",
     "https://www.nav.no/sosialhjelp/modia-api"
   ],
+  "abac_pdp_endpoint_url": "https://wasapp.adeo.no/asm-pdp/authorize",
   "fiks_digisos_endpoint_url": "https://api.fiks.ks.no",
   "norg_endpoint_url": "https://app.adeo.no/norg2/api/v1",
   "virksomhetssertifikat_vault_path": "/kv/prod/sbs/sosialhjelp-modia-api/default",
