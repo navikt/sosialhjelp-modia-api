@@ -11,9 +11,9 @@ spring:
   application:
     name: "sosialhjelp-modia-api"
 
-server:
-  servlet:
-    context-path: '/sosialhjelp/modia-api'
+#server:
+#  servlet:
+#    context-path: '/sosialhjelp/modia-api'
 
 client:
   fiks_digisos_endpoint_url: ${FIKS_DIGISOS_ENDPOINT_URL:https://api.fiks.test.ks.no}

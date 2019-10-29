@@ -1,8 +1,7 @@
 {
   "namespace": "default",
   "ingresses": [
-    "https://sosialhjelp-modia-api.nais.oera.no/sosialhjelp/modia-api",
-    "https://www.nav.no/sosialhjelp/modia-api"
+    "https://sosialhjelp-modia-api.nais.adeo.no"
   ],
   "fiks_digisos_endpoint_url": "https://api.fiks.ks.no",
   "norg_endpoint_url": "https://app.adeo.no/norg2/api/v1",
