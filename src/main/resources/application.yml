@@ -11,9 +11,9 @@ spring:
   application:
     name: "sosialhjelp-modia-api"
 
-server:
-  servlet:
-    context-path: '/sosialhjelp/modia-api'
+#server:
+#  servlet:
+#    context-path: '/sosialhjelp/modia-api'
 
 client:
   abac_pdp_endpoint_url: ${ABAC_PDP_ENDPOINT_URL:https://wasapp-q0.adeo.no/asm-pdp/authorize}

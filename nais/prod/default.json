@@ -1,14 +1,13 @@
 {
   "namespace": "default",
   "ingresses": [
-    "https://sosialhjelp-modia-api.nais.oera.no/sosialhjelp/modia-api",
-    "https://www.nav.no/sosialhjelp/modia-api"
+    "https://sosialhjelp-modia-api.nais.adeo.no"
   ],
   "abac_pdp_endpoint_url": "https://wasapp.adeo.no/asm-pdp/authorize",
   "fiks_digisos_endpoint_url": "https://api.fiks.ks.no",
   "norg_endpoint_url": "https://app.adeo.no/norg2/api/v1",
-  "virksomhetssertifikat_vault_path": "/kv/prod/sbs/sosialhjelp-modia-api/default",
-  "application_vault_path": "/kv/prod/sbs/sosialhjelp-modia-api/default",
+  "virksomhetssertifikat_vault_path": "/kv/prod/fss/sosialhjelp-modia-api/default",
+  "application_vault_path": "/kv/prod/fss/sosialhjelp-modia-api/default",
   "id_porten_token_url": "https://oidc.difi.no/idporten-oidc-provider/token",
   "id_porten_config_url": "https://oidc.difi.no/idporten-oidc-provider/.well-known/openid-configuration",
   "id_porten_client_id": "bd520e59-6e01-4669-a7c8-f68fa2cac362",
