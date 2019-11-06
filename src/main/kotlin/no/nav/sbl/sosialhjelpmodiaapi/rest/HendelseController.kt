@@ -2,7 +2,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.rest
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.HendelseResponse
 import no.nav.sbl.sosialhjelpmodiaapi.hendelse.HendelseService
-import no.nav.security.oidc.api.Unprotected
+import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity

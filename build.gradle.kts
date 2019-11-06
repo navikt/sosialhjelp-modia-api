@@ -12,7 +12,7 @@ val mockkVersion = "1.9.3"
 val filformatVersion = "1.2019.10.15-14.03-f5ce98b1fb15"
 val micrometerRegistryVersion = "1.1.7"
 val prometheusVersion = "0.7.0"
-val tokenSupportVersion = "0.2.18"
+val tokenValidationVersion = "1.1.2"
 val jacksonVersion = "2.9.10"
 val jacksonDatabindVersion = "2.9.10"
 val guavaVersion = "28.0-jre"
@@ -96,7 +96,7 @@ dependencies {
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 
-    implementation("no.nav.security:oidc-spring-support:$tokenSupportVersion")
+    implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
     implementation("io.springfox:springfox-swagger2:$swaggerVersion")
     implementation("io.springfox:springfox-swagger-ui:$swaggerVersion")
 
@@ -123,7 +123,7 @@ dependencies {
     }
     testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("no.nav.security:oidc-test-support:$tokenSupportVersion")
+    testImplementation("no.nav.security:token-validation-test-support:$tokenValidationVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinTestVersion")
 }
 
