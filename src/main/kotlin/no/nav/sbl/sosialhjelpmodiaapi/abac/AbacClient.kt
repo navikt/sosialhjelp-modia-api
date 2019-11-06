@@ -17,7 +17,7 @@ class AbacClient(clientProperties: ClientProperties,
 
     private val url = clientProperties.abacPdpEndpointUrl
 
-    fun harTilgang(request: Request): Decision {
+    fun sjekkTilgang(request: Request): Decision {
         //logg request-info til auditlogger
 
         val xacmlResponse = askForPermission(XacmlRequest(request))
