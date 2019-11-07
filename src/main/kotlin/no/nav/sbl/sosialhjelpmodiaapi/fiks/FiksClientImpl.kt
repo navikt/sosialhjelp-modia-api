@@ -59,9 +59,6 @@ class FiksClientImpl(clientProperties: ClientProperties,
         }
     }
 
-    /**
-     * Brukes for å hente json-filer som er definert i filformat. Dermed brukes filformatObjectMapper
-     */
     override fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>, sporingsId: String): Any {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 

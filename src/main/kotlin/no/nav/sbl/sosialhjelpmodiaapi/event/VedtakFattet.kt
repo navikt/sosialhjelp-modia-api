@@ -7,7 +7,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
 
-    val utfallString = hendelse.utfall?.utfall?.name
+    val utfallString = hendelse.utfall?.name
     val utfall = if (utfallString == null) null else UtfallVedtak.valueOf(utfallString)
 
     val vedtakFattet = Vedtak(utfall)

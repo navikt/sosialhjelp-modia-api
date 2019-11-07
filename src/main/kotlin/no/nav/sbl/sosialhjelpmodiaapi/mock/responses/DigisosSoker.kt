@@ -109,9 +109,7 @@ val digisosSoker = JsonDigisosSoker()
                                                 )
                                 )
                                 .withSaksreferanse("SAK1")
-                                .withUtfall(
-                                        JsonUtfall()
-                                                .withUtfall(JsonUtfall.Utfall.INNVILGET))
+                                .withUtfall(JsonVedtakFattet.Utfall.INNVILGET)
                                 .withVedlegg(
                                         listOf(
                                                 JsonVedlegg()
