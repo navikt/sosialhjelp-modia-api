@@ -21,13 +21,7 @@ val resilience4jVersion = "1.0.0"
 val rxKotlinVersion = "2.4.0"
 val vavrKotlinVersion = "0.10.0"
 val ktorVersion = "1.2.2"
-val konfigVersion = "1.6.10.0"
 val kotlinCoroutinesVersion = "1.3.2"
-val commonsIoVersion = "2.6"
-val fileUploadVersion = "1.4"
-val tikaVersion = "1.22"
-val pdfBoxVersion = "2.0.16"
-val fiksKrypteringVersion = "1.0.7"
 val kotlinTestVersion = "1.3.50"
 
 val mainClass = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
@@ -77,8 +71,6 @@ dependencies {
     implementation("io.ktor:ktor-client-jackson:$ktorVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:${kotlinCoroutinesVersion}")
 
-    implementation("com.natpryce:konfig:$konfigVersion")
-
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
@@ -99,12 +91,6 @@ dependencies {
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
     implementation("io.springfox:springfox-swagger2:$swaggerVersion")
     implementation("io.springfox:springfox-swagger-ui:$swaggerVersion")
-
-    implementation("commons-io:commons-io:$commonsIoVersion")
-    implementation("commons-fileupload:commons-fileupload:$fileUploadVersion")
-    implementation("org.apache.tika:tika-core:$tikaVersion")
-    implementation("org.apache.pdfbox:preflight:$pdfBoxVersion")
-    implementation("no.ks.fiks:kryptering:$fiksKrypteringVersion")
 
     //spesifikke versjoner oppgradert etter ønske fra snyk
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion")
