@@ -596,7 +596,7 @@ internal class EventServiceTest {
             .withType(JsonHendelse.Type.VEDTAK_FATTET)
             .withSaksreferanse(referanse_1)
             .withVedtaksfil(JsonVedtaksfil().withReferanse(DOKUMENTLAGER_1))
-            .withUtfall(JsonUtfall().withUtfall(JsonUtfall.Utfall.INNVILGET))
+            .withUtfall(JsonVedtakFattet.Utfall.INNVILGET)
 
     private val SAK1_VEDTAK_FATTET_UTEN_UTFALL = JsonVedtakFattet()
             .withType(JsonHendelse.Type.VEDTAK_FATTET)
@@ -607,13 +607,13 @@ internal class EventServiceTest {
             .withType(JsonHendelse.Type.VEDTAK_FATTET)
             .withSaksreferanse(referanse_1)
             .withVedtaksfil(JsonVedtaksfil().withReferanse(DOKUMENTLAGER_2))
-            .withUtfall(JsonUtfall().withUtfall(JsonUtfall.Utfall.AVSLATT))
+            .withUtfall(JsonVedtakFattet.Utfall.AVSLATT)
 
     private val SAK2_VEDTAK_FATTET = JsonVedtakFattet()
             .withType(JsonHendelse.Type.VEDTAK_FATTET)
             .withSaksreferanse(referanse_2)
             .withVedtaksfil(JsonVedtaksfil().withReferanse(SVARUT_1))
-            .withUtfall(JsonUtfall().withUtfall(JsonUtfall.Utfall.INNVILGET))
+            .withUtfall(JsonVedtakFattet.Utfall.INNVILGET)
 
     private val DOKUMENTASJONETTERSPURT = JsonDokumentasjonEtterspurt()
             .withType(JsonHendelse.Type.DOKUMENTASJON_ETTERSPURT)

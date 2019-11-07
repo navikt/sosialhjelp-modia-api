@@ -9,10 +9,10 @@ val logbackVersion = "1.2.3"
 val logstashVersion = "5.3"
 val junitJupiterVersion = "5.5.2"
 val mockkVersion = "1.9.3"
-val filformatVersion = "1.2019.10.15-14.03-f5ce98b1fb15"
+val filformatVersion = "1.2019.10.29-12.39-6bf6917cf603"
 val micrometerRegistryVersion = "1.1.7"
 val prometheusVersion = "0.7.0"
-val tokenSupportVersion = "0.2.18"
+val tokenValidationVersion = "1.1.2"
 val jacksonVersion = "2.9.10"
 val jacksonDatabindVersion = "2.9.10"
 val guavaVersion = "28.0-jre"
@@ -21,13 +21,7 @@ val resilience4jVersion = "1.0.0"
 val rxKotlinVersion = "2.4.0"
 val vavrKotlinVersion = "0.10.0"
 val ktorVersion = "1.2.2"
-val konfigVersion = "1.6.10.0"
 val kotlinCoroutinesVersion = "1.3.2"
-val commonsIoVersion = "2.6"
-val fileUploadVersion = "1.4"
-val tikaVersion = "1.22"
-val pdfBoxVersion = "2.0.16"
-val fiksKrypteringVersion = "1.0.7"
 val kotlinTestVersion = "1.3.50"
 val abacAttributeConstantsVersion = "3.3.13"
 
@@ -78,8 +72,6 @@ dependencies {
     implementation("io.ktor:ktor-client-jackson:$ktorVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:${kotlinCoroutinesVersion}")
 
-    implementation("com.natpryce:konfig:$konfigVersion")
-
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
@@ -97,15 +89,9 @@ dependencies {
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 
-    implementation("no.nav.security:oidc-spring-support:$tokenSupportVersion")
+    implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
     implementation("io.springfox:springfox-swagger2:$swaggerVersion")
     implementation("io.springfox:springfox-swagger-ui:$swaggerVersion")
-
-    implementation("commons-io:commons-io:$commonsIoVersion")
-    implementation("commons-fileupload:commons-fileupload:$fileUploadVersion")
-    implementation("org.apache.tika:tika-core:$tikaVersion")
-    implementation("org.apache.pdfbox:preflight:$pdfBoxVersion")
-    implementation("no.ks.fiks:kryptering:$fiksKrypteringVersion")
 
     implementation("no.nav.abac.policies:abac-attribute-constants:$abacAttributeConstantsVersion")
 
@@ -126,7 +112,7 @@ dependencies {
     }
     testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("no.nav.security:oidc-test-support:$tokenSupportVersion")
+    testImplementation("no.nav.security:token-validation-test-support:$tokenValidationVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinTestVersion")
 }
 

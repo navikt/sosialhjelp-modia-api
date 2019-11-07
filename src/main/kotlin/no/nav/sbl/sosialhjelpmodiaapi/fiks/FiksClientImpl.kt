@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.fiks
 
-import com.fasterxml.jackson.core.JsonProcessingException
 import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
@@ -11,14 +10,11 @@ import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_PASSORD
-import no.nav.sbl.sosialhjelpmodiaapi.utils.filformatObjectMapper
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.springframework.context.annotation.Profile
 import org.springframework.http.*
 import org.springframework.http.HttpHeaders.AUTHORIZATION
-import org.springframework.lang.NonNull
 import org.springframework.stereotype.Component
-import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
@@ -63,9 +59,6 @@ class FiksClientImpl(clientProperties: ClientProperties,
         }
     }
 
-    /**
-     * Brukes for å hente json-filer som er definert i filformat. Dermed brukes filformatObjectMapper
-     */
     override fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>, sporingsId: String): Any {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
@@ -78,7 +71,7 @@ class FiksClientImpl(clientProperties: ClientProperties,
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java)
 
             log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
-            return filformatObjectMapper.readValue(response.body!!, requestedClass)
+            return objectMapper.readValue(response.body!!, requestedClass)
 
         } catch (e: HttpStatusCodeException) {
             log.warn("Fiks - hentDokument feilet - ${e.statusCode} ${e.statusText}", e)

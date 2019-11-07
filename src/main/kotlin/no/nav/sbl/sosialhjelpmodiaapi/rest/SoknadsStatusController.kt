@@ -4,7 +4,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatusResponse
 import no.nav.sbl.sosialhjelpmodiaapi.soknadsstatus.SoknadsStatusService
-import no.nav.security.oidc.api.Unprotected
+import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

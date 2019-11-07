@@ -8,7 +8,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.AbstractDependencyCheck
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.DependencyCheckResult
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.Result
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.SelftestResult
-import no.nav.security.oidc.api.Unprotected
+import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
