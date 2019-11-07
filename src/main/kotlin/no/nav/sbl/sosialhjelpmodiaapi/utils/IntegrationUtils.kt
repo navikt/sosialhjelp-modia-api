@@ -22,4 +22,6 @@ private fun getSystemTime(): Long {
 object IntegrationUtils {
     const val HEADER_INTEGRASJON_ID = "IntegrasjonId"
     const val HEADER_INTEGRASJON_PASSORD = "IntegrasjonPassord"
+
+    const val KILDE_INNSYN_API = "innsyn-api"
 }
