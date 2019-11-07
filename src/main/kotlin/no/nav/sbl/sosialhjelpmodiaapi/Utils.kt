@@ -3,6 +3,9 @@ package no.nav.sbl.sosialhjelpmodiaapi
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.ParameterizedTypeReference
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -40,11 +43,15 @@ fun isRunningInProd(): Boolean {
 }
 
 fun resolveSrvUser(): String {
-    return getProperty("app_username") // FIXME
+    return getFileAsString("/secrets/serviceuser/srvsosialhjelp-mod/username")
 }
 
 fun resolveSrvPassword(): String {
-    return getProperty("app_password") // FIXME
+    return getFileAsString("/secrets/serviceuser/srvsosialhjelp-mod/password")
+}
+
+private fun getFileAsString(path: String): String {
+    return String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8)
 }
 
 private fun getProperty(propertyName: String): String {
