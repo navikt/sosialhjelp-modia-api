@@ -50,6 +50,7 @@ class AbacClient(clientProperties: ClientProperties,
     private fun request(postingString: String): String {
         val requestEntity = HttpEntity(postingString, headers())
         try {
+            log.info("Request: ${requestEntity.body}")
             val response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String::class.java)
 
             return response.body!!
