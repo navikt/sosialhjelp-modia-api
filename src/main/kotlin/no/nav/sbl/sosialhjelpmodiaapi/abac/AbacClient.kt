@@ -10,6 +10,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
 
 @Component
@@ -50,16 +51,19 @@ class AbacClient(clientProperties: ClientProperties,
             val response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String::class.java)
 
             return response.body!!
+        } catch(e: HttpStatusCodeException) {
+            log.warn("Abac response: ${e.responseBodyAsString}")
+            log.error("Abac - noe feilet - ${e.statusCode} ${e.message}", e)
+            throw RuntimeException("Noe feilet ved kall til Abac", e)
         } catch (e: Exception) {
-            log.error("noe feil skjedde visst her :( ")
-            throw RuntimeException("abac feil ?")
+            log.error("Abac - noe feilet", e)
+            throw RuntimeException("Noe feilet ved kall til Abac", e)
         }
     }
 
     private fun headers(): HttpHeaders {
         val headers = HttpHeaders()
         headers.set("Accept", MEDIA_TYPE)
-        log.info("henter servicebruker username: ${resolveSrvUser()} fra pod")
         headers.setBasicAuth(resolveSrvUser(), resolveSrvPassword())
         return headers
     }
