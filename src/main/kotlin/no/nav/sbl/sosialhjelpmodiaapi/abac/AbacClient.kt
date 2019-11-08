@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.abac
 
+import no.nav.abac.xacml.StandardAttributter.ACTION_ID
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.resolveSrvPassword
@@ -25,6 +26,16 @@ class AbacClient(clientProperties: ClientProperties,
 
         //logg response-info til auditlogger
         return decision
+    }
+
+    fun ping(): Decision {
+        // lag request som blir riktig ref https://confluence.adeo.no/display/ABAC/PDP+ping ->
+
+        val pingAttribute = Attribute(ACTION_ID, "ping")
+        val request = Request(null, Attributes(mutableListOf(pingAttribute)), null, null)
+
+        val xacmlResponse = askForPermission(XacmlRequest(request))
+        return xacmlResponse.response.decision
     }
 
     private fun askForPermission(request: XacmlRequest): XacmlResponse { // flagg for useCache?
