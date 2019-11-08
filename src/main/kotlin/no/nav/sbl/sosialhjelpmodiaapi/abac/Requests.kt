@@ -1,12 +1,19 @@
 package no.nav.sbl.sosialhjelpmodiaapi.abac
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 data class Request(
+        @JsonProperty("Environment")
         val environment: Attributes?,
+        @JsonProperty("Action")
         val action: Attributes?,
+        @JsonProperty("Resource")
         val resource: Attributes?,
-        val accessObject: Attributes?
+        @JsonProperty("AccessSubject")
+        val accessSubject: Attributes?
 )
 
 data class XacmlRequest(
+        @JsonProperty("Request")
         val request: Request
 )
