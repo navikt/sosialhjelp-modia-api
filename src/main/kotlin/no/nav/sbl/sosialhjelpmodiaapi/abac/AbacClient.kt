@@ -31,8 +31,6 @@ class AbacClient(clientProperties: ClientProperties,
     }
 
     fun ping(): Decision {
-        // lag request som blir riktig ref https://confluence.adeo.no/display/ABAC/PDP+ping ->
-
         val pingAttribute = Attribute(ACTION_ID, "ping")
         val envAttribute = Attribute(ENVIRONMENT_FELLES_PEP_ID, resolveSrvUser())
         val request = Request(Attributes(mutableListOf(envAttribute)), Attributes(mutableListOf(pingAttribute)), null, null)
@@ -52,6 +50,7 @@ class AbacClient(clientProperties: ClientProperties,
         try {
             val response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String::class.java)
 
+            log.info(response.body)
             return response.body!!
         } catch (e: HttpStatusCodeException) {
             log.warn("Abac - feil, response: ${e.responseBodyAsString}")

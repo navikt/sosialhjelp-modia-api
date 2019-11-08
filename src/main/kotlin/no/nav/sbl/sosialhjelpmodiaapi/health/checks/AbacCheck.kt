@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.health.checks
 
-import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacClient
+import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.AbstractDependencyCheck
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.DependencyType
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 
 
 @Component
-class AbacCheck(private val abacClient: AbacClient,
+class AbacCheck(private val abacService: AbacService,
                 clientProperties: ClientProperties) : AbstractDependencyCheck(
         DependencyType.REST,
         "ABAC",
@@ -22,6 +22,6 @@ class AbacCheck(private val abacClient: AbacClient,
     }
 
     override fun doCheck() {
-        abacClient.ping()
+        abacService.ping()
     }
 }

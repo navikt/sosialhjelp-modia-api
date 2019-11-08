@@ -20,4 +20,9 @@ class AbacService (private val client: AbacClient) {
 
         return true
     }
+
+    fun ping(): Boolean {
+        val decision = client.ping()
+        return decision == Decision.Permit
+    }
 }
