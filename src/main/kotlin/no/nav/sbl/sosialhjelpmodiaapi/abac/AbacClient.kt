@@ -63,7 +63,7 @@ class AbacClient(clientProperties: ClientProperties,
 
     private fun headers(): HttpHeaders {
         val headers = HttpHeaders()
-        headers.set("Accept", MEDIA_TYPE)
+        headers.set("Content-Type", MEDIA_TYPE)
         headers.setBasicAuth(resolveSrvUser(), resolveSrvPassword())
         return headers
     }
