@@ -23,6 +23,6 @@ class AbacService (private val client: AbacClient) {
 
     fun ping(): Boolean {
         val decision = client.ping()
-        return decision == Decision.Permit
+        return if (decision == Decision.Permit) true else throw RuntimeException("Abac - ping, decision != Permit")
     }
 }

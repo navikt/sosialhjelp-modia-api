@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.abac
 
 import no.nav.abac.xacml.NavAttributter.ENVIRONMENT_FELLES_PEP_ID
+import no.nav.abac.xacml.NavAttributter.RESOURCE_FELLES_DOMENE
 import no.nav.abac.xacml.StandardAttributter.ACTION_ID
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
@@ -31,9 +32,14 @@ class AbacClient(clientProperties: ClientProperties,
     }
 
     fun ping(): Decision {
-        val pingAttribute = Attribute(ACTION_ID, "ping")
-        val envAttribute = Attribute(ENVIRONMENT_FELLES_PEP_ID, resolveSrvUser())
-        val request = Request(Attributes(mutableListOf(envAttribute)), Attributes(mutableListOf(pingAttribute)), null, null)
+        val ping = Attribute(ACTION_ID, "ping")
+        val env = Attribute(ENVIRONMENT_FELLES_PEP_ID, resolveSrvUser())
+        val domene = Attribute(RESOURCE_FELLES_DOMENE, "domene for digisos") // FIXME
+        val request = Request(
+                environment = Attributes(mutableListOf(env)),
+                action = Attributes(mutableListOf(ping)),
+                resource = Attributes(mutableListOf(domene)),
+                accessSubject = null)
 
         val xacmlResponse = askForPermission(XacmlRequest(request))
         return xacmlResponse.response.decision
