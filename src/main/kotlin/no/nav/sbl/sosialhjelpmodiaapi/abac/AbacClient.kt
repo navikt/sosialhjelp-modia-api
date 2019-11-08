@@ -50,12 +50,11 @@ class AbacClient(clientProperties: ClientProperties,
     private fun request(postingString: String): String {
         val requestEntity = HttpEntity(postingString, headers())
         try {
-            log.info("Request: ${requestEntity.body}")
             val response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String::class.java)
 
             return response.body!!
         } catch (e: HttpStatusCodeException) {
-            log.warn("Abac response: ${e.responseBodyAsString}")
+            log.warn("Abac - feil, response: ${e.responseBodyAsString}")
             log.error("Abac - noe feilet - ${e.statusCode} ${e.message}", e)
             throw RuntimeException("Noe feilet ved kall til Abac", e)
         } catch (e: Exception) {
