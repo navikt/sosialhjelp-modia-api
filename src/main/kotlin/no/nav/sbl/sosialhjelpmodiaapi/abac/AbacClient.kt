@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.abac
 
+import no.nav.abac.xacml.NavAttributter.ENVIRONMENT_FELLES_PEP_ID
 import no.nav.abac.xacml.StandardAttributter.ACTION_ID
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
@@ -33,7 +34,8 @@ class AbacClient(clientProperties: ClientProperties,
         // lag request som blir riktig ref https://confluence.adeo.no/display/ABAC/PDP+ping ->
 
         val pingAttribute = Attribute(ACTION_ID, "ping")
-        val request = Request(null, Attributes(mutableListOf(pingAttribute)), null, null)
+        val envAttribute = Attribute(ENVIRONMENT_FELLES_PEP_ID, resolveSrvUser())
+        val request = Request(Attributes(mutableListOf(envAttribute)), Attributes(mutableListOf(pingAttribute)), null, null)
 
         val xacmlResponse = askForPermission(XacmlRequest(request))
         return xacmlResponse.response.decision
@@ -51,7 +53,7 @@ class AbacClient(clientProperties: ClientProperties,
             val response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String::class.java)
 
             return response.body!!
-        } catch(e: HttpStatusCodeException) {
+        } catch (e: HttpStatusCodeException) {
             log.warn("Abac response: ${e.responseBodyAsString}")
             log.error("Abac - noe feilet - ${e.statusCode} ${e.message}", e)
             throw RuntimeException("Noe feilet ved kall til Abac", e)
