@@ -59,6 +59,7 @@ class AbacClient(clientProperties: ClientProperties,
     private fun headers(): HttpHeaders {
         val headers = HttpHeaders()
         headers.set("Accept", MEDIA_TYPE)
+        log.info("henter servicebruker username: ${resolveSrvUser()} fra pod")
         headers.setBasicAuth(resolveSrvUser(), resolveSrvPassword())
         return headers
     }
