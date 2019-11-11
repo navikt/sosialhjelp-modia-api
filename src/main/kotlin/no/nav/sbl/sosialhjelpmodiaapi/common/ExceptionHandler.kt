@@ -13,7 +13,7 @@ private const val norgError: String = "norg_error"
 
 
 @ControllerAdvice
-class InnsynExceptionHandler : ResponseEntityExceptionHandler() {
+class ExceptionHandler : ResponseEntityExceptionHandler() {
 
     companion object {
         val log by logger()
@@ -37,13 +37,6 @@ class InnsynExceptionHandler : ResponseEntityExceptionHandler() {
     fun handleNorgError(e: NorgException): ResponseEntity<ErrorMessage> {
         log.error("Noe feilet ved kall til Norg", e)
         val error = ErrorMessage(norgError, "Noe uventet feilet")
-        return ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
-
-    @ExceptionHandler(OpplastingException::class)
-    fun handleOpplastingError(e: OpplastingException): ResponseEntity<ErrorMessage> {
-        log.error("Noe feilet ved opplasting av vedlegg", e)
-        val error = ErrorMessage(unexpectedError, "Noe uventet feilet")
         return ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
