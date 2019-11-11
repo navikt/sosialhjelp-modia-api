@@ -1,8 +1,7 @@
-package no.nav.sbl.sosialhjelpmodiaapi.rest
+package no.nav.sbl.sosialhjelpmodiaapi.utbetalinger
 
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
-import no.nav.sbl.sosialhjelpmodiaapi.utbetalinger.UtbetalingerService
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity

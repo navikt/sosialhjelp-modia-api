@@ -1,7 +1,6 @@
-package no.nav.sbl.sosialhjelpmodiaapi.rest
+package no.nav.sbl.sosialhjelpmodiaapi.saksstatus
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatusResponse
-import no.nav.sbl.sosialhjelpmodiaapi.saksstatus.SaksStatusService
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpStatus

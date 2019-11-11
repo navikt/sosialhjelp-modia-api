@@ -1,7 +1,6 @@
-package no.nav.sbl.sosialhjelpmodiaapi.rest
+package no.nav.sbl.sosialhjelpmodiaapi.hendelse
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.HendelseResponse
-import no.nav.sbl.sosialhjelpmodiaapi.hendelse.HendelseService
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType

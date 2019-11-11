@@ -1,6 +1,5 @@
-package no.nav.sbl.sosialhjelpmodiaapi.rest
+package no.nav.sbl.sosialhjelpmodiaapi.kommune
 
-import no.nav.sbl.sosialhjelpmodiaapi.kommune.KommuneService
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity

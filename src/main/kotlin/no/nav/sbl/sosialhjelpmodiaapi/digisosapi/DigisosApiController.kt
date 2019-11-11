@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelpmodiaapi.rest
+package no.nav.sbl.sosialhjelpmodiaapi.digisosapi
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker

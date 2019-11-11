@@ -1,7 +1,6 @@
-package no.nav.sbl.sosialhjelpmodiaapi.rest
+package no.nav.sbl.sosialhjelpmodiaapi.soknadsstatus
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatusResponse
-import no.nav.sbl.sosialhjelpmodiaapi.soknadsstatus.SoknadsStatusService
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity
