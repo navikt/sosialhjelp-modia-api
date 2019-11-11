@@ -1,15 +1,15 @@
 package no.nav.sbl.sosialhjelpmodiaapi.event
 
-import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVilkar
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonDokumentasjonkrav
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Dokumentasjonkrav
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Sak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Utbetaling
-import no.nav.sbl.sosialhjelpmodiaapi.domain.Vilkar
 
-fun InternalDigisosSoker.apply(hendelse: JsonVilkar) {
+fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonkrav) {
 
     val utbetalinger = mutableListOf<Utbetaling>()
-    val vilkarSaker = mutableListOf<Sak>()
+    val dokumentasjonkravsaker = mutableListOf<Sak>()
     for (utbetalingsreferanse in hendelse.utbetalingsreferanse) {
         for (sak in saker) {
             for (utbetaling in sak.utbetalinger) {
@@ -19,14 +19,13 @@ fun InternalDigisosSoker.apply(hendelse: JsonVilkar) {
             }
         }
     }
-    val vilkar = Vilkar(hendelse.vilkarreferanse, utbetalinger, hendelse.beskrivelse, hendelse.status == JsonVilkar.Status.OPPFYLT)
+    val dokumentasjonkrav = Dokumentasjonkrav(hendelse.dokumentasjonkravreferanse, utbetalinger, hendelse.beskrivelse, hendelse.status == JsonDokumentasjonkrav.Status.OPPFYLT)
 
-    vilkarSaker.forEach { sak ->
-        sak.vilkar.add(vilkar)
+    dokumentasjonkravsaker.forEach { sak ->
+        sak.dokumentasjonkrav.add(dokumentasjonkrav)
     }
 
     utbetalinger.forEach { utbetaling ->
-        utbetaling.vilkar.add(vilkar)
+        utbetaling.dokumentasjonkrav.add(dokumentasjonkrav)
     }
-
 }

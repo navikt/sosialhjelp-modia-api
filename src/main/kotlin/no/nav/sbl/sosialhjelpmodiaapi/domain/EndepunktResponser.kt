@@ -26,42 +26,19 @@ data class OppgaveResponse(
 )
 
 data class UtbetalingerResponse(
-        val fiksDigisosId: String,
-        val utbetalinger: MutableList<UtbetalingerManedResponse>
+        val ar: Int,
+        val maned: String,
+        val sum: Double,
+        val utbetalinger: List<ManedUtbetaling>
 )
 
-data class UtbetalingerManedResponse(
-        val tittel: String,
-        val utbetalinger: MutableList<UtbetalingResponse>,
-        val belop: Double
-)
-
-data class UtbetalingResponse(
+data class ManedUtbetaling(
         val tittel: String?,
         val belop: Double,
         @JsonFormat(pattern = "yyyy-MM-dd")
         val utbetalingsdato: LocalDate?,
-        val vilkar: MutableList<VilkarResponse>
-)
-
-data class VilkarResponse(
-        val beskrivelse: String?,
-        val oppfylt: Boolean
-)
-
-data class VedleggResponse(
-        val filnavn: String,
-        val storrelse: Long,
-        val url: String,
-        val type: String,
-        val tilleggsinfo: String?,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-        val datoLagtTil: LocalDateTime
-)
-
-data class VedleggOpplastingResponse(
-        val filnavn: String?,
-        val status: String
+        val status: String,
+        val fiksDigisosId: String
 )
 
 data class SakResponse(

@@ -49,7 +49,8 @@ internal class SaksStatusServiceTest {
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(),
-                vilkar = mutableListOf()
+                vilkar = mutableListOf(),
+                dokumentasjonkrav = mutableListOf()
         ))
 
         every { eventService.createModel(any(), any()) } returns model
@@ -71,7 +72,8 @@ internal class SaksStatusServiceTest {
                 tittel = tittel,
                 vedtak = mutableListOf(Vedtak(utfall = UtfallVedtak.INNVILGET)),
                 utbetalinger = mutableListOf(),
-                vilkar = mutableListOf()
+                vilkar = mutableListOf(),
+                dokumentasjonkrav = mutableListOf()
         ))
 
         every { eventService.createModel(any(), any()) } returns model
@@ -93,7 +95,8 @@ internal class SaksStatusServiceTest {
                 tittel = DEFAULT_TITTEL,
                 vedtak = mutableListOf(Vedtak(utfall = UtfallVedtak.INNVILGET)),
                 utbetalinger = mutableListOf(),
-                vilkar = mutableListOf()
+                vilkar = mutableListOf(),
+                dokumentasjonkrav = mutableListOf()
         ))
 
         every { eventService.createModel(any(), any()) } returns model
@@ -118,14 +121,16 @@ internal class SaksStatusServiceTest {
                                 Vedtak(utfall = UtfallVedtak.INNVILGET),
                                 Vedtak(utfall = UtfallVedtak.INNVILGET)),
                         utbetalinger = mutableListOf(),
-                        vilkar = mutableListOf()),
+                        vilkar = mutableListOf(),
+                        dokumentasjonkrav = mutableListOf()),
                 Sak(
                         referanse = referanse,
                         saksStatus = SaksStatus.IKKE_INNSYN,
                         tittel = DEFAULT_TITTEL,
                         vedtak = mutableListOf(),
                         utbetalinger = mutableListOf(),
-                        vilkar = mutableListOf()
+                        vilkar = mutableListOf(),
+                        dokumentasjonkrav = mutableListOf()
                 )
         ))
 
