@@ -18,6 +18,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -43,6 +44,13 @@ internal class EventServiceTest {
     private val referanse_1 = "sak1"
     private val referanse_2 = "sak2"
 
+    protected val utbetaling_ref_1 = "utbetaling 1"
+    protected val utbetaling_ref_2 = "utbetaling 2"
+
+    protected val vilkar_ref_1 = "ulike vilkar"
+
+    protected val dokumentasjonkrav_ref_1 = "dette må du gjøre for å få pengene"
+
     private val dokumentlagerId_1 = "1"
     private val dokumentlagerId_2 = "2"
     private val svarUtId = "42"
@@ -61,6 +69,7 @@ internal class EventServiceTest {
     private val tidspunkt_3 = now.minusHours(8).format(DateTimeFormatter.ISO_DATE_TIME)
     private val tidspunkt_4 = now.minusHours(7).format(DateTimeFormatter.ISO_DATE_TIME)
     private val tidspunkt_5 = now.minusHours(6).format(DateTimeFormatter.ISO_DATE_TIME)
+    private val tidspunkt_6 = now.minusHours(5).format(DateTimeFormatter.ISO_DATE_TIME)
 
     private val innsendelsesfrist = now.plusDays(7).format(DateTimeFormatter.ISO_DATE_TIME)
 
@@ -161,6 +170,28 @@ internal class EventServiceTest {
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(toLocalDateTime(tidspunkt_1))
             assertThat(hendelse.tittel).contains("Søknaden med vedlegg er mottatt hos ")
+        }
+
+        @Test
+        fun `soknadsStatus MOTTATT papirsoknad`() {
+            every { mockJsonSoknad.mottaker } returns null
+            every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+                    JsonDigisosSoker()
+                            .withAvsender(avsender)
+                            .withVersion("123")
+                            .withHendelser(listOf(
+                                    SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
+                            ))
+
+            val model = service.createModel(mockDigisosSak, "token")
+
+            assertThat(model).isNotNull
+            assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
+            assertThat(model.historikk).hasSize(1)
+
+            val hendelse = model.historikk.last()
+            assertThat(hendelse.tidspunkt).isEqualTo(toLocalDateTime(tidspunkt_1))
+            assertThat(hendelse.tittel).contains("Søknaden med vedlegg er mottatt")
         }
 
         @Test
@@ -331,9 +362,9 @@ internal class EventServiceTest {
             assertThat(model.historikk).hasSize(4)
 
             val sak = model.saker.last()
-            assertThat(sak.saksStatus).isNull()
+            assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
             assertThat(sak.referanse).isEqualTo(referanse_1)
-            assertThat(sak.tittel).isNull()
+            assertThat(sak.tittel).isEqualTo(DEFAULT_TITTEL)
             assertThat(sak.vedtak).hasSize(1)
             assertThat(sak.utbetalinger).isEmpty()
 
@@ -511,6 +542,60 @@ internal class EventServiceTest {
         }
     }
 
+    @Nested
+    inner class Dokumentasjonskrav {
+        @Test
+        fun `dokumentasjonskrav ETTER utbetaling`() {
+            every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+                    JsonDigisosSoker()
+                            .withAvsender(avsender)
+                            .withVersion("123")
+                            .withHendelser(listOf(
+                                    SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                                    SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                                    SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3),
+                                    SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_4),
+                                    UTBETALING.withHendelsestidspunkt(tidspunkt_5),
+                                    DOKUMENTASJONKRAV_OPPFYLT.withHendelsestidspunkt(tidspunkt_6)
+                            ))
+
+            val model = service.createModel(mockDigisosSak, "token")
+
+            assertThat(model).isNotNull
+            assertThat(model.status).isEqualTo(SoknadsStatus.FERDIGBEHANDLET)
+            assertThat(model.saker).hasSize(1)
+            assertThat(model.historikk).hasSize(5)
+
+            assertThat(model.saker[0].utbetalinger).hasSize(1)
+            val utbetaling = model.saker[0].utbetalinger[0]
+            assertThat(utbetaling.dokumentasjonkrav).hasSize(1)
+            assertThat(utbetaling.dokumentasjonkrav[0].referanse).isEqualTo(dokumentasjonkrav_ref_1)
+            assertThat(utbetaling.dokumentasjonkrav[0].beskrivelse).isEqualTo("beskrivelse")
+            assertThat(utbetaling.dokumentasjonkrav[0].utbetalinger).hasSize(1)
+            assertThat(utbetaling.dokumentasjonkrav[0].oppfyllt).isEqualTo(true)
+        }
+
+        @Test
+        fun `dokumentasjonkrav UTEN utbetaling`() {
+            every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+                    JsonDigisosSoker()
+                            .withAvsender(avsender)
+                            .withVersion("123")
+                            .withHendelser(listOf(
+                                    SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                                    SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                                    DOKUMENTASJONKRAV_OPPFYLT.withHendelsestidspunkt(tidspunkt_3)
+                            ))
+
+            val model = service.createModel(mockDigisosSak, "token")
+
+            assertThat(model).isNotNull
+            assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
+            assertThat(model.saker).hasSize(0)
+            assertThat(model.historikk).hasSize(3)
+        }
+    }
+
     @Test
     fun `forelopigSvar skal gi historikk`() {
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
@@ -535,6 +620,128 @@ internal class EventServiceTest {
         assertThat(hendelse.tittel).contains("Du har fått et brev om saksbehandlingstiden for søknaden din")
     }
 
+    @Nested
+    inner class Utbetaling {
+        @Test
+        fun `utbetaling ETTER vedtakFattet og saksStatus`() {
+            every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+                    JsonDigisosSoker()
+                            .withAvsender(avsender)
+                            .withVersion("123")
+                            .withHendelser(listOf(
+                                    SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                                    SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                                    SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3),
+                                    SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_4),
+                                    SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_5),
+                                    UTBETALING.withHendelsestidspunkt(tidspunkt_6)
+                            ))
+
+            val model = service.createModel(mockDigisosSak, "token")
+
+            assertThat(model).isNotNull
+            assertThat(model.status).isEqualTo(SoknadsStatus.FERDIGBEHANDLET)
+            assertThat(model.saker).hasSize(1)
+            assertThat(model.historikk).hasSize(5)
+
+            assertThat(model.saker[0].tittel).isEqualTo(tittel_1) // tittel for sak fra saksstatus-hendelse
+
+            assertThat(model.saker[0].utbetalinger).hasSize(1)
+            val utbetaling = model.saker[0].utbetalinger[0]
+            assertThat(utbetaling.referanse).isEqualTo(utbetaling_ref_1)
+            assertThat(utbetaling.status).isEqualTo(UtbetalingsStatus.UTBETALT)
+            assertThat(utbetaling.belop).isEqualTo("1234.56")
+            assertThat(utbetaling.beskrivelse).isEqualTo(tittel_1)
+            assertThat(utbetaling.posteringsDato).isEqualTo(LocalDate.of(2019, 12, 31))
+            assertThat(utbetaling.utbetalingsDato).isEqualTo(LocalDate.of(2019, 12, 24))
+            assertThat(utbetaling.fom).isNull()
+            assertThat(utbetaling.tom).isNull()
+            assertThat(utbetaling.mottaker).isEqualTo("fnr")
+            assertThat(utbetaling.utbetalingsform).isEqualTo("pose med krølla femtilapper")
+            assertThat(utbetaling.vilkar).isEmpty()
+            assertThat(utbetaling.dokumentasjonkrav).isEmpty()
+        }
+
+        @Test
+        fun `utbetaling UTEN vedtakFattet`() {
+            every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+                    JsonDigisosSoker()
+                            .withAvsender(avsender)
+                            .withVersion("123")
+                            .withHendelser(listOf(
+                                    SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                                    SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                                    UTBETALING.withHendelsestidspunkt(tidspunkt_3)
+                            ))
+
+            val model = service.createModel(mockDigisosSak, "token")
+
+            assertThat(model).isNotNull
+            assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
+            assertThat(model.saker).hasSize(1)
+            assertThat(model.historikk).hasSize(3)
+
+            assertThat(model.saker[0].tittel).isEqualTo(DEFAULT_TITTEL) // default tittel for sak som settes i dersom hverken saksStatus eller vedtakfattet er mottatt
+            assertThat(model.saker[0].utbetalinger).hasSize(1)
+            val utbetaling = model.saker[0].utbetalinger[0]
+            assertThat(utbetaling.belop).isEqualTo("1234.56")
+        }
+    }
+
+    @Nested
+    inner class Vilkar {
+        @Test
+        fun `vilkar ETTER utbetaling`() {
+            every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+                    JsonDigisosSoker()
+                            .withAvsender(avsender)
+                            .withVersion("123")
+                            .withHendelser(listOf(
+                                    SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                                    SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                                    SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3),
+                                    SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_4),
+                                    UTBETALING.withHendelsestidspunkt(tidspunkt_5),
+                                    VILKAR_OPPFYLT.withHendelsestidspunkt(tidspunkt_6)
+                            ))
+
+            val model = service.createModel(mockDigisosSak, "token")
+
+            assertThat(model).isNotNull
+            assertThat(model.status).isEqualTo(SoknadsStatus.FERDIGBEHANDLET)
+            assertThat(model.saker).hasSize(1)
+            assertThat(model.historikk).hasSize(5)
+
+            assertThat(model.saker[0].utbetalinger).hasSize(1)
+            val utbetaling = model.saker[0].utbetalinger[0]
+            assertThat(utbetaling.vilkar).hasSize(1)
+            assertThat(utbetaling.vilkar[0].referanse).isEqualTo(vilkar_ref_1)
+            assertThat(utbetaling.vilkar[0].beskrivelse).isEqualTo("beskrivelse")
+            assertThat(utbetaling.vilkar[0].utbetalinger).hasSize(1)
+            assertThat(utbetaling.vilkar[0].oppfyllt).isEqualTo(true)
+        }
+
+        @Test
+        fun `vilkar UTEN utbetaling`() {
+            every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+                    JsonDigisosSoker()
+                            .withAvsender(avsender)
+                            .withVersion("123")
+                            .withHendelser(listOf(
+                                    SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                                    SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                                    VILKAR_OPPFYLT.withHendelsestidspunkt(tidspunkt_3)
+                            ))
+
+            val model = service.createModel(mockDigisosSak, "token")
+
+            assertThat(model).isNotNull
+            assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
+            assertThat(model.saker).hasSize(0)
+            assertThat(model.historikk).hasSize(3)
+        }
+    }
+
     private fun resetHendelser() {
         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(null)
         SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(null)
@@ -548,6 +755,9 @@ internal class EventServiceTest {
         SAK2_VEDTAK_FATTET.withHendelsestidspunkt(null)
         DOKUMENTASJONETTERSPURT.withHendelsestidspunkt(null)
         FORELOPIGSVAR.withHendelsestidspunkt(null)
+        UTBETALING.withHendelsestidspunkt(null)
+        DOKUMENTASJONKRAV_OPPFYLT.withHendelsestidspunkt(null)
+        VILKAR_OPPFYLT.withHendelsestidspunkt(null)
     }
 
     private val DOKUMENTLAGER_1 = JsonDokumentlagerFilreferanse().withType(JsonFilreferanse.Type.DOKUMENTLAGER).withId(dokumentlagerId_1)
@@ -627,4 +837,36 @@ internal class EventServiceTest {
     private val FORELOPIGSVAR = JsonForelopigSvar()
             .withType(JsonHendelse.Type.FORELOPIG_SVAR)
             .withForvaltningsbrev(JsonForvaltningsbrev().withReferanse(SVARUT_1))
+
+    private val UTBETALING = JsonUtbetaling()
+                .withType(JsonHendelse.Type.UTBETALING)
+                .withUtbetalingsreferanse(utbetaling_ref_1)
+                .withSaksreferanse(referanse_1)
+                .withRammevedtaksreferanse(null)
+                .withStatus(JsonUtbetaling.Status.UTBETALT)
+                .withBelop(1234.56)
+                .withBeskrivelse(tittel_1)
+                .withForfallsdato("2019-12-31")
+                .withStonadstype("type")
+                .withUtbetalingsdato("2019-12-24")
+                .withFom(null)
+                .withTom(null)
+                .withAnnenMottaker(false)
+                .withMottaker("fnr")
+                .withKontonummer("kontonummer")
+                .withUtbetalingsmetode("pose med krølla femtilapper")
+
+    private val VILKAR_OPPFYLT = JsonVilkar()
+            .withType(JsonHendelse.Type.VILKAR)
+            .withVilkarreferanse(vilkar_ref_1)
+            .withUtbetalingsreferanse(listOf(utbetaling_ref_1))
+            .withBeskrivelse("beskrivelse")
+            .withStatus(JsonVilkar.Status.OPPFYLT)
+
+    private val DOKUMENTASJONKRAV_OPPFYLT = JsonDokumentasjonkrav()
+            .withType(JsonHendelse.Type.DOKUMENTASJONKRAV)
+            .withDokumentasjonkravreferanse(dokumentasjonkrav_ref_1)
+            .withUtbetalingsreferanse(listOf(utbetaling_ref_1))
+            .withBeskrivelse("beskrivelse")
+            .withStatus(JsonDokumentasjonkrav.Status.OPPFYLT)
 }

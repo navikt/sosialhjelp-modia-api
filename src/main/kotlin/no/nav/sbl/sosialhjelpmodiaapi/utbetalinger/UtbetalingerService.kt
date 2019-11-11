@@ -6,10 +6,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import org.springframework.stereotype.Component
 import java.text.DateFormatSymbols
-import java.time.LocalDate
-import java.time.temporal.ChronoField
-import java.util.*
-import kotlin.collections.ArrayList
+import java.time.YearMonth
 
 
 @Component
@@ -24,52 +21,39 @@ class UtbetalingerService(private val fiksClient: FiksClient,
             return emptyList()
         }
 
-        return digisosSaker.map {
-            val model = eventService.createModel(it, token)
-            val utbetalingerResponse = UtbetalingerResponse(it.fiksDigisosId, mutableListOf())
-            val utbetalingerPerManed = TreeMap<String, MutableList<Utbetaling>>()
-
-            model.saker
-                    .flatMap { sak -> sak.utbetalinger }
-                    .forEach { utbetaling ->
-                        if (utbetaling.utbetalingsDato != null) {
-                            val monthToString = monthToString(utbetaling.utbetalingsDato)
-                            if (!utbetalingerPerManed.containsKey(monthToString)) {
-                                utbetalingerPerManed[monthToString] = ArrayList()
+        val alleUtbetalinger: List<ManedUtbetaling> = digisosSaker
+                .flatMap { digisosSak ->
+                    val model = eventService.createModel(digisosSak, token)
+                    model.saker
+                            .flatMap { sak ->
+                                sak.utbetalinger
+                                        .filter { it.utbetalingsDato != null && (it.status == UtbetalingsStatus.UTBETALT || it.status == UtbetalingsStatus.ANNULLERT) }
+                                        .map { utbetaling ->
+                                            ManedUtbetaling(
+                                                    tittel = utbetaling.beskrivelse,
+                                                    belop = utbetaling.belop.toDouble(),
+                                                    utbetalingsdato = utbetaling.utbetalingsDato,
+                                                    status = utbetaling.status.name,
+                                                    fiksDigisosId = digisosSak.fiksDigisosId
+                                            )
+                                        }
                             }
-                            utbetalingerPerManed[monthToString]!!.add(utbetaling)
+                }
 
-                        }
-                        if (utbetaling.fom != null) {
-                            utbetalingerPerManed[monthToString(utbetaling.fom)]!!.add(utbetaling)
-                        }
-                    }
-
-            utbetalingerPerManed.entries
-                    .forEach { utbetalingPrMnd ->
-                        val alleUtbetalingene = utbetalingPrMnd.value
-                                .map { utbetaling ->
-                                    UtbetalingResponse(
-                                            utbetaling.beskrivelse,
-                                            utbetaling.belop.toDouble(),
-                                            utbetaling.utbetalingsDato,
-                                            utbetaling.vilkar
-                                                    .map { vilkar -> VilkarResponse(vilkar.beskrivelse, vilkar.oppfyllt) } as MutableList<VilkarResponse>)
-                                }
-                        utbetalingerResponse.utbetalinger.add(UtbetalingerManedResponse(
-                                utbetalingPrMnd.key,
-                                alleUtbetalingene.toMutableList(),
-                                alleUtbetalingene
-                                        .map { t -> t.belop }
-                                        .reduce { t, u -> t.plus(u) }))
-                    }
-
-            utbetalingerResponse
-        }
+        return alleUtbetalinger
+                .sortedByDescending { it.utbetalingsdato}
+                .groupBy { YearMonth.of(it.utbetalingsdato!!.year, it.utbetalingsdato.month) }
+                .map { (key, value) ->
+                    UtbetalingerResponse(
+                            ar = key.year,
+                            maned = monthToString(key.monthValue),
+                            sum = value.filter { it.status == UtbetalingsStatus.UTBETALT.name }.sumByDouble { it.belop },
+                            utbetalinger = value.sortedByDescending { it.utbetalingsdato }
+                    )
+                }
     }
 
-    private fun monthToString(localDate: LocalDate?) =
-            DateFormatSymbols().months[localDate!!.get(ChronoField.MONTH_OF_YEAR) - 1]
+    private fun monthToString(month: Int) = DateFormatSymbols().months[month - 1]
 
     companion object {
         val log by logger()

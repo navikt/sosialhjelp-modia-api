@@ -26,6 +26,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonSaksStatus) {
                 hendelse.tittel,
                 mutableListOf(),
                 mutableListOf(),
+                mutableListOf(),
                 mutableListOf()
         ))
     }

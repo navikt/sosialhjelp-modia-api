@@ -4,10 +4,7 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.*
 import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
-import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
-import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
-import no.nav.sbl.sosialhjelpmodiaapi.domain.Soknadsmottaker
+import no.nav.sbl.sosialhjelpmodiaapi.domain.*
 import no.nav.sbl.sosialhjelpmodiaapi.innsyn.InnsynService
 import no.nav.sbl.sosialhjelpmodiaapi.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
@@ -29,13 +26,11 @@ class EventService(private val innsynService: InnsynService,
             model.historikk.add(Hendelse("Søknaden med vedlegg er sendt til ${jsonSoknad.mottaker.navEnhetsnavn}", unixToLocalDateTime(timestampSendt)))
         }
 
-        if (jsonDigisosSoker == null) {
-            return model
+        if (jsonDigisosSoker != null) {
+            jsonDigisosSoker.hendelser
+                    .sortedBy { it.hendelsestidspunkt }
+                    .forEach { model.applyHendelse(it) }
         }
-
-        jsonDigisosSoker.hendelser
-                .sortedBy { it.hendelsestidspunkt }
-                .forEach { model.applyHendelse(it) }
 
         return model
     }
@@ -50,6 +45,8 @@ class EventService(private val innsynService: InnsynService,
             is JsonForelopigSvar -> apply(hendelse)
             is JsonUtbetaling -> apply(hendelse)
             is JsonVilkar -> apply(hendelse)
+            is JsonDokumentasjonkrav -> apply(hendelse)
+            is JsonRammevedtak -> apply(hendelse) // Gjør ingenting as of now
             else -> throw RuntimeException("Hendelsetype ${hendelse.type.value()} mangler mapping")
         }
     }

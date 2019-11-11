@@ -1,7 +1,6 @@
-package no.nav.sbl.sosialhjelpmodiaapi.rest
+package no.nav.sbl.sosialhjelpmodiaapi.oppgave
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.OppgaveResponse
-import no.nav.sbl.sosialhjelpmodiaapi.oppgave.OppgaveService
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpStatus

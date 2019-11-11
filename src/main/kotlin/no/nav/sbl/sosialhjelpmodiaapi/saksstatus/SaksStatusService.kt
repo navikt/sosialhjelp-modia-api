@@ -23,7 +23,7 @@ class SaksStatusService(private val fiksClient: FiksClient,
             return emptyList()
         }
 
-        val responseList = model.saker.map { mapToResponse(it) }
+        val responseList = model.saker.filter { it.saksStatus != SaksStatus.FEILREGISTRERT }.map { mapToResponse(it) }
         log.info("Hentet ${responseList.size} sak(er) for $fiksDigisosId")
         return responseList
     }
@@ -43,5 +43,4 @@ class SaksStatusService(private val fiksClient: FiksClient,
     companion object {
         val log by logger()
     }
-
 }
