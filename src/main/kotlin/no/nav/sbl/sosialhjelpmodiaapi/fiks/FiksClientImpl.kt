@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.fiks
 
 import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
+import no.nav.sbl.sosialhjelpmodiaapi.common.FiksNotFoundException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
@@ -53,6 +54,9 @@ class FiksClientImpl(clientProperties: ClientProperties,
 
         } catch (e: HttpStatusCodeException) {
             log.warn("Fiks - hentDigisosSak feilet - ${e.statusCode} ${e.statusText}", e)
+            if (e.statusCode == HttpStatus.NOT_FOUND) {
+                throw FiksNotFoundException(e.statusCode, e.message, e)
+            }
             throw FiksException(e.statusCode, e.message, e)
         } catch (e: Exception) {
             log.warn("Fiks - hentDigisosSak feilet", e)
