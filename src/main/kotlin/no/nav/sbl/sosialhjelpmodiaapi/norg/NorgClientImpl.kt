@@ -27,7 +27,9 @@ class NorgClientImpl(clientProperties: ClientProperties,
         headers.set("Nav-Call-Id", generateCallId())
         try {
             log.info("Norg2 - GET enhet $enhetsnr")
-            val response = restTemplate.exchange("$baseUrl/enhet/$enhetsnr", HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java)
+            val urlTemplate = "$baseUrl/enhet/{enhetsnr}"
+            val vars = mapOf("enhetsnr" to enhetsnr)
+            val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
 
             log.info("Norg2 - GET enhet OK")
             return objectMapper.readValue(response.body!!, NavEnhet::class.java)
