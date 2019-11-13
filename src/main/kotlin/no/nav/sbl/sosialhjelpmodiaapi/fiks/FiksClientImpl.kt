@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.fiks
 
 import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
+import no.nav.sbl.sosialhjelpmodiaapi.common.FiksNotFoundException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
@@ -42,16 +43,20 @@ class FiksClientImpl(clientProperties: ClientProperties,
 
         log.info("Forsøker å hente digisosSak fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId")
 
-        val url = "$baseUrl/digisos/api/v1/nav/soknader/$digisosId"
-        val uriComponents = UriComponentsBuilder.fromHttpUrl(url).queryParam("sporingsId", sporingsId).build()
+        val urlTemplate = "$baseUrl/digisos/api/v1/nav/soknader/{digisosId}"
+        val uriComponents = UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam("sporingsId", "{sporingsId}").build()
         try {
-            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java)
+            val vars = mapOf("digisosId" to digisosId, "sporingsId" to sporingsId)
+            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
 
             log.info("Hentet DigisosSak $digisosId fra Fiks")
             return objectMapper.readValue(response.body!!, DigisosSak::class.java)
 
         } catch (e: HttpStatusCodeException) {
             log.warn("Fiks - hentDigisosSak feilet - ${e.statusCode} ${e.statusText}", e)
+            if (e.statusCode == HttpStatus.NOT_FOUND) {
+                throw FiksNotFoundException(e.statusCode, e.message, e)
+            }
             throw FiksException(e.statusCode, e.message, e)
         } catch (e: Exception) {
             log.warn("Fiks - hentDigisosSak feilet", e)
@@ -64,11 +69,15 @@ class FiksClientImpl(clientProperties: ClientProperties,
 
         val headers = setIntegrasjonHeaders("Bearer ${virksomhetsToken.token}")
 
-        val url = "$baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId"
-        val uriComponents = UriComponentsBuilder.fromHttpUrl(url).queryParam("sporingsId", sporingsId).build()
-        log.info("Forsøker å hente dokument fra $url")
+        val urlTemplate = "$baseUrl/digisos/api/v1/nav/soknader/{digisosId}/dokumenter/{dokumentlagerId}"
+        val uriComponents = UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam("sporingsId", "{sporingsId}").build()
+        log.info("Forsøker å hente dokument fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId")
         try {
-            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java)
+            val vars = mapOf(
+                    "digisosId" to digisosId,
+                    "dokumentlagerId" to dokumentlagerId,
+                    "sporingsId" to sporingsId)
+            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
 
             log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
             return objectMapper.readValue(response.body!!, requestedClass)
@@ -88,9 +97,10 @@ class FiksClientImpl(clientProperties: ClientProperties,
         val headers = setIntegrasjonHeaders("Bearer ${virksomhetsToken.token}")
 
         val url = "$baseUrl/digisos/api/nav/v1/soknader"
-        val uriComponents = UriComponentsBuilder.fromHttpUrl(url).queryParam("sporingsId", sporingsId).build()
+        val uriComponents = UriComponentsBuilder.fromHttpUrl(url).queryParam("sporingsId", "{sporingsId}").build()
         try {
-            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), typeRef<List<String>>())
+            val vars = mapOf("sporingsId" to sporingsId)
+            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), typeRef<List<String>>(), vars)
 
             return response.body!!.map { s: String -> objectMapper.readValue(s, DigisosSak::class.java) }
 
@@ -109,7 +119,9 @@ class FiksClientImpl(clientProperties: ClientProperties,
         val headers = setIntegrasjonHeaders("Bearer ${virksomhetsToken.token}")
 
         try {
-            val response = restTemplate.exchange("$baseUrl/digisos/api/v1/nav/kommune/$kommunenummer", HttpMethod.GET, HttpEntity<Nothing>(headers), KommuneInfo::class.java)
+            val urlTemplate = "$baseUrl/digisos/api/v1/nav/kommune/{kommunenummer}"
+            val vars = mapOf("kommunenummer" to kommunenummer)
+            val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), KommuneInfo::class.java, vars)
 
             return response.body!!
 

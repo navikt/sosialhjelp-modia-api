@@ -44,10 +44,11 @@ internal class FiksClientTest {
 
         every {
             restTemplate.exchange(
-                    any<String>(),
+                    any(),
                     HttpMethod.GET,
                     any(),
-                    KommuneInfo::class.java)
+                    KommuneInfo::class.java,
+                    any())
         } returns mockKommuneResponse
 
         val result = fiksClient.hentKommuneInfo("1234")
@@ -67,10 +68,11 @@ internal class FiksClientTest {
 
         every {
             restTemplate.exchange(
-                    any<String>(),
+                    any(),
                     HttpMethod.GET,
                     any(),
-                    KommuneInfo::class.java)
+                    KommuneInfo::class.java,
+                    any())
         } throws HttpClientErrorException(HttpStatus.NOT_FOUND, "not found")
 
         assertThatExceptionOfType(FiksException::class.java).isThrownBy { fiksClient.hentKommuneInfo("1234") }
