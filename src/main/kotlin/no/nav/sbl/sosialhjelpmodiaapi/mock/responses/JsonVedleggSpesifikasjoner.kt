@@ -21,10 +21,6 @@ val jsonVedleggSpesifikasjonSoknad = JsonVedleggSpesifikasjon()
                         JsonVedlegg()
                                 .withType("kontooversikt")
                                 .withTilleggsinfo("brukskonto")
-                                .withStatus("VedleggKreves"),
-                        JsonVedlegg()
-                                .withType("annet")
-                                .withTilleggsinfo("annet")
                                 .withStatus("VedleggKreves")
                 )
         )!!
