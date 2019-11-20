@@ -26,8 +26,8 @@ class VedleggController(private val vedleggService: VedleggService) {
                     VedleggResponse(
                             it.type,
                             it.tilleggsinfo,
-                            null,
-                            it.tidspunktLastetOpp)
+                            it.innsendelsesfrist,
+                            it.datoLagtTil)
                 }
         return ResponseEntity.ok(vedleggResponses)
     }

@@ -1,10 +1,11 @@
 package no.nav.sbl.sosialhjelpmodiaapi.vedlegg
 
-import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
+import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DokumentInfo
 import no.nav.sbl.sosialhjelpmodiaapi.domain.EttersendtInfoNAV
+import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.OriginalSoknadNAV
+import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import org.springframework.stereotype.Component
@@ -14,14 +15,15 @@ const val LASTET_OPP_STATUS = "LastetOpp"
 const val VEDLEGG_KREVES_STATUS = "VedleggKreves"
 
 @Component
-class VedleggService(private val fiksClient: FiksClient) {
+class VedleggService(private val fiksClient: FiksClient,
+                     private val eventService: EventService) {
 
     fun hentAlleOpplastedeVedlegg(fiksDigisosId: String, token: String): List<InternalVedlegg> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)
+        val model = eventService.createModel(digisosSak, token)
 
         val soknadVedlegg = hentSoknadVedleggMedStatus(LASTET_OPP_STATUS, fiksDigisosId, digisosSak.originalSoknadNAV, token)
-        val ettersendteVedlegg = hentEttersendteVedlegg(fiksDigisosId, digisosSak.ettersendtInfoNAV, token)
-//        val gjenstaendeOppgaver = hentGjenstaendeOppgaver(fiksDigisosId, token)
+        val ettersendteVedlegg = hentEttersendteVedlegg(fiksDigisosId, model, digisosSak.ettersendtInfoNAV, token)
 
         return soknadVedlegg.plus(ettersendteVedlegg)
     }
@@ -40,15 +42,15 @@ class VedleggService(private val fiksClient: FiksClient) {
                 .filter { vedlegg -> vedlegg.status == status }
                 .map { vedlegg ->
                     InternalVedlegg(
-                            vedlegg.type,
-                            vedlegg.tilleggsinfo,
-                            getAntallVedlegg(originalSoknadNAV.vedlegg, vedlegg.filer),
-                            unixToLocalDateTime(originalSoknadNAV.timestampSendt)
+                            type = vedlegg.type,
+                            tilleggsinfo = vedlegg.tilleggsinfo,
+                            innsendelsesfrist = null,
+                            datoLagtTil = unixToLocalDateTime(originalSoknadNAV.timestampSendt)
                     )
                 }
     }
 
-    fun hentEttersendteVedlegg(fiksDigisosId: String, ettersendtInfoNAV: EttersendtInfoNAV?, token: String): List<InternalVedlegg> {
+    fun hentEttersendteVedlegg(fiksDigisosId: String, model: InternalDigisosSoker, ettersendtInfoNAV: EttersendtInfoNAV?, token: String): List<InternalVedlegg> {
         return ettersendtInfoNAV?.ettersendelser
                 ?.flatMap { ettersendelse ->
                     val jsonVedleggSpesifikasjon = hentVedleggSpesifikasjon(fiksDigisosId, ettersendelse.vedleggMetadata, token)
@@ -56,43 +58,30 @@ class VedleggService(private val fiksClient: FiksClient) {
                             .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
                             .map { vedlegg ->
                                 InternalVedlegg(
-                                        vedlegg.type,
-                                        vedlegg.tilleggsinfo,
-                                        getAntallVedlegg(ettersendelse.vedlegg, vedlegg.filer),
-                                        unixToLocalDateTime(ettersendelse.timestampSendt)
+                                        type = vedlegg.type,
+                                        tilleggsinfo = vedlegg.tilleggsinfo,
+                                        innsendelsesfrist = hentInnsendelsesfristFraOppgave(model, vedlegg),
+                                        datoLagtTil = unixToLocalDateTime(ettersendelse.timestampSendt)
                                 )
                             }
                 } ?: emptyList()
     }
 
-//    fun hentGjenstaendeOppgaver(fiksDigisosId: String, token: String) {
-//        oppgaveService.hentOppgaver(fiksDigisosId, token)
-//    }
-
     private fun hentVedleggSpesifikasjon(fiksDigisosId: String, dokumentlagerId: String, token: String): JsonVedleggSpesifikasjon {
         return fiksClient.hentDokument(fiksDigisosId, dokumentlagerId, JsonVedleggSpesifikasjon::class.java, token) as JsonVedleggSpesifikasjon
     }
 
-    private fun matchDokumentInfoAndJsonFiler(dokumentInfoList: List<DokumentInfo>, jsonFiler: List<JsonFiler>): List<DokumentInfo> {
-        return jsonFiler
-                .flatMap { fil ->
-                    dokumentInfoList
-                            .filter { it.filnavn == fil.filnavn }
-                }
-    }
-
-    private fun getAntallVedlegg(dokumentInfoList: List<DokumentInfo>, jsonFiler: List<JsonFiler>): Int {
-        return jsonFiler
-                .flatMap { fil ->
-                    dokumentInfoList
-                            .filter { it.filnavn == fil.filnavn }
-                }.size
+    private fun hentInnsendelsesfristFraOppgave(model: InternalDigisosSoker, vedlegg: JsonVedlegg): LocalDateTime? {
+        return model.oppgaver
+                .sortedByDescending { it.innsendelsesfrist }
+                .firstOrNull { it.tittel == vedlegg.type && it.tilleggsinfo == vedlegg.tilleggsinfo }
+                ?.innsendelsesfrist
     }
 
     data class InternalVedlegg(
             val type: String,
             val tilleggsinfo: String?,
-            val antallVedlegg: Int,
-            val tidspunktLastetOpp: LocalDateTime
+            val innsendelsesfrist: LocalDateTime?,
+            val datoLagtTil: LocalDateTime
     )
 }

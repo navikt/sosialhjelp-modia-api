@@ -24,7 +24,7 @@ class OppgaveService(private val fiksClient: FiksClient,
             return emptyList()
         }
 
-        val ettersendteVedlegg = vedleggService.hentEttersendteVedlegg(fiksDigisosId, digisosSak.ettersendtInfoNAV, token)
+        val ettersendteVedlegg = vedleggService.hentEttersendteVedlegg(fiksDigisosId, model, digisosSak.ettersendtInfoNAV, token)
 
         val oppgaveResponseList = model.oppgaver
                 .sortedBy { it.innsendelsesfrist }
@@ -44,11 +44,10 @@ class OppgaveService(private val fiksClient: FiksClient,
     private fun hentOpplastedeDokumenter(oppgave: Oppgave, vedleggListe: List<InternalVedlegg>): List<OpplastetDokument> {
         return vedleggListe
                 .filter { it.type == oppgave.tittel && it.tilleggsinfo == oppgave.tilleggsinfo}
-                .filter { it.tidspunktLastetOpp.isAfter(oppgave.tidspunktForKrav) } // som er lastet opp _etter_ krav ble utstedt
-                .filter { it.antallVedlegg > 0 }
+                .filter { it.datoLagtTil.isAfter(oppgave.tidspunktForKrav) } // lastet opp _etter_ krav ble utstedt
                 .map {
                     OpplastetDokument(
-                            it.tidspunktLastetOpp,
+                            it.datoLagtTil,
                             it.type,
                             it.tilleggsinfo
                     )

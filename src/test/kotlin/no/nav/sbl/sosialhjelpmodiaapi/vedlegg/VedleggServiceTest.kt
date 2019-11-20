@@ -6,10 +6,8 @@ import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DokumentInfo
-import no.nav.sbl.sosialhjelpmodiaapi.domain.Ettersendelse
-import no.nav.sbl.sosialhjelpmodiaapi.domain.OriginalSoknadNAV
+import no.nav.sbl.sosialhjelpmodiaapi.domain.*
+import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -22,11 +20,14 @@ import java.time.temporal.ChronoUnit
 internal class VedleggServiceTest {
 
     private val fiksClient: FiksClient = mockk()
+    private val eventService: EventService = mockk()
 
-    private val service = VedleggService(fiksClient)
+    private val service = VedleggService(fiksClient, eventService)
 
     private val mockDigisosSak: DigisosSak = mockk()
     private val mockJsonVedleggSpesifikasjon: JsonVedleggSpesifikasjon = mockk()
+
+    private val zoneIdOslo = ZoneId.of("Europe/Oslo")
 
     @BeforeEach
     internal fun setUp() {
@@ -48,6 +49,9 @@ internal class VedleggServiceTest {
 
     @Test
     fun `skal returnere emptylist hvis soknad har null vedlegg og ingen ettersendelser finnes`() {
+        val model = InternalDigisosSoker()
+
+        every { eventService.createModel(any(), any()) } returns model
         every { fiksClient.hentDokument(any(), vedleggMetadata_soknad_1, any(), any()) } returns mockJsonVedleggSpesifikasjon
 
         every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns emptyList()
@@ -59,21 +63,25 @@ internal class VedleggServiceTest {
 
     @Test
     fun `skal kun returnere soknadens vedlegg hvis ingen ettersendelser finnes`() {
+        val model = InternalDigisosSoker()
+
+        every { eventService.createModel(any(), any()) } returns model
         every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns emptyList()
 
         val list = service.hentAlleOpplastedeVedlegg(id, "token")
 
         assertThat(list).hasSize(2)
         assertThat(list[0].type).isEqualTo(dokumenttype)
-//        assertThat(list[0].dokumentInfoList[0].filnavn).isEqualTo(soknad_filnavn_1)
-        assertThat(list[0].antallVedlegg).isEqualTo(1)
+        assertThat(list[0].innsendelsesfrist).isNull()
         assertThat(list[1].type).isEqualTo(dokumenttype_2)
-//        assertThat(list[1].dokumentInfoList[0].filnavn).isEqualTo(soknad_filnavn_2)
-        assertThat(list[1].antallVedlegg).isEqualTo(1)
+        assertThat(list[1].innsendelsesfrist).isNull()
     }
 
     @Test
     fun `skal filtrere vekk vedlegg som ikke er LastetOpp`() {
+        val model = InternalDigisosSoker()
+
+        every { eventService.createModel(any(), any()) } returns model
         every { fiksClient.hentDokument(any(), vedleggMetadata_soknad_1, any(), any()) } returns mockJsonVedleggSpesifikasjon
 
         every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns listOf(
@@ -90,60 +98,62 @@ internal class VedleggServiceTest {
 
     @Test
     fun `skal kun returne ettersendte vedlegg hvis soknaden ikke har noen vedlegg`() {
+        val model = InternalDigisosSoker()
+
+        every { eventService.createModel(any(), any()) } returns model
         every { fiksClient.hentDokument(any(), vedleggMetadata_soknad_1, any(), any()) } returns mockJsonVedleggSpesifikasjon
 
         val list = service.hentAlleOpplastedeVedlegg(id, "token")
 
         assertThat(list).hasSize(4)
         assertThat(list[0].type).isEqualTo(dokumenttype_3)
-//        assertThat(list[0].dokumentInfoList[0].filnavn).isEqualTo(ettersendelse_filnavn_1)
-        assertThat(list[0].antallVedlegg).isEqualTo(1)
+        assertThat(list[0].innsendelsesfrist).isNull()
 
         assertThat(list[1].type).isEqualTo(dokumenttype_4)
-//        assertThat(list[1].dokumentInfoList[0].filnavn).isEqualTo(ettersendelse_filnavn_2)
-        assertThat(list[1].antallVedlegg).isEqualTo(1)
+        assertThat(list[1].innsendelsesfrist).isNull()
 
         assertThat(list[2].type).isEqualTo(dokumenttype_3)
-//        assertThat(list[2].dokumentInfoList).hasSize(2)
-//        assertThat(list[2].dokumentInfoList[0].filnavn).isEqualTo(ettersendelse_filnavn_3)
-//        assertThat(list[2].dokumentInfoList[1].filnavn).isEqualTo(ettersendelse_filnavn_4)
-        assertThat(list[2].antallVedlegg).isEqualTo(2)
+        assertThat(list[2].innsendelsesfrist).isNull()
 
         assertThat(list[3].type).isEqualTo(dokumenttype_3)
-//        assertThat(list[3].dokumentInfoList).hasSize(2)
-//        assertThat(list[3].dokumentInfoList[0].filnavn).isEqualTo(ettersendelse_filnavn_4)
-        assertThat(list[3].antallVedlegg).isEqualTo(2)
+        assertThat(list[3].innsendelsesfrist).isNull()
     }
 
     @Test
     fun `skal hente alle vedlegg for digisosSak`() {
+        val model = InternalDigisosSoker()
+
+        every { eventService.createModel(any(), any()) } returns model
+
         val list = service.hentAlleOpplastedeVedlegg(id, "token")
 
         assertThat(list).hasSize(6)
 
         // nano-presisjon lacking
-        val zoneIdOslo = ZoneId.of("Europe/Oslo")
         assertThat(list[0].type).isEqualTo(dokumenttype)
-        assertThat(list[0].tidspunktLastetOpp).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
+        assertThat(list[0].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
 
         assertThat(list[1].type).isEqualTo(dokumenttype_2)
-        assertThat(list[1].tidspunktLastetOpp).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
+        assertThat(list[1].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
 
         assertThat(list[2].type).isEqualTo(dokumenttype_3)
-        assertThat(list[2].tidspunktLastetOpp).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_1, zoneIdOslo))
+        assertThat(list[2].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_1, zoneIdOslo))
 
         assertThat(list[3].type).isEqualTo(dokumenttype_4)
-        assertThat(list[3].tidspunktLastetOpp).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_1, zoneIdOslo))
+        assertThat(list[3].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_1, zoneIdOslo))
 
         assertThat(list[4].type).isEqualTo(dokumenttype_3)
-        assertThat(list[4].tidspunktLastetOpp).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_2, zoneIdOslo))
+        assertThat(list[4].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_2, zoneIdOslo))
 
         assertThat(list[5].type).isEqualTo(dokumenttype_3)
-        assertThat(list[5].tidspunktLastetOpp).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_2, zoneIdOslo))
+        assertThat(list[5].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_2, zoneIdOslo))
     }
 
     @Test
-    fun `skal hente søknadsvedlegg filtrert på status for digisosSak`() {
+    fun `skal hente soknadsvedlegg filtrert pa status for digisosSak`() {
+        val model = InternalDigisosSoker()
+
+        every { eventService.createModel(any(), any()) } returns model
         val lastetOppList = service.hentSoknadVedleggMedStatus(LASTET_OPP_STATUS, id, originalSoknadMedVedleggKrevesOgLastetOpp, "token")
         val vedleggKrevesList = service.hentSoknadVedleggMedStatus(VEDLEGG_KREVES_STATUS, id, originalSoknadMedVedleggKrevesOgLastetOpp, "token")
 
@@ -153,16 +163,18 @@ internal class VedleggServiceTest {
         // nano-presisjon lacking
         val zoneIdOslo = ZoneId.of("Europe/Oslo")
         assertThat(lastetOppList[0].type).isEqualTo(dokumenttype)
-        assertThat(lastetOppList[0].tidspunktLastetOpp).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
+        assertThat(lastetOppList[0].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
 
         assertThat(vedleggKrevesList[0].type).isEqualTo(dokumenttype_2)
-        assertThat(vedleggKrevesList[0].tidspunktLastetOpp).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
+        assertThat(vedleggKrevesList[0].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
     }
 
     @Test
     fun `like filnavn i DokumentInfoList vil resultere i at de returneres for hver JsonFil med samme filnavn`() {
-        every { fiksClient.hentDokument(any(), vedleggMetadata_soknad_1, any(), any()) } returns mockJsonVedleggSpesifikasjon
+        val model = InternalDigisosSoker()
 
+        every { eventService.createModel(any(), any()) } returns model
+        every { fiksClient.hentDokument(any(), vedleggMetadata_soknad_1, any(), any()) } returns mockJsonVedleggSpesifikasjon
         every { fiksClient.hentDokument(any(), vedleggMetadata_ettersendelse_5, any(), any()) } returns
                 JsonVedleggSpesifikasjon()
                         .withVedlegg(listOf(
@@ -179,7 +191,6 @@ internal class VedleggServiceTest {
                                         .withStatus(LASTET_OPP_STATUS)
                                         .withType(dokumenttype_4)
                         ))
-
         every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns listOf(
                 Ettersendelse(
                         navEksternRefId = "ref 3",
@@ -194,20 +205,53 @@ internal class VedleggServiceTest {
         val list = service.hentAlleOpplastedeVedlegg(id, "token")
 
         assertThat(list).hasSize(2)
+        assertThat(list[0].innsendelsesfrist).isNull()
+        assertThat(list[1].innsendelsesfrist).isNull()
+    }
 
-//        assertThat(list[0].dokumentInfoList).hasSize(3)
-        assertThat(list[0].antallVedlegg).isEqualTo(3)
-//        assertThat(list[0].dokumentInfoList[1].filnavn).isEqualTo(ettersendelse_filnavn_2)
-//        assertThat(list[0].dokumentInfoList[1].dokumentlagerDokumentId).isEqualTo(dokumentlagerId_2)
-//        assertThat(list[0].dokumentInfoList[2].filnavn).isEqualTo(ettersendelse_filnavn_2)
-//        assertThat(list[0].dokumentInfoList[2].dokumentlagerDokumentId).isEqualTo(dokumentlagerId_3)
+    @Test
+    fun `skal hente innsendelsesfrist fra oppgave`() {
+        val frist = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(14)
+        val datoLagtTil = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(2)
+        val model = InternalDigisosSoker()
+        model.oppgaver.add(Oppgave(
+                dokumenttype_3,
+                null,
+                frist,
+                datoLagtTil,
+                true
+        ))
 
-        assertThat(list[1].antallVedlegg).isEqualTo(3)
-//        assertThat(list[1].dokumentInfoList).hasSize(3)
-//        assertThat(list[1].dokumentInfoList[0].filnavn).isEqualTo(ettersendelse_filnavn_2)
-//        assertThat(list[1].dokumentInfoList[0].dokumentlagerDokumentId).isEqualTo(dokumentlagerId_2)
-//        assertThat(list[1].dokumentInfoList[1].filnavn).isEqualTo(ettersendelse_filnavn_2)
-//        assertThat(list[1].dokumentInfoList[1].dokumentlagerDokumentId).isEqualTo(dokumentlagerId_3)
+        every { eventService.createModel(any(), any()) } returns model
+
+        val list = service.hentAlleOpplastedeVedlegg(id, "token")
+
+        assertThat(list).hasSize(6)
+
+        // nano-presisjon lacking
+        assertThat(list[0].type).isEqualTo(dokumenttype)
+        assertThat(list[0].innsendelsesfrist).isNull()
+        assertThat(list[0].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
+
+        assertThat(list[1].type).isEqualTo(dokumenttype_2)
+        assertThat(list[1].innsendelsesfrist).isNull()
+        assertThat(list[1].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
+
+        assertThat(list[2].type).isEqualTo(dokumenttype_3)
+        assertThat(list[2].innsendelsesfrist).isEqualToIgnoringNanos(frist)
+        assertThat(list[2].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_1, zoneIdOslo))
+
+        assertThat(list[3].type).isEqualTo(dokumenttype_4)
+        assertThat(list[3].innsendelsesfrist).isNull()
+        assertThat(list[3].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_1, zoneIdOslo))
+
+        assertThat(list[4].type).isEqualTo(dokumenttype_3)
+        assertThat(list[4].innsendelsesfrist).isEqualToIgnoringNanos(frist)
+        assertThat(list[4].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_2, zoneIdOslo))
+
+        assertThat(list[5].type).isEqualTo(dokumenttype_3)
+        assertThat(list[5].innsendelsesfrist).isEqualToIgnoringNanos(frist)
+        assertThat(list[5].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_2, zoneIdOslo))
     }
 }
 
