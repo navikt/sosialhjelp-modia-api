@@ -43,8 +43,8 @@ class FiksCheck(private val restTemplate: RestTemplate,
             headers.set(HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
             headers.set(HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
 
-            // later som kommuneInfo-kall er ping for selftest
-            restTemplate.exchange("$address/digisos/api/v1/nav/kommune/0301", HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java)
+            // kaller /kommuner for å simulere ping
+            restTemplate.exchange("$address/digisos/api/v1/nav/kommuner", HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java)
         } catch (e: HttpStatusCodeException) {
             log.warn("Selftest - Fiks hentKommuneInfo feilet - ${e.statusCode} ${e.statusText}", e)
             throw FiksException(e.statusCode, e.message, e)
