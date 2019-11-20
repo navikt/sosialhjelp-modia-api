@@ -19,10 +19,21 @@ data class HendelseResponse(
 )
 
 data class OppgaveResponse(
-        val innsendelsesfrist: String?,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+        val innsendelsesfrist: LocalDateTime?,
         val dokumenttype: String,
         val tilleggsinformasjon: String?,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+        val datoLagtTil: LocalDateTime,
+        val dokumenterLastetOpp: List<OpplastetDokument>,
         val erFraInnsyn: Boolean
+)
+
+data class OpplastetDokument(
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+        val lastetOpp: LocalDateTime,
+        val type: String,
+        val tilleggsinformasjon: String?
 )
 
 data class UtbetalingerResponse(
