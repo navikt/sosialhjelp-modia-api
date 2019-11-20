@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav.sbl"
 version = "1.0-SNAPSHOT"
 
-val kotlinVersion = "1.3.50"
-val springBootVersion = "2.2.1.RELEASE"
+val kotlinVersion = "1.3.60"
+val springBootVersion = "2.2.0.RELEASE"
 val logbackVersion = "1.2.3"
 val logstashVersion = "5.3"
 val junitJupiterVersion = "5.5.2"
@@ -22,16 +22,15 @@ val rxKotlinVersion = "2.4.0"
 val vavrKotlinVersion = "0.10.0"
 val ktorVersion = "1.2.2"
 val kotlinCoroutinesVersion = "1.3.2"
-val kotlinTestVersion = "1.3.50"
 
 val mainClass = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
 
 plugins {
     application
-    kotlin("jvm") version "1.3.50"
+    kotlin("jvm") version "1.3.60"
 
-    id("org.jetbrains.kotlin.plugin.spring") version "1.3.50"
-    id("org.springframework.boot") version "2.2.1.RELEASE"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.3.60"
+    id("org.springframework.boot") version "2.2.0.RELEASE"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
 }
 
@@ -110,7 +109,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("no.nav.security:token-validation-test-support:$tokenValidationVersion")
-    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinTestVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
 }
 
 repositories {
