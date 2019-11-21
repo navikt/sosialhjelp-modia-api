@@ -210,17 +210,13 @@ internal class VedleggServiceTest {
     }
 
     @Test
-    fun `skal hente innsendelsesfrist fra oppgave`() {
+    fun `skal knytte innsendelsesfrist fra oppgave til vedlegg`() {
         val frist = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(14)
+        val frist2 = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(21)
         val datoLagtTil = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(2)
         val model = InternalDigisosSoker()
-        model.oppgaver.add(Oppgave(
-                dokumenttype_3,
-                null,
-                frist,
-                datoLagtTil,
-                true
-        ))
+        model.oppgaver.add(Oppgave(dokumenttype_3, null, frist, datoLagtTil, true))
+        model.oppgaver.add(Oppgave(dokumenttype_4, null, frist2, datoLagtTil, true))
 
         every { eventService.createModel(any(), any()) } returns model
 
@@ -228,30 +224,23 @@ internal class VedleggServiceTest {
 
         assertThat(list).hasSize(6)
 
-        // nano-presisjon lacking
         assertThat(list[0].type).isEqualTo(dokumenttype)
         assertThat(list[0].innsendelsesfrist).isNull()
-        assertThat(list[0].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
 
         assertThat(list[1].type).isEqualTo(dokumenttype_2)
         assertThat(list[1].innsendelsesfrist).isNull()
-        assertThat(list[1].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
 
         assertThat(list[2].type).isEqualTo(dokumenttype_3)
-        assertThat(list[2].innsendelsesfrist).isEqualToIgnoringNanos(frist)
-        assertThat(list[2].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_1, zoneIdOslo))
+        assertThat(list[2].innsendelsesfrist).isEqualTo(frist)
 
         assertThat(list[3].type).isEqualTo(dokumenttype_4)
-        assertThat(list[3].innsendelsesfrist).isNull()
-        assertThat(list[3].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_1, zoneIdOslo))
+        assertThat(list[3].innsendelsesfrist).isEqualTo(frist2)
 
         assertThat(list[4].type).isEqualTo(dokumenttype_3)
-        assertThat(list[4].innsendelsesfrist).isEqualToIgnoringNanos(frist)
-        assertThat(list[4].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_2, zoneIdOslo))
+        assertThat(list[4].innsendelsesfrist).isEqualTo(frist)
 
         assertThat(list[5].type).isEqualTo(dokumenttype_3)
-        assertThat(list[5].innsendelsesfrist).isEqualToIgnoringNanos(frist)
-        assertThat(list[5].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_2, zoneIdOslo))
+        assertThat(list[5].innsendelsesfrist).isEqualTo(frist)
     }
 }
 
