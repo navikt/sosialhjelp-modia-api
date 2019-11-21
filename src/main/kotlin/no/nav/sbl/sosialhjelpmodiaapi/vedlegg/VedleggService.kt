@@ -1,7 +1,9 @@
 package no.nav.sbl.sosialhjelpmodiaapi.vedlegg
 
+import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
+import no.nav.sbl.sosialhjelpmodiaapi.domain.DokumentInfo
 import no.nav.sbl.sosialhjelpmodiaapi.domain.EttersendtInfoNAV
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.OriginalSoknadNAV
@@ -45,6 +47,7 @@ class VedleggService(private val fiksClient: FiksClient,
                             type = vedlegg.type,
                             tilleggsinfo = vedlegg.tilleggsinfo,
                             innsendelsesfrist = null,
+                            antallFiler = matchDokumentInfoOgJsonFiler(originalSoknadNAV.vedlegg, vedlegg.filer),
                             datoLagtTil = unixToLocalDateTime(originalSoknadNAV.timestampSendt)
                     )
                 }
@@ -61,6 +64,7 @@ class VedleggService(private val fiksClient: FiksClient,
                                         type = vedlegg.type,
                                         tilleggsinfo = vedlegg.tilleggsinfo,
                                         innsendelsesfrist = hentInnsendelsesfristFraOppgave(model, vedlegg),
+                                        antallFiler = matchDokumentInfoOgJsonFiler(ettersendelse.vedlegg, vedlegg.filer),
                                         datoLagtTil = unixToLocalDateTime(ettersendelse.timestampSendt)
                                 )
                             }
@@ -69,6 +73,14 @@ class VedleggService(private val fiksClient: FiksClient,
 
     private fun hentVedleggSpesifikasjon(fiksDigisosId: String, dokumentlagerId: String, token: String): JsonVedleggSpesifikasjon {
         return fiksClient.hentDokument(fiksDigisosId, dokumentlagerId, JsonVedleggSpesifikasjon::class.java, token) as JsonVedleggSpesifikasjon
+    }
+
+    private fun matchDokumentInfoOgJsonFiler(dokumentInfoList: List<DokumentInfo>, jsonFiler: List<JsonFiler>): Int {
+        return jsonFiler
+                .flatMap { fil ->
+                    dokumentInfoList
+                            .filter { it.filnavn == fil.filnavn }
+                }.count()
     }
 
     private fun hentInnsendelsesfristFraOppgave(model: InternalDigisosSoker, vedlegg: JsonVedlegg): LocalDateTime? {
@@ -82,6 +94,7 @@ class VedleggService(private val fiksClient: FiksClient,
             val type: String,
             val tilleggsinfo: String?,
             val innsendelsesfrist: LocalDateTime?,
-            val datoLagtTil: LocalDateTime
+            val antallFiler: Int,
+            val datoLagtTil: LocalDateTime?
     )
 }

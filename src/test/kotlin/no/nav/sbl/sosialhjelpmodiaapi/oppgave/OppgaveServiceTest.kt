@@ -137,10 +137,10 @@ internal class OppgaveServiceTest {
 
         every { eventService.createModel(any(), any()) } returns model
         every { vedleggService.hentEttersendteVedlegg(any(), any(), any(), any()) } returns listOf(
-                InternalVedlegg(type, tillegg, frist, tidspunktEtterKrav),
-                InternalVedlegg(type2, null, frist2, tidspunktEtterKrav),
-                InternalVedlegg(type3, tillegg3, frist3, tidspunktFoerKrav),
-                InternalVedlegg(type3, null, frist3, tidspunktEtterKrav))
+                InternalVedlegg(type, tillegg, frist, 1, tidspunktEtterKrav),
+                InternalVedlegg(type2, null, frist2, 1, tidspunktEtterKrav),
+                InternalVedlegg(type3, tillegg3, frist3, 1, tidspunktFoerKrav),
+                InternalVedlegg(type3, null, frist3, 1, tidspunktEtterKrav))
 
         val oppgaver = service.hentOppgaver("123", token)
 
@@ -150,19 +150,20 @@ internal class OppgaveServiceTest {
         assertThat(oppgaver[0].dokumenttype).isEqualTo(type)
         assertThat(oppgaver[0].tilleggsinformasjon).isEqualTo(tillegg)
         assertThat(oppgaver[0].innsendelsesfrist).isEqualTo(frist)
-        assertThat(oppgaver[0].dokumenterLastetOpp).hasSize(1)
-        assertThat(oppgaver[0].dokumenterLastetOpp[0].lastetOpp).isEqualTo(tidspunktEtterKrav)
+        assertThat(oppgaver[0].antallVedlegg).isEqualTo(1)
+        assertThat(oppgaver[0].vedleggDatoLagtTil).isEqualTo(tidspunktEtterKrav)
 
         assertThat(oppgaver[1].dokumenttype).isEqualTo(type2)
         assertThat(oppgaver[1].tilleggsinformasjon).isNull()
         assertThat(oppgaver[1].innsendelsesfrist).isEqualTo(frist2)
-        assertThat(oppgaver[1].dokumenterLastetOpp).hasSize(1)
-        assertThat(oppgaver[1].dokumenterLastetOpp[0].lastetOpp).isEqualTo(tidspunktEtterKrav)
+        assertThat(oppgaver[1].antallVedlegg).isEqualTo(1)
+        assertThat(oppgaver[1].vedleggDatoLagtTil).isEqualTo(tidspunktEtterKrav)
 
         assertThat(oppgaver[2].dokumenttype).isEqualTo(type3)
         assertThat(oppgaver[2].tilleggsinformasjon).isEqualTo(tillegg3)
         assertThat(oppgaver[2].innsendelsesfrist).isEqualTo(frist3)
-        assertThat(oppgaver[2].dokumenterLastetOpp).isEmpty()
+        assertThat(oppgaver[2].antallVedlegg).isEqualTo(0)
+        assertThat(oppgaver[2].vedleggDatoLagtTil).isNull()
     }
 
     // FIXME:
@@ -178,7 +179,7 @@ internal class OppgaveServiceTest {
 
         every { eventService.createModel(any(), any()) } returns model
         every { vedleggService.hentEttersendteVedlegg(any(), any(), any(), any()) } returns listOf(
-                InternalVedlegg(type, tillegg, frist, tidspunktEtterKrav))
+                InternalVedlegg(type, tillegg, frist, 2, tidspunktEtterKrav))
 
         val oppgaver = service.hentOppgaver("123", token)
 

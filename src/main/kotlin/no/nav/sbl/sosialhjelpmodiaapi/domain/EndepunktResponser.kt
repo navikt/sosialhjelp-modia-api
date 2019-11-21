@@ -25,15 +25,10 @@ data class OppgaveResponse(
         val tilleggsinformasjon: String?,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
         val datoLagtTil: LocalDateTime,
-        val dokumenterLastetOpp: List<OpplastetDokument>,
-        val erFraInnsyn: Boolean
-)
-
-data class OpplastetDokument(
+        val antallVedlegg: Int,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-        val lastetOpp: LocalDateTime,
-        val type: String,
-        val tilleggsinformasjon: String?
+        val vedleggDatoLagtTil: LocalDateTime?,
+        val erFraInnsyn: Boolean
 )
 
 data class UtbetalingerResponse(

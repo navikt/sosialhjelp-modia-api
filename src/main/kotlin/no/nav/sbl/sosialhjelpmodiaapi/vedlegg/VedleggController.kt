@@ -22,13 +22,24 @@ class VedleggController(private val vedleggService: VedleggService) {
         }
 
         val vedleggResponses = internalVedleggList
-                .map {
-                    VedleggResponse(
-                            it.type,
-                            it.tilleggsinfo,
-                            it.innsendelsesfrist,
-                            it.datoLagtTil)
+                .flatMap { vedlegg ->
+                    if (vedlegg.antallFiler == 0) {
+                        return@flatMap listOf(VedleggResponse(
+                                vedlegg.type,
+                                vedlegg.tilleggsinfo,
+                                vedlegg.innsendelsesfrist,
+                                vedlegg.datoLagtTil))
+                    }
+                    (0 until vedlegg.antallFiler)
+                            .map {
+                                VedleggResponse(
+                                        vedlegg.type,
+                                        vedlegg.tilleggsinfo,
+                                        vedlegg.innsendelsesfrist,
+                                        vedlegg.datoLagtTil)
+                            }
                 }
+                .sortedWith(compareByDescending<VedleggResponse> { it.innsendelsesfrist }.thenByDescending { it.datoLagtTil })
         return ResponseEntity.ok(vedleggResponses)
     }
 }
