@@ -10,7 +10,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.DigisosApiWrapper
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE
+import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -30,8 +30,8 @@ class MockController(private val fiksClientMock: FiksClientMock,
     private val sosialhjelpMapper = JsonSosialhjelpObjectMapper.createObjectMapper()
 
     @PostMapping("/{soknadId}",
-            consumes = [APPLICATION_JSON_UTF8_VALUE],
-            produces = [APPLICATION_JSON_UTF8_VALUE])
+            consumes = [APPLICATION_JSON_VALUE],
+            produces = [APPLICATION_JSON_VALUE])
     fun postJsonDigisosSoker(@PathVariable soknadId: String, @RequestBody digisosApiWrapper: DigisosApiWrapper) {
         log.info("soknadId: $soknadId, jsonDigisosSoker: $digisosApiWrapper")
         val digisosSak = fiksClientMock.hentDigisosSak(soknadId, "Token")
@@ -42,7 +42,7 @@ class MockController(private val fiksClientMock: FiksClientMock,
     }
 
     @GetMapping("/{soknadId}",
-            produces = [APPLICATION_JSON_UTF8_VALUE])
+            produces = [APPLICATION_JSON_VALUE])
     fun getInnsynForSoknad(@PathVariable soknadId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<JsonDigisosSoker> {
         val digisosSak = fiksClientMock.hentDigisosSak(soknadId, token)
         val jsonDigisosSoker = innsynService.hentJsonDigisosSoker(soknadId, digisosSak.digisosSoker?.metadata, token)
