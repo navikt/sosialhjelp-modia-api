@@ -29,8 +29,8 @@ val jsonVedleggSpesifikasjonEttersendelse = JsonVedleggSpesifikasjon()
         .withVedlegg(
                 listOf(
                         JsonVedlegg()
-                                .withType("kontoutskrift")
-                                .withTilleggsinfo("additional")
+                                .withType("Strømfaktura")
+                                .withTilleggsinfo("For periode 01.01.2019 til 01.02.2019")
                                 .withStatus("LastetOpp")
                                 .withFiler(
                                         listOf(

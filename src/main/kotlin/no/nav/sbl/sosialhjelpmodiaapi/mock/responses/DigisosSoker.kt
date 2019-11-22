@@ -2,7 +2,6 @@ package no.nav.sbl.sosialhjelpmodiaapi.mock.responses
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.*
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.filreferanse.JsonDokumentlagerFilreferanse
-import no.nav.sbl.soknadsosialhjelp.digisos.soker.filreferanse.JsonSvarUtFilreferanse
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.*
 
 val digisosSoker = JsonDigisosSoker()
@@ -34,25 +33,6 @@ val digisosSoker = JsonDigisosSoker()
                                                                 .withId("12345678-9abc-def0-1234-56789abcdeb1")
                                                 )
                                 )
-                                .withVedlegg(
-                                        listOf(
-                                                JsonVedlegg()
-                                                        .withTittel("dokumentasjon etterspurt dokumentlager")
-                                                        .withReferanse(
-                                                                JsonDokumentlagerFilreferanse()
-                                                                        .withType(JsonFilreferanse.Type.DOKUMENTLAGER)
-                                                                        .withId("12345678-9abc-def0-1234-56789abcdea2")
-                                                        ),
-                                                JsonVedlegg()
-                                                        .withTittel("dokumentasjon etterspurt svarut")
-                                                        .withReferanse(
-                                                                JsonSvarUtFilreferanse()
-                                                                        .withType(JsonFilreferanse.Type.SVARUT)
-                                                                        .withId("12345678-9abc-def0-1234-56789abcdea3")
-                                                                        .withNr(1)
-                                                        )
-                                        )
-                                )
                                 .withDokumenter(
                                         listOf(
                                                 JsonDokumenter()
@@ -76,25 +56,6 @@ val digisosSoker = JsonDigisosSoker()
                                                                 .withType(JsonFilreferanse.Type.DOKUMENTLAGER)
                                                                 .withId("12345678-9abc-def0-1234-56789abcdeb1")
                                                 )
-                                )
-                                .withVedlegg(
-                                        listOf(
-                                                JsonVedlegg()
-                                                        .withTittel("foreløpig svar dokumentlager")
-                                                        .withReferanse(
-                                                                JsonDokumentlagerFilreferanse()
-                                                                        .withType(JsonFilreferanse.Type.DOKUMENTLAGER)
-                                                                        .withId("12345678-9abc-def0-1234-56789abcdeb2")
-                                                        ),
-                                                JsonVedlegg()
-                                                        .withTittel("foreløpig svar svarut")
-                                                        .withReferanse(
-                                                                JsonSvarUtFilreferanse()
-                                                                        .withType(JsonFilreferanse.Type.SVARUT)
-                                                                        .withId("12345678-9abc-def0-1234-56789abcdeb3")
-                                                                        .withNr(1)
-                                                        )
-                                        )
                                 ),
 
                         JsonVedtakFattet()
@@ -109,26 +70,7 @@ val digisosSoker = JsonDigisosSoker()
                                                 )
                                 )
                                 .withSaksreferanse("SAK1")
-                                .withUtfall(JsonVedtakFattet.Utfall.INNVILGET)
-                                .withVedlegg(
-                                        listOf(
-                                                JsonVedlegg()
-                                                        .withTittel("Foobar")
-                                                        .withReferanse(
-                                                                JsonDokumentlagerFilreferanse()
-                                                                        .withType(JsonFilreferanse.Type.DOKUMENTLAGER)
-                                                                        .withId("12345678-9abc-def0-1234-56789abcdef0")
-                                                        ),
-                                                JsonVedlegg()
-                                                        .withTittel("Test")
-                                                        .withReferanse(
-                                                                JsonSvarUtFilreferanse()
-                                                                        .withType(JsonFilreferanse.Type.SVARUT)
-                                                                        .withId("12345678-9abc-def0-1234-56789abcdef0")
-                                                                        .withNr(1)
-                                                        )
-                                        )
-                                ),
+                                .withUtfall(JsonVedtakFattet.Utfall.INNVILGET),
 
                         JsonSaksStatus()
                                 .withType(JsonHendelse.Type.SAKS_STATUS)
