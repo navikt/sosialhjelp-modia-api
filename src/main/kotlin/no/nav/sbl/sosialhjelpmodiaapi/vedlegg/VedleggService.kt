@@ -27,7 +27,10 @@ class VedleggService(private val fiksClient: FiksClient,
         val soknadVedlegg = hentSoknadVedleggMedStatus(LASTET_OPP_STATUS, fiksDigisosId, digisosSak.originalSoknadNAV, token)
         val ettersendteVedlegg = hentEttersendteVedlegg(fiksDigisosId, model, digisosSak.ettersendtInfoNAV, token)
 
-        return soknadVedlegg.plus(ettersendteVedlegg)
+        // legg til utestående oppgaver som vedlegg med antallFiler=0 og datoLagtTil=null
+        val utestaendeOppgaver = hentUtestaendeOppgaver(model, ettersendteVedlegg)
+
+        return soknadVedlegg.plus(ettersendteVedlegg).plus(utestaendeOppgaver)
     }
 
     fun hentSoknadVedleggMedStatus(status: String, fiksDigisosId: String, originalSoknadNAV: OriginalSoknadNAV?, token: String): List<InternalVedlegg> {
@@ -69,6 +72,23 @@ class VedleggService(private val fiksClient: FiksClient,
                                 )
                             }
                 } ?: emptyList()
+    }
+
+    private fun hentUtestaendeOppgaver(model: InternalDigisosSoker, ettersendteVedlegg: List<InternalVedlegg>): List<InternalVedlegg> {
+        return model.oppgaver
+                .filterNot { oppgave ->
+                    ettersendteVedlegg
+                            .any { it.type == oppgave.tittel && it.tilleggsinfo == oppgave.tilleggsinfo && it.innsendelsesfrist == oppgave.innsendelsesfrist }
+                }
+                .map {
+                    InternalVedlegg(
+                            type = it.tittel,
+                            tilleggsinfo = it.tilleggsinfo,
+                            innsendelsesfrist = it.innsendelsesfrist,
+                            antallFiler = 0,
+                            datoLagtTil = null
+                    )
+                }
     }
 
     private fun hentVedleggSpesifikasjon(fiksDigisosId: String, dokumentlagerId: String, token: String): JsonVedleggSpesifikasjon {

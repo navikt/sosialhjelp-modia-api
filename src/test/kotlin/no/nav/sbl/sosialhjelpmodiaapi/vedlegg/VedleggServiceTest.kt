@@ -242,6 +242,36 @@ internal class VedleggServiceTest {
         assertThat(list[5].type).isEqualTo(dokumenttype_3)
         assertThat(list[5].innsendelsesfrist).isEqualTo(frist)
     }
+
+    @Test
+    internal fun `utestaaende oppgaver skal mappes som manglende vedlegg`() {
+        val frist = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(14)
+        val frist2 = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(21)
+        val datoLagtTil = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(2)
+        val model = InternalDigisosSoker()
+        model.oppgaver.add(Oppgave(dokumenttype_3, null, frist, datoLagtTil, true))
+        model.oppgaver.add(Oppgave(dokumenttype_4, null, frist2, datoLagtTil, true))
+
+        every { eventService.createModel(any(), any()) } returns model
+        every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns emptyList()
+        every { fiksClient.hentDokument(any(), vedleggMetadata_soknad_1, any(), any()) } returns mockJsonVedleggSpesifikasjon
+
+        val list = service.hentAlleOpplastedeVedlegg(id, "token")
+
+        assertThat(list).hasSize(2)
+
+        assertThat(list[0].type).isEqualTo(dokumenttype_3)
+        assertThat(list[0].tilleggsinfo).isNull()
+        assertThat(list[0].innsendelsesfrist).isEqualTo(frist)
+        assertThat(list[0].antallFiler).isEqualTo(0)
+        assertThat(list[0].datoLagtTil).isNull()
+
+        assertThat(list[1].type).isEqualTo(dokumenttype_4)
+        assertThat(list[1].tilleggsinfo).isNull()
+        assertThat(list[1].innsendelsesfrist).isEqualTo(frist2)
+        assertThat(list[1].antallFiler).isEqualTo(0)
+        assertThat(list[1].datoLagtTil).isNull()
+    }
 }
 
 private const val id = "123"
