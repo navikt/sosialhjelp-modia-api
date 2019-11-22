@@ -1,14 +1,14 @@
 package no.nav.sbl.sosialhjelpmodiaapi.saksstatus
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatusResponse
-import no.nav.security.token.support.core.api.Unprotected
+import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-@Unprotected
+@ProtectedWithClaims(issuer = "")
 @RestController
 @RequestMapping("/api/v1/innsyn")
 class SaksStatusController(private val saksStatusService: SaksStatusService) {

@@ -1,14 +1,14 @@
 package no.nav.sbl.sosialhjelpmodiaapi.oppgave
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.OppgaveResponse
-import no.nav.security.token.support.core.api.Unprotected
+import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-@Unprotected
+@ProtectedWithClaims(issuer = "")
 @RestController
 @RequestMapping("/api/v1/innsyn")
 class OppgaveController(val oppgaveService: OppgaveService) {
