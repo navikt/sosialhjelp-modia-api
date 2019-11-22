@@ -23,14 +23,8 @@ class VedleggController(private val vedleggService: VedleggService) {
 
         val vedleggResponses = internalVedleggList
                 .flatMap { vedlegg ->
-                    if (vedlegg.antallFiler == 0) {
-                        return@flatMap listOf(VedleggResponse(
-                                vedlegg.type,
-                                vedlegg.tilleggsinfo,
-                                vedlegg.innsendelsesfrist,
-                                vedlegg.datoLagtTil))
-                    }
-                    (0 until vedlegg.antallFiler)
+                    val end = vedlegg.antallFiler.takeIf { it > 0 } ?: 1
+                    (0 until end)
                             .map {
                                 VedleggResponse(
                                         vedlegg.type,
