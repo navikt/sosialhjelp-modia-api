@@ -21,9 +21,13 @@ class EventService(private val innsynService: InnsynService,
 
         val model = InternalDigisosSoker()
 
-        if (jsonSoknad != null && jsonSoknad.mottaker != null && timestampSendt != null) {
-            model.soknadsmottaker = Soknadsmottaker(jsonSoknad.mottaker.enhetsnummer, jsonSoknad.mottaker.navEnhetsnavn)
-            model.historikk.add(Hendelse("Søknaden med vedlegg er sendt til ${jsonSoknad.mottaker.navEnhetsnavn}", unixToLocalDateTime(timestampSendt)))
+        if (timestampSendt != null) {
+            model.status = SoknadsStatus.SENDT
+
+            if (jsonSoknad != null && jsonSoknad.mottaker != null) {
+                model.soknadsmottaker = Soknadsmottaker(jsonSoknad.mottaker.enhetsnummer, jsonSoknad.mottaker.navEnhetsnavn)
+                model.historikk.add(Hendelse("Søknaden med vedlegg er sendt til ${jsonSoknad.mottaker.navEnhetsnavn}", unixToLocalDateTime(timestampSendt)))
+            }
         }
 
         if (jsonDigisosSoker != null) {

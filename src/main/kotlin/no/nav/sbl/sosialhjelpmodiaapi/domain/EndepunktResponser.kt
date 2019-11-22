@@ -19,9 +19,15 @@ data class HendelseResponse(
 )
 
 data class OppgaveResponse(
-        val innsendelsesfrist: String?,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+        val innsendelsesfrist: LocalDateTime?,
         val dokumenttype: String,
         val tilleggsinformasjon: String?,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+        val datoLagtTil: LocalDateTime,
+        val antallVedlegg: Int,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+        val vedleggDatoLagtTil: LocalDateTime?,
         val erFraInnsyn: Boolean
 )
 
@@ -49,4 +55,13 @@ data class SakResponse(
         val sistOppdatert: LocalDateTime,
         val antallNyeOppgaver: Int?,
         val kilde: String
+)
+
+data class VedleggResponse(
+        val type: String,
+        val tilleggsinfo: String?,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val innsendelsesfrist: LocalDateTime?,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val datoLagtTil: LocalDateTime?
 )

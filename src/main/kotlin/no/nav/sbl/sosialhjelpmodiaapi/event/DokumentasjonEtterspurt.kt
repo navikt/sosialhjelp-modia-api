@@ -11,7 +11,8 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonEtterspurt) {
             .map { Oppgave(it.dokumenttype, it.tilleggsinformasjon, toLocalDateTime(it.innsendelsesfrist), toLocalDateTime(hendelse.hendelsestidspunkt), true) }
             .toMutableList()
 
-    val antallKrav = if (hendelse.dokumenter.isEmpty()) "Ingen" else hendelse.dokumenter.size.toString()
-    val beskrivelse = "Veileder har oppdatert dine dokumentasjonskrav: $antallKrav vedlegg mangler"
-    historikk.add(Hendelse(beskrivelse, toLocalDateTime(hendelse.hendelsestidspunkt)))
+    if (hendelse.dokumenter.isNotEmpty() && hendelse.forvaltningsbrev != null) {
+        val beskrivelse = "Du må sende dokumentasjon"
+        historikk.add(Hendelse(beskrivelse, toLocalDateTime(hendelse.hendelsestidspunkt)))
+    }
 }

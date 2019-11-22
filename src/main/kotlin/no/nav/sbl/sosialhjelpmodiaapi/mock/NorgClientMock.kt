@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.mock
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
-import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.defaultNAVEnhet
 import no.nav.sbl.sosialhjelpmodiaapi.norg.NorgClient
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
@@ -14,7 +13,15 @@ class NorgClientMock : NorgClient {
 
     override fun hentNavEnhet(enhetsnr: String): NavEnhet {
         return innsynMap.getOrElse(enhetsnr, {
-            val default = defaultNAVEnhet
+            val default = NavEnhet(
+                    enhetId = 100000367,
+                    navn = enhetsnr,
+                    enhetNr = 1630,
+                    antallRessurser = 20,
+                    status = "AKTIV",
+                    aktiveringsdato = "1982-04-21",
+                    nedleggelsesdato = "null"
+            )
             innsynMap[enhetsnr] = default
             default
         })

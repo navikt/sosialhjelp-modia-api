@@ -10,6 +10,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.*
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.*
 
 @Profile("mock")
@@ -19,15 +21,15 @@ class FiksClientMock : FiksClient {
     private val innsynMap = mutableMapOf<String, DigisosSak>()
     private val dokumentMap = mutableMapOf<String, Any>()
 
-    override fun hentDigisosSak(digisosId: String, sporingsId: String): DigisosSak {
+    override fun hentDigisosSak(digisosId: String, token: String): DigisosSak {
         return innsynMap.getOrElse(digisosId, {
-            val default = defaultDigisosSak.copyDigisosSokerWithNewMetadataId(UUID.randomUUID().toString())
+            val default = defaultDigisosSak.copyDigisosSokerWithNewMetadataId(digisosId, innsynMap.size.toLong())
             innsynMap[digisosId] = default
             default
         })
     }
 
-    override fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>, sporingsId: String): Any {
+    override fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>, token: String): Any {
         return when (requestedClass) {
             JsonDigisosSoker::class.java -> dokumentMap.getOrElse(dokumentlagerId, {
                 val default = digisosSoker
@@ -61,16 +63,45 @@ class FiksClientMock : FiksClient {
         }
     }
 
-    override fun hentAlleDigisosSaker(sporingsId: String): List<DigisosSak> {
-        return innsynMap.values.toList()
+    override fun hentAlleDigisosSaker(token: String): List<DigisosSak> {
+        return when {
+            innsynMap.values.isEmpty() -> listOf(defaultDigisosSak.copyDigisosSokerWithNewMetadataId(UUID.randomUUID().toString(), 1))
+            else -> innsynMap.values.toList()
+        }
     }
 
     override fun hentKommuneInfo(kommunenummer: String): KommuneInfo {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return KommuneInfo(kommunenummer, true, true, false, false, null)
     }
+
+//    override fun hentKommuneInfoForAlle(): List<KommuneInfo> {
+//        val returnValue = ArrayList<KommuneInfo>()
+//        returnValue.add(KommuneInfo("0001", true, true, false, false, null))
+//        returnValue.add(KommuneInfo("1123", true, true, false, false, null))
+//        returnValue.add(KommuneInfo("0002", true, true, false, false, null))
+//        returnValue.add(KommuneInfo("9863", true, true, false, false, null))
+//        returnValue.add(KommuneInfo("9999", true, true, false, false, null))
+//        returnValue.add(KommuneInfo("2352", true, true, false, false, null))
+//        returnValue.add(KommuneInfo("0000", true, false, false, false, null))
+//        returnValue.add(KommuneInfo("8734", true, true, false, false, null))
+//        returnValue.add(KommuneInfo("0909", true, true, false, false, null))
+//        returnValue.add(KommuneInfo("0301", true, true, false, false, null))
+//        returnValue.add(KommuneInfo("1222", true, true, false, false, null))
+//        returnValue.add(KommuneInfo("9002", true, true, false, false, null))
+//        returnValue.add(KommuneInfo("6663", true, true, false, false, null))
+//        returnValue.add(KommuneInfo("1201", true, true, false, false, null))
+//        returnValue.add(KommuneInfo("4455", true, true, false, true, null))
+//        returnValue.add(KommuneInfo("1833", false, false, false, false, null))
+//        returnValue.add(KommuneInfo("1430", true, true, true, true, null))
+//        return returnValue
+//    }
 
     fun postDigisosSak(digisosSak: DigisosSak) {
         innsynMap[digisosSak.fiksDigisosId] = digisosSak
+    }
+
+    fun digisosSakFinnes(fiksDigisosId: String): Boolean {
+        return innsynMap.containsKey(fiksDigisosId)
     }
 
     fun postDokument(dokumentlagerId: String, jsonDigisosSoker: JsonDigisosSoker) {
@@ -81,8 +112,9 @@ class FiksClientMock : FiksClient {
         dokumentMap[dokumentlagerId] = jsonVedleggSpesifikasjon
     }
 
-    fun DigisosSak.copyDigisosSokerWithNewMetadataId(metadata: String): DigisosSak {
-        return this.copy(digisosSoker = this.digisosSoker?.copy(metadata = metadata))
+    fun DigisosSak.copyDigisosSokerWithNewMetadataId(metadata: String, ukerTilbake: Long): DigisosSak {
+        val sistEndret = LocalDateTime.now().minusWeeks(ukerTilbake).toEpochSecond(ZoneOffset.UTC) * 1000
+        return this.copy(fiksDigisosId = metadata, sistEndret = sistEndret, digisosSoker = this.digisosSoker?.copy(metadata = metadata))
     }
 
     fun DigisosSak.updateEttersendtInfoNAV(ettersendtInfoNAV: EttersendtInfoNAV): DigisosSak {
