@@ -55,3 +55,8 @@ spec:
       value: {{id_porten_client_id}}
     - name: ID_PORTEN_SCOPE
       value: {{id_porten_scope}}
+
+    - name: NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_DISCOVERYURL
+      value: {{issuer_veileder_discoveryurl}}
+    - name: NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE
+      value: {{issuer_veileder_acceptedaudience}}

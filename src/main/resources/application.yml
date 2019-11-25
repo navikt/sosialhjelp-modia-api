@@ -27,6 +27,8 @@ client:
   id_porten_config_url: ${ID_PORTEN_CONFIG_URL:https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration}
   norg_endpoint_url: ${NORG_ENDPOINT_URL:norg_endpoint_url}
 
-cors:
-  allowed_origins:
-    - "https://www.nav.no/sosialhjelp/"
+no.nav.security.jwt:
+  issuer.veileder:
+    discoveryurl: ${NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_DISCOVERYURL}
+    accepted_audience: ${NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE}
+    cookie_name: ID_token
