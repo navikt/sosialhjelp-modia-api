@@ -8,7 +8,7 @@ import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-@ProtectedWithClaims(issuer = "")
+@ProtectedWithClaims(issuer = "veileder")
 @RestController
 @RequestMapping("/api/v1/innsyn")
 class OppgaveController(val oppgaveService: OppgaveService) {

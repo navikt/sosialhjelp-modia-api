@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@ProtectedWithClaims(issuer = "")
+@ProtectedWithClaims(issuer = "veileder")
 @RestController
 @RequestMapping("/api/v1/innsyn/")
 class UtbetalingerController(private val utbetalingerService: UtbetalingerService) {

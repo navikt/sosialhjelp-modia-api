@@ -5,7 +5,7 @@ import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-@ProtectedWithClaims(issuer = "")
+@ProtectedWithClaims(issuer = "veileder")
 @RestController
 @RequestMapping("/api/v1/innsyn/kommune")
 class KommuneController(private val kommuneService: KommuneService) {
