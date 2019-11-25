@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.config
 
-import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -16,8 +15,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 @Configuration
 @EnableWebSecurity
 @EnableWebMvc
-@EnableJwtTokenValidation(ignore = ["org.springframework", "springfox.documentation.swagger.web.ApiResourceController"])
-class WebSecurityConfig(private val corsProperties: CorsProperties) : WebSecurityConfigurerAdapter() {
+class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
@@ -28,13 +26,20 @@ class WebSecurityConfig(private val corsProperties: CorsProperties) : WebSecurit
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf(*corsProperties.allowedOrigins)
+        configuration.allowedOrigins = listOf(
+                "https://www.nav.no",
+                "https://tjenester.nav.no")
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
         configuration.allowedHeaders = listOf("Origin", "Content-Type", "Accept", "Authorization")
         configuration.allowCredentials = true
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)
         return source
+    }
+
+    @Bean
+    fun navCorsFilter(): CORSFilter {
+        return CORSFilter()
     }
 }
 
@@ -45,7 +50,7 @@ class WebSecurityMockConfig : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        http.csrf().ignoringAntMatchers("/api/v1/mock/**", "/api/v1/innsyn/**/vedlegg/send", "/api/v1/digisosapi/**", "/api/woldena/**")
+        http.csrf().disable()
         http.cors()
     }
 }
