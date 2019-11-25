@@ -29,6 +29,6 @@ client:
 
 no.nav.security.jwt:
   issuer.veileder:
-    discoveryurl:
-    accepted_audience:
-    cookie_name:
+    discoveryurl: ${NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_DISCOVERYURL}
+    accepted_audience: ${NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE}
+    cookie_name: ID_token
