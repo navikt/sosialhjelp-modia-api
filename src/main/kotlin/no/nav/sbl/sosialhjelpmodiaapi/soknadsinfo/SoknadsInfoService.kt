@@ -15,7 +15,8 @@ class SoknadsInfoService(private val fiksClient: FiksClient,
 
     // TODO: vurdere om SoknadsInfoResponse skal reduseres til å _kun_ inneholde
     //  soknadSendtMottattTidspunkt, navKontorSoknad, navKontorTildelt, tidspunktForelopigSvar og navKontorSaksbehandlingstid
-    //  status, tittel og sistOppdatert kan bli informasjon liggende i en slags "header"
+    //  Mulig at følgende fjernes (eller blir eget endepunkt): status, tittel og sistOppdatert
+    //  Mulig utvidelse: Oppgaver {antall dokumentkrav, neste frist}, Utbetalinger {harVilkår, antall utførte, antall til forfall, antall stoppet}
 
     fun hentSoknadsInfo(fiksDigisosId: String, sporingsId: String): SoknadsInfoResponse {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, sporingsId)
