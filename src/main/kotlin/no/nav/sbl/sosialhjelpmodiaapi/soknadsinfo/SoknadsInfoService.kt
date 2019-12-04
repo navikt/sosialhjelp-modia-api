@@ -13,6 +13,10 @@ class SoknadsInfoService(private val fiksClient: FiksClient,
                          private val eventService: EventService,
                          private val norgClient: NorgClient) {
 
+    // TODO: vurdere om SoknadsInfoResponse skal reduseres til å _kun_ inneholde
+    //  soknadSendtMottattTidspunkt, navKontorSoknad, navKontorTildelt, tidspunktForelopigSvar og navKontorSaksbehandlingstid
+    //  status, tittel og sistOppdatert kan bli informasjon liggende i en slags "header"
+
     fun hentSoknadsInfo(fiksDigisosId: String, sporingsId: String): SoknadsInfoResponse {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, sporingsId)
         val model = eventService.createModel(digisosSak, sporingsId)
@@ -24,7 +28,7 @@ class SoknadsInfoService(private val fiksClient: FiksClient,
                 status = model.status!!,
                 tittel = hentSoknadTittel(digisosSak, model),
                 sistOppdatert = unixToLocalDateTime(digisosSak.sistEndret),
-                sendtTidspunkt = model.historikk[0].tidspunkt, // Første hendelse i historikk er alltid SENDT eller MOTTATT (hvis papirsøknad)
+                soknadSendtMottattTidspunkt = model.historikk[0].tidspunkt, // Første hendelse i historikk er alltid SENDT eller MOTTATT (hvis papirsøknad)
                 navKontorSoknad = model.soknadsmottaker?.navEnhetsnavn, // null hvis papirsøknad?
                 navKontorTildelt = navEnhetTildelt?.navn,
                 tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt,
