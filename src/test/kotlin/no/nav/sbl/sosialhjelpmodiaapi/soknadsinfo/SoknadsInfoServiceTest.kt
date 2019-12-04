@@ -71,8 +71,8 @@ internal class SoknadsInfoServiceTest {
         assertThat(soknadsInfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(soknadsInfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
         assertThat(soknadsInfo.sendtTidspunkt).isEqualTo(tidspunkt)
-        assertThat(soknadsInfo.navKontorSendtTil).isEqualTo(enhetNavn1)
-        assertThat(soknadsInfo.navKontorVideresendtTil).isNull()
+        assertThat(soknadsInfo.navKontorSoknad).isEqualTo(enhetNavn1)
+        assertThat(soknadsInfo.navKontorTildelt).isNull()
         assertThat(soknadsInfo.tidspunktForelopigSvar).isNull()
         assertThat(soknadsInfo.navKontorSaksbehandlingstid).isEqualTo(sosialetjenester1)
     }
@@ -97,8 +97,8 @@ internal class SoknadsInfoServiceTest {
         assertThat(soknadsInfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(soknadsInfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
         assertThat(soknadsInfo.sendtTidspunkt).isEqualTo(tidspunkt)
-        assertThat(soknadsInfo.navKontorSendtTil).isEqualTo(enhetNavn1)
-        assertThat(soknadsInfo.navKontorVideresendtTil).isNull()
+        assertThat(soknadsInfo.navKontorSoknad).isEqualTo(enhetNavn1)
+        assertThat(soknadsInfo.navKontorTildelt).isNull()
         assertThat(soknadsInfo.tidspunktForelopigSvar).isEqualTo(tidspunkt)
         assertThat(soknadsInfo.navKontorSaksbehandlingstid).isEqualTo(sosialetjenester1)
     }
@@ -123,14 +123,14 @@ internal class SoknadsInfoServiceTest {
         assertThat(soknadsInfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(soknadsInfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
         assertThat(soknadsInfo.sendtTidspunkt).isEqualTo(tidspunkt)
-        assertThat(soknadsInfo.navKontorSendtTil).isEqualTo(enhetNavn1)
-        assertThat(soknadsInfo.navKontorVideresendtTil).isEqualTo(enhetNavn2)
+        assertThat(soknadsInfo.navKontorSoknad).isEqualTo(enhetNavn1)
+        assertThat(soknadsInfo.navKontorTildelt).isEqualTo(enhetNavn2)
         assertThat(soknadsInfo.tidspunktForelopigSvar).isNull()
         assertThat(soknadsInfo.navKontorSaksbehandlingstid).isEqualTo(sosialetjenester2)
     }
 
     @Test
-    fun `soknadsInfo videresendt papirsoknad`() {
+    fun `soknadsInfo papirsoknad og videresendt`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -148,8 +148,8 @@ internal class SoknadsInfoServiceTest {
         assertThat(soknadsInfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(soknadsInfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
         assertThat(soknadsInfo.sendtTidspunkt).isEqualTo(tidspunkt)
-        assertThat(soknadsInfo.navKontorSendtTil).isEqualTo("NAVKONTOR") //FIXME?
-        assertThat(soknadsInfo.navKontorVideresendtTil).isEqualTo(enhetNavn2)
+        assertThat(soknadsInfo.navKontorSoknad).isNull() // null hvis papirsøknad?
+        assertThat(soknadsInfo.navKontorTildelt).isEqualTo(enhetNavn2)
         assertThat(soknadsInfo.tidspunktForelopigSvar).isNull()
         assertThat(soknadsInfo.navKontorSaksbehandlingstid).isEqualTo(sosialetjenester2)
     }
@@ -172,8 +172,8 @@ internal class SoknadsInfoServiceTest {
         assertThat(soknadsInfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(soknadsInfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
         assertThat(soknadsInfo.sendtTidspunkt).isEqualTo(tidspunkt)
-        assertThat(soknadsInfo.navKontorSendtTil).isEqualTo("NAVKONTOR") //FIXME?
-        assertThat(soknadsInfo.navKontorVideresendtTil).isNull()
+        assertThat(soknadsInfo.navKontorSoknad).isNull() // null hvis papirsøknad?
+        assertThat(soknadsInfo.navKontorTildelt).isNull()
         assertThat(soknadsInfo.tidspunktForelopigSvar).isNull()
         assertThat(soknadsInfo.navKontorSaksbehandlingstid).isNull()
     }

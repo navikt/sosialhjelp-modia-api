@@ -79,8 +79,8 @@ data class SoknadsInfoResponse(
         val sistOppdatert: LocalDateTime,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
         val sendtTidspunkt: LocalDateTime,
-        val navKontorSendtTil: String, // nullable?
-        val navKontorVideresendtTil: String?,
+        val navKontorSoknad: String?,
+        val navKontorTildelt: String?,
         val tidspunktForelopigSvar: LocalDateTime?,
         val navKontorSaksbehandlingstid: String?
 )
