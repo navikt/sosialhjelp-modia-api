@@ -34,7 +34,10 @@ spec:
         mountPath: /var/run/secrets/nais.io/virksomhetssertifikat
       - kvPath: {{serviceuser_vault_path}}
         mountPath: /secrets/serviceuser/srvsosialhjelp-mod
-  ingresses: {{{ingresses}}}
+  ingresses:
+    {{#each ingresses}}
+    - "{{this}}"
+    {{/each}}
   resources:
     limits:
       cpu: 500m
