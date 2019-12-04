@@ -17,7 +17,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonSoknadsStatus) {
             if (navEnhetsnavn == null) {
                 "Søknaden med vedlegg er mottatt"
             } else {
-                "Søknaden med vedlegg er mottatt hos $navEnhetsnavn "
+                "Søknaden med vedlegg er mottatt hos $navEnhetsnavn"
             }
         }
         JsonSoknadsStatus.Status.UNDER_BEHANDLING -> "Søknaden er under behandling"
