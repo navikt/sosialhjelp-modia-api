@@ -17,8 +17,8 @@ class SoknadsInfoService(private val fiksClient: FiksClient,
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, sporingsId)
         val model = eventService.createModel(digisosSak, sporingsId)
 
-        val enhetsnr: String? = model.tildeltNavKontor ?: model.soknadsmottaker?.navEnhetsnummer
-        val navEnhet = enhetsnr?.let { norgClient.hentNavEnhet(it) }
+        val navEnhetSendt = model.soknadsmottaker?.navEnhetsnummer?.let { norgClient.hentNavEnhet(it) }
+        val navEnhetVideresendt = model.tildeltNavKontor?.let { norgClient.hentNavEnhet(it) }
 
         return SoknadsInfoResponse(
                 status = model.status!!,
@@ -26,9 +26,9 @@ class SoknadsInfoService(private val fiksClient: FiksClient,
                 sistOppdatert = unixToLocalDateTime(digisosSak.sistEndret),
                 sendtTidspunkt = model.historikk[0].tidspunkt, // Første hendelse i historikk er alltid SENDT eller MOTTATT (hvis papirsøknad)
                 navKontorSendtTil = model.soknadsmottaker?.navEnhetsnavn ?: "NAVKONTOR", // hva hvis papirsøknad og ikke videresendt?
-                navKontorVideresendtTil = navEnhet?.navn,
+                navKontorVideresendtTil = navEnhetVideresendt?.navn,
                 tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt,
-                navKontorSaksbehandlingstid = navEnhet?.sosialeTjenester // info om sosialTjenester for navkontor søknad er videresendt til eller sendt til/mottatt
+                navKontorSaksbehandlingstid = navEnhetVideresendt?.sosialeTjenester ?: navEnhetSendt?.sosialeTjenester // info om sosialTjenester for navkontor søknad er videresendt til eller sendt til/mottatt
         )
     }
 }

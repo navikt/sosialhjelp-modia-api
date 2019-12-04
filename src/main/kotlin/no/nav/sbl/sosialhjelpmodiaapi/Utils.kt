@@ -15,6 +15,7 @@ import kotlin.reflect.full.companionObject
 
 const val NAIS_CLUSTER_NAME = "NAIS_CLUSTER_NAME"
 const val NAIS_NAMESPACE = "NAIS_NAMESPACE"
+const val SOKNAD_DEFAULT_TITTEL = "Søknad om økonomisk sosialhjelp"
 
 inline fun <reified T : Any> typeRef(): ParameterizedTypeReference<T> = object : ParameterizedTypeReference<T>() {}
 
@@ -44,7 +45,7 @@ fun isRunningInProd(): Boolean {
 
 fun hentSoknadTittel(digisosSak: DigisosSak, model: InternalDigisosSoker): String {
     return when (digisosSak.digisosSoker) {
-        null -> "Søknad om økonomisk sosialhjelp"
+        null -> SOKNAD_DEFAULT_TITTEL
         else -> model.saker.joinToString { it.tittel ?: DEFAULT_TITTEL }
     }
 }
