@@ -71,3 +71,16 @@ data class VedleggResponse(
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
         val datoLagtTil: LocalDateTime?
 )
+
+data class SoknadsInfoResponse(
+        val status: SoknadsStatus,
+        val tittel: String,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val sistOppdatert: LocalDateTime,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val sendtTidspunkt: LocalDateTime,
+        val navKontorSendtTil: String, // nullable?
+        val navKontorVideresendtTil: String?,
+        val tidspunktForelopigSvar: LocalDateTime?,
+        val navKontorSaksbehandlingstid: String?
+)

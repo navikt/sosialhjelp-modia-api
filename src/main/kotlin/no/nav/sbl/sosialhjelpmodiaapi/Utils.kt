@@ -1,5 +1,8 @@
 package no.nav.sbl.sosialhjelpmodiaapi
 
+import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
+import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.saksstatus.DEFAULT_TITTEL
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.ParameterizedTypeReference
@@ -37,4 +40,11 @@ fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
 
 fun isRunningInProd(): Boolean {
     return System.getenv(NAIS_CLUSTER_NAME) == "prod-fss" && System.getenv(NAIS_NAMESPACE) == "default"
+}
+
+fun hentSoknadTittel(digisosSak: DigisosSak, model: InternalDigisosSoker): String {
+    return when (digisosSak.digisosSoker) {
+        null -> "Søknad om økonomisk sosialhjelp"
+        else -> model.saker.joinToString { it.tittel ?: DEFAULT_TITTEL }
+    }
 }

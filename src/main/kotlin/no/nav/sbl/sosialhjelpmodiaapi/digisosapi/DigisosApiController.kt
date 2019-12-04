@@ -1,12 +1,11 @@
 package no.nav.sbl.sosialhjelpmodiaapi.digisosapi
 
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SakResponse
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.hentSoknadTittel
 import no.nav.sbl.sosialhjelpmodiaapi.oppgave.OppgaveService
-import no.nav.sbl.sosialhjelpmodiaapi.saksstatus.DEFAULT_TITTEL
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.KILDE_INNSYN_API
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -34,7 +33,7 @@ class DigisosApiController(private val fiksClient: FiksClient,
 
                     SakResponse(
                             digisosSak.fiksDigisosId,
-                            hentNavn(digisosSak, model),
+                            hentSoknadTittel(digisosSak, model),
                             model.status.toString(),
                             unixToLocalDateTime(digisosSak.sistEndret),
                             hentAntallNyeOppgaver(model, digisosSak.fiksDigisosId, token),
@@ -45,14 +44,7 @@ class DigisosApiController(private val fiksClient: FiksClient,
         return ResponseEntity.ok().body(responselist)
     }
 
-    private fun hentNavn(digisosSak: DigisosSak, model: InternalDigisosSoker): String {
-        return when {
-            digisosSak.digisosSoker == null -> "Søknad om økonomisk sosialhjelp"
-            else -> model.saker.joinToString { it.tittel ?: DEFAULT_TITTEL }
-        }
-    }
-
-    private fun hentAntallNyeOppgaver(model: InternalDigisosSoker, fiksDigisosId: String, token: String) : Int? {
+    private fun hentAntallNyeOppgaver(model: InternalDigisosSoker, fiksDigisosId: String, token: String): Int? {
         return when {
             model.oppgaver.isEmpty() -> null
             else -> oppgaveService.hentOppgaver(fiksDigisosId, token).size
