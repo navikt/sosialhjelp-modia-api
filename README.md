@@ -1,4 +1,7 @@
-[![CircleCI](https://circleci.com/gh/navikt/sosialhjelp-modia-api.svg?style=svg&circle-token=94dff29c86cdbfcb739ac73795619f6ddecd2d43)](https://circleci.com/gh/navikt/sosialhjelp-modia-api)
+![](https://github.com/navikt/sosialhjelp-modia-api/workflows/Build/badge.svg?branch=master)
+![](https://github.com/navikt/sosialhjelp-modia-api/workflows/Deploy%20Dev/badge.svg?)
+![](https://github.com/navikt/sosialhjelp-modia-api/workflows/Deploy%20Prod/badge.svg?)
+
 # sosialhjelp-modia-api
 Backend-app som skal vise personinformasjon i modia for sosialhjelp.
 
