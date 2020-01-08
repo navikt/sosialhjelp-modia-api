@@ -44,7 +44,7 @@ jobs:
         uses: navikt/sosialhjelp-ci/actions/create-artifact-version@master
       - name: Create docker image tags
         run: |
-          PROJECT_NAME=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)
+          PROJECT_NAME=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)-2
           echo "docker.pkg.github.com/$GITHUB_REPOSITORY/$PROJECT_NAME:$VERSION" > DOCKER_TAG
         env:
           VERSION: ${{ steps.artifact-version.outputs.version }}
