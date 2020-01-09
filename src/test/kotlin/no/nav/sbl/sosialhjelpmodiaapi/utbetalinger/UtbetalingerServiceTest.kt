@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.utbetalinger
 
 import io.mockk.clearAllMocks
-import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.sosialhjelpmodiaapi.domain.*
@@ -57,7 +56,7 @@ internal class UtbetalingerServiceTest {
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
                         Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null,
-                                LocalDate.of(2019, 8, 10), null, null, null, null, mutableListOf(), mutableListOf())),
+                                LocalDate.of(2019, 8, 10), LocalDate.of(2019,8,1), LocalDate.of(2019,8,31), "mottaker", null, mutableListOf(), mutableListOf())),
                 vilkar = mutableListOf(),
                 dokumentasjonkrav = mutableListOf()
         ))
@@ -77,6 +76,10 @@ internal class UtbetalingerServiceTest {
         assertThat(response[0].utbetalinger[0].belop).isEqualTo(10.0)
         assertThat(response[0].utbetalinger[0].fiksDigisosId).isEqualTo(digisosId)
         assertThat(response[0].utbetalinger[0].utbetalingsdato).isEqualTo("2019-08-10")
+        assertThat(response[0].utbetalinger[0].fom).isEqualTo("2019-08-01")
+        assertThat(response[0].utbetalinger[0].tom).isEqualTo("2019-08-31")
+        assertThat(response[0].utbetalinger[0].mottaker).isEqualTo("mottaker")
+        assertThat(response[0].utbetalinger[0].harVilkar).isFalse()
     }
 
     @Test
@@ -158,7 +161,6 @@ internal class UtbetalingerServiceTest {
         assertThat(response[1].utbetalinger[0].utbetalingsdato).isEqualTo("2019-08-10")
     }
 
-    @Disabled("disabled frem til det blir bekreftet om vilkår skal være med i response")
     @Test
     fun `Skal returnere response med 1 utbetaling med vilkar`() {
         val model = InternalDigisosSoker()
@@ -171,11 +173,7 @@ internal class UtbetalingerServiceTest {
                 saksStatus = SaksStatus.UNDER_BEHANDLING,
                 tittel = tittel,
                 vedtak = mutableListOf(),
-                utbetalinger = mutableListOf(
-                        utbetaling1,
-                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null,
-                                LocalDate.of(2019, 9, 12), null, null, null, null, mutableListOf(vilkar), mutableListOf())
-                ),
+                utbetalinger = mutableListOf(utbetaling1),
                 vilkar = mutableListOf(vilkar),
                 dokumentasjonkrav = mutableListOf()
         ))
@@ -187,7 +185,8 @@ internal class UtbetalingerServiceTest {
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
-        assertThat(response[0].utbetalinger).hasSize(2)
+        assertThat(response[0].utbetalinger).hasSize(1)
+        assertThat(response[0].utbetalinger[0].harVilkar).isTrue()
     }
 
     @Disabled("disabled frem til det blir bekreftet om dokumentasjonkrav skal være med i response")

@@ -4,9 +4,9 @@ metadata:
   name: sosialhjelp-modia-api
   namespace: {{namespace}}
   labels:
-    team: digisos
+    team: teamdigisos
 spec:
-  image: docker.pkg.github.com/navikt/sosialhjelp-modia-api/sosialhjelp-modia-api:{{version}}
+  image: docker.pkg.github.com/navikt/sosialhjelp-modia-api/sosialhjelp-modia-api-2:{{version}}
   port: 8080
   liveness:
     path: /internal/isAlive
@@ -34,7 +34,10 @@ spec:
         mountPath: /var/run/secrets/nais.io/virksomhetssertifikat
       - kvPath: {{serviceuser_vault_path}}
         mountPath: /secrets/serviceuser/srvsosialhjelp-mod
-  ingresses: {{{ingresses}}}
+  ingresses:
+    {{#each ingresses}}
+    - "{{this}}"
+    {{/each}}
   resources:
     limits:
       cpu: 500m
@@ -59,3 +62,8 @@ spec:
       value: {{id_porten_client_id}}
     - name: ID_PORTEN_SCOPE
       value: {{id_porten_scope}}
+
+    - name: NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_DISCOVERYURL
+      value: {{issuer_veileder_discoveryurl}}
+    - name: NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE
+      value: {{issuer_veileder_acceptedaudience}}

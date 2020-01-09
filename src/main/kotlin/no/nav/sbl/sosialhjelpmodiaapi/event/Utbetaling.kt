@@ -5,37 +5,36 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.*
 import no.nav.sbl.sosialhjelpmodiaapi.saksstatus.DEFAULT_TITTEL
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
 
 fun InternalDigisosSoker.apply(hendelse: JsonUtbetaling) {
-    val pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    val utbetaling = Utbetaling(hendelse.utbetalingsreferanse,
-            UtbetalingsStatus.valueOf(hendelse.status?.value() ?: JsonUtbetaling.Status.PLANLAGT_UTBETALING.value()),
-            BigDecimal.valueOf(hendelse.belop ?: 0.0),
-            hendelse.beskrivelse,
-            if (hendelse.forfallsdato == null) null else LocalDate.parse(hendelse.forfallsdato, pattern),
-            if (hendelse.utbetalingsdato == null) null else LocalDate.parse(hendelse.utbetalingsdato, pattern),
-            if (hendelse.fom == null) null else LocalDate.parse(hendelse.fom, pattern),
-            if (hendelse.tom == null) null else LocalDate.parse(hendelse.tom, pattern),
-            hendelse.mottaker,
-            hendelse.utbetalingsmetode,
-            mutableListOf(),
-            mutableListOf()
+    val utbetaling = Utbetaling(
+            referanse = hendelse.utbetalingsreferanse,
+            status = UtbetalingsStatus.valueOf(hendelse.status?.value() ?: JsonUtbetaling.Status.PLANLAGT_UTBETALING.value()),
+            belop = BigDecimal.valueOf(hendelse.belop ?: 0.0),
+            beskrivelse = hendelse.beskrivelse,
+            posteringsDato = if (hendelse.forfallsdato == null) null else LocalDate.parse(hendelse.forfallsdato, ISO_LOCAL_DATE),
+            utbetalingsDato = if (hendelse.utbetalingsdato == null) null else LocalDate.parse(hendelse.utbetalingsdato, ISO_LOCAL_DATE),
+            fom = if (hendelse.fom == null) null else LocalDate.parse(hendelse.fom, ISO_LOCAL_DATE),
+            tom = if (hendelse.tom == null) null else LocalDate.parse(hendelse.tom, ISO_LOCAL_DATE),
+            mottaker = hendelse.mottaker,
+            utbetalingsform = hendelse.utbetalingsmetode,
+            vilkar = mutableListOf(),
+            dokumentasjonkrav = mutableListOf()
     )
-
 
     var sakForReferanse = saker.firstOrNull { it.referanse == hendelse.saksreferanse } ?: saker.firstOrNull { it.referanse == "default" }
 
     if (sakForReferanse == null) {
         // Opprett ny Sak
         sakForReferanse = Sak(
-                hendelse.saksreferanse ?: "default",
-                SaksStatus.UNDER_BEHANDLING,
-                DEFAULT_TITTEL,
-                mutableListOf(),
-                mutableListOf(),
-                mutableListOf(),
-                mutableListOf()
+                referanse = hendelse.saksreferanse ?: "default",
+                saksStatus = SaksStatus.UNDER_BEHANDLING,
+                tittel = DEFAULT_TITTEL,
+                utbetalinger = mutableListOf(),
+                vedtak = mutableListOf(),
+                vilkar = mutableListOf(),
+                dokumentasjonkrav = mutableListOf()
         )
         saker.add(sakForReferanse)
     }

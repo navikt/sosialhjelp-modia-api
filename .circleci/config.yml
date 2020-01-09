@@ -42,7 +42,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          docker_layer_caching: true
+          docker_layer_caching: false
       - run:
           name: GitHub package registry login
           command: |
@@ -85,29 +85,39 @@ jobs:
 
   deploy_miljo:
     docker:
-      - image: navikt/deployment-cli:v0.2.0
+      - image: navikt/deployment:v1
     steps:
       - checkout
-      - setup_remote_docker
       - run:
-          name: Deploy versjon=${VERSION} til miljø=${MILJO} i dev-fss
+          name: Deploy til miljø i dev-fss
           command: |
             git clone https://github.com/navikt/sosialhjelp-ci.git
-            VERSION=$(sosialhjelp-ci/bin/create-artifact-version.sh)
-            deployment-cli deploy create --cluster=dev-fss --repository=navikt/sosialhjelp-modia-api --team=digisos -r=nais.yaml --var version=${VERSION} --vars=nais/dev/${MILJO}.json
+            yq w "nais/dev/${MILJO}.json" version "$(sosialhjelp-ci/bin/create-artifact-version.sh)" > deployment.yaml
+            /app/deploy \
+                --apikey="$NAIS_DEPLOY_APIKEY" \
+                --cluster="dev-fss" \
+                --repository="$CIRCLE_PROJECT_REPONAME" \
+                --resource="nais.yaml" \
+                --vars="deployment.yaml" \
+                --wait=true
 
   deploy_prod:
     docker:
-      - image: navikt/deployment-cli:v0.2.0
+      - image: navikt/deployment:v1
     steps:
       - checkout
-      - setup_remote_docker
       - run:
-          name: Deploy versjon=${VERSION} til prod
+          name: Deploy til prod
           command: |
             git clone https://github.com/navikt/sosialhjelp-ci.git
-            VERSION=$(sosialhjelp-ci/bin/create-artifact-version.sh)
-            deployment-cli deploy create --cluster=prod-fss --repository=navikt/sosialhjelp-modia-api --team=digisos -r=nais.yaml --var version=${VERSION} --vars=nais/prod/default.json
+            yq w "nais/prod/default.json" version "$(sosialhjelp-ci/bin/create-artifact-version.sh)" > deployment.yaml
+            /app/deploy \
+                --apikey="$NAIS_DEPLOY_APIKEY" \
+                --cluster="prod-fss" \
+                --repository="$CIRCLE_PROJECT_REPONAME" \
+                --resource="nais.yaml" \
+                --vars="deployment.yaml" \
+                --wait=true
 
 workflows:
   version: 2

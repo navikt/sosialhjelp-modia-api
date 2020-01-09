@@ -12,9 +12,10 @@ data class InternalDigisosSoker(
         var soknadsmottaker: Soknadsmottaker?,
         var tildeltNavKontor: String?,
         var oppgaver: MutableList<Oppgave>,
-        var historikk: MutableList<Hendelse>
+        var historikk: MutableList<Hendelse>,
+        var forelopigSvar: ForelopigSvar?
 ) {
-    constructor() : this(null, null, mutableListOf(), mutableListOf(), null, null, mutableListOf(), mutableListOf())
+    constructor() : this(null, null, mutableListOf(), mutableListOf(), null, null, mutableListOf(), mutableListOf(), null)
 }
 
 data class Forvaltningsbrev(
@@ -81,6 +82,10 @@ data class Dokumentasjonkrav(
 data class Hendelse(
         val tittel: String,
         val tidspunkt: LocalDateTime
+)
+
+data class ForelopigSvar(
+        val hendelseTidspunkt: LocalDateTime
 )
 
 enum class SoknadsStatus {

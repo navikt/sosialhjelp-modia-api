@@ -19,12 +19,11 @@ fun InternalDigisosSoker.apply(hendelse: JsonTildeltNavKontor, norgClient: NorgC
 
     tildeltNavKontor = hendelse.navKontor
 
-    val detalj = try {
-        val navKontorNavn = norgClient.hentNavEnhet(hendelse.navKontor).navn
-        navKontorNavn
+    val destinasjon = try {
+        norgClient.hentNavEnhet(hendelse.navKontor).navn
     } catch (e: NorgException) {
         "et annet NAV-kontor"
     }
-    val beskrivelse = "Søknaden med vedlegg er videresendt og mottatt ved $detalj. Videresendingen vil ikke påvirke saksbehandlingstiden."
+    val beskrivelse = "Søknaden med vedlegg er videresendt og mottatt ved $destinasjon. Videresendingen vil ikke påvirke saksbehandlingstiden."
     historikk.add(Hendelse(beskrivelse, toLocalDateTime(hendelse.hendelsestidspunkt)))
 }

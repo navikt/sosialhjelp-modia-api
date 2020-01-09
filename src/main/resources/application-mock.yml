@@ -1,5 +1,5 @@
-cors:
-  allowed_origins:
-    - "http://localhost:3000"
-    - "http://localhost:3001"
-    - "https://www.digisos-test.com"
+no.nav.security.jwt:
+  issuer.veileder:
+    discoveryurl: http://metadata
+    accepted_audience: aud-localhost
+    cookie_name: localhost-idtoken

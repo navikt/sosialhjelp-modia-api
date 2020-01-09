@@ -44,7 +44,13 @@ data class ManedUtbetaling(
         @JsonFormat(pattern = "yyyy-MM-dd")
         val utbetalingsdato: LocalDate?,
         val status: String,
-        val fiksDigisosId: String
+        val fiksDigisosId: String,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val fom: LocalDate?,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val tom: LocalDate?,
+        val mottaker: String?,
+        val harVilkar: Boolean
 )
 
 data class SakResponse(
@@ -64,4 +70,17 @@ data class VedleggResponse(
         val innsendelsesfrist: LocalDateTime?,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
         val datoLagtTil: LocalDateTime?
+)
+
+data class SoknadsInfoResponse(
+        val status: SoknadsStatus,
+        val tittel: String,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val sistOppdatert: LocalDateTime,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val soknadSendtMottattTidspunkt: LocalDateTime,
+        val navKontorSoknad: String?,
+        val navKontorTildelt: String?,
+        val tidspunktForelopigSvar: LocalDateTime?,
+        val navKontorSaksbehandlingstid: String?
 )

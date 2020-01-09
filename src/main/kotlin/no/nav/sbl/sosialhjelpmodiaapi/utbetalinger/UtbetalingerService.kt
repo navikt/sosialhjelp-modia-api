@@ -1,6 +1,8 @@
 package no.nav.sbl.sosialhjelpmodiaapi.utbetalinger
 
-import no.nav.sbl.sosialhjelpmodiaapi.domain.*
+import no.nav.sbl.sosialhjelpmodiaapi.domain.ManedUtbetaling
+import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
+import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.logger
@@ -34,7 +36,11 @@ class UtbetalingerService(private val fiksClient: FiksClient,
                                                     belop = utbetaling.belop.toDouble(),
                                                     utbetalingsdato = utbetaling.utbetalingsDato,
                                                     status = utbetaling.status.name,
-                                                    fiksDigisosId = digisosSak.fiksDigisosId
+                                                    fiksDigisosId = digisosSak.fiksDigisosId,
+                                                    fom = utbetaling.fom,
+                                                    tom = utbetaling.tom,
+                                                    mottaker = utbetaling.mottaker,
+                                                    harVilkar = !utbetaling.vilkar.isNullOrEmpty()
                                             )
                                         }
                             }

@@ -92,7 +92,7 @@ val defaultJsonSoknad: JsonSoknad = JsonSoknad()
         )
         .withMottaker(
                 JsonSoknadsmottaker()
-                        .withNavEnhetsnavn("Eiganes og Tasta, Stavanger kommune")
+                        .withNavEnhetsnavn("NAV Eiganes og Tasta, Stavanger kommune")
                         .withEnhetsnummer("0301")
                         .withKommunenummer("1337")
         )
