@@ -35,9 +35,9 @@ spec:
       - kvPath: {{serviceuser_vault_path}}
         mountPath: /secrets/serviceuser/srvsosialhjelp-mod
   ingresses:
-    {{#each ingresses}}
+{{#each ingress}}
     - "{{this}}"
-    {{/each}}
+{{/each}}
   resources:
     limits:
       cpu: 500m
@@ -46,20 +46,7 @@ spec:
       cpu: 200m
       memory: 256Mi
   env:
-    - name: FIKS_DIGISOS_ENDPOINT_URL
-      value: {{fiks_digisos_endpoint_url}}
-    - name: NORG_ENDPOINT_URL
-      value: {{norg_endpoint_url}}
-    - name: ID_PORTEN_TOKEN_URL
-      value: {{id_porten_token_url}}
-    - name: ID_PORTEN_CONFIG_URL
-      value: {{id_porten_config_url}}
-    - name: ID_PORTEN_CLIENT_ID
-      value: {{id_porten_client_id}}
-    - name: ID_PORTEN_SCOPE
-      value: {{id_porten_scope}}
-
-    - name: NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_DISCOVERYURL
-      value: {{issuer_veileder_discoveryurl}}
-    - name: NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE
-      value: {{issuer_veileder_acceptedaudience}}
+{{#each ingress}}
+    - name: {{@key}}
+      value: "{{this}}"
+{{/each}}

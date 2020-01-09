@@ -1,17 +1,19 @@
 {
   "namespace": "q0",
-  "ingresses": [
+  "ingress": [
     "https://sosialhjelp-modia-api-q0.nais.preprod.local"
   ],
-  "fiks_digisos_endpoint_url": "https://api.fiks.test.ks.no",
-  "norg_endpoint_url": "https://app-q0.adeo.no/norg2/api/v1",
   "virksomhetssertifikat_vault_path": "/secret/virksomhetssertifikat/preprod/shared",
   "application_vault_path": "/kv/preprod/fss/sosialhjelp-modia-api/q0",
   "serviceuser_vault_path": "/serviceuser/data/dev/srvsosialhjelp-mod",
-  "id_porten_token_url": "https://oidc-ver2.difi.no/idporten-oidc-provider/token",
-  "id_porten_config_url": "https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration",
-  "id_porten_client_id": "1c3631f4-dbf2-4c12-bdc4-156cbd53c625",
-  "id_porten_scope": "ks:fiks",
-  "issuer_veileder_discoveryurl": "https://isso-q.adeo.no:443/isso/oauth2/.well-known/openid-configuration",
-  "issuer_veileder_acceptedaudience": "modiabrukerdialog-q0,veilarblogin-q0"
+  "env": {
+    "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.test.ks.no",
+    "NORG_ENDPOINT_URL": "https://app-q0.adeo.no/norg2/api/v1",
+    "ID_PORTEN_TOKEN_URL": "https://oidc-ver2.difi.no/idporten-oidc-provider/token",
+    "ID_PORTEN_CONFIG_URL": "https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration",
+    "ID_PORTEN_CLIENT_ID": "1c3631f4-dbf2-4c12-bdc4-156cbd53c625",
+    "ID_PORTEN_SCOPE": "ks:fiks",
+    "NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_DISCOVERYURL": "https://isso-q.adeo.no:443/isso/oauth2/.well-known/openid-configuration",
+    "NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE": "modiabrukerdialog-q0,veilarblogin-q0"
+  }
 }
