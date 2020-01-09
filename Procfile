@@ -1,1 +1,0 @@
-web: java -Dserver.port=$PORT -Dspring.profiles.active=mock $JAVA_OPTS -jar build/libs/*.jar
