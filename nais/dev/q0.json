@@ -15,5 +15,10 @@
     "ID_PORTEN_SCOPE": "ks:fiks",
     "NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_DISCOVERYURL": "https://isso-q.adeo.no:443/isso/oauth2/.well-known/openid-configuration",
     "NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE": "modiabrukerdialog-q0,veilarblogin-q0"
-  }
+  },
+  "minReplicas": "1",
+  "maxReplicas": "4",
+  "prometheusEnabled": true,
+  "webProxyEnabled": true,
+  "vaultEnabled": true
 }

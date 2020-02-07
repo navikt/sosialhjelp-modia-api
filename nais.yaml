@@ -19,14 +19,15 @@ spec:
     initialDelay: 20
     timeout: 1
   prometheus:
-    enabled: true
+    enabled: {{prometheusEnabled}}
     path: /internal/prometheus
   replicas:
-    min: 1
-    max: 4
-  webproxy: true
+    min: {{minReplicas}}
+    max: {{maxReplicas}}
+  webproxy: {{webProxyEnabled}}
   vault:
-    enabled: true
+    enabled: {{vaultEnabled}}
+{{#if vaultEnabled}}
     paths:
       - kvPath: {{application_vault_path}}
         mountPath: /var/run/secrets/nais.io/vault
@@ -34,6 +35,7 @@ spec:
         mountPath: /var/run/secrets/nais.io/virksomhetssertifikat
       - kvPath: {{serviceuser_vault_path}}
         mountPath: /secrets/serviceuser/srvsosialhjelp-mod
+{{/if}}
   ingresses:
 {{#each ingress}}
     - "{{this}}"
