@@ -14,7 +14,8 @@
     "ID_PORTEN_CLIENT_ID": "1c3631f4-dbf2-4c12-bdc4-156cbd53c625",
     "ID_PORTEN_SCOPE": "ks:fiks",
     "NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_DISCOVERYURL": "https://isso-q.adeo.no:443/isso/oauth2/.well-known/openid-configuration",
-    "NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE": "modiabrukerdialog-q1,veilarblogin-q1"
+    "NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE": "modiabrukerdialog-q1,veilarblogin-q1",
+    "PDL_ENDPOINT_URL": "https://pdl-api.nais.preprod.local/graphql"
   },
   "minReplicas": "1",
   "maxReplicas": "4",
