@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.utils
 
 import java.security.SecureRandom
+import java.util.*
 
 private val RANDOM = SecureRandom()
 
@@ -26,4 +27,8 @@ object IntegrationUtils {
     const val KILDE_INNSYN_API = "innsyn-api"
 
     const val BEARER = "Bearer "
+}
+
+fun basicHeader(credentialUsername: String, credentialPassword: String): String {
+    return "Basic " + Base64.getEncoder().encodeToString("$credentialUsername:$credentialPassword".toByteArray())
 }

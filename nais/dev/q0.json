@@ -15,7 +15,8 @@
     "ID_PORTEN_SCOPE": "ks:fiks",
     "NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_DISCOVERYURL": "https://isso-q.adeo.no:443/isso/oauth2/.well-known/openid-configuration",
     "NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE": "modiabrukerdialog-q0,veilarblogin-q0",
-    "PDL_ENDPOINT_URL": "https://pdl-api.nais.preprod.local/graphql"
+    "PDL_ENDPOINT_URL": "https://pdl-api.nais.preprod.local/graphql",
+    "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.preprod.local"
   },
   "minReplicas": "1",
   "maxReplicas": "4",

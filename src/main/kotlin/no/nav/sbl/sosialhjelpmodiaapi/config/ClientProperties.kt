@@ -24,4 +24,5 @@ class ClientProperties {
 
     lateinit var pdlEndpointUrl: String
 
+    lateinit var stsTokenEndpointUrl: String
 }
