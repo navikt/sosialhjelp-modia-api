@@ -5,7 +5,9 @@
   ],
   "virksomhetssertifikat_vault_path": "/kv/prod/fss/sosialhjelp-modia-api/default",
   "application_vault_path": "/kv/prod/fss/sosialhjelp-modia-api/default",
-  "serviceuser_vault_path": "/serviceuser/data/prod/srvsosialhjelp-mod",
+  "secretKvPaths": {
+    "/serviceuser/srvsosialhjelp-mod": "/serviceuser/data/prod/srvsosialhjelp-mod"
+  },
   "env": {
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.ks.no",
     "NORG_ENDPOINT_URL": "https://app.adeo.no/norg2/api/v1",
