@@ -5,7 +5,9 @@
   ],
   "virksomhetssertifikat_vault_path": "/secret/virksomhetssertifikat/preprod/shared",
   "application_vault_path": "/kv/preprod/fss/sosialhjelp-modia-api/q1",
-  "serviceuser_vault_path": "/serviceuser/data/dev/srvsosialhjelp-mod",
+  "secretKvPaths": {
+    "/serviceuser/srvsosialhjelp-mod": "/serviceuser/data/dev/srvsosialhjelp-mod"
+  },
   "env": {
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.test.ks.no",
     "NORG_ENDPOINT_URL": "https://app-q1.adeo.no/norg2/api/v1",
@@ -14,7 +16,9 @@
     "ID_PORTEN_CLIENT_ID": "1c3631f4-dbf2-4c12-bdc4-156cbd53c625",
     "ID_PORTEN_SCOPE": "ks:fiks",
     "NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_DISCOVERYURL": "https://isso-q.adeo.no:443/isso/oauth2/.well-known/openid-configuration",
-    "NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE": "modiabrukerdialog-q1,veilarblogin-q1"
+    "NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE": "modiabrukerdialog-q1,veilarblogin-q1",
+    "PDL_ENDPOINT_URL": "https://pdl-api.nais.preprod.local/graphql",
+    "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.preprod.local"
   },
   "minReplicas": "1",
   "maxReplicas": "4",

@@ -22,4 +22,7 @@ class ClientProperties {
     lateinit var idPortenScope: String
     lateinit var idPortenConfigUrl: String
 
+    lateinit var pdlEndpointUrl: String
+
+    lateinit var stsTokenEndpointUrl: String
 }
