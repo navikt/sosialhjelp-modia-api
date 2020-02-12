@@ -6,11 +6,11 @@ import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.DependencyType
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.Importance
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.pdl.PdlClient
+import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientException
-import org.springframework.web.client.RestTemplate
 
-class PdlCheck (private val restTemplate: RestTemplate,
-                clientProperties: ClientProperties,
+@Component
+class PdlCheck (clientProperties: ClientProperties,
                 private val pdlClient: PdlClient) : AbstractDependencyCheck(
         DependencyType.REST,
         "PDL",
