@@ -16,7 +16,7 @@ import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 
 @Component
-class PdlClient(private val clientProperties: ClientProperties,
+class PdlClient(clientProperties: ClientProperties,
                 private val restTemplate: RestTemplate,
                 private val stsClient: STSClient) {
 
@@ -59,7 +59,7 @@ class PdlClient(private val clientProperties: ClientProperties,
         headers.set("Nav-Call-Id", generateCallId())
         headers.set("Nav-Consumer-Token", BEARER + stsToken)
         headers.set(AUTHORIZATION, BEARER + stsToken)
-        headers.set("Tema", "TEMA_VERDI") // team for økonomisk sosialhjelp?
+        headers.set("Tema", "TEMA_SOSIALHJELP") // tema for økonomisk sosialhjelp?
         return HttpEntity(request, headers)
     }
 }
