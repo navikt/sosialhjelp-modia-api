@@ -39,6 +39,24 @@ class EventService(private val innsynService: InnsynService,
         return model
     }
 
+    fun createSoknadsoversiktModel(token: String, digisosSak: DigisosSak): InternalDigisosSoker {
+        val jsonDigisosSoker: JsonDigisosSoker? = innsynService.hentJsonDigisosSoker(digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata, token)
+        val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
+
+        val model = InternalDigisosSoker()
+        if (timestampSendt != null) {
+            model.status = SoknadsStatus.SENDT
+        }
+        if (jsonDigisosSoker == null) {
+            return model
+        }
+        jsonDigisosSoker.hendelser
+                .sortedBy { it.hendelsestidspunkt }
+                .forEach { model.applyHendelse(it) }
+
+        return model
+    }
+
     fun InternalDigisosSoker.applyHendelse(hendelse: JsonHendelse) {
         when (hendelse) {
             is JsonSoknadsStatus -> apply(hendelse)
