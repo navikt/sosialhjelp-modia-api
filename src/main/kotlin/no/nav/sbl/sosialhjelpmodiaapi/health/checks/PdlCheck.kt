@@ -6,9 +6,11 @@ import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.DependencyType
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.Importance
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.pdl.PdlClient
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientException
 
+@Profile("!mock")
 @Component
 class PdlCheck (clientProperties: ClientProperties,
                 private val pdlClient: PdlClient) : AbstractDependencyCheck(

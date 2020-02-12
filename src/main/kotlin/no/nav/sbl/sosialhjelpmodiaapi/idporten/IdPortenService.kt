@@ -17,6 +17,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.defaultHttpClient
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.io.File
 import java.security.KeyPair
@@ -25,7 +26,7 @@ import java.security.PrivateKey
 import java.security.cert.X509Certificate
 import java.util.*
 
-
+@Profile("!mock")
 @Component
 class IdPortenService(clientProperties: ClientProperties) {
 
