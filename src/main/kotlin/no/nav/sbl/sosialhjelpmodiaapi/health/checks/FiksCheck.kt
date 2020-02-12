@@ -8,6 +8,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.DependencyType
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.Importance
 import no.nav.sbl.sosialhjelpmodiaapi.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_PASSORD
 import org.springframework.context.annotation.Profile
@@ -40,7 +41,7 @@ class FiksCheck(private val restTemplate: RestTemplate,
             val headers = HttpHeaders()
             val accessToken = runBlocking { idPortenService.requestToken() }
             headers.accept = Collections.singletonList(MediaType.APPLICATION_JSON)
-            headers.set(AUTHORIZATION, "Bearer ${accessToken.token}")
+            headers.set(AUTHORIZATION, BEARER + accessToken.token)
             headers.set(HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
             headers.set(HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
 

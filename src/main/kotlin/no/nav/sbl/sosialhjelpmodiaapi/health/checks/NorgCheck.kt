@@ -6,6 +6,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.AbstractDependencyCheck
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.DependencyType
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.Importance
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.NAV_CALL_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.generateCallId
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
@@ -31,7 +32,7 @@ class NorgCheck(private val restTemplate: RestTemplate,
     override fun doCheck() {
         try {
             val headers = HttpHeaders()
-            headers.set("Nav-Call-Id", generateCallId())
+            headers.set(NAV_CALL_ID, generateCallId())
 
             // samme kall som selftest i soknad-api
             restTemplate.exchange("$address/kodeverk/EnhetstyperNorg", HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java)

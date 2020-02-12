@@ -5,6 +5,10 @@ import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.sts.STSClient
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.NAV_CALL_ID
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.NAV_CONSUMER_TOKEN
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.TEMA
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.TEMA_KOM
 import no.nav.sbl.sosialhjelpmodiaapi.utils.generateCallId
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -56,10 +60,10 @@ class PdlClient(clientProperties: ClientProperties,
         val stsToken: String = stsClient.token()
         val headers = HttpHeaders()
         headers.contentType = APPLICATION_JSON
-        headers.set("Nav-Call-Id", generateCallId())
-        headers.set("Nav-Consumer-Token", BEARER + stsToken)
+        headers.set(NAV_CALL_ID, generateCallId())
+        headers.set(NAV_CONSUMER_TOKEN, BEARER + stsToken)
         headers.set(AUTHORIZATION, BEARER + stsToken)
-        headers.set("Tema", "TEMA_SOSIALHJELP") // tema for økonomisk sosialhjelp?
+        headers.set(TEMA, TEMA_KOM)
         return HttpEntity(request, headers)
     }
 }

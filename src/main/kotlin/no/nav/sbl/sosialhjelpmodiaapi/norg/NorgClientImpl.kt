@@ -4,6 +4,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.common.NorgException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.NAV_CALL_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.generateCallId
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.springframework.context.annotation.Profile
@@ -24,12 +25,13 @@ class NorgClientImpl(clientProperties: ClientProperties,
 
     override fun hentNavEnhet(enhetsnr: String): NavEnhet {
         val headers = HttpHeaders()
-        headers.set("Nav-Call-Id", generateCallId())
+
         try {
             log.info("Norg2 - GET enhet $enhetsnr")
             val urlTemplate = "$baseUrl/enhet/{enhetsnr}"
             val vars = mapOf("enhetsnr" to enhetsnr)
-            val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
+            val requestEntity = createRequestEntity()
+            val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, requestEntity, String::class.java, vars)
 
             log.info("Norg2 - GET enhet OK")
             return objectMapper.readValue(response.body!!, NavEnhet::class.java)
@@ -41,6 +43,12 @@ class NorgClientImpl(clientProperties: ClientProperties,
             log.warn("Norg2 - Noe feilet", e)
             throw NorgException(null, e.message, e)
         }
+    }
+
+    private fun createRequestEntity(): HttpEntity<Nothing> {
+        val headers = HttpHeaders()
+        headers.set(NAV_CALL_ID, generateCallId())
+        return HttpEntity(headers)
     }
 
     companion object {
