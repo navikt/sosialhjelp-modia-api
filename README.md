@@ -16,12 +16,12 @@ Dette prosjektet bygger og deployer vha Github Actions
 - Docker image bygges på CircleCi og pushes til github package registry, eks [her](https://github.com/navikt/sosialhjelp-modia-api/packages/13432/versions)
 
 ### Github Actions
-- Docker image bygges ved push => se `.github/workflows/build.yml`
-- Deployment til dev-fss eller prod-fss trigges ved bruk av cli-verktøyet [sosialhjelp-ci](https://github.com/navikt/sosialhjelp-ci).
-- For deploy til dev-fss => `.github/workflows/deploy-miljo.yml`, og for deploy til prod-fss => `.github/workflows/deploy-prod.yml`
+- Docker image bygges ved push => `.github/workflows/build.yml`
+- Deploy til dev-fss => `.github/workflows/deploy-miljo.yml`
+- Deploy til prod-fss => `.github/workflows/deploy-prod.yml`
+- For å deploye til dev-sbs eller prod-sbs brukes av cli-verktøyet [sosialhjelp-ci](https://github.com/navikt/sosialhjelp-ci).
 
 ### Github deployment
-- Krever at appen bruker naiserator
 - Github deployments - registrer ditt github-repo [her](https://deployment.prod-sbs.nais.io/auth/form)
 - Deployments vises [her](https://github.com/navikt/sosialhjelp-modia-api/deployments)
 
