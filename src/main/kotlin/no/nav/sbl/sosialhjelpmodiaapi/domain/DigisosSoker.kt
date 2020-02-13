@@ -8,6 +8,7 @@ data class InternalDigisosSoker(
         var referanse: String?,
         var status: SoknadsStatus?,
         var saker: MutableList<Sak>,
+        var utbetalinger: MutableList<Utbetaling>,
         var forvaltningsbrev: MutableList<Forvaltningsbrev>,
         var soknadsmottaker: Soknadsmottaker?,
         var tildeltNavKontor: String?,
@@ -15,7 +16,7 @@ data class InternalDigisosSoker(
         var historikk: MutableList<Hendelse>,
         var forelopigSvar: ForelopigSvar?
 ) {
-    constructor() : this(null, null, mutableListOf(), mutableListOf(), null, null, mutableListOf(), mutableListOf(), null)
+    constructor() : this(null, null, mutableListOf(), mutableListOf(), mutableListOf(), null, null, mutableListOf(), mutableListOf(), null)
 }
 
 data class Forvaltningsbrev(
@@ -43,11 +44,13 @@ data class Sak(
         var vedtak: MutableList<Vedtak>,
         var utbetalinger: MutableList<Utbetaling>,
         var vilkar: MutableList<Vilkar>,
-        var dokumentasjonkrav: MutableList<Dokumentasjonkrav>
+        var dokumentasjonkrav: MutableList<Dokumentasjonkrav>,
+        var datoOpprettet: LocalDate
 )
 
 data class Vedtak(
-        var utfall: UtfallVedtak?
+        var utfall: UtfallVedtak?,
+        var datoFattet: LocalDate
 )
 
 data class Utbetaling(
@@ -55,12 +58,13 @@ data class Utbetaling(
         var status: UtbetalingsStatus,
         var belop: BigDecimal,
         var beskrivelse: String?,
-        var posteringsDato: LocalDate?,
+        var forfallsDato: LocalDate?,
         var utbetalingsDato: LocalDate?,
         var fom: LocalDate?,
         var tom: LocalDate?,
         var mottaker: String?,
-        var utbetalingsform: String?,
+        var kontonummer: String?,
+        var utbetalingsmetode: String?,
         var vilkar: MutableList<Vilkar>,
         var dokumentasjonkrav: MutableList<Dokumentasjonkrav>
 )

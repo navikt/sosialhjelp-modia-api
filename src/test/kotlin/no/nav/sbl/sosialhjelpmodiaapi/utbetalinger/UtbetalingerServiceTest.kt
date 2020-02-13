@@ -55,10 +55,23 @@ internal class UtbetalingerServiceTest {
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
-                        Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null,
-                                LocalDate.of(2019, 8, 10), LocalDate.of(2019,8,1), LocalDate.of(2019,8,31), "mottaker", null, mutableListOf(), mutableListOf())),
+                        Utbetaling(
+                                referanse = "Sak1",
+                                status = UtbetalingsStatus.UTBETALT,
+                                belop = BigDecimal.TEN,
+                                beskrivelse = "Nødhjelp",
+                                forfallsDato = null,
+                                utbetalingsDato = LocalDate.of(2019, 8, 10),
+                                fom = LocalDate.of(2019, 8, 1),
+                                tom = LocalDate.of(2019, 8, 31),
+                                mottaker = "utleier",
+                                kontonummer = "kontonr",
+                                utbetalingsmetode = "utbetalingsmetode",
+                                vilkar = mutableListOf(),
+                                dokumentasjonkrav = mutableListOf())),
                 vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf()
+                dokumentasjonkrav = mutableListOf(),
+                datoOpprettet = LocalDate.now()
         ))
 
         every { eventService.createModel(any(), any()) } returns model
@@ -70,7 +83,6 @@ internal class UtbetalingerServiceTest {
         assertThat(response).hasSize(1)
         assertThat(response[0].ar).isEqualTo(2019)
         assertThat(response[0].maned).isEqualToIgnoringCase("august")
-        assertThat(response[0].sum).isEqualTo(10.0)
         assertThat(response[0].utbetalinger).hasSize(1)
         assertThat(response[0].utbetalinger[0].tittel).isEqualTo("Nødhjelp")
         assertThat(response[0].utbetalinger[0].belop).isEqualTo(10.0)
@@ -78,8 +90,9 @@ internal class UtbetalingerServiceTest {
         assertThat(response[0].utbetalinger[0].utbetalingsdato).isEqualTo("2019-08-10")
         assertThat(response[0].utbetalinger[0].fom).isEqualTo("2019-08-01")
         assertThat(response[0].utbetalinger[0].tom).isEqualTo("2019-08-31")
-        assertThat(response[0].utbetalinger[0].mottaker).isEqualTo("mottaker")
-        assertThat(response[0].utbetalinger[0].harVilkar).isFalse()
+        assertThat(response[0].utbetalinger[0].mottaker).isEqualTo("utleier")
+        assertThat(response[0].utbetalinger[0].kontonummer).isEqualTo("kontonr")
+        assertThat(response[0].utbetalinger[0].utbetalingsmetode).isEqualTo("utbetalingsmetode")
     }
 
     @Test
@@ -91,11 +104,12 @@ internal class UtbetalingerServiceTest {
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
-                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, null, mutableListOf(), mutableListOf()),
-                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 8, 12), null, null, null, null, mutableListOf(), mutableListOf())
+                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf()),
+                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 8, 12), null, null, null, null, null, mutableListOf(), mutableListOf())
                 ),
                 vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf()
+                dokumentasjonkrav = mutableListOf(),
+                datoOpprettet = LocalDate.now()
         ))
 
         every { eventService.createModel(any(), any()) } returns model
@@ -107,7 +121,6 @@ internal class UtbetalingerServiceTest {
         assertThat(response).hasSize(1)
         assertThat(response[0].ar).isEqualTo(2019)
         assertThat(response[0].maned).isEqualToIgnoringCase("august")
-        assertThat(response[0].sum).isEqualTo(20.0)
         assertThat(response[0].utbetalinger).hasSize(2)
         assertThat(response[0].utbetalinger[0].tittel).isEqualTo("Tannlege")
         assertThat(response[0].utbetalinger[0].belop).isEqualTo(10.0)
@@ -128,11 +141,12 @@ internal class UtbetalingerServiceTest {
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
-                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, null, mutableListOf(), mutableListOf()),
-                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 9, 12), null, null, null, null, mutableListOf(), mutableListOf())
+                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf()),
+                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 9, 12), null, null, null, null, null, mutableListOf(), mutableListOf())
                 ),
                 vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf()
+                dokumentasjonkrav = mutableListOf(),
+                datoOpprettet = LocalDate.now()
         ))
 
         every { eventService.createModel(any(), any()) } returns model
@@ -144,7 +158,6 @@ internal class UtbetalingerServiceTest {
         assertThat(response).hasSize(2)
         assertThat(response[0].ar).isEqualTo(2019)
         assertThat(response[0].maned).isEqualToIgnoringCase("september")
-        assertThat(response[0].sum).isEqualTo(10.0)
         assertThat(response[0].utbetalinger).hasSize(1)
         assertThat(response[0].utbetalinger[0].tittel).isEqualTo("Tannlege")
         assertThat(response[0].utbetalinger[0].belop).isEqualTo(10.0)
@@ -153,7 +166,6 @@ internal class UtbetalingerServiceTest {
 
         assertThat(response[1].ar).isEqualTo(2019)
         assertThat(response[1].maned).isEqualToIgnoringCase("august")
-        assertThat(response[1].sum).isEqualTo(10.0)
         assertThat(response[1].utbetalinger).hasSize(1)
         assertThat(response[1].utbetalinger[0].tittel).isEqualTo("Nødhjelp")
         assertThat(response[1].utbetalinger[0].belop).isEqualTo(10.0)
@@ -166,7 +178,7 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         val vilkar = Vilkar("vilkar1", mutableListOf(), "Skal hoppe", false)
         val utbetaling1 = Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
-                null, LocalDate.of(2019, 8, 10), null, null, null, null, mutableListOf(vilkar), mutableListOf())
+                null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(vilkar), mutableListOf())
         vilkar.utbetalinger.add(utbetaling1)
         model.saker.add(Sak(
                 referanse = referanse,
@@ -175,7 +187,8 @@ internal class UtbetalingerServiceTest {
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(utbetaling1),
                 vilkar = mutableListOf(vilkar),
-                dokumentasjonkrav = mutableListOf()
+                dokumentasjonkrav = mutableListOf(),
+                datoOpprettet = LocalDate.now()
         ))
 
         every { eventService.createModel(any(), any()) } returns model
@@ -195,7 +208,7 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         val dokumentasjonkrav = Dokumentasjonkrav("dokumentasjonskrav", mutableListOf(), "Skal hoppe", false)
         val utbetaling1 = Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
-                null, LocalDate.of(2019, 8, 10), null, null, null, null, mutableListOf(), mutableListOf(dokumentasjonkrav))
+                null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf(dokumentasjonkrav))
         dokumentasjonkrav.utbetalinger.add(utbetaling1)
         model.saker.add(Sak(
                 referanse = referanse,
@@ -204,7 +217,8 @@ internal class UtbetalingerServiceTest {
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(utbetaling1),
                 vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf(dokumentasjonkrav)
+                dokumentasjonkrav = mutableListOf(dokumentasjonkrav),
+                datoOpprettet = LocalDate.now()
         ))
 
         every { eventService.createModel(any(), any()) } returns model
@@ -227,9 +241,10 @@ internal class UtbetalingerServiceTest {
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
                         Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null,
-                                LocalDate.of(2019, 8, 10), null, null, null, null, mutableListOf(), mutableListOf())),
+                                LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf())),
                 vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf()
+                dokumentasjonkrav = mutableListOf(),
+                datoOpprettet = LocalDate.now()
         ))
 
         val model2 = InternalDigisosSoker()
@@ -240,9 +255,10 @@ internal class UtbetalingerServiceTest {
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
                         Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.ONE, "Barnehage og SFO", null,
-                                LocalDate.of(2019, 9, 12), null, null, null, null, mutableListOf(), mutableListOf())),
+                                LocalDate.of(2019, 9, 12), null, null, null, null, null, mutableListOf(), mutableListOf())),
                 vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf()
+                dokumentasjonkrav = mutableListOf(),
+                datoOpprettet = LocalDate.now()
         ))
 
         val mockDigisosSak2: DigisosSak = mockk()

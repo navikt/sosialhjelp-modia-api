@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.utbetalinger
 
+import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.ManedUtbetaling
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
@@ -24,30 +25,43 @@ class UtbetalingerService(private val fiksClient: FiksClient,
         }
 
         val alleUtbetalinger: List<ManedUtbetaling> = digisosSaker
-                .flatMap { digisosSak ->
-                    val model = eventService.createModel(digisosSak, token)
-                    model.saker
-                            .flatMap { sak ->
-                                sak.utbetalinger
-                                        .filter { it.utbetalingsDato != null && (it.status == UtbetalingsStatus.UTBETALT || it.status == UtbetalingsStatus.ANNULLERT) }
-                                        .map { utbetaling ->
-                                            ManedUtbetaling(
-                                                    tittel = utbetaling.beskrivelse,
-                                                    belop = utbetaling.belop.toDouble(),
-                                                    utbetalingsdato = utbetaling.utbetalingsDato,
-                                                    status = utbetaling.status.name,
-                                                    fiksDigisosId = digisosSak.fiksDigisosId,
-                                                    fom = utbetaling.fom,
-                                                    tom = utbetaling.tom,
-                                                    mottaker = utbetaling.mottaker,
-                                                    harVilkar = !utbetaling.vilkar.isNullOrEmpty()
-                                            )
-                                        }
+                .flatMap { digisosSak -> hentManedUtbetalingerForDigisosSak(digisosSak, token) }
+
+        return mapToUtbetalingerResponse(alleUtbetalinger)
+    }
+
+    fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak, token: String): List<UtbetalingerResponse> {
+        val manedUtbetalinger = hentManedUtbetalingerForDigisosSak(digisosSak, token)
+        return mapToUtbetalingerResponse(manedUtbetalinger)
+    }
+
+    private fun hentManedUtbetalingerForDigisosSak(digisosSak: DigisosSak, token: String): List<ManedUtbetaling> {
+        val model = eventService.createModel(digisosSak, token)
+        return model.saker
+                .flatMap { sak ->
+                    sak.utbetalinger
+                            .filter { it.utbetalingsDato != null && (it.status == UtbetalingsStatus.UTBETALT || it.status == UtbetalingsStatus.ANNULLERT) }
+                            .map { utbetaling ->
+                                ManedUtbetaling(
+                                        tittel = utbetaling.beskrivelse,
+                                        belop = utbetaling.belop.toDouble(),
+                                        utbetalingsdato = utbetaling.utbetalingsDato,
+                                        status = utbetaling.status.name,
+                                        fiksDigisosId = digisosSak.fiksDigisosId,
+                                        fom = utbetaling.fom,
+                                        tom = utbetaling.tom,
+                                        mottaker = utbetaling.mottaker,
+                                        kontonummer = utbetaling.kontonummer,
+                                        utbetalingsmetode = utbetaling.utbetalingsmetode,
+                                        harVilkar = !utbetaling.vilkar.isNullOrEmpty()
+                                )
                             }
                 }
+    }
 
-        return alleUtbetalinger
-                .sortedByDescending { it.utbetalingsdato}
+    private fun mapToUtbetalingerResponse(manedUtbetalinger: List<ManedUtbetaling>): List<UtbetalingerResponse> {
+        return manedUtbetalinger
+                .sortedByDescending { it.utbetalingsdato }
                 .groupBy { YearMonth.of(it.utbetalingsdato!!.year, it.utbetalingsdato.month) }
                 .map { (key, value) ->
                     UtbetalingerResponse(

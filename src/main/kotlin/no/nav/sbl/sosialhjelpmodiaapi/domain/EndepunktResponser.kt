@@ -11,7 +11,19 @@ data class SoknadsStatusResponse(
 
 data class SaksStatusResponse(
         val tittel: String,
-        val status: SaksStatus?
+        val status: SaksStatus?,
+        val vedtak: List<VedtakResponse>?,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val datoOpprettet: LocalDate,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val datoAvsluttet: LocalDate?,
+        val utfall: UtfallVedtak?
+)
+
+data class VedtakResponse(
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val dato: LocalDate,
+        val utfall: UtfallVedtak?
 )
 
 data class HendelseResponse(
@@ -51,6 +63,8 @@ data class ManedUtbetaling(
         @JsonFormat(pattern = "yyyy-MM-dd")
         val tom: LocalDate?,
         val mottaker: String?,
+        val kontonummer: String?,
+        val utbetalingsmetode: String?,
         val harVilkar: Boolean
 )
 

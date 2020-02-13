@@ -8,11 +8,11 @@ import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonEtterspurt) {
     oppgaver = hendelse.dokumenter
-            .map { Oppgave(it.dokumenttype, it.tilleggsinformasjon, toLocalDateTime(it.innsendelsesfrist), toLocalDateTime(hendelse.hendelsestidspunkt), true) }
+            .map { Oppgave(it.dokumenttype, it.tilleggsinformasjon, it.innsendelsesfrist.toLocalDateTime(), hendelse.hendelsestidspunkt.toLocalDateTime(), true) }
             .toMutableList()
 
     if (hendelse.dokumenter.isNotEmpty() && hendelse.forvaltningsbrev != null) {
         val beskrivelse = "Du må sende dokumentasjon"
-        historikk.add(Hendelse(beskrivelse, toLocalDateTime(hendelse.hendelsestidspunkt)))
+        historikk.add(Hendelse(beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
     }
 }

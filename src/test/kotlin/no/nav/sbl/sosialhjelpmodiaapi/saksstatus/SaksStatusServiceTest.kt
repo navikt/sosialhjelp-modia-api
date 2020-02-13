@@ -9,6 +9,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
 
 internal class SaksStatusServiceTest {
     private val fiksClient: FiksClient = mockk()
@@ -50,7 +51,8 @@ internal class SaksStatusServiceTest {
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(),
                 vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf()
+                dokumentasjonkrav = mutableListOf(),
+                datoOpprettet = LocalDate.now()
         ))
 
         every { eventService.createModel(any(), any()) } returns model
@@ -70,10 +72,13 @@ internal class SaksStatusServiceTest {
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING,
                 tittel = tittel,
-                vedtak = mutableListOf(Vedtak(utfall = UtfallVedtak.INNVILGET)),
+                vedtak = mutableListOf(Vedtak(
+                        utfall = UtfallVedtak.INNVILGET,
+                        datoFattet = LocalDate.now())),
                 utbetalinger = mutableListOf(),
                 vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf()
+                dokumentasjonkrav = mutableListOf(),
+                datoOpprettet = LocalDate.now()
         ))
 
         every { eventService.createModel(any(), any()) } returns model
@@ -93,10 +98,13 @@ internal class SaksStatusServiceTest {
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING,
                 tittel = DEFAULT_TITTEL,
-                vedtak = mutableListOf(Vedtak(utfall = UtfallVedtak.INNVILGET)),
+                vedtak = mutableListOf(Vedtak(
+                        utfall = UtfallVedtak.INNVILGET,
+                        datoFattet = LocalDate.now())),
                 utbetalinger = mutableListOf(),
                 vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf()
+                dokumentasjonkrav = mutableListOf(),
+                datoOpprettet = LocalDate.now()
         ))
 
         every { eventService.createModel(any(), any()) } returns model
@@ -118,11 +126,16 @@ internal class SaksStatusServiceTest {
                         saksStatus = SaksStatus.UNDER_BEHANDLING,
                         tittel = tittel,
                         vedtak = mutableListOf(
-                                Vedtak(utfall = UtfallVedtak.INNVILGET),
-                                Vedtak(utfall = UtfallVedtak.INNVILGET)),
+                                Vedtak(
+                                        utfall = UtfallVedtak.INNVILGET,
+                                        datoFattet = LocalDate.now()),
+                                Vedtak(
+                                        utfall = UtfallVedtak.INNVILGET,
+                                        datoFattet = LocalDate.now())),
                         utbetalinger = mutableListOf(),
                         vilkar = mutableListOf(),
-                        dokumentasjonkrav = mutableListOf()),
+                        dokumentasjonkrav = mutableListOf(),
+                        datoOpprettet = LocalDate.now()),
                 Sak(
                         referanse = referanse,
                         saksStatus = SaksStatus.IKKE_INNSYN,
@@ -130,7 +143,8 @@ internal class SaksStatusServiceTest {
                         vedtak = mutableListOf(),
                         utbetalinger = mutableListOf(),
                         vilkar = mutableListOf(),
-                        dokumentasjonkrav = mutableListOf()
+                        dokumentasjonkrav = mutableListOf(),
+                        datoOpprettet = LocalDate.now()
                 )
         ))
 

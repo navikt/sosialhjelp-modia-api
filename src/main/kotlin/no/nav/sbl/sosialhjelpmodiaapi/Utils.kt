@@ -7,10 +7,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.ParameterizedTypeReference
 import java.sql.Timestamp
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import java.time.*
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.reflect.full.companionObject
@@ -21,10 +18,13 @@ const val SOKNAD_DEFAULT_TITTEL = "Søknad om økonomisk sosialhjelp"
 
 inline fun <reified T : Any> typeRef(): ParameterizedTypeReference<T> = object : ParameterizedTypeReference<T>() {}
 
-fun toLocalDateTime(hendelsetidspunkt: String): LocalDateTime {
-    return ZonedDateTime.parse(hendelsetidspunkt, DateTimeFormatter.ISO_DATE_TIME)
+fun String.toLocalDateTime(): LocalDateTime {
+    return ZonedDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
             .withZoneSameInstant(ZoneId.of("Europe/Oslo")).toLocalDateTime()
 }
+
+fun String.toLocalDate(): LocalDate =
+        LocalDate.parse(this, DateTimeFormatter.ISO_LOCAL_DATE)
 
 fun unixToLocalDateTime(tidspunkt: Long): LocalDateTime {
     return LocalDateTime.ofInstant(Instant.ofEpochMilli(tidspunkt), ZoneId.of("Europe/Oslo"))

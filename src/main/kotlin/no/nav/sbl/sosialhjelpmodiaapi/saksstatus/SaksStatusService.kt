@@ -3,6 +3,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.saksstatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Sak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatusResponse
+import no.nav.sbl.sosialhjelpmodiaapi.domain.VedtakResponse
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.logger
@@ -23,14 +24,20 @@ class SaksStatusService(private val fiksClient: FiksClient,
             return emptyList()
         }
 
-        val responseList = model.saker.filter { it.saksStatus != SaksStatus.FEILREGISTRERT }.map { mapToResponse(it) }
+        val responseList = model.saker
+                .filter { it.saksStatus != SaksStatus.FEILREGISTRERT }
+                .map { sak ->
+                    SaksStatusResponse(
+                            tittel = sak.tittel ?: DEFAULT_TITTEL,
+                            status = hentStatusNavn(sak),
+                            vedtak = sak.vedtak.map{ VedtakResponse(it.datoFattet, it.utfall) },
+                            datoOpprettet = sak.datoOpprettet,
+                            datoAvsluttet = sak.vedtak.maxBy { it.datoFattet }?.datoFattet,
+                            utfall = sak.vedtak.maxBy { it.datoFattet }?.utfall
+                    )
+                }
         log.info("Hentet ${responseList.size} sak(er) for $fiksDigisosId")
         return responseList
-    }
-
-    private fun mapToResponse(sak: Sak): SaksStatusResponse {
-        val saksStatus = hentStatusNavn(sak)
-        return SaksStatusResponse(sak.tittel ?: DEFAULT_TITTEL, saksStatus)
     }
 
     private fun hentStatusNavn(sak: Sak): SaksStatus? {

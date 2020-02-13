@@ -76,10 +76,10 @@ internal class ForelopigSvarTest {
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
         assertThat(model.historikk).hasSize(3)
         assertThat(model.forelopigSvar).isNotNull
-        assertThat(model.forelopigSvar?.hendelseTidspunkt).isEqualTo(toLocalDateTime(tidspunkt_2))
+        assertThat(model.forelopigSvar?.hendelseTidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
 
         val hendelse = model.historikk.last()
-        assertThat(hendelse.tidspunkt).isEqualTo(toLocalDateTime(tidspunkt_2))
+        assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
         assertThat(hendelse.tittel).contains("Du har fått et brev om saksbehandlingstiden for søknaden din")
     }
 

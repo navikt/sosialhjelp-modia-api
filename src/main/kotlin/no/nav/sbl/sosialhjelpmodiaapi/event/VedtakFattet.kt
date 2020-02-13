@@ -10,7 +10,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
     val utfallString = hendelse.utfall?.name
     val utfall = if (utfallString == null) null else UtfallVedtak.valueOf(utfallString)
 
-    val vedtakFattet = Vedtak(utfall)
+    val vedtakFattet = Vedtak(utfall, hendelse.hendelsestidspunkt.toLocalDateTime().toLocalDate())
 
     var sakForReferanse = saker.firstOrNull { it.referanse == hendelse.saksreferanse } ?: saker.firstOrNull { it.referanse == "default" }
 
@@ -23,7 +23,8 @@ fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
                 mutableListOf(),
                 mutableListOf(),
                 mutableListOf(),
-                mutableListOf()
+                mutableListOf(),
+                hendelse.hendelsestidspunkt.toLocalDateTime().toLocalDate()
         )
         saker.add(sakForReferanse)
     }
@@ -32,5 +33,5 @@ fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
     val sak = saker.first { it.referanse == hendelse.saksreferanse }
     val beskrivelse = "${sak.tittel ?: DEFAULT_TITTEL} er ferdig behandlet"
 
-    historikk.add(Hendelse(beskrivelse, toLocalDateTime(hendelse.hendelsestidspunkt)))
+    historikk.add(Hendelse(beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
 }

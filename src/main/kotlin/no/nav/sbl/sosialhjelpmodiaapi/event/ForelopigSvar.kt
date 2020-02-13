@@ -8,9 +8,9 @@ import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonForelopigSvar) {
 
-    forelopigSvar = ForelopigSvar(toLocalDateTime(hendelse.hendelsestidspunkt))
+    forelopigSvar = ForelopigSvar(hendelse.hendelsestidspunkt.toLocalDateTime())
 
     val beskrivelse = "Du har fått et brev om saksbehandlingstiden for søknaden din"
 
-    historikk.add(Hendelse(beskrivelse, toLocalDateTime(hendelse.hendelsestidspunkt)))
+    historikk.add(Hendelse(beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
 }
