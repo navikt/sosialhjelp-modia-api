@@ -66,7 +66,7 @@ internal class SaksStatusServiceTest {
         assertThat(response[0].tittel).isEqualTo(tittel)
         assertThat(response[0].datoOpprettet).isEqualTo(now)
         assertThat(response[0].datoAvsluttet).isNull()
-        assertThat(response[0].vedtak).isNull()
+        assertThat(response[0].vedtak).isEmpty()
         assertThat(response[0].utfall).isNull()
     }
 
@@ -188,7 +188,7 @@ internal class SaksStatusServiceTest {
         assertThat(response[1].tittel).isEqualTo(DEFAULT_TITTEL)
         assertThat(response[1].datoOpprettet).isEqualTo(now)
         assertThat(response[1].datoAvsluttet).isNull()
-        assertThat(response[1].vedtak).isNull()
+        assertThat(response[1].vedtak).isEmpty()
         assertThat(response[1].utfall).isNull()
     }
 }
