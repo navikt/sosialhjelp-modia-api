@@ -3,7 +3,7 @@
 ![](https://github.com/navikt/sosialhjelp-modia-api/workflows/Deploy%20Prod/badge.svg?)
 
 # sosialhjelp-modia-api
-Backend-app som skal vise personinformasjon i modia for sosialhjelp.
+Backend-app som skal gi innsyn i sosialhjelp-saker for saksbehandlere ved NKS.
 
 ## Henvendelser
 Henvendelser kan sendes via Slack i kanalen #digisos.
