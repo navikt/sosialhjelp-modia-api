@@ -12,8 +12,7 @@ Henvendelser kan sendes via Slack i kanalen #digisos.
 Dette prosjektet bygger og deployer vha Github Actions
 
 ### Github package registry
-- NB: Fungerer foreløpig kun med personal access token, og tokenet må ha read og write access til packages.
-- Docker image bygges på CircleCi og pushes til github package registry, eks [her](https://github.com/navikt/sosialhjelp-modia-api/packages/13432/versions)
+- Docker image pushes til github package registry [https://github.com/navikt/sosialhjelp-modia-api/packages/](https://github.com/navikt/sosialhjelp-modia-api/packages/)
 
 ### Github Actions
 - Docker image bygges ved push => `.github/workflows/build.yml`
