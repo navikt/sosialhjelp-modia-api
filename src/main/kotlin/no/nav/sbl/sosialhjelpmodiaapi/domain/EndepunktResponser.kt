@@ -114,5 +114,6 @@ data class SaksDetaljerResponse(
         val fiksDigisosId: String,
         val soknadTittel: String,
         val status: String,
-        val antallNyeOppgaver: Int?
+        val harNyeOppgaver: Boolean,
+        val harVilkar: Boolean
 )

@@ -21,7 +21,7 @@ class SoknadsoversiktController(private val fiksClient: FiksClient,
                                 private val eventService: EventService,
                                 private val oppgaveService: OppgaveService) {
 
-    @GetMapping("/soknader")
+    @GetMapping("/saker")
     fun hentAlleSaker(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<List<SaksListeResponse>> {
         val saker = try {
             fiksClient.hentAlleDigisosSaker(token)
@@ -32,11 +32,11 @@ class SoknadsoversiktController(private val fiksClient: FiksClient,
         val responselist = saker
                 .map { sak ->
                     SaksListeResponse(
-                            sak.fiksDigisosId,
-                            "Søknad om økonomisk sosialhjelp",
-                            unixTimestampToDate(sak.sistEndret),
-                            sak.originalSoknadNAV?.timestampSendt?.let { unixTimestampToDate(it) },
-                            IntegrationUtils.KILDE_INNSYN_API
+                            fiksDigisosId = sak.fiksDigisosId,
+                            soknadTittel = "Søknad om økonomisk sosialhjelp",
+                            sistOppdatert = unixTimestampToDate(sak.sistEndret),
+                            sendt = sak.originalSoknadNAV?.timestampSendt?.let { unixTimestampToDate(it) },
+                            kilde = IntegrationUtils.KILDE_INNSYN_API
                     )
                 }
         log.info("Hentet alle (${responselist.size}) DigisosSaker for bruker.")
@@ -44,18 +44,16 @@ class SoknadsoversiktController(private val fiksClient: FiksClient,
         return ResponseEntity.ok().body(responselist.sortedByDescending { it.sistOppdatert })
     }
 
-    @GetMapping("/saksDetaljer")
-    fun hentSaksDetaljer(@RequestParam id: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<SaksDetaljerResponse> {
-        if (id.isEmpty()) {
-            return ResponseEntity.noContent().build()
-        }
-        val sak = fiksClient.hentDigisosSak(id, token)
+    @GetMapping("{fiksDigisosId}/saksDetaljer")
+    fun hentSaksDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<SaksDetaljerResponse> {
+        val sak = fiksClient.hentDigisosSak(fiksDigisosId, token)
         val model = eventService.createSoknadsoversiktModel(token, sak)
         val saksDetaljerResponse = SaksDetaljerResponse(
-                sak.fiksDigisosId,
-                hentNavn(model),
-                model.status?.let { mapStatus(it) } ?: "",
-                hentAntallNyeOppgaver(model, sak.fiksDigisosId, token)
+                fiksDigisosId = sak.fiksDigisosId,
+                soknadTittel = hentNavn(model),
+                status = model.status?.let { mapStatus(it) } ?: "",
+                harNyeOppgaver = harNyeOppgaver(model, sak.fiksDigisosId, token),
+                harVilkar = harVilkar(model)
         )
         return ResponseEntity.ok().body(saksDetaljerResponse)
     }
@@ -72,11 +70,18 @@ class SoknadsoversiktController(private val fiksClient: FiksClient,
         return model.saker.filter { SaksStatus.FEILREGISTRERT != it.saksStatus }.joinToString { it.tittel ?: DEFAULT_TITTEL }
     }
 
-    private fun hentAntallNyeOppgaver(model: InternalDigisosSoker, fiksDigisosId: String, token: String): Int? {
+    private fun harNyeOppgaver(model: InternalDigisosSoker, fiksDigisosId: String, token: String): Boolean {
         return when {
-            model.oppgaver.isEmpty() -> null
-            else -> oppgaveService.hentOppgaver(fiksDigisosId, token).size
+            model.oppgaver.isEmpty() -> false
+            else -> oppgaveService.hentOppgaver(fiksDigisosId, token).isNotEmpty()
         }
+    }
+
+    private fun harVilkar(model: InternalDigisosSoker): Boolean {
+        // forenkle?
+        return model.saker
+                .any { sak -> sak.vilkar
+                        .any { vilkar -> !vilkar.oppfyllt } }
     }
 
     companion object {

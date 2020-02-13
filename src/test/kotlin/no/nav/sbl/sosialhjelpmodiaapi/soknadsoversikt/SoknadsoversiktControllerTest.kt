@@ -97,8 +97,11 @@ internal class SoknadsoversiktControllerTest {
 
         every { sak1.tittel } returns "Livsopphold"
         every { sak1.saksStatus } returns SaksStatus.UNDER_BEHANDLING
+        every { sak1.vilkar } returns mutableListOf(Vilkar("", mutableListOf(), "", true))
+
         every { sak2.tittel } returns "Strøm"
         every { sak2.saksStatus } returns SaksStatus.UNDER_BEHANDLING
+        every { sak2.vilkar } returns mutableListOf(Vilkar("", mutableListOf(), "", false))
 
         every { model1.saker } returns mutableListOf()
         every { model2.saker } returns mutableListOf(sak1, sak2)
@@ -109,7 +112,8 @@ internal class SoknadsoversiktControllerTest {
         assertThat(response1.statusCode.value()).isEqualTo(HttpStatus.SC_OK)
         assertThat(sak1).isNotNull
         assertThat(sak1?.soknadTittel).isEqualTo("")
-        assertThat(sak1?.antallNyeOppgaver).isEqualTo(2)
+        assertThat(sak1?.harNyeOppgaver).isTrue()
+        assertThat(sak1?.harVilkar).isFalse()
 
         val response2 = controller.hentSaksDetaljer("456", "token")
         val sak2 = response2.body
@@ -118,7 +122,8 @@ internal class SoknadsoversiktControllerTest {
         assertThat(sak2).isNotNull
         assertThat(sak2?.soknadTittel).contains("Livsopphold", "Strøm")
         assertThat(sak2?.status).isEqualTo("UNDER BEHANDLING")
-        assertThat(sak2?.antallNyeOppgaver).isEqualTo(1)
+        assertThat(sak2?.harNyeOppgaver).isTrue()
+        assertThat(sak2?.harVilkar).isTrue()
     }
 
     @Test
@@ -138,6 +143,6 @@ internal class SoknadsoversiktControllerTest {
 
         verify { oppgaveService wasNot Called }
 
-        assertThat(sak?.antallNyeOppgaver).isEqualTo(null)
+        assertThat(sak?.harNyeOppgaver).isFalse()
     }
 }
