@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.config
 
+import no.nav.sbl.sosialhjelpmodiaapi.sts.STSClient
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.web.client.RestTemplateBuilder
@@ -9,6 +10,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter
+import java.nio.charset.StandardCharsets
 
 @Configuration
 class RestConfig {
@@ -16,6 +18,12 @@ class RestConfig {
     @Bean
     fun restTemplate(builder: RestTemplateBuilder): RestTemplate =
             builder.build()
+
+    @Bean
+    fun stsRestTemplate(builder: RestTemplateBuilder): RestTemplate =
+            builder
+                    .basicAuthentication(System.getenv(STSClient.SRVSOSIALHJELP_MODIA_API_USERNAME), System.getenv(STSClient.SRVSOSIALHJELP_MODIA_API_PASSWORD), StandardCharsets.UTF_8)
+                    .build()
 
     @Bean
     fun objectMapperCustomizer(): Jackson2ObjectMapperBuilderCustomizer {

@@ -4,18 +4,14 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.sts.STSToken.Companion.shouldRenewToken
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
-import no.nav.sbl.sosialhjelpmodiaapi.utils.basicHeader
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod.GET
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
-import java.lang.System.getenv
 import java.time.LocalDateTime
 
 @Component
-class STSClient(private val restTemplate: RestTemplate,
+class STSClient(private val stsRestTemplate: RestTemplate,
                 private val clientProperties: ClientProperties) {
 
     companion object {
@@ -29,33 +25,20 @@ class STSClient(private val restTemplate: RestTemplate,
 
     fun token(): String {
         if (shouldRenewToken(cachedToken)) {
-            val requestEntity = HttpEntity<Any>(basicAuthHeader())
-            val requestUrl = clientProperties.stsTokenEndpointUrl
-
             try {
-                val response = restTemplate.exchange(requestUrl, GET, requestEntity, typeRef<STSToken>())
+                log.info("Henter nytt token fra STS")
+                val requestUrl = clientProperties.stsTokenEndpointUrl
+                val response = stsRestTemplate.exchange(requestUrl, GET, null, typeRef<STSToken>())
 
                 cachedToken = response.body
-
+                return response.body!!.access_token
             } catch (e: HttpClientErrorException) {
                 log.error("STS - ${e.statusCode} ${e.statusText}", e)
                 throw e
             }
         }
+        log.info("Hentet token fra cache")
         return cachedToken!!.access_token
-    }
-
-    private fun basicAuthHeader(): HttpHeaders {
-        val srvusername: String? = getenv(SRVSOSIALHJELP_MODIA_API_USERNAME)
-        val srvpassword: String? = getenv(SRVSOSIALHJELP_MODIA_API_PASSWORD)
-        if (srvusername == null || srvpassword == null) {
-            throw IllegalStateException("srvusername eller srvpassword er ikke tilgjengelig")
-        }
-
-        val basicAuthHeader = basicHeader(srvusername, srvpassword)
-        val headers = HttpHeaders()
-        headers.add(HttpHeaders.AUTHORIZATION, basicAuthHeader)
-        return headers
     }
 }
 
@@ -69,7 +52,7 @@ data class STSToken(
 
     companion object {
         fun shouldRenewToken(token: STSToken?): Boolean {
-            if (token == null){
+            if (token == null) {
                 return true
             }
             return isExpired(token)
