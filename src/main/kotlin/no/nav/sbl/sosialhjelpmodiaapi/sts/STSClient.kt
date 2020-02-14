@@ -3,7 +3,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.sts
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.sts.STSToken.Companion.shouldRenewToken
-import no.nav.sbl.sosialhjelpmodiaapi.typeRef
+import no.nav.sbl.sosialhjelpmodiaapi.typeRefr
 import org.springframework.http.HttpMethod.GET
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
@@ -16,9 +16,6 @@ class STSClient(private val stsRestTemplate: RestTemplate,
 
     companion object {
         val log by logger()
-
-        const val SRVSOSIALHJELP_MODIA_API_USERNAME: String = "SRVSOSIALHJELP_MODIA_API_USERNAME"
-        const val SRVSOSIALHJELP_MODIA_API_PASSWORD: String = "SRVSOSIALHJELP_MODIA_API_PASSWORD"
     }
 
     private var cachedToken: STSToken? = null

@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.config
 
-import no.nav.sbl.sosialhjelpmodiaapi.sts.STSClient
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.web.client.RestTemplateBuilder
@@ -15,6 +14,11 @@ import java.nio.charset.StandardCharsets
 @Configuration
 class RestConfig {
 
+    companion object {
+        const val SRVSOSIALHJELP_MODIA_API_USERNAME: String = "SRVSOSIALHJELP_MODIA_API_USERNAME"
+        const val SRVSOSIALHJELP_MODIA_API_PASSWORD: String = "SRVSOSIALHJELP_MODIA_API_PASSWORD"
+    }
+
     @Bean
     fun restTemplate(builder: RestTemplateBuilder): RestTemplate =
             builder.build()
@@ -22,7 +26,7 @@ class RestConfig {
     @Bean
     fun stsRestTemplate(builder: RestTemplateBuilder): RestTemplate =
             builder
-                    .basicAuthentication(System.getenv(STSClient.SRVSOSIALHJELP_MODIA_API_USERNAME), System.getenv(STSClient.SRVSOSIALHJELP_MODIA_API_PASSWORD), StandardCharsets.UTF_8)
+                    .basicAuthentication(System.getenv(SRVSOSIALHJELP_MODIA_API_USERNAME), System.getenv(SRVSOSIALHJELP_MODIA_API_PASSWORD), StandardCharsets.UTF_8)
                     .build()
 
     @Bean
