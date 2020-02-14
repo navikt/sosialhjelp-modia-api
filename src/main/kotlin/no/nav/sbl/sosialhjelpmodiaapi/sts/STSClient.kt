@@ -3,7 +3,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.sts
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.sts.STSToken.Companion.shouldRenewToken
-import no.nav.sbl.sosialhjelpmodiaapi.typeRefr
+import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import org.springframework.http.HttpMethod.GET
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
