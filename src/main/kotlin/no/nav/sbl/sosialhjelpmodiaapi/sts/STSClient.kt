@@ -2,6 +2,8 @@ package no.nav.sbl.sosialhjelpmodiaapi.sts
 
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.sts.STSToken.Companion.shouldRenewToken
+import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import no.nav.sbl.sosialhjelpmodiaapi.utils.basicHeader
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -23,20 +25,24 @@ class STSClient(private val restTemplate: RestTemplate,
         const val SRVSOSIALHJELP_MODIA_API_PASSWORD: String = "SRVSOSIALHJELP_MODIA_API_PASSWORD"
     }
 
+    private var cachedToken: STSToken? = null
+
     fun token(): String {
-        // if cachedToken.shouldRenewToken() ?
-        val requestEntity = HttpEntity<Any>(basicAuthHeader())
-        val requestUrl = clientProperties.stsTokenEndpointUrl
+        if (shouldRenewToken(cachedToken)) {
+            val requestEntity = HttpEntity<Any>(basicAuthHeader())
+            val requestUrl = clientProperties.stsTokenEndpointUrl
 
-        try {
-            val response = restTemplate.exchange(requestUrl, GET, requestEntity, STSToken::class.java)
+            try {
+                val response = restTemplate.exchange(requestUrl, GET, requestEntity, typeRef<STSToken>())
 
-            return response.body!!.access_type
+                cachedToken = response.body
 
-        } catch (e: HttpClientErrorException) {
-            log.error("STS - ${e.statusCode} ${e.statusText}", e)
-            throw e
+            } catch (e: HttpClientErrorException) {
+                log.error("STS - ${e.statusCode} ${e.statusText}", e)
+                throw e
+            }
         }
+        return cachedToken!!.access_token
     }
 
     private fun basicAuthHeader(): HttpHeaders {
@@ -54,12 +60,12 @@ class STSClient(private val restTemplate: RestTemplate,
 }
 
 data class STSToken(
-        val access_type: String,
+        val access_token: String,
         val token_type: String,
         val expires_in: Long
 ) {
-    // caching av token -> kan bruke dette
-    val expirationTime = LocalDateTime.now().plusSeconds(expires_in - 10L)
+
+    val expirationTime: LocalDateTime = LocalDateTime.now().plusSeconds(expires_in - 10L)
 
     companion object {
         fun shouldRenewToken(token: STSToken?): Boolean {
