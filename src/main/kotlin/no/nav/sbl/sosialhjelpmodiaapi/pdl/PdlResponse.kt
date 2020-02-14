@@ -35,3 +35,21 @@ data class PdlPersonNavn(
         val mellomnavn: String?,
         val etternavn: String
 )
+
+fun PdlHentPerson.getNavn(): String? {
+    val navneListe = this.hentPerson?.navn
+    if (navneListe.isNullOrEmpty()) {
+        return null
+    }
+    navneListe[0].let {
+        val fornavn = it.fornavn.toLowerCase().capitalize()
+        val mellomnavn = it.mellomnavn
+        val etternavn = it.etternavn.toLowerCase().capitalize()
+
+        return if (mellomnavn.isNullOrBlank()) {
+            "$fornavn $etternavn"
+        } else {
+            "$fornavn ${mellomnavn.toLowerCase().capitalize()} $etternavn"
+        }
+    }
+}

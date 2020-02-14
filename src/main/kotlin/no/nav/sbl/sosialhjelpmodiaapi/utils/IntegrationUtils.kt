@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.utils
 
 import java.security.SecureRandom
-import java.util.*
 
 private val RANDOM = SecureRandom()
 
@@ -33,8 +32,4 @@ object IntegrationUtils {
     const val NAV_CALL_ID = "Nav-Call-Id"
     const val NAV_CONSUMER_TOKEN = "Nav-Consumer-Token"
     const val TEMA = "Tema"
-}
-
-fun basicHeader(credentialUsername: String, credentialPassword: String): String {
-    return "Basic " + Base64.getEncoder().encodeToString("$credentialUsername:$credentialPassword".toByteArray())
 }

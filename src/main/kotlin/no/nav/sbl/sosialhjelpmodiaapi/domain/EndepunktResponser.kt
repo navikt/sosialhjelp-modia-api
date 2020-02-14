@@ -117,3 +117,10 @@ data class SaksDetaljerResponse(
         val harNyeOppgaver: Boolean,
         val harVilkar: Boolean
 )
+
+data class PersonInfoResponse(
+        val sammensattNavn: String?
+//        val alder: Int
+//        val fnr: String,
+//        val tlfnr: String
+)

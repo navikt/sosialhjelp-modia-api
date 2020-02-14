@@ -23,7 +23,6 @@ internal class STSClientTest {
     @BeforeEach
     fun init() {
         clearAllMocks()
-
     }
 
     @Test
@@ -89,12 +88,11 @@ internal class STSClientTest {
         val firstToken = stsClient.token()
 
         assertThat(firstToken).isNotNull()
-        assertThat(firstToken).isEqualTo(token.access_token)
         verify(exactly = 1) { restTemplate.exchange(any<String>(), HttpMethod.GET, any(), typeRef<STSToken>()) }
 
         val secondToken = stsClient.token()
 
-        assertThat(secondToken).isEqualTo(token.access_token)
+        assertThat(secondToken).isNotNull()
         verify(exactly = 2) { restTemplate.exchange(any<String>(), HttpMethod.GET, any(), typeRef<STSToken>()) }
     }
 }
