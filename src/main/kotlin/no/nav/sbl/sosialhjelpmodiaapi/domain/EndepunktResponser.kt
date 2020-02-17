@@ -32,15 +32,13 @@ data class HendelseResponse(
 )
 
 data class OppgaveResponse(
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-        val innsendelsesfrist: LocalDateTime?,
         val dokumenttype: String,
         val tilleggsinformasjon: String?,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-        val datoLagtTil: LocalDateTime,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val innsendelsesfrist: LocalDate?,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val vedleggDatoLagtTil: LocalDate?,
         val antallVedlegg: Int,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-        val vedleggDatoLagtTil: LocalDateTime?,
         val erFraInnsyn: Boolean
 )
 
