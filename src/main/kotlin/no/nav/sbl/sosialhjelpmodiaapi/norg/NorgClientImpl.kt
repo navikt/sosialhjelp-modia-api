@@ -24,8 +24,6 @@ class NorgClientImpl(clientProperties: ClientProperties,
     private val baseUrl = clientProperties.norgEndpointUrl
 
     override fun hentNavEnhet(enhetsnr: String): NavEnhet {
-        val headers = HttpHeaders()
-
         try {
             log.info("Norg2 - GET enhet $enhetsnr")
             val urlTemplate = "$baseUrl/enhet/{enhetsnr}"
