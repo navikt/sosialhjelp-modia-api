@@ -11,7 +11,17 @@ import org.springframework.stereotype.Component
 @Profile("mock | local")
 class PdlClientMock: PdlClient {
 
-    override fun hentPerson(): PdlHentPerson? {
+    private val pdlHentPersonMap = mutableMapOf<String, PdlHentPerson>()
+
+    override fun hentPerson(ident: String): PdlHentPerson? {
+        return pdlHentPersonMap.getOrElse(ident, {
+            val default = defaultPdlHentPerson()
+            pdlHentPersonMap[ident] = default
+            default
+        })
+    }
+
+    private fun defaultPdlHentPerson(): PdlHentPerson {
         return PdlHentPerson(
                 PdlPerson(
                         listOf(PdlPersonNavn("Bruce", "mock", "Banner"))

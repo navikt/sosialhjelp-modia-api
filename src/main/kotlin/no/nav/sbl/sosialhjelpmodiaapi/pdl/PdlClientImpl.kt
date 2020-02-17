@@ -10,6 +10,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.NAV_CONSUMER_TOKEN
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.TEMA
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.TEMA_KOM
 import no.nav.sbl.sosialhjelpmodiaapi.utils.generateCallId
+import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.AUTHORIZATION
@@ -19,10 +20,11 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 
+@Profile("!(mock | local)")
 @Component
 class PdlClientImpl(clientProperties: ClientProperties,
                     private val restTemplate: RestTemplate,
-                    private val stsClient: STSClient): PdlClient {
+                    private val stsClient: STSClient) : PdlClient {
 
     companion object {
         val log by logger()
@@ -30,13 +32,11 @@ class PdlClientImpl(clientProperties: ClientProperties,
 
     private val baseurl = clientProperties.pdlEndpointUrl
 
-    override fun hentPerson(): PdlHentPerson? {
-        val fnr: String = "fnr" // fixme: fnr som input - etter at vi har sjekket at veileder har tilgang til å hente personinfo for bruker?
-
+    override fun hentPerson(ident: String): PdlHentPerson? {
+        // fixme: sjekk at veileder har tilgang til å hente personinfo for bruker med ident?
         val query = getResourceAsString("/pdl/hentPerson.graphql").replace("[\n\r]", "")
-
-        val requestEntity = createRequestEntity(PdlRequest(query, Variables(fnr)))
         try {
+            val requestEntity = createRequestEntity(PdlRequest(query, Variables(ident)))
             val response = restTemplate.exchange(baseurl, HttpMethod.POST, requestEntity, typeRef<PdlPersonResponse>())
             return response.body!!.data
         } catch (e: RestClientException) {
@@ -58,6 +58,7 @@ class PdlClientImpl(clientProperties: ClientProperties,
 
     private fun createRequestEntity(request: PdlRequest): HttpEntity<PdlRequest> {
         val stsToken: String = stsClient.token()
+
         val headers = HttpHeaders()
         headers.contentType = APPLICATION_JSON
         headers.set(NAV_CALL_ID, generateCallId())
