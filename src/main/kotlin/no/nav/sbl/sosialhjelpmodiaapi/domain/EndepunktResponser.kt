@@ -22,7 +22,7 @@ data class SaksStatusResponse(
 
 data class VedtakResponse(
         @JsonFormat(pattern = "yyyy-MM-dd")
-        val dato: LocalDate,
+        val vedtakDato: LocalDate,
         val utfall: UtfallVedtak?
 )
 

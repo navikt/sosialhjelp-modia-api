@@ -30,7 +30,12 @@ class SaksStatusService(private val fiksClient: FiksClient,
                     SaksStatusResponse(
                             tittel = sak.tittel ?: DEFAULT_TITTEL,
                             status = hentStatusNavn(sak),
-                            vedtak = sak.vedtak.map{ VedtakResponse(it.datoFattet, it.utfall) },
+                            vedtak = sak.vedtak.map {
+                                VedtakResponse(
+                                        vedtakDato = it.datoFattet,
+                                        utfall = it.utfall
+                                )
+                            },
                             datoOpprettet = sak.datoOpprettet,
                             datoAvsluttet = sak.vedtak.maxBy { it.datoFattet }?.datoFattet,
                             utfall = sak.vedtak.maxBy { it.datoFattet }?.utfall
