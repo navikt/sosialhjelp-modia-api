@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelpmodiaapi.soknadsinfo
+package no.nav.sbl.sosialhjelpmodiaapi.noekkelinfo
 
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -15,12 +15,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
-internal class SoknadsInfoServiceTest {
+internal class NoekkelinfoServiceTest {
 
     private val fiksClient: FiksClient = mockk()
     private val eventService: EventService = mockk()
     private val norgClient: NorgClient = mockk()
-    private val service = SoknadsInfoService(fiksClient, eventService, norgClient)
+    private val service = NoekkelinfoService(fiksClient, eventService, norgClient)
 
     private val mockDigisosSak: DigisosSak = mockk()
     private val mockNavEnhetSendt: NavEnhet = mockk()
@@ -53,7 +53,7 @@ internal class SoknadsInfoServiceTest {
     }
 
     @Test
-    fun `soknadsInfo ikke videresendt eller forelopig svar`() {
+    fun `noekkelinfo ikke videresendt eller forelopig svar`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -65,20 +65,20 @@ internal class SoknadsInfoServiceTest {
 
         every { mockDigisosSak.digisosSoker } returns null
 
-        val soknadsInfo = service.hentSoknadsInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123", "token")
 
-        assertThat(soknadsInfo.status).isEqualTo(MOTTATT)
-        assertThat(soknadsInfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
-        assertThat(soknadsInfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
-        assertThat(soknadsInfo.soknadSendtMottattTidspunkt).isEqualTo(tidspunkt)
-        assertThat(soknadsInfo.navKontorSoknad).isEqualTo(enhetNavn1)
-        assertThat(soknadsInfo.navKontorTildelt).isNull()
-        assertThat(soknadsInfo.tidspunktForelopigSvar).isNull()
-        assertThat(soknadsInfo.navKontorSaksbehandlingstid).isEqualTo(sosialetjenester1)
+        assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
+        assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
+        assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
+        assertThat(noekkelinfo.saksId).isNull() //fix
+        assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt)
+        assertThat(noekkelinfo.navKontor).isEqualTo(enhetNavn1)
+        assertThat(noekkelinfo.videresendt).isFalse()
+        assertThat(noekkelinfo.tidspunktForelopigSvar).isNull()
     }
 
     @Test
-    fun `soknadsInfo ikke videresendt med med forelopig svar`() {
+    fun `noekkelinfo ikke videresendt med med forelopig svar`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -91,20 +91,20 @@ internal class SoknadsInfoServiceTest {
 
         every { mockDigisosSak.digisosSoker } returns null
 
-        val soknadsInfo = service.hentSoknadsInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123", "token")
 
-        assertThat(soknadsInfo.status).isEqualTo(MOTTATT)
-        assertThat(soknadsInfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
-        assertThat(soknadsInfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
-        assertThat(soknadsInfo.soknadSendtMottattTidspunkt).isEqualTo(tidspunkt)
-        assertThat(soknadsInfo.navKontorSoknad).isEqualTo(enhetNavn1)
-        assertThat(soknadsInfo.navKontorTildelt).isNull()
-        assertThat(soknadsInfo.tidspunktForelopigSvar).isEqualTo(tidspunkt)
-        assertThat(soknadsInfo.navKontorSaksbehandlingstid).isEqualTo(sosialetjenester1)
+        assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
+        assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
+        assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
+        assertThat(noekkelinfo.saksId).isNull() //fix
+        assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt)
+        assertThat(noekkelinfo.navKontor).isEqualTo(enhetNavn1)
+        assertThat(noekkelinfo.videresendt).isFalse()
+        assertThat(noekkelinfo.tidspunktForelopigSvar).isEqualTo(tidspunkt)
     }
 
     @Test
-    fun `soknadsInfo videresendt`() {
+    fun `noekkelinfo videresendt`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -117,20 +117,20 @@ internal class SoknadsInfoServiceTest {
 
         every { mockDigisosSak.digisosSoker } returns null
 
-        val soknadsInfo = service.hentSoknadsInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123", "token")
 
-        assertThat(soknadsInfo.status).isEqualTo(MOTTATT)
-        assertThat(soknadsInfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
-        assertThat(soknadsInfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
-        assertThat(soknadsInfo.soknadSendtMottattTidspunkt).isEqualTo(tidspunkt)
-        assertThat(soknadsInfo.navKontorSoknad).isEqualTo(enhetNavn1)
-        assertThat(soknadsInfo.navKontorTildelt).isEqualTo(enhetNavn2)
-        assertThat(soknadsInfo.tidspunktForelopigSvar).isNull()
-        assertThat(soknadsInfo.navKontorSaksbehandlingstid).isEqualTo(sosialetjenester2)
+        assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
+        assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
+        assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
+        assertThat(noekkelinfo.saksId).isNull() //fix
+        assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt)
+        assertThat(noekkelinfo.navKontor).isEqualTo(enhetNavn2)
+        assertThat(noekkelinfo.videresendt).isTrue()
+        assertThat(noekkelinfo.tidspunktForelopigSvar).isNull()
     }
 
     @Test
-    fun `soknadsInfo papirsoknad og videresendt`() {
+    fun `noekkelinfo papirsoknad og videresendt`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -142,20 +142,20 @@ internal class SoknadsInfoServiceTest {
 
         every { mockDigisosSak.digisosSoker } returns null
 
-        val soknadsInfo = service.hentSoknadsInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123", "token")
 
-        assertThat(soknadsInfo.status).isEqualTo(MOTTATT)
-        assertThat(soknadsInfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
-        assertThat(soknadsInfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
-        assertThat(soknadsInfo.soknadSendtMottattTidspunkt).isEqualTo(tidspunkt)
-        assertThat(soknadsInfo.navKontorSoknad).isNull() // null hvis papirsøknad?
-        assertThat(soknadsInfo.navKontorTildelt).isEqualTo(enhetNavn2)
-        assertThat(soknadsInfo.tidspunktForelopigSvar).isNull()
-        assertThat(soknadsInfo.navKontorSaksbehandlingstid).isEqualTo(sosialetjenester2)
+        assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
+        assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
+        assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
+        assertThat(noekkelinfo.saksId).isNull() //fix
+        assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt)
+        assertThat(noekkelinfo.navKontor).isEqualTo(enhetNavn2)
+        assertThat(noekkelinfo.videresendt).isTrue()
+        assertThat(noekkelinfo.tidspunktForelopigSvar).isNull()
     }
 
     @Test
-    fun `soknadsInfo papirsoknad ikke videresendt`() {
+    fun `noekkelinfo papirsoknad ikke videresendt`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -166,15 +166,15 @@ internal class SoknadsInfoServiceTest {
 
         every { mockDigisosSak.digisosSoker } returns null
 
-        val soknadsInfo = service.hentSoknadsInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123", "token")
 
-        assertThat(soknadsInfo.status).isEqualTo(MOTTATT)
-        assertThat(soknadsInfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
-        assertThat(soknadsInfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
-        assertThat(soknadsInfo.soknadSendtMottattTidspunkt).isEqualTo(tidspunkt)
-        assertThat(soknadsInfo.navKontorSoknad).isNull() // null hvis papirsøknad?
-        assertThat(soknadsInfo.navKontorTildelt).isNull()
-        assertThat(soknadsInfo.tidspunktForelopigSvar).isNull()
-        assertThat(soknadsInfo.navKontorSaksbehandlingstid).isNull()
+        assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
+        assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
+        assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789))
+        assertThat(noekkelinfo.saksId).isNull() //fix
+        assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt)
+        assertThat(noekkelinfo.navKontor).isNull()
+        assertThat(noekkelinfo.videresendt).isFalse()
+        assertThat(noekkelinfo.tidspunktForelopigSvar).isNull()
     }
 }

@@ -87,17 +87,17 @@ data class VedleggResponse(
         val datoLagtTil: LocalDateTime?
 )
 
-data class SoknadsInfoResponse(
-        val status: SoknadsStatus,
+data class SoknadNoekkelinfoResponse(
         val tittel: String,
+        val status: SoknadsStatus,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
         val sistOppdatert: LocalDateTime,
+        val saksId: String?,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val soknadSendtMottattTidspunkt: LocalDateTime,
-        val navKontorSoknad: String?,
-        val navKontorTildelt: String?,
-        val tidspunktForelopigSvar: LocalDateTime?,
-        val navKontorSaksbehandlingstid: String?
+        val sendtEllerMottattTidspunkt: LocalDateTime,
+        val navKontor: String?,
+        val videresendt: Boolean,
+        val tidspunktForelopigSvar: LocalDateTime?
 )
 
 data class SaksListeResponse(
