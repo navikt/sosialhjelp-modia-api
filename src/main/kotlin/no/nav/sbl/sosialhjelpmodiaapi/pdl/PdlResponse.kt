@@ -42,14 +42,20 @@ fun PdlHentPerson.getNavn(): String? {
         return null
     }
     navneListe[0].let {
-        val fornavn = it.fornavn.toLowerCase().capitalize()
-        val mellomnavn = it.mellomnavn
-        val etternavn = it.etternavn.toLowerCase().capitalize()
+        val fornavn = it.fornavn.capitalizeEachWord()
+        val mellomnavn = it.mellomnavn?.capitalizeEachWord()
+        val etternavn = it.etternavn.capitalizeEachWord()
 
         return if (mellomnavn.isNullOrBlank()) {
             "$fornavn $etternavn"
         } else {
-            "$fornavn ${mellomnavn.toLowerCase().capitalize()} $etternavn"
+            "$fornavn $mellomnavn $etternavn"
         }
     }
+}
+
+fun String.capitalizeEachWord(): String {
+    return this.split(" ").toList()
+            .joinToString(separator = " ") { it.toLowerCase().capitalize() }
+
 }
