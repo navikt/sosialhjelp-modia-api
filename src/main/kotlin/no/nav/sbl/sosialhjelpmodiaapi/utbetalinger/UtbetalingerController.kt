@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/v1/innsyn/")
 class UtbetalingerController(private val utbetalingerService: UtbetalingerService) {
 
-    @GetMapping("utbetalinger")
+    @GetMapping("utbetalinger", produces = ["application/json;charset=UTF-8"])
     fun hentUtbetalinger(@RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<List<UtbetalingerResponse>> {
         // Gitt innlogget bruker
         return ResponseEntity.ok().body(utbetalingerService.hentUtbetalinger(token))

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/innsyn/")
 class SoknadsStatusController(private val soknadsStatusService: SoknadsStatusService) {
 
-    @GetMapping("{fiksDigisosId}/soknadsStatus")
+    @GetMapping("{fiksDigisosId}/soknadsStatus", produces = ["application/json;charset=UTF-8"])
     fun hentSoknadsStatus(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<SoknadsStatusResponse> {
         // Gitt innlogget bruker
         val soknadsStatus: SoknadsStatusResponse = soknadsStatusService.hentSoknadsStatus(fiksDigisosId, token)

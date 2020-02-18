@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/innsyn/")
 class NoekkelinfoController(private val noekkelinfoService: NoekkelinfoService) {
 
-    @GetMapping("{fiksDigisosId}/noekkelinfo")
+    @GetMapping("{fiksDigisosId}/noekkelinfo", produces = ["application/json;charset=UTF-8"])
     fun hentNoekkelInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<SoknadNoekkelinfoResponse> {
 
         val noekkelinfo = noekkelinfoService.hentNoekkelInfo(fiksDigisosId, token)

@@ -21,7 +21,7 @@ class SoknadsoversiktController(private val fiksClient: FiksClient,
                                 private val eventService: EventService,
                                 private val oppgaveService: OppgaveService) {
 
-    @GetMapping("/saker")
+    @GetMapping("/saker", produces = ["application/json;charset=UTF-8"])
     fun hentAlleSaker(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<List<SaksListeResponse>> {
         val saker = try {
             fiksClient.hentAlleDigisosSaker(token)
@@ -44,7 +44,7 @@ class SoknadsoversiktController(private val fiksClient: FiksClient,
         return ResponseEntity.ok().body(responselist.sortedByDescending { it.sistOppdatert })
     }
 
-    @GetMapping("{fiksDigisosId}/saksDetaljer")
+    @GetMapping("{fiksDigisosId}/saksDetaljer", produces = ["application/json;charset=UTF-8"])
     fun hentSaksDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<SaksDetaljerResponse> {
         val sak = fiksClient.hentDigisosSak(fiksDigisosId, token)
         val model = eventService.createSoknadsoversiktModel(token, sak)
