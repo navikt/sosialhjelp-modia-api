@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 
@@ -39,7 +40,8 @@ class PdlClientImpl(clientProperties: ClientProperties,
             val requestEntity = createRequestEntity(PdlRequest(query, Variables(ident)))
             val response = restTemplate.exchange(baseurl, HttpMethod.POST, requestEntity, typeRef<PdlPersonResponse>())
             return response.body!!.data
-        } catch (e: RestClientException) {
+        } catch (e: HttpClientErrorException) {
+            log.warn("response: ${e.responseBodyAsString}")
             log.error("PDL - feil ved henting av navn, requesturl: $baseurl", e)
             throw e
         }
