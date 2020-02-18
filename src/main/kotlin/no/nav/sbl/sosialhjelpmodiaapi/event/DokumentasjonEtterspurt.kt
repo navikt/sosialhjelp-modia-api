@@ -12,7 +12,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonEtterspurt) {
             .toMutableList()
 
     if (hendelse.dokumenter.isNotEmpty() && hendelse.forvaltningsbrev != null) {
-        val beskrivelse = "Veileder ber søker sende dokumentasjon"
+        val beskrivelse = "Veileder ber søker sende dokumentasjon. Med forvaltningsbrev."
         historikk.add(Hendelse(DOKUMENTASJONSKRAV, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
     }
 }

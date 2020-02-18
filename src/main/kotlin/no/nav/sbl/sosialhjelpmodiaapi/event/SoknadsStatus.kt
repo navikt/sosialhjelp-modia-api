@@ -21,9 +21,9 @@ fun InternalDigisosSoker.apply(hendelse: JsonSoknadsStatus) {
     val beskrivelse: String? = if (tittel == SOKNAD_MOTTATT) {
         val navEnhetsnavn = soknadsmottaker?.navEnhetsnavn
         if (navEnhetsnavn == null) {
-            "Søknaden med vedlegg er mottatt"
+            "Søknaden med vedlegg er mottatt."
         } else {
-            "Søknaden med vedlegg er mottatt hos $navEnhetsnavn"
+            "Søknaden med vedlegg er mottatt hos $navEnhetsnavn."
         }
     } else {
         null

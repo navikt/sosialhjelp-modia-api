@@ -26,7 +26,7 @@ class EventService(private val innsynService: InnsynService,
 
             if (jsonSoknad != null && jsonSoknad.mottaker != null) {
                 model.soknadsmottaker = Soknadsmottaker(jsonSoknad.mottaker.enhetsnummer, jsonSoknad.mottaker.navEnhetsnavn)
-                model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til ${jsonSoknad.mottaker.navEnhetsnavn}", unixToLocalDateTime(timestampSendt)))
+                model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til ${jsonSoknad.mottaker.navEnhetsnavn}.", unixToLocalDateTime(timestampSendt)))
             }
         }
 
