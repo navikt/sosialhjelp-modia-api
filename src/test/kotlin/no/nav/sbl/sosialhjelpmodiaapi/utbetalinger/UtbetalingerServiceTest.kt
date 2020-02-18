@@ -293,4 +293,53 @@ internal class UtbetalingerServiceTest {
         assertThat(response[1].utbetalinger[0].fiksDigisosId).isEqualTo(id1)
         assertThat(response[1].utbetalinger[0].utbetalingsdato).isEqualTo("2019-08-10")
     }
+
+    @Test
+    internal fun `hentUtbetalinger for DigisosSak`() {
+        val model = InternalDigisosSoker()
+        model.saker.add(Sak(
+                referanse = referanse,
+                saksStatus = SaksStatus.UNDER_BEHANDLING,
+                tittel = tittel,
+                vedtak = mutableListOf(),
+                utbetalinger = mutableListOf(
+                        Utbetaling(
+                                referanse = "Sak1",
+                                status = UtbetalingsStatus.UTBETALT,
+                                belop = BigDecimal.TEN,
+                                beskrivelse = "Nødhjelp",
+                                forfallsDato = null,
+                                utbetalingsDato = LocalDate.of(2019, 8, 10),
+                                fom = LocalDate.of(2019, 8, 1),
+                                tom = LocalDate.of(2019, 8, 31),
+                                mottaker = "utleier",
+                                kontonummer = "kontonr",
+                                utbetalingsmetode = "utbetalingsmetode",
+                                vilkar = mutableListOf(),
+                                dokumentasjonkrav = mutableListOf())),
+                vilkar = mutableListOf(),
+                dokumentasjonkrav = mutableListOf(),
+                datoOpprettet = LocalDate.now()
+        ))
+
+        every { eventService.createModel(any(), any()) } returns model
+        every { fiksClient.hentDigisosSak(any(), any()) } returns mockDigisosSak
+
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(mockDigisosSak, token)
+
+        assertThat(response).isNotEmpty
+        assertThat(response).hasSize(1)
+        assertThat(response[0].ar).isEqualTo(2019)
+        assertThat(response[0].maned).isEqualToIgnoringCase("august")
+        assertThat(response[0].utbetalinger).hasSize(1)
+        assertThat(response[0].utbetalinger[0].tittel).isEqualTo("Nødhjelp")
+        assertThat(response[0].utbetalinger[0].belop).isEqualTo(10.0)
+        assertThat(response[0].utbetalinger[0].fiksDigisosId).isEqualTo(digisosId)
+        assertThat(response[0].utbetalinger[0].utbetalingsdato).isEqualTo("2019-08-10")
+        assertThat(response[0].utbetalinger[0].fom).isEqualTo("2019-08-01")
+        assertThat(response[0].utbetalinger[0].tom).isEqualTo("2019-08-31")
+        assertThat(response[0].utbetalinger[0].mottaker).isEqualTo("utleier")
+        assertThat(response[0].utbetalinger[0].kontonummer).isEqualTo("kontonr")
+        assertThat(response[0].utbetalinger[0].utbetalingsmetode).isEqualTo("utbetalingsmetode")
+    }
 }

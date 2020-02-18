@@ -30,7 +30,7 @@ class UtbetalingerService(private val fiksClient: FiksClient,
         return mapToUtbetalingerResponse(alleUtbetalinger)
     }
 
-    fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak, token: String): List<UtbetalingerResponse> {
+    fun hentUtbetalinger(digisosSak: DigisosSak, token: String): List<UtbetalingerResponse> {
         val manedUtbetalinger = hentManedUtbetalingerForDigisosSak(digisosSak, token)
         return mapToUtbetalingerResponse(manedUtbetalinger)
     }
