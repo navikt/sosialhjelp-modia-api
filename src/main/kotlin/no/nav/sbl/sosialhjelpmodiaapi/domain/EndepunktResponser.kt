@@ -118,7 +118,7 @@ data class SaksDetaljerResponse(
         val harVilkar: Boolean
 )
 
-data class PersonInfoResponse(
+data class PersoninfoResponse(
         val sammensattNavn: String?
 //        val alder: Int
 //        val fnr: String,
