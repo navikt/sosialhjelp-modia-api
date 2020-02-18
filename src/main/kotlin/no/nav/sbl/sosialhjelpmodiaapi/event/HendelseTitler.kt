@@ -10,7 +10,6 @@ const val SOKNAD_BEHANDLES_IKKE = "Søknaden behandles ikke"
 const val SAK_FERDIGBEHANDLET = "Sak er ferdig behandlet"
 
 const val VEDLEGG_MOTTATT = "Vedlegg mottatt"
-const val DOKUMENTASJON_ETTERSPURT = "Dokumentasjon etterspurt"
 const val DOKUMENTASJONSKRAV = "Dokumentasjonskrav"
 
 const val FORELOPIG_SVAR = "Foreløpig svar sendt"

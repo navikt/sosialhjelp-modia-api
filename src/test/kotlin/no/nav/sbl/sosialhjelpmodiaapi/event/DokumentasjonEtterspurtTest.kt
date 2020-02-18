@@ -73,7 +73,7 @@ internal class DokumentasjonEtterspurtTest {
 
         val hendelse = model.historikk.last()
         assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_3.toLocalDateTime())
-        assertThat(hendelse.tittel).isEqualTo(DOKUMENTASJON_ETTERSPURT)
+        assertThat(hendelse.tittel).isEqualTo(DOKUMENTASJONSKRAV)
     }
 
     @Test

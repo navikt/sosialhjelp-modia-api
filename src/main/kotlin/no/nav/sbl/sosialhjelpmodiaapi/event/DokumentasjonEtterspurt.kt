@@ -13,6 +13,6 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonEtterspurt) {
 
     if (hendelse.dokumenter.isNotEmpty() && hendelse.forvaltningsbrev != null) {
         val beskrivelse = "Veileder ber søker sende dokumentasjon"
-        historikk.add(Hendelse(DOKUMENTASJON_ETTERSPURT, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
+        historikk.add(Hendelse(DOKUMENTASJONSKRAV, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
     }
 }
