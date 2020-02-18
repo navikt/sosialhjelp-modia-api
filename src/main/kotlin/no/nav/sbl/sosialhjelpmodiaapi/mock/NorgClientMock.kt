@@ -21,14 +21,10 @@ class NorgClientMock : NorgClient {
                     status = "AKTIV",
                     aktiveringsdato = "1982-04-21",
                     nedleggelsesdato = "null",
-                    sosialeTjenester = "some string with info about sosiale tjenester"
+                    sosialeTjenester = "Informasjon om sosiale tjenester for enhetsnr $enhetsnr. \nGjerne over flere linjer.\n\tKanskje til og med tab.\nOg mere til!"
             )
             innsynMap[enhetsnr] = default
             default
         })
-    }
-
-    fun postNavEnhet(enhetsnr: String, navenhet: NavEnhet) {
-        innsynMap[enhetsnr] = navenhet
     }
 }
