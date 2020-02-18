@@ -118,7 +118,8 @@ internal class EventServiceTest {
 
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
-            assertThat(hendelse.tittel).contains("Søknaden er under behandling")
+            assertThat(hendelse.tittel).isEqualTo(SOKNAD_UNDER_BEHANDLING)
+            assertThat(hendelse.beskrivelse).isNull()
         }
 
         @Test
@@ -149,7 +150,8 @@ internal class EventServiceTest {
 
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
-            assertThat(hendelse.tittel).contains("Søknaden er under behandling")
+            assertThat(hendelse.tittel).isEqualTo(SOKNAD_UNDER_BEHANDLING)
+            assertThat(hendelse.beskrivelse).isNull()
         }
 
         @Test
@@ -184,7 +186,8 @@ internal class EventServiceTest {
 
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_4.toLocalDateTime())
-            assertThat(hendelse.tittel).contains("$tittel_1 er ferdig behandlet")
+            assertThat(hendelse.tittel).isEqualTo(SAK_FERDIGBEHANDLET)
+            assertThat(hendelse.beskrivelse).contains("$tittel_1 er ferdig behandlet")
         }
 
         @Test
@@ -218,7 +221,8 @@ internal class EventServiceTest {
 
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_3.toLocalDateTime())
-            assertThat(hendelse.tittel).contains("$DEFAULT_TITTEL er ferdig behandlet")
+            assertThat(hendelse.tittel).isEqualTo(SAK_FERDIGBEHANDLET)
+            assertThat(hendelse.beskrivelse).contains("$DEFAULT_TITTEL er ferdig behandlet")
         }
 
         @Test
@@ -254,7 +258,8 @@ internal class EventServiceTest {
 
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_3.toLocalDateTime())
-            assertThat(hendelse.tittel).contains("$DEFAULT_TITTEL er ferdig behandlet")
+            assertThat(hendelse.tittel).isEqualTo(SAK_FERDIGBEHANDLET)
+            assertThat(hendelse.beskrivelse).contains("$DEFAULT_TITTEL er ferdig behandlet")
         }
 
         @Test
@@ -322,7 +327,8 @@ internal class EventServiceTest {
 
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_4.toLocalDateTime())
-            assertThat(hendelse.tittel).contains("$DEFAULT_TITTEL er ferdig behandlet")
+            assertThat(hendelse.tittel).isEqualTo(SAK_FERDIGBEHANDLET)
+            assertThat(hendelse.beskrivelse).contains("$DEFAULT_TITTEL er ferdig behandlet")
         }
     }
 
@@ -347,7 +353,7 @@ internal class EventServiceTest {
 
         val hendelse = model.historikk.last()
         assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_3.toLocalDateTime())
-        assertThat(hendelse.tittel).contains("Du har fått et brev om saksbehandlingstiden for søknaden din")
+        assertThat(hendelse.tittel).isEqualTo(FORELOPIG_SVAR)
     }
 
 }

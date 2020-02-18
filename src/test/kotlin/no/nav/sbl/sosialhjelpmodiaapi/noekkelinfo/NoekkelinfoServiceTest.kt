@@ -7,6 +7,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.SOKNAD_DEFAULT_TITTEL
 import no.nav.sbl.sosialhjelpmodiaapi.domain.*
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus.MOTTATT
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
+import no.nav.sbl.sosialhjelpmodiaapi.event.SOKNAD_SENDT
 import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
@@ -58,7 +59,7 @@ internal class NoekkelinfoServiceTest {
 
         val model = InternalDigisosSoker()
         model.status = MOTTATT
-        model.historikk.add(Hendelse("søknad sendt", tidspunkt))
+        model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
         model.soknadsmottaker = Soknadsmottaker(enhetsnr1, enhetNavn1)
 
         every { eventService.createModel(any(), any()) } returns model
@@ -83,7 +84,7 @@ internal class NoekkelinfoServiceTest {
 
         val model = InternalDigisosSoker()
         model.status = MOTTATT
-        model.historikk.add(Hendelse("søknad sendt", tidspunkt))
+        model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
         model.soknadsmottaker = Soknadsmottaker(enhetsnr1, enhetNavn1)
         model.forelopigSvar = ForelopigSvar(tidspunkt)
 
@@ -109,7 +110,7 @@ internal class NoekkelinfoServiceTest {
 
         val model = InternalDigisosSoker()
         model.status = MOTTATT
-        model.historikk.add(Hendelse("søknad sendt", tidspunkt))
+        model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
         model.soknadsmottaker = Soknadsmottaker(enhetsnr1, enhetNavn1)
         model.tildeltNavKontor = enhetsnr2
 
@@ -135,7 +136,7 @@ internal class NoekkelinfoServiceTest {
 
         val model = InternalDigisosSoker()
         model.status = MOTTATT
-        model.historikk.add(Hendelse("søknad sendt", tidspunkt))
+        model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
         model.tildeltNavKontor = enhetsnr2
 
         every { eventService.createModel(any(), any()) } returns model
@@ -160,7 +161,7 @@ internal class NoekkelinfoServiceTest {
 
         val model = InternalDigisosSoker()
         model.status = MOTTATT
-        model.historikk.add(Hendelse("søknad sendt", tidspunkt))
+        model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
 
         every { eventService.createModel(any(), any()) } returns model
 

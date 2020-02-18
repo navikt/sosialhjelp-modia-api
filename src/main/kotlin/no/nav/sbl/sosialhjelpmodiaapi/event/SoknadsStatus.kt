@@ -11,20 +11,23 @@ fun InternalDigisosSoker.apply(hendelse: JsonSoknadsStatus) {
     status = SoknadsStatus.valueOf(hendelse.status.name)
 
     val tittel = when (hendelse.status) {
-        JsonSoknadsStatus.Status.MOTTATT -> {
-            val navEnhetsnavn = soknadsmottaker?.navEnhetsnavn
-
-            if (navEnhetsnavn == null) {
-                "Søknaden med vedlegg er mottatt"
-            } else {
-                "Søknaden med vedlegg er mottatt hos $navEnhetsnavn"
-            }
-        }
-        JsonSoknadsStatus.Status.UNDER_BEHANDLING -> "Søknaden er under behandling"
-        JsonSoknadsStatus.Status.FERDIGBEHANDLET -> "Søknaden er ferdig behandlet"
-        JsonSoknadsStatus.Status.BEHANDLES_IKKE -> "Søknaden behandles ikke"
+        JsonSoknadsStatus.Status.MOTTATT -> SOKNAD_MOTTATT
+        JsonSoknadsStatus.Status.UNDER_BEHANDLING -> SOKNAD_UNDER_BEHANDLING
+        JsonSoknadsStatus.Status.FERDIGBEHANDLET -> SOKNAD_FERDIGBEHANDLET
+        JsonSoknadsStatus.Status.BEHANDLES_IKKE -> SOKNAD_BEHANDLES_IKKE
         else -> throw RuntimeException("Statustype ${hendelse.status.value()} mangler mapping")
     }
 
-    historikk.add(Hendelse(tittel, hendelse.hendelsestidspunkt.toLocalDateTime()))
+    val beskrivelse: String? = if (tittel == SOKNAD_MOTTATT) {
+        val navEnhetsnavn = soknadsmottaker?.navEnhetsnavn
+        if (navEnhetsnavn == null) {
+            "Søknaden med vedlegg er mottatt"
+        } else {
+            "Søknaden med vedlegg er mottatt hos $navEnhetsnavn"
+        }
+    } else {
+        null
+    }
+
+    historikk.add(Hendelse(tittel, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
 }

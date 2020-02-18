@@ -7,6 +7,9 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
+import no.nav.sbl.sosialhjelpmodiaapi.event.SOKNAD_MOTTATT
+import no.nav.sbl.sosialhjelpmodiaapi.event.SOKNAD_SENDT
+import no.nav.sbl.sosialhjelpmodiaapi.event.SOKNAD_UNDER_BEHANDLING
 import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -41,7 +44,7 @@ internal class HendelseServiceTest {
     @Test
     fun `Skal returnere respons med 1 hendelse`() {
         val model = InternalDigisosSoker()
-        model.historikk.add(Hendelse(tittel_sendt, tidspunkt_sendt))
+        model.historikk.add(Hendelse(SOKNAD_SENDT, tittel_sendt, tidspunkt_sendt))
 
         every { eventService.createModel(any(), any()) } returns model
 
@@ -56,9 +59,9 @@ internal class HendelseServiceTest {
     fun `Skal returnere respons med flere hendelser`() {
         val model = InternalDigisosSoker()
         model.historikk.addAll(listOf(
-                Hendelse(tittel_sendt, tidspunkt_sendt),
-                Hendelse(tittel_mottatt, tidspunkt_mottatt),
-                Hendelse(tittel3, tidspunkt3)))
+                Hendelse(SOKNAD_SENDT, tittel_sendt, tidspunkt_sendt),
+                Hendelse(SOKNAD_MOTTATT, tittel_mottatt, tidspunkt_mottatt),
+                Hendelse(SOKNAD_UNDER_BEHANDLING, tittel3, tidspunkt3)))
 
         every { eventService.createModel(any(), any()) } returns model
 

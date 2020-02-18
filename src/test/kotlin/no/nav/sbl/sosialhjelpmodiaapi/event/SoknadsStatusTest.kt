@@ -54,7 +54,8 @@ internal class SoknadsStatusTest {
 
         val hendelse = model.historikk.last()
         assertThat(hendelse.tidspunkt).isEqualTo(unixToLocalDateTime(tidspunkt_soknad))
-        assertThat(hendelse.tittel).contains("Søknaden med vedlegg er sendt til")
+        assertThat(hendelse.tittel).isEqualTo(SOKNAD_SENDT)
+        assertThat(hendelse.beskrivelse).contains("Søknaden med vedlegg er sendt til")
     }
 
     @Test
@@ -75,7 +76,8 @@ internal class SoknadsStatusTest {
 
         val hendelse = model.historikk.last()
         assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_1.toLocalDateTime())
-        assertThat(hendelse.tittel).contains("Søknaden med vedlegg er mottatt hos ")
+        assertThat(hendelse.tittel).isEqualTo(SOKNAD_MOTTATT)
+        assertThat(hendelse.beskrivelse).contains("Søknaden med vedlegg er mottatt hos ")
     }
 
     @Test
@@ -97,7 +99,8 @@ internal class SoknadsStatusTest {
 
         val hendelse = model.historikk.last()
         assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_1.toLocalDateTime())
-        assertThat(hendelse.tittel).contains("Søknaden med vedlegg er mottatt")
+        assertThat(hendelse.tittel).isEqualTo(SOKNAD_MOTTATT)
+        assertThat(hendelse.beskrivelse).contains("Søknaden med vedlegg er mottatt")
     }
 
     @Test
@@ -120,7 +123,8 @@ internal class SoknadsStatusTest {
 
         val hendelse = model.historikk.last()
         assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
-        assertThat(hendelse.tittel).contains("Søknaden er under behandling")
+        assertThat(hendelse.tittel).isEqualTo(SOKNAD_UNDER_BEHANDLING)
+        assertThat(hendelse.beskrivelse).isNull()
     }
 
     @Test
@@ -144,6 +148,7 @@ internal class SoknadsStatusTest {
 
         val hendelse = model.historikk.last()
         assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_3.toLocalDateTime())
-        assertThat(hendelse.tittel).contains("Søknaden er ferdig behandlet")
+        assertThat(hendelse.tittel).isEqualTo(SOKNAD_FERDIGBEHANDLET)
+        assertThat(hendelse.beskrivelse).isNull()
     }
 }

@@ -85,6 +85,7 @@ data class Dokumentasjonkrav(
 
 data class Hendelse(
         val tittel: String,
+        val beskrivelse: String?,
         val tidspunkt: LocalDateTime
 )
 

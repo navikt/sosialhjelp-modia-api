@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtakFattet
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtaksfil
 import no.nav.sbl.sosialhjelpmodiaapi.domain.*
 import no.nav.sbl.sosialhjelpmodiaapi.saksstatus.DEFAULT_TITTEL
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
@@ -10,9 +11,9 @@ fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
     val utfallString = hendelse.utfall?.name
     val utfall = if (utfallString == null) null else UtfallVedtak.valueOf(utfallString)
 
-    val vedtakFattet = Vedtak(utfall, hendelse.hendelsestidspunkt.toLocalDateTime().toLocalDate())
+    val vedtak = Vedtak(utfall, hendelse.hendelsestidspunkt.toLocalDateTime().toLocalDate())
 
-    var sakForReferanse = saker.firstOrNull { it.referanse == hendelse.saksreferanse } ?: saker.firstOrNull { it.referanse == "default" }
+    var sakForReferanse = saker.firstOrNull { it.referanse == hendelse.saksreferanse || it.referanse == "default"}
 
     if (sakForReferanse == null) {
         // Opprett ny Sak
@@ -28,10 +29,15 @@ fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
         )
         saker.add(sakForReferanse)
     }
-    sakForReferanse.vedtak.add(vedtakFattet)
+    sakForReferanse.vedtak.add(vedtak)
 
-    val sak = saker.first { it.referanse == hendelse.saksreferanse }
-    val beskrivelse = "${sak.tittel ?: DEFAULT_TITTEL} er ferdig behandlet"
+    val beskrivelse = beskrivelse(sakForReferanse, hendelse.vedtaksfil)
 
-    historikk.add(Hendelse(beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
+    historikk.add(Hendelse(SAK_FERDIGBEHANDLET, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
+}
+
+private fun beskrivelse(sak: Sak, vedtaksfil: JsonVedtaksfil?): String {
+    val beskrivelse = "${sak.tittel ?: DEFAULT_TITTEL} er ferdig behandlet."
+    val vedtaksbrev = if (vedtaksfil == null || vedtaksfil.referanse == null) null else "Med vedtaksbrev."
+    return "$beskrivelse $vedtaksbrev"
 }

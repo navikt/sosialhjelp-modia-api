@@ -27,8 +27,9 @@ data class VedtakResponse(
 )
 
 data class HendelseResponse(
+        val tittel: String,
         val tidspunkt: String,
-        val beskrivelse: String
+        val beskrivelse: String?
 )
 
 data class OppgaveResponse(
@@ -79,10 +80,11 @@ data class SakResponse(
 data class VedleggResponse(
         val type: String,
         val tilleggsinfo: String?,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         val innsendelsesfrist: LocalDateTime?,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val datoLagtTil: LocalDateTime?
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val datoLagtTil: LocalDateTime?,
+        val antallVedlegg: Int
 )
 
 data class SoknadNoekkelinfoResponse(

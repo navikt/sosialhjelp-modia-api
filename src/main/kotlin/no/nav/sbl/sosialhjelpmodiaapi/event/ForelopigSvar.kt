@@ -10,7 +10,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonForelopigSvar) {
 
     forelopigSvar = ForelopigSvar(hendelse.hendelsestidspunkt.toLocalDateTime())
 
-    val beskrivelse = "Du har fått et brev om saksbehandlingstiden for søknaden din"
+    val beskrivelse = "Søker har fått et brev om saksbehandlingstiden for søknaden."
 
-    historikk.add(Hendelse(beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
+    historikk.add(Hendelse(FORELOPIG_SVAR, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
 }

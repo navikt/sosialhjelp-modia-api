@@ -80,7 +80,8 @@ internal class ForelopigSvarTest {
 
         val hendelse = model.historikk.last()
         assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
-        assertThat(hendelse.tittel).contains("Du har fått et brev om saksbehandlingstiden for søknaden din")
+        assertThat(hendelse.tittel).isEqualTo(FORELOPIG_SVAR)
+        assertThat(hendelse.beskrivelse).contains("Søker har fått et brev om saksbehandlingstiden for søknaden.")
     }
 
 

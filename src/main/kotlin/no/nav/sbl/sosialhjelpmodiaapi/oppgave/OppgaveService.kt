@@ -48,10 +48,13 @@ class OppgaveService(private val fiksClient: FiksClient,
                 ?.antallFiler ?: 0
     }
 
+    // FIXme: flere enn 1 vedlegg lastet opp på ulike datoer. Bruk nyeste dato?
+    //  skal kanskje ikke være mulig, siden oppgaver i innsyn ansees som ferdige ved opplasting?
     private fun hentVedleggDatoLagtTil(oppgave: Oppgave, vedleggListe: List<InternalVedlegg>): LocalDate? {
         return vedleggListe
                 .filter { it.type == oppgave.tittel && it.tilleggsinfo == oppgave.tilleggsinfo }
-                .firstOrNull { it.datoLagtTil != null && it.datoLagtTil.isAfter(oppgave.tidspunktForKrav) }
+                .filter{ it.datoLagtTil != null && it.datoLagtTil.isAfter(oppgave.tidspunktForKrav) }
+                .maxBy { it.datoLagtTil!! }
                 ?.datoLagtTil?.toLocalDate()
     }
 
