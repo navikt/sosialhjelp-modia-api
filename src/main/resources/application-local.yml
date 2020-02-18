@@ -21,3 +21,5 @@ client:
   id_porten_scope: ${ID_PORTEN_SCOPE:ks:fiks}
   id_porten_config_url: ${ID_PORTEN_CONFIG_URL:https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration}
   norg_endpoint_url: ${NORG_ENDPOINT_URL:norg_endpoint_url}
+  pdl_endpoint_url: ${PDL_ENDPOINT_URL:pdl_endpoint_url}
+  sts_token_endpoint_url: ${STS_TOKEN_ENDPOINT_URL:sts_token_endpoint_url}

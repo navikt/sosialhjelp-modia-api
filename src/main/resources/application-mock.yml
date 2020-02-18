@@ -15,3 +15,5 @@ client:
   id_porten_scope: scope
   id_porten_config_url: configurl
   norg_endpoint_url: norgurl
+  pdl_endpoint_url: pdlurl
+  sts_token_endpoint_url: stsurl

@@ -25,6 +25,7 @@ client:
   id_porten_config_url: ${ID_PORTEN_CONFIG_URL}
   norg_endpoint_url: ${NORG_ENDPOINT_URL}
   pdl_endpoint_url: ${PDL_ENDPOINT_URL}
+  sts_token_endpoint_url: ${STS_TOKEN_ENDPOINT_URL}
 
 #Token-validering
 no.nav.security.jwt:
