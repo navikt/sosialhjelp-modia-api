@@ -18,7 +18,7 @@ Dette prosjektet bygger og deployer vha Github Actions
 - Docker image bygges ved push => `.github/workflows/build.yml`
 - Deploy til dev-fss => `.github/workflows/deploy-miljo.yml`
 - Deploy til prod-fss => `.github/workflows/deploy-prod.yml`
-- For å deploye til dev-sbs eller prod-sbs brukes av cli-verktøyet [sosialhjelp-ci](https://github.com/navikt/sosialhjelp-ci).
+- For å deploye til dev-fss eller prod-fss brukes av cli-verktøyet [sosialhjelp-ci](https://github.com/navikt/sosialhjelp-ci).
 
 ### Github deployment
 - Github deployments - registrer ditt github-repo [her](https://deployment.prod-sbs.nais.io/auth/form)
