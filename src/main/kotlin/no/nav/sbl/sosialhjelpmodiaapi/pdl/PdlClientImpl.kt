@@ -3,7 +3,6 @@ package no.nav.sbl.sosialhjelpmodiaapi.pdl
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.sts.STSClient
-import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.NAV_CALL_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.NAV_CONSUMER_TOKEN
@@ -17,7 +16,6 @@ import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
-import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 
@@ -38,10 +36,9 @@ class PdlClientImpl(clientProperties: ClientProperties,
         val query = getResourceAsString("/pdl/hentPerson.graphql").replace("[\n\r]", "")
         try {
             val requestEntity = createRequestEntity(PdlRequest(query, Variables(ident)))
-            val response = restTemplate.exchange(baseurl, HttpMethod.POST, requestEntity, typeRef<PdlPersonResponse>())
+            val response = restTemplate.exchange(baseurl, HttpMethod.POST, requestEntity, PdlPersonResponse::class.java)
             return response.body!!.data
-        } catch (e: HttpClientErrorException) {
-            log.warn("response: ${e.responseBodyAsString}")
+        } catch (e: RestClientException) {
             log.error("PDL - feil ved henting av navn, requesturl: $baseurl", e)
             throw e
         }
