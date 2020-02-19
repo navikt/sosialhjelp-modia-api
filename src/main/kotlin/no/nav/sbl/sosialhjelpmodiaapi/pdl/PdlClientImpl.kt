@@ -17,6 +17,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientException
+import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.RestTemplate
 
 @Profile("!(mock | local)")
@@ -39,9 +40,14 @@ class PdlClientImpl(clientProperties: ClientProperties,
             val requestEntity = createRequestEntity(PdlRequest(query, Variables(ident)))
             val response = restTemplate.exchange(baseurl, HttpMethod.POST, requestEntity, PdlPersonResponse::class.java)
             log.info("response: ${response.statusCode}")
+            val pdlPersonResponse: PdlPersonResponse = response.body!!
+            if (pdlPersonResponse.errors != null) {
+                pdlPersonResponse.errors
+                        .forEach { log.error("PDL - noe feilet. Message=${it.message}, path=${it.path}, code=${it.extensions.code}, classification=${it.extensions.classification}") }
+            }
             return response.body!!.data
-        } catch (e: RestClientException) {
-            log.error("PDL - feil ved henting av navn, requesturl: $baseurl", e)
+        } catch (e: RestClientResponseException) {
+            log.error("PDL - ${e.rawStatusCode} ${e.statusText} feil ved henting av navn, requesturl: $baseurl", e)
             throw e
         }
     }
