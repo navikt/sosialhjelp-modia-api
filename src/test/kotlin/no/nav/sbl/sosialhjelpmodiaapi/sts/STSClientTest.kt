@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestTemplate
-import java.net.URI
 
 internal class STSClientTest {
 
@@ -33,7 +32,7 @@ internal class STSClientTest {
         every { response.body } returns token
         every {
             restTemplate.exchange(
-                    any<URI>(),
+                    any<String>(),
                     HttpMethod.GET,
                     any(),
                     STSToken::class.java)
@@ -53,7 +52,7 @@ internal class STSClientTest {
         every { response.body } returns token
         every {
             restTemplate.exchange(
-                    any<URI>(),
+                    any<String>(),
                     HttpMethod.GET,
                     any(),
                     STSToken::class.java)
@@ -63,12 +62,12 @@ internal class STSClientTest {
 
         assertThat(firstToken).isNotNull()
         assertThat(firstToken).isEqualTo(token.access_token)
-        verify(exactly = 1) { restTemplate.exchange(any<URI>(), HttpMethod.GET, any(), STSToken::class.java) }
+        verify(exactly = 1) { restTemplate.exchange(any<String>(), HttpMethod.GET, any(), STSToken::class.java) }
 
         val secondToken = stsClient.token()
 
         assertThat(secondToken).isEqualTo(token.access_token)
-        verify(exactly = 1) { restTemplate.exchange(any<URI>(), HttpMethod.GET, any(), STSToken::class.java) }
+        verify(exactly = 1) { restTemplate.exchange(any<String>(), HttpMethod.GET, any(), STSToken::class.java) }
     }
 
     @Test
@@ -79,7 +78,7 @@ internal class STSClientTest {
         every { response.body } returns token
         every {
             restTemplate.exchange(
-                    any<URI>(),
+                    any<String>(),
                     HttpMethod.GET,
                     any(),
                     STSToken::class.java)
@@ -88,11 +87,11 @@ internal class STSClientTest {
         val firstToken = stsClient.token()
 
         assertThat(firstToken).isNotNull()
-        verify(exactly = 1) { restTemplate.exchange(any<URI>(), HttpMethod.GET, any(), STSToken::class.java) }
+        verify(exactly = 1) { restTemplate.exchange(any<String>(), HttpMethod.GET, any(), STSToken::class.java) }
 
         val secondToken = stsClient.token()
 
         assertThat(secondToken).isNotNull()
-        verify(exactly = 2) { restTemplate.exchange(any<URI>(), HttpMethod.GET, any(), STSToken::class.java) }
+        verify(exactly = 2) { restTemplate.exchange(any<String>(), HttpMethod.GET, any(), STSToken::class.java) }
     }
 }
