@@ -24,7 +24,7 @@ class STSClient(private val stsRestTemplate: RestTemplate,
         if (shouldRenewToken(cachedToken)) {
             try {
                 log.info("Henter nytt token fra STS")
-                val requestUrl = lagRequest()
+                val requestUrl = lagRequest(clientProperties.stsTokenEndpointUrl)
                 val response = stsRestTemplate.exchange(requestUrl, GET, null, STSToken::class.java)
 
                 cachedToken = response.body
@@ -38,9 +38,9 @@ class STSClient(private val stsRestTemplate: RestTemplate,
         return cachedToken!!.access_token
     }
 
-    private fun lagRequest(): String {
+    private fun lagRequest(baseurl: String): String {
         return UriComponentsBuilder
-                .fromPath(clientProperties.stsTokenEndpointUrl)
+                .fromPath("$baseurl/token")
                 .queryParam("grant_type", "client_credentials")
                 .queryParam("scope", "openid")
                 .build().toUriString()

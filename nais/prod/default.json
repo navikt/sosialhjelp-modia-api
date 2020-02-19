@@ -16,7 +16,7 @@
     "ID_PORTEN_CLIENT_ID": "bd520e59-6e01-4669-a7c8-f68fa2cac362",
     "ID_PORTEN_SCOPE": "ks:fiks",
     "PDL_ENDPOINT_URL": "https://pdl-api.nais.adeo.no/graphql",
-    "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.adeo.no"
+    "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.adeo.no/rest/v1/sts"
   },
   "minReplicas": "2",
   "maxReplicas": "4",
