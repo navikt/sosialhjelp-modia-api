@@ -25,6 +25,7 @@ jobs:
     container: navikt/deployment:v1
     steps:
       - uses: actions/checkout@v1
+      - name: deploy to dev
         run: |
           echo "*** Deploying $TAG to $MILJO ***"
           git checkout ${TAG}
