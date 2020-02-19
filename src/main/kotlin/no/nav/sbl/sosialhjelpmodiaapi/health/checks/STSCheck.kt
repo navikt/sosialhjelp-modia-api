@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate
 class STSCheck(clientProperties: ClientProperties,
                private val restTemplate: RestTemplate) : AbstractDependencyCheck(
         DependencyType.REST,
-        "PDL",
+        "STS",
         clientProperties.stsTokenEndpointUrl,
         Importance.WARNING
 ) {
