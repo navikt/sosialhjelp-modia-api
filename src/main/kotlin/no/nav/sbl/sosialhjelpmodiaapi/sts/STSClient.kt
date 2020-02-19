@@ -7,7 +7,6 @@ import org.springframework.http.HttpMethod.GET
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.util.UriComponentsBuilder
 import java.time.LocalDateTime
 
 @Component
@@ -25,6 +24,7 @@ class STSClient(private val stsRestTemplate: RestTemplate,
             try {
                 log.info("Henter nytt token fra STS")
                 val requestUrl = lagRequest(clientProperties.stsTokenEndpointUrl)
+                log.info("requesturl: $requestUrl")
                 val response = stsRestTemplate.exchange(requestUrl, GET, null, STSToken::class.java)
 
                 cachedToken = response.body
@@ -39,11 +39,7 @@ class STSClient(private val stsRestTemplate: RestTemplate,
     }
 
     private fun lagRequest(baseurl: String): String {
-        return UriComponentsBuilder
-                .fromPath("$baseurl/token")
-                .queryParam("grant_type", "client_credentials")
-                .queryParam("scope", "openid")
-                .build().toUriString()
+        return "$baseurl/token?grant_type=client_credentials&scope=openid"
     }
 }
 
