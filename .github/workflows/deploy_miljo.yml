@@ -22,6 +22,5 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: nais.yaml
           CLUSTER: dev-fss
-          VARS: /nais/dev/${MILJO}.json
+          VARS: /nais/dev/${{ github.event.client_payload.MILJO }}.json
           PRINT_PAYLOAD: true
-          MILJO: ${{ github.event.client_payload.MILJO }}
