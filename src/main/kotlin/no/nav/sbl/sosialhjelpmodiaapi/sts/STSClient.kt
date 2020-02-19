@@ -5,17 +5,19 @@ import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.sts.STSToken.Companion.shouldRenewToken
 import org.springframework.http.HttpMethod.GET
 import org.springframework.stereotype.Component
-import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import java.time.LocalDateTime
 
 @Component
 class STSClient(private val stsRestTemplate: RestTemplate,
-                private val clientProperties: ClientProperties) {
+                clientProperties: ClientProperties) {
 
     companion object {
         val log by logger()
     }
+
+    private val baseUrl = clientProperties.stsTokenEndpointUrl
 
     private var cachedToken: STSToken? = null
 
@@ -23,14 +25,13 @@ class STSClient(private val stsRestTemplate: RestTemplate,
         if (shouldRenewToken(cachedToken)) {
             try {
                 log.info("Henter nytt token fra STS")
-                val requestUrl = lagRequest(clientProperties.stsTokenEndpointUrl)
-                log.info("requesturl: $requestUrl")
+                val requestUrl = lagRequest(baseUrl)
                 val response = stsRestTemplate.exchange(requestUrl, GET, null, STSToken::class.java)
 
                 cachedToken = response.body
                 return response.body!!.access_token
-            } catch (e: HttpClientErrorException) {
-                log.error("STS - ${e.statusCode} ${e.statusText}", e)
+            } catch (e: RestClientException) {
+                log.error("STS - Noe feilet, message: ${e.message}", e)
                 throw e
             }
         }
