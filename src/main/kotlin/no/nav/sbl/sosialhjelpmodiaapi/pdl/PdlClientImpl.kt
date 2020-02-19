@@ -35,8 +35,10 @@ class PdlClientImpl(clientProperties: ClientProperties,
         // fixme: sjekk at veileder har tilgang til å hente personinfo for bruker med ident?
         val query = getResourceAsString("/pdl/hentPerson.graphql").replace("[\n\r]", "")
         try {
+            log.info("query: $query")
             val requestEntity = createRequestEntity(PdlRequest(query, Variables(ident)))
             val response = restTemplate.exchange(baseurl, HttpMethod.POST, requestEntity, PdlPersonResponse::class.java)
+            log.info("response: ${response.statusCode}")
             return response.body!!.data
         } catch (e: RestClientException) {
             log.error("PDL - feil ved henting av navn, requesturl: $baseurl", e)
