@@ -250,27 +250,41 @@ internal class VedleggServiceTest {
         val datoLagtTil = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(2)
         val model = InternalDigisosSoker()
         model.oppgaver.add(Oppgave(dokumenttype_3, null, frist, datoLagtTil, true))
-        model.oppgaver.add(Oppgave(dokumenttype_4, null, frist2, datoLagtTil, true))
+        model.oppgaver.add(Oppgave(dokumenttype, null, frist2, datoLagtTil, true))
 
         every { eventService.createModel(any(), any()) } returns model
-        every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns emptyList()
+        every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns listOf(
+                Ettersendelse(
+                        navEksternRefId = "ref 1",
+                        vedleggMetadata = vedleggMetadata_ettersendelse_1,
+                        vedlegg = listOf(DokumentInfo(ettersendelse_filnavn_1, dokumentlagerId_1, 42), DokumentInfo(ettersendelse_filnavn_2, dokumentlagerId_2, 42)),
+                        timestampSendt = tid_1.toEpochMilli()))
         every { fiksClient.hentDokument(any(), vedleggMetadata_soknad_1, any(), any()) } returns mockJsonVedleggSpesifikasjon
 
         val list = service.hentAlleOpplastedeVedlegg(id, "token")
 
-        assertThat(list).hasSize(2)
+        assertThat(list).hasSize(3)
 
+        // Ettersendt vedlegg matches med oppgave
         assertThat(list[0].type).isEqualTo(dokumenttype_3)
         assertThat(list[0].tilleggsinfo).isNull()
         assertThat(list[0].innsendelsesfrist).isEqualTo(frist)
-        assertThat(list[0].antallFiler).isEqualTo(0)
-        assertThat(list[0].datoLagtTil).isNull()
+        assertThat(list[0].antallFiler).isEqualTo(1)
+        assertThat(list[0].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_1, zoneIdOslo))
 
+        // Ettersendt vedlegg matches ikke med oppgave
         assertThat(list[1].type).isEqualTo(dokumenttype_4)
         assertThat(list[1].tilleggsinfo).isNull()
-        assertThat(list[1].innsendelsesfrist).isEqualTo(frist2)
-        assertThat(list[1].antallFiler).isEqualTo(0)
-        assertThat(list[1].datoLagtTil).isNull()
+        assertThat(list[1].innsendelsesfrist).isNull()
+        assertThat(list[1].antallFiler).isEqualTo(1)
+        assertThat(list[1].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_1, zoneIdOslo))
+
+        // Utestående oppgave legges til
+        assertThat(list[2].type).isEqualTo(dokumenttype)
+        assertThat(list[2].tilleggsinfo).isNull()
+        assertThat(list[2].innsendelsesfrist).isEqualTo(frist2)
+        assertThat(list[2].antallFiler).isEqualTo(0)
+        assertThat(list[2].datoLagtTil).isNull()
     }
 }
 
