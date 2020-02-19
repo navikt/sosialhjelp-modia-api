@@ -11,13 +11,12 @@ jobs:
     container: navikt/deployment:v1
     steps:
       - uses: actions/checkout@v1
-      - name: deploy to dev
+      - name: checkout $TAG
         run: |
           echo "*** Deploying $TAG to $MILJO ***"
           git checkout ${TAG}
         env:
           TAG: ${{ github.event.client_payload.TAG }}
-          MILJO: ${{ github.event.client_payload.MILJO }}
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
@@ -25,3 +24,4 @@ jobs:
           CLUSTER: dev-fss
           VARS: /nais/dev/${MILJO}.json
           PRINT_PAYLOAD: true
+          MILJO: ${{ github.event.client_payload.MILJO }}
