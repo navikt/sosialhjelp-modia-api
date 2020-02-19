@@ -8,17 +8,20 @@ jobs:
     name: Deploy to dev-fss
     runs-on: ubuntu-latest
     if: github.event.action == 'deploy_miljo_tag'
-    container: navikt/deployment-cli:0.4.0
+    container: navikt/deployment:v1
     steps:
       - uses: actions/checkout@v1
-      - name: Deploy to dev
+      - name: deploy to dev
         run: |
-          MILJO=$(jq -r '.client_payload.MILJO' $GITHUB_EVENT_PATH)
-          TAG=$(jq -r '.client_payload.TAG' $GITHUB_EVENT_PATH)
-
+          echo "*** Deploying $TAG to $MILJO ***"
           git checkout ${TAG}
-
-          deployment-cli deploy create --cluster=dev-fss --repository=${GITHUB_REPOSITORY} --team=teamdigisos -r=nais.yaml --var version=${TAG} --vars=nais/dev/${MILJO}.json
         env:
-          DEPLOYMENT_USERNAME: ${{ secrets.DEPLOYMENT_USERNAME }}
-          DEPLOYMENT_PASSWORD: ${{ secrets.DEPLOYMENT_PASSWORD }}
+          TAG: ${{ github.event.client_payload.TAG }}
+          MILJO: ${{ github.event.client_payload.MILJO }}
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          RESOURCE: nais.yaml
+          CLUSTER: dev-fss
+          VARS: /nais/dev/${MILJO}.json
+          PRINT_PAYLOAD: true
