@@ -41,7 +41,7 @@ class STSClient(private val stsRestTemplate: RestTemplate,
 
     private fun lagRequest(): URI {
         return UriComponentsBuilder
-                .fromHttpUrl(clientProperties.stsTokenEndpointUrl)
+                .fromPath(clientProperties.stsTokenEndpointUrl)
                 .queryParam("grant_type", "client_credentials")
                 .queryParam("scope", "openid")
                 .build().toUri()
