@@ -3,11 +3,12 @@ package no.nav.sbl.sosialhjelpmodiaapi.sts
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.sts.STSToken.Companion.shouldRenewToken
-import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import org.springframework.http.HttpMethod.GET
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.util.UriComponentsBuilder
+import java.net.URI
 import java.time.LocalDateTime
 
 @Component
@@ -24,8 +25,8 @@ class STSClient(private val stsRestTemplate: RestTemplate,
         if (shouldRenewToken(cachedToken)) {
             try {
                 log.info("Henter nytt token fra STS")
-                val requestUrl = clientProperties.stsTokenEndpointUrl
-                val response = stsRestTemplate.exchange(requestUrl, GET, null, typeRef<STSToken>())
+                val requestUri = lagRequest()
+                val response = stsRestTemplate.exchange(requestUri, GET, null, STSToken::class.java)
 
                 cachedToken = response.body
                 return response.body!!.access_token
@@ -36,6 +37,14 @@ class STSClient(private val stsRestTemplate: RestTemplate,
         }
         log.info("Hentet token fra cache")
         return cachedToken!!.access_token
+    }
+
+    private fun lagRequest(): URI {
+        return UriComponentsBuilder
+                .fromHttpUrl(clientProperties.stsTokenEndpointUrl)
+                .queryParam("grant_type", "client_credentials")
+                .queryParam("scope", "openid")
+                .build().toUri()
     }
 }
 
