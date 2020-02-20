@@ -32,4 +32,3 @@ jobs:
           VARS: nais/dev/${{ env.MILJO }}.json
           REF: ${{ env.TAG }}
           PRINT_PAYLOAD: true
-          VERSION: ${IMAGE}
