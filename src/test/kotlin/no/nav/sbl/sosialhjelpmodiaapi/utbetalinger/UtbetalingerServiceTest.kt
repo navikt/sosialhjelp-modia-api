@@ -81,18 +81,15 @@ internal class UtbetalingerServiceTest {
 
         assertThat(response).isNotEmpty
         assertThat(response).hasSize(1)
-        assertThat(response[0].ar).isEqualTo(2019)
-        assertThat(response[0].maned).isEqualToIgnoringCase("august")
-        assertThat(response[0].utbetalinger).hasSize(1)
-        assertThat(response[0].utbetalinger[0].tittel).isEqualTo("Nødhjelp")
-        assertThat(response[0].utbetalinger[0].belop).isEqualTo(10.0)
-        assertThat(response[0].utbetalinger[0].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[0].utbetalinger[0].utbetalingsdato).isEqualTo("2019-08-10")
-        assertThat(response[0].utbetalinger[0].fom).isEqualTo("2019-08-01")
-        assertThat(response[0].utbetalinger[0].tom).isEqualTo("2019-08-31")
-        assertThat(response[0].utbetalinger[0].mottaker).isEqualTo("utleier")
-        assertThat(response[0].utbetalinger[0].kontonummer).isEqualTo("kontonr")
-        assertThat(response[0].utbetalinger[0].utbetalingsmetode).isEqualTo("utbetalingsmetode")
+        assertThat(response[0].tittel).isEqualTo("Nødhjelp")
+        assertThat(response[0].belop).isEqualTo(10.0)
+        assertThat(response[0].fiksDigisosId).isEqualTo(digisosId)
+        assertThat(response[0].utbetalingsdato).isEqualTo("2019-08-10")
+        assertThat(response[0].fom).isEqualTo("2019-08-01")
+        assertThat(response[0].tom).isEqualTo("2019-08-31")
+        assertThat(response[0].mottaker).isEqualTo("utleier")
+        assertThat(response[0].kontonummer).isEqualTo("kontonr")
+        assertThat(response[0].utbetalingsmetode).isEqualTo("utbetalingsmetode")
     }
 
     @Test
@@ -118,18 +115,15 @@ internal class UtbetalingerServiceTest {
         val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token)
 
         assertThat(response).isNotNull
-        assertThat(response).hasSize(1)
-        assertThat(response[0].ar).isEqualTo(2019)
-        assertThat(response[0].maned).isEqualToIgnoringCase("august")
-        assertThat(response[0].utbetalinger).hasSize(2)
-        assertThat(response[0].utbetalinger[0].tittel).isEqualTo("Tannlege")
-        assertThat(response[0].utbetalinger[0].belop).isEqualTo(10.0)
-        assertThat(response[0].utbetalinger[0].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[0].utbetalinger[0].utbetalingsdato).isEqualTo("2019-08-12")
-        assertThat(response[0].utbetalinger[1].tittel).isEqualTo("Nødhjelp")
-        assertThat(response[0].utbetalinger[1].belop).isEqualTo(10.0)
-        assertThat(response[0].utbetalinger[1].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[0].utbetalinger[1].utbetalingsdato).isEqualTo("2019-08-10")
+        assertThat(response).hasSize(2)
+        assertThat(response[0].tittel).isEqualTo("Tannlege")
+        assertThat(response[0].belop).isEqualTo(10.0)
+        assertThat(response[0].fiksDigisosId).isEqualTo(digisosId)
+        assertThat(response[0].utbetalingsdato).isEqualTo("2019-08-12")
+        assertThat(response[1].tittel).isEqualTo("Nødhjelp")
+        assertThat(response[1].belop).isEqualTo(10.0)
+        assertThat(response[1].fiksDigisosId).isEqualTo(digisosId)
+        assertThat(response[1].utbetalingsdato).isEqualTo("2019-08-10")
     }
 
     @Test
@@ -156,21 +150,15 @@ internal class UtbetalingerServiceTest {
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(2)
-        assertThat(response[0].ar).isEqualTo(2019)
-        assertThat(response[0].maned).isEqualToIgnoringCase("september")
-        assertThat(response[0].utbetalinger).hasSize(1)
-        assertThat(response[0].utbetalinger[0].tittel).isEqualTo("Tannlege")
-        assertThat(response[0].utbetalinger[0].belop).isEqualTo(10.0)
-        assertThat(response[0].utbetalinger[0].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[0].utbetalinger[0].utbetalingsdato).isEqualTo("2019-09-12")
+        assertThat(response[0].tittel).isEqualTo("Tannlege")
+        assertThat(response[0].belop).isEqualTo(10.0)
+        assertThat(response[0].fiksDigisosId).isEqualTo(digisosId)
+        assertThat(response[0].utbetalingsdato).isEqualTo("2019-09-12")
 
-        assertThat(response[1].ar).isEqualTo(2019)
-        assertThat(response[1].maned).isEqualToIgnoringCase("august")
-        assertThat(response[1].utbetalinger).hasSize(1)
-        assertThat(response[1].utbetalinger[0].tittel).isEqualTo("Nødhjelp")
-        assertThat(response[1].utbetalinger[0].belop).isEqualTo(10.0)
-        assertThat(response[1].utbetalinger[0].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[1].utbetalinger[0].utbetalingsdato).isEqualTo("2019-08-10")
+        assertThat(response[1].tittel).isEqualTo("Nødhjelp")
+        assertThat(response[1].belop).isEqualTo(10.0)
+        assertThat(response[1].fiksDigisosId).isEqualTo(digisosId)
+        assertThat(response[1].utbetalingsdato).isEqualTo("2019-08-10")
     }
 
     @Test
@@ -198,8 +186,7 @@ internal class UtbetalingerServiceTest {
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
-        assertThat(response[0].utbetalinger).hasSize(1)
-        assertThat(response[0].utbetalinger[0].harVilkar).isTrue()
+        assertThat(response[0].harVilkar).isTrue()
     }
 
     @Disabled("disabled frem til det blir bekreftet om dokumentasjonkrav skal være med i response")
@@ -228,11 +215,10 @@ internal class UtbetalingerServiceTest {
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
-        assertThat(response[0].utbetalinger).hasSize(1)
     }
 
     @Test
-    fun `Skal returnere utbetalinger for alle digisosSaker`() {
+    fun `hentUtbetalinger skal returnere utbetalinger for alle digisosSaker`() {
         val model = InternalDigisosSoker()
         model.saker.add(Sak(
                 referanse = referanse,
@@ -264,6 +250,7 @@ internal class UtbetalingerServiceTest {
         val mockDigisosSak2: DigisosSak = mockk()
         val id1 = "some id"
         val id2 = "other id"
+
         every { mockDigisosSak.fiksDigisosId } returns id1
         every { mockDigisosSak2.fiksDigisosId } returns id2
         every { eventService.createModel(mockDigisosSak, any()) } returns model
@@ -275,27 +262,19 @@ internal class UtbetalingerServiceTest {
         assertThat(response).isNotEmpty
         assertThat(response).hasSize(2)
 
-        assertThat(response[0].ar).isEqualTo(2019)
-        assertThat(response[0].maned).isEqualToIgnoringCase("september")
-        assertThat(response[0].sum).isEqualTo(1.0)
-        assertThat(response[0].utbetalinger).hasSize(1)
-        assertThat(response[0].utbetalinger[0].tittel).isEqualTo("Barnehage og SFO")
-        assertThat(response[0].utbetalinger[0].belop).isEqualTo(1.0)
-        assertThat(response[0].utbetalinger[0].fiksDigisosId).isEqualTo(id2)
-        assertThat(response[0].utbetalinger[0].utbetalingsdato).isEqualTo("2019-09-12")
+        assertThat(response[0].tittel).isEqualTo("Barnehage og SFO")
+        assertThat(response[0].belop).isEqualTo(1.0)
+        assertThat(response[0].fiksDigisosId).isEqualTo(id2)
+        assertThat(response[0].utbetalingsdato).isEqualTo("2019-09-12")
 
-        assertThat(response[1].ar).isEqualTo(2019)
-        assertThat(response[1].maned).isEqualToIgnoringCase("august")
-        assertThat(response[1].sum).isEqualTo(10.0)
-        assertThat(response[1].utbetalinger).hasSize(1)
-        assertThat(response[1].utbetalinger[0].tittel).isEqualTo("Nødhjelp")
-        assertThat(response[1].utbetalinger[0].belop).isEqualTo(10.0)
-        assertThat(response[1].utbetalinger[0].fiksDigisosId).isEqualTo(id1)
-        assertThat(response[1].utbetalinger[0].utbetalingsdato).isEqualTo("2019-08-10")
+        assertThat(response[1].tittel).isEqualTo("Nødhjelp")
+        assertThat(response[1].belop).isEqualTo(10.0)
+        assertThat(response[1].fiksDigisosId).isEqualTo(id1)
+        assertThat(response[1].utbetalingsdato).isEqualTo("2019-08-10")
     }
 
     @Test
-    internal fun `hentUtbetalinger for DigisosSak`() {
+    internal fun `hentUtbetalingerForDigisosSak skal hente alle utbetalinger for én DigisosSak`() {
         val model = InternalDigisosSoker()
         model.saker.add(Sak(
                 referanse = referanse,
@@ -325,21 +304,18 @@ internal class UtbetalingerServiceTest {
         every { eventService.createModel(any(), any()) } returns model
         every { fiksClient.hentDigisosSak(any(), any()) } returns mockDigisosSak
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(mockDigisosSak, token)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalingerForDigisosSak(mockDigisosSak, token)
 
         assertThat(response).isNotEmpty
         assertThat(response).hasSize(1)
-        assertThat(response[0].ar).isEqualTo(2019)
-        assertThat(response[0].maned).isEqualToIgnoringCase("august")
-        assertThat(response[0].utbetalinger).hasSize(1)
-        assertThat(response[0].utbetalinger[0].tittel).isEqualTo("Nødhjelp")
-        assertThat(response[0].utbetalinger[0].belop).isEqualTo(10.0)
-        assertThat(response[0].utbetalinger[0].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[0].utbetalinger[0].utbetalingsdato).isEqualTo("2019-08-10")
-        assertThat(response[0].utbetalinger[0].fom).isEqualTo("2019-08-01")
-        assertThat(response[0].utbetalinger[0].tom).isEqualTo("2019-08-31")
-        assertThat(response[0].utbetalinger[0].mottaker).isEqualTo("utleier")
-        assertThat(response[0].utbetalinger[0].kontonummer).isEqualTo("kontonr")
-        assertThat(response[0].utbetalinger[0].utbetalingsmetode).isEqualTo("utbetalingsmetode")
+        assertThat(response[0].tittel).isEqualTo("Nødhjelp")
+        assertThat(response[0].belop).isEqualTo(10.0)
+        assertThat(response[0].fiksDigisosId).isEqualTo(digisosId)
+        assertThat(response[0].utbetalingsdato).isEqualTo("2019-08-10")
+        assertThat(response[0].fom).isEqualTo("2019-08-01")
+        assertThat(response[0].tom).isEqualTo("2019-08-31")
+        assertThat(response[0].mottaker).isEqualTo("utleier")
+        assertThat(response[0].kontonummer).isEqualTo("kontonr")
+        assertThat(response[0].utbetalingsmetode).isEqualTo("utbetalingsmetode")
     }
 }

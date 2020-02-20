@@ -22,7 +22,7 @@ class UtbetalingerController(private val utbetalingerService: UtbetalingerServic
     @GetMapping("/{fiksDigisosId}/utbetalinger", produces = ["application/json;charset=UTF-8"])
     fun hentUtbetalingerForDigisosSak(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<List<UtbetalingerResponse>> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)
-        return ResponseEntity.ok().body(utbetalingerService.hentUtbetalinger(digisosSak, token))
+        return ResponseEntity.ok().body(utbetalingerService.hentUtbetalingerForDigisosSak(digisosSak, token))
     }
 
 }

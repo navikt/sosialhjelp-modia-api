@@ -44,13 +44,6 @@ data class OppgaveResponse(
 )
 
 data class UtbetalingerResponse(
-        val ar: Int,
-        val maned: String,
-        val sum: Double,
-        val utbetalinger: List<ManedUtbetaling>
-)
-
-data class ManedUtbetaling(
         val tittel: String?,
         val belop: Double,
         @JsonFormat(pattern = "yyyy-MM-dd")
@@ -65,16 +58,6 @@ data class ManedUtbetaling(
         val kontonummer: String?,
         val utbetalingsmetode: String?,
         val harVilkar: Boolean
-)
-
-data class SakResponse(
-        val fiksDigisosId: String,
-        val soknadTittel: String,
-        val status: String,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-        val sistOppdatert: LocalDateTime,
-        val antallNyeOppgaver: Int?,
-        val kilde: String
 )
 
 data class VedleggResponse(
