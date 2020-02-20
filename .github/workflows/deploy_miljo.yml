@@ -15,12 +15,12 @@ jobs:
             echo "::set-env name=MILJO::$(echo ${{ github.event.client_payload.MILJO }})
 
       - name: checkout $TAG
-      - uses: actions/checkout@v1
+        uses: actions/checkout@v1
         with:
           ref: ${{ env.TAG }}
 
       - name: Deploy til dev-fss
-      - uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: nais.yaml
