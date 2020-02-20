@@ -25,6 +25,6 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: nais.yaml
           CLUSTER: dev-fss
-          VARS: /nais/dev/${{ env.MILJO }}.json
+          VARS: nais/dev/${{ env.MILJO }}.json
           REF: ${{ env.TAG }}
           PRINT_PAYLOAD: true
