@@ -6,7 +6,7 @@ metadata:
   labels:
     team: teamdigisos
 spec:
-  image: docker.pkg.github.com/navikt/sosialhjelp-modia-api/sosialhjelp-modia-api-2:{{version}}
+  image: docker.pkg.github.com/navikt/sosialhjelp-modia-api/sosialhjelp-modia-api-2:{{ tag }}
   port: 8080
   liveness:
     path: /internal/isAlive
