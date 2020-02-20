@@ -8,19 +8,23 @@ jobs:
     name: Deploy to dev-fss
     runs-on: ubuntu-latest
     if: github.event.action == 'deploy_miljo_tag'
-    container: navikt/deployment:v1
     steps:
-      - uses: actions/checkout@v1
-      - name: checkout $TAG
+      - name: Set $TAG og $MILJO
         run: |
-          echo "*** Deploying $TAG to $MILJO ***"
-          git checkout ${TAG}
-        env:
-          TAG: ${{ github.event.client_payload.TAG }}
+            echo "::set-env name=TAG::$(echo ${{ github.event.client_payload.TAG }})
+            echo "::set-env name=MILJO::$(echo ${{ github.event.client_payload.MILJO }})
+
+      - name: checkout $TAG
+      - uses: actions/checkout@v1
+        with:
+          ref: ${{ env.TAG }}
+
+      - name: Deploy til dev-fss
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: nais.yaml
           CLUSTER: dev-fss
-          VARS: nais/dev/${{ github.event.client_payload.MILJO }}.json
+          VARS: /nais/dev/${{ env.MILJO }}.json
+          REF: ${{ env.TAG }}
           PRINT_PAYLOAD: true
