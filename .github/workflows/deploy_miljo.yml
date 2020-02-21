@@ -16,9 +16,9 @@ jobs:
 
       - name: Set $TAG, $MILJO og $IMAGE
         run: |
-            echo ::set-env name=TAG::$(echo ${{ github.event.client_payload.TAG }})
-            echo ::set-env name=MILJO::$(echo ${{ github.event.client_payload.MILJO }})
-            echo ::set-env name=IMAGE::$(echo $IMAGE_BASE:${{ github.event.client_payload.TAG }})
+          echo ::set-env name=TAG::$(echo ${{ github.event.client_payload.TAG }})
+          echo ::set-env name=MILJO::$(echo ${{ github.event.client_payload.MILJO }})
+          echo ::set-env name=IMAGE::$(echo $IMAGE_BASE:${{ github.event.client_payload.TAG }})
 
       - name: checkout $TAG
         uses: actions/checkout@v1
