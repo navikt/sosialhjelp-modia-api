@@ -12,7 +12,7 @@ jobs:
       - name: Sett $IMAGE_BASE
         run: |
           PROJECT_NAME=$(echo ${{ github.repository }} | cut -d/ -f2)
-          echo ::set-env name=IMAGE_BASE:$(echo "docker.pkg.github.com/${{ github.repository }}/$PROJECT_NAME-2")
+          echo ::set-env name=IMAGE_BASE::$(echo "docker.pkg.github.com/${{ github.repository }}/$PROJECT_NAME-2")
 
       - name: Set $TAG og $IMAGE
         run: |
