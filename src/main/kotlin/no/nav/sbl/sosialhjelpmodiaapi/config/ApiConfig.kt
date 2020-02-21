@@ -28,7 +28,9 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         val configuration = CorsConfiguration()
         configuration.allowedOrigins = listOf(
                 "https://www.nav.no",
-                "https://tjenester.nav.no")
+                "https://tjenester.nav.no",
+                "http://localhost:3000",
+                "http://localhost:3001")
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
         configuration.allowedHeaders = listOf("Origin", "Content-Type", "Accept", "Authorization")
         configuration.allowCredentials = true
