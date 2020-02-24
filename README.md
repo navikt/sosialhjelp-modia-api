@@ -9,7 +9,7 @@ Backend-app som skal gi innsyn i sosialhjelp-saker for saksbehandlere ved NKS.
 Henvendelser kan sendes via Slack i kanalen #digisos.
 
 ## Oppsett av nytt prosjekt
-Dette prosjektet bygger og deployer vha Github Actions
+Prosjektet bruker Github Actions for bygg og deploy
 
 ### Github package registry
 - Docker image pushes til github package registry [https://github.com/navikt/sosialhjelp-modia-api/packages/](https://github.com/navikt/sosialhjelp-modia-api/packages/)
