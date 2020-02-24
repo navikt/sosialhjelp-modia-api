@@ -13,10 +13,6 @@ jobs:
     container: openjdk:11-jdk
     steps:
       - uses: actions/checkout@v1
-#      - uses: actions/cache@v1
-#        with:
-#          path: ~/.gradle
-#          key: gradle-${{ hashFiles('build.gradle.kts') }}
       - uses: actions/cache@v1
         with:
           path: ~/.gradle/caches
