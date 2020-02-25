@@ -28,7 +28,8 @@ val mainClass = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
 plugins {
     application
     kotlin("jvm") version "1.3.60"
-
+//    id("org.jmailen.kotlinter") version "2.3.1" // TODO - burde tas i bruk
+    id("org.jetbrains.kotlin.plugin.spring") version "1.3.60"
     id("com.github.johnrengelman.shadow") version "5.2.0"
     id("org.springframework.boot") version "2.2.0.RELEASE"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
