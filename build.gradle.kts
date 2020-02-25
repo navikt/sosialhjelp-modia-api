@@ -34,6 +34,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.spring") version "1.3.60"
     id("com.github.johnrengelman.shadow") version "5.2.0"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
+    id("com.github.ben-manes.versions") version "0.28.0"
 }
 
 application {
