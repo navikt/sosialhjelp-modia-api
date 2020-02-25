@@ -1,7 +1,11 @@
 package no.nav.sbl.sosialhjelpmodiaapi.mock
 
 import no.nav.sbl.sosialhjelpmodiaapi.digisosapi.DigisosApiClient
-import no.nav.sbl.sosialhjelpmodiaapi.domain.*
+import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
+import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.domain.DokumentInfo
+import no.nav.sbl.sosialhjelpmodiaapi.domain.EttersendtInfoNAV
+import no.nav.sbl.sosialhjelpmodiaapi.domain.OriginalSoknadNAV
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 import no.nav.sbl.sosialhjelpmodiaapi.utils.DigisosApiWrapper
 import org.springframework.context.annotation.Profile
