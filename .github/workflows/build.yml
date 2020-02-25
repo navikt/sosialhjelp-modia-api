@@ -7,33 +7,32 @@ on:
       - '**' # Don't build any tags
 
 jobs:
-  test:
-    name: Run tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: Setup java
-        uses: actions/setup-java@v1
-        with:
-          java-version: '11.0.2'
-      - uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-cache-${{ hashFiles('build.gradle.kts') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-cache-
-      - uses: actions/cache@v1
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-wrapper-
-      - name: Build and run tests
-        run: ./gradlew clean build
+#  test:
+#    name: Run tests
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v1
+#      - name: Setup java
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: '11.0.2'
+#      - uses: actions/cache@v1
+#        with:
+#          path: ~/.gradle/caches
+#          key: ${{ runner.os }}-gradle-cache-${{ hashFiles('build.gradle.kts') }}
+#          restore-keys: |
+#            ${{ runner.os }}-gradle-cache-
+#      - uses: actions/cache@v1
+#        with:
+#          path: ~/.gradle/wrapper
+#          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+#          restore-keys: |
+#            ${{ runner.os }}-gradle-wrapper-
+#      - name: Build and run tests
+#        run: ./gradlew clean build
 
   build:
     name: Build and push docker image
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Setup java
@@ -63,8 +62,10 @@ jobs:
 #        with:
 #          name: build-libs
 #          path: build/libs
+      - name: Run tests
+        run: ./gradlew test
       - name: Build JAR
-        run: ./gradlew clean build shadowJar -x test
+        run: ./gradlew clean shadowJar -x test
       - name: Login to GitHub package registry
         run: |
           echo ${GITHUB_TOKEN} | docker login -u ${GITHUB_REPOSITORY} --password-stdin docker.pkg.github.com
