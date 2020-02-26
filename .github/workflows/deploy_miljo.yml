@@ -23,7 +23,7 @@ jobs:
         id: sjekk-mot-master
         run: |
           MASTER_HEAD_COMMIT=$(git rev-parse HEAD)
-          TAG=1.1_20200226.1249_4de9c21
+          TAG=${{ github.event.client_payload.TAG }}
 
           git checkout ${TAG}
 
