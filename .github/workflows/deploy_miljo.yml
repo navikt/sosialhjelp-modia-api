@@ -14,22 +14,7 @@ jobs:
           PROJECT_NAME=$(echo ${{ github.repository }} | cut -d/ -f2)-2
           echo ::set-env name=IMAGE::$(echo "docker.pkg.github.com/${{ github.repository }}/$PROJECT_NAME":${{ github.event.client_payload.TAG }})
 
-      - uses: actions/checkout@v1
-
-      - name: sjekk om $TAG finnes på master-branch
-        run: |
-          MASTER_HEAD_COMMIT=$(git rev-parse HEAD)
-          TAG=${{ github.event.client_payload.TAG }}
-
-          git checkout ${TAG}
-
-          TAG_COMMIT=$(git rev-parse HEAD)
-          MERGE_BASE=$(git merge-base $MASTER_HEAD_COMMIT $TAG_COMMIT)
-
-          if [[ $MERGE_BASE != $TAG_COMMIT ]]; then
-            echo Tag $TAG is not on master branch
-            exit 1
-          fi
+      - uses: actions/checkout@v2
 
       - name: Deploy til dev-fss
         uses: nais/deploy/actions/deploy@v1
