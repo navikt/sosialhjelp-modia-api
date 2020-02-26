@@ -16,8 +16,8 @@ jobs:
 
       - name: checkout $TAG
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.client_payload.TAG }}
+#        with:
+#          ref: ${{ github.event.client_payload.TAG }}
 
       - name: sjekk mot master
         id: sjekk-mot-master
