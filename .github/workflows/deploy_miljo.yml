@@ -15,7 +15,7 @@ jobs:
           echo ::set-env name=IMAGE::$(echo "docker.pkg.github.com/${{ github.repository }}/$PROJECT_NAME":${{ github.event.client_payload.TAG }})
 
       - name: checkout $TAG
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
 #        with:
 #          ref: ${{ github.event.client_payload.TAG }}
 
