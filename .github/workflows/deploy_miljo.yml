@@ -30,11 +30,6 @@ jobs:
           TAG_COMMIT=$(git rev-parse HEAD)
           MERGE_BASE=$(git merge-base $MASTER_HEAD_COMMIT $TAG_COMMIT)
 
-#          if [[ $MERGE_BASE != $TAG_COMMIT ]]; then
-#            echo "${TAG} is not on master branch" 1>&2
-#            exit 1
-#          fi
-
           echo ::set-output name=finnes_paa_master::$( $MERGE_BASE != $TAG_COMMIT && echo ja || echo nei)
 
       - name: Deploy til dev-fss
