@@ -23,7 +23,8 @@ jobs:
         id: sjekk-mot-master
         run: |
           git fetch origin master
-          echo ::set-output name=finnes_paa_master::$(git merge-base --is-ancestor origin/master ${{ github.event.client_payload.TAG }} && echo ja || echo nei)
+          TAG_COMMIT=$(git rev-list -n 1 ${{ github.event.client_payload.TAG }})
+          echo ::set-output name=finnes_paa_master::$(git merge-base --is-ancestor origin/master $TAG_COMMIT && echo ja || echo nei)
 
       - name: Deploy til dev-fss
         if: steps.sjekk-mot-master.outputs.finnes_paa_master == 'ja'
