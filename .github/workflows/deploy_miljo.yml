@@ -16,11 +16,8 @@ jobs:
 
       - name: checkout $TAG
         uses: actions/checkout@v1
-#        with:
-#          ref: ${{ github.event.client_payload.TAG }}
 
       - name: sjekk mot master
-        id: sjekk-mot-master
         run: |
           MASTER_HEAD_COMMIT=$(git rev-parse HEAD)
           TAG=${{ github.event.client_payload.TAG }}
@@ -31,12 +28,11 @@ jobs:
           MERGE_BASE=$(git merge-base $MASTER_HEAD_COMMIT $TAG_COMMIT)
 
           if [[ $MERGE_BASE != $TAG_COMMIT ]]; then
-            echo TAG is not on master branch
+            echo Tag $TAG is not on master branch
             exit 1
           fi
 
       - name: Deploy til dev-fss
-#        if: steps.sjekk-mot-master.outputs.finnes_paa_master == 'ja'
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
