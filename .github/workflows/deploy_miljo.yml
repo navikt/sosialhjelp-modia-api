@@ -31,11 +31,10 @@ jobs:
           MERGE_BASE=$(git merge-base $MASTER_HEAD_COMMIT $TAG_COMMIT)
 
           if [[ $MERGE_BASE != $TAG_COMMIT ]]; then
-            echo "${TAG} is not on master branch" 1>&2
             echo ::set-output name=finnes_paa_master::$(echo nei)
-          else
-            echo ::set-output name=finnes_paa_master::$(echo ja)
+            exit 1
           fi
+          echo ::set-output name=finnes_paa_master::$(echo ja)
 
       - name: Deploy til dev-fss
         if: steps.sjekk-mot-master.outputs.finnes_paa_master == 'ja'
