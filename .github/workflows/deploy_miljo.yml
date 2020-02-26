@@ -22,19 +22,8 @@ jobs:
       - name: sjekk mot master
         id: sjekk-mot-master
         run: |
-          MASTER_HEAD_COMMIT=$(git rev-parse HEAD)
-          TAG=$(jq -r '.client_payload.TAG' $GITHUB_EVENT_PATH)
-
-          git checkout ${TAG}
-
-          TAG_COMMIT=$(git rev-parse HEAD)
-          MERGE_BASE=$(git merge-base $MASTER_HEAD_COMMIT $TAG_COMMIT)
-
-          if [[ $MERGE_BASE != $TAG_COMMIT ]]; then
-            echo ::set-output name=finnes_paa_master::$(echo nei)
-            exit 1
-          fi
-          echo ::set-output name=finnes_paa_master::$(echo ja)
+          git fetch origin master
+          echo ::set-output name=finnes_paa_master::$(git merge-base --is-ancestor origin/master ${{ github.event.client_payload.TAG }} && echo ja || echo nei)
 
       - name: Deploy til dev-fss
         if: steps.sjekk-mot-master.outputs.finnes_paa_master == 'ja'
