@@ -23,14 +23,19 @@ jobs:
         id: sjekk-mot-master
         run: |
           MASTER_HEAD_COMMIT=$(git rev-parse HEAD)
-          TAG=${{ github.event.client_payload.TAG }}
+          TAG=$(jq -r '.client_payload.TAG' $GITHUB_EVENT_PATH)
 
           git checkout ${TAG}
 
           TAG_COMMIT=$(git rev-parse HEAD)
           MERGE_BASE=$(git merge-base $MASTER_HEAD_COMMIT $TAG_COMMIT)
 
-          echo ::set-output name=finnes_paa_master::$( $MERGE_BASE == $TAG_COMMIT && echo ja || echo nei)
+          if [[ $MERGE_BASE != $TAG_COMMIT ]]; then
+            echo "${TAG} is not on master branch" 1>&2
+            echo ::set-output name=finnes_paa_master::$(echo nei)
+          else
+            echo ::set-output name=finnes_paa_master::$(echo ja)
+          fi
 
       - name: Deploy til dev-fss
         if: steps.sjekk-mot-master.outputs.finnes_paa_master == 'ja'
