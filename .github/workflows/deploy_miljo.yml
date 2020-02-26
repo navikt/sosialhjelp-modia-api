@@ -30,7 +30,7 @@ jobs:
           TAG_COMMIT=$(git rev-parse HEAD)
           MERGE_BASE=$(git merge-base $MASTER_HEAD_COMMIT $TAG_COMMIT)
 
-          echo ::set-output name=finnes_paa_master::$( $MERGE_BASE != $TAG_COMMIT && echo ja || echo nei)
+          echo ::set-output name=finnes_paa_master::$( $MERGE_BASE == $TAG_COMMIT && echo ja || echo nei)
 
       - name: Deploy til dev-fss
         if: steps.sjekk-mot-master.outputs.finnes_paa_master == 'ja'
