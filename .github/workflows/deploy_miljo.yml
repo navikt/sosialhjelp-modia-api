@@ -15,11 +15,25 @@ jobs:
           echo ::set-env name=IMAGE::$(echo "docker.pkg.github.com/${{ github.repository }}/$PROJECT_NAME":${{ github.event.client_payload.TAG }})
 
       - name: checkout $TAG
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
         with:
           ref: ${{ github.event.client_payload.TAG }}
+      - run: |
+          MASTER_HEAD_COMMIT=$(git rev-parse HEAD)
+          TAG=${{ github.event.client_payload.TAG }}
+
+          git checkout ${TAG}
+
+          TAG_COMMIT=$(git rev-parse HEAD)
+          MERGE_BASE=$(git merge-base $MASTER_HEAD_COMMIT $TAG_COMMIT)
+
+          if [[ $MERGE_BASE != $TAG_COMMIT ]]; then
+            echo "${TAG} is not on master branch" 1>&2
+            exit 1
+          fi
 
       - name: Deploy til dev-fss
+        if: success()
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
