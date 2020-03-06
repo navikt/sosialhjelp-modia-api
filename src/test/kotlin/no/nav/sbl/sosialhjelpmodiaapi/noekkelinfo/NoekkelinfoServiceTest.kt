@@ -59,7 +59,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.saksId).isNull() //fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor).isEqualTo(enhetNavn1)
-        assertThat(noekkelinfo.videresendtInfo).isNull()
+        assertThat(noekkelinfo.videresendtHistorikk).isNull()
         assertThat(noekkelinfo.tidspunktForelopigSvar).isNull()
     }
 
@@ -86,7 +86,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.saksId).isNull() //fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor).isEqualTo(enhetNavn1)
-        assertThat(noekkelinfo.videresendtInfo).isNull()
+        assertThat(noekkelinfo.videresendtHistorikk).isNull()
         assertThat(noekkelinfo.tidspunktForelopigSvar).isEqualTo(tidspunkt)
     }
 
@@ -113,7 +113,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.saksId).isNull() //fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor).isEqualTo(enhetNavn2)
-        assertThat(noekkelinfo.videresendtInfo).hasSize(2)
+        assertThat(noekkelinfo.videresendtHistorikk).hasSize(2)
         assertThat(noekkelinfo.tidspunktForelopigSvar).isNull()
     }
 
@@ -140,7 +140,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.saksId).isNull() //fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor).isEqualTo(enhetNavn2)
-        assertThat(noekkelinfo.videresendtInfo).hasSize(2)
+        assertThat(noekkelinfo.videresendtHistorikk).hasSize(2)
         assertThat(noekkelinfo.tidspunktForelopigSvar).isNull()
     }
 
@@ -163,7 +163,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.saksId).isNull() //fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor).isNull()
-        assertThat(noekkelinfo.videresendtInfo).isNull()
+        assertThat(noekkelinfo.videresendtHistorikk).isNull()
         assertThat(noekkelinfo.tidspunktForelopigSvar).isNull()
     }
 }

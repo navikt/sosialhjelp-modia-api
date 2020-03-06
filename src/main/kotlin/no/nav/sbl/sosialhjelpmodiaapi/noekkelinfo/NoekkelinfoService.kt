@@ -27,7 +27,7 @@ class NoekkelinfoService(private val fiksClient: FiksClient,
                 saksId = null, // TODO: saksreferanse eller behandlingsid?
                 sendtEllerMottattTidspunkt = model.historikk[0].tidspunkt.toLocalDate(), // Første hendelse i historikk er alltid SENDT eller MOTTATT (hvis papirsøknad)
                 navKontor = behandlendeNavKontor?.navEnhetsnavn, // null hvis papirsøknad og ikke enda mottatt
-                videresendtInfo = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
+                videresendtHistorikk = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
                 tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt
         )
     }
