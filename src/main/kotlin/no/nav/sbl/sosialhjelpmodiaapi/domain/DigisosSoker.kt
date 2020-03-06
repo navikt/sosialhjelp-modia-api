@@ -11,12 +11,12 @@ data class InternalDigisosSoker(
         var utbetalinger: MutableList<Utbetaling>,
         var forvaltningsbrev: MutableList<Forvaltningsbrev>,
         var soknadsmottaker: Soknadsmottaker?,
-        var tildeltNavKontor: String?,
+        var navKontorHistorikk: MutableList<NavKontorInformasjon>,
         var oppgaver: MutableList<Oppgave>,
         var historikk: MutableList<Hendelse>,
         var forelopigSvar: ForelopigSvar?
 ) {
-    constructor() : this(null, null, mutableListOf(), mutableListOf(), mutableListOf(), null, null, mutableListOf(), mutableListOf(), null)
+    constructor() : this(null, null, mutableListOf(), mutableListOf(), mutableListOf(), null, mutableListOf(), mutableListOf(), mutableListOf(), null)
 }
 
 data class Forvaltningsbrev(
@@ -92,6 +92,17 @@ data class Hendelse(
 data class ForelopigSvar(
         val hendelseTidspunkt: LocalDateTime
 )
+
+data class NavKontorInformasjon(
+        val type: SendingType,
+        val tidspunkt: LocalDateTime,
+        val navEnhetsnummer: String,
+        val navEnhetsnavn: String
+)
+
+enum class SendingType {
+    SENDT, VIDERESENDT
+}
 
 enum class SoknadsStatus {
     SENDT, MOTTATT, UNDER_BEHANDLING, FERDIGBEHANDLET, BEHANDLES_IKKE
