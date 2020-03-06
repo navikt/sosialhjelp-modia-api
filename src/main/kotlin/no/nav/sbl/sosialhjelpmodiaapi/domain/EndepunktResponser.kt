@@ -79,13 +79,13 @@ data class SoknadNoekkelinfoResponse(
         @JsonFormat(pattern = "yyyy-MM-dd")
         val sendtEllerMottattTidspunkt: LocalDate,
         val navKontor: String?,
-        val videresendtInfo: List<VideresendtInfo>?,
+        val videresendtHistorikk: List<VideresendtInfo>?,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
         val tidspunktForelopigSvar: LocalDateTime?
 )
 
 data class VideresendtInfo(
-        val type: SendtVideresendtType,
+        val type: SendingType,
         @JsonFormat(pattern = "yyyy-MM-dd")
         val tidspunkt: LocalDate,
         val navKontor: String

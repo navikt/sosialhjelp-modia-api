@@ -45,7 +45,7 @@ internal class NoekkelinfoServiceTest {
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
         model.navKontorHistorikk = mutableListOf(
-                NavKontorInformasjon(SendtVideresendtType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1)
+                NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1)
         )
 
         every { eventService.createModel(any(), any()) } returns model
@@ -71,7 +71,7 @@ internal class NoekkelinfoServiceTest {
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
         model.navKontorHistorikk = mutableListOf(
-                NavKontorInformasjon(SendtVideresendtType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1)
+                NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1)
         )
         model.forelopigSvar = ForelopigSvar(tidspunkt)
 
@@ -98,8 +98,8 @@ internal class NoekkelinfoServiceTest {
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
         model.navKontorHistorikk = mutableListOf(
-                NavKontorInformasjon(SendtVideresendtType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
-                NavKontorInformasjon(SendtVideresendtType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2)
+                NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
+                NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2)
         )
 
         every { eventService.createModel(any(), any()) } returns model
@@ -125,8 +125,8 @@ internal class NoekkelinfoServiceTest {
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
         model.navKontorHistorikk = mutableListOf(
-                NavKontorInformasjon(SendtVideresendtType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
-                NavKontorInformasjon(SendtVideresendtType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2)
+                NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
+                NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2)
         )
 
         every { eventService.createModel(any(), any()) } returns model

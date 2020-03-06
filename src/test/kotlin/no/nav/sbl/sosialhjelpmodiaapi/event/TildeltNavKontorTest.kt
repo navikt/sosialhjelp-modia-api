@@ -8,7 +8,7 @@ import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.sosialhjelpmodiaapi.common.NorgException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
-import no.nav.sbl.sosialhjelpmodiaapi.domain.SendtVideresendtType
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SendingType
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.innsyn.InnsynService
 import no.nav.sbl.sosialhjelpmodiaapi.norg.NorgClient
@@ -69,7 +69,7 @@ internal class TildeltNavKontorTest {
         assertThat(model.navKontorHistorikk).hasSize(2)
 
         val last = model.navKontorHistorikk.last()
-        assertThat(last.type).isEqualTo(SendtVideresendtType.VIDERESENDT)
+        assertThat(last.type).isEqualTo(SendingType.VIDERESENDT)
         assertThat(last.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
         assertThat(last.navEnhetsnummer).isEqualTo(navKontor)
         assertThat(last.navEnhetsnavn).isEqualTo(enhetNavn)

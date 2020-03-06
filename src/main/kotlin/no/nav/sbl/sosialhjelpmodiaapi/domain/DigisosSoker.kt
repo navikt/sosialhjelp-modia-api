@@ -94,13 +94,13 @@ data class ForelopigSvar(
 )
 
 data class NavKontorInformasjon(
-        val type: SendtVideresendtType,
+        val type: SendingType,
         val tidspunkt: LocalDateTime,
         val navEnhetsnummer: String,
         val navEnhetsnavn: String
 )
 
-enum class SendtVideresendtType {
+enum class SendingType {
     SENDT, VIDERESENDT
 }
 

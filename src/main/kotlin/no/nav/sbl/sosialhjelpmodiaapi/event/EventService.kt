@@ -17,7 +17,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontorInformasjon
-import no.nav.sbl.sosialhjelpmodiaapi.domain.SendtVideresendtType
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SendingType
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Soknadsmottaker
 import no.nav.sbl.sosialhjelpmodiaapi.innsyn.InnsynService
@@ -42,7 +42,7 @@ class EventService(private val innsynService: InnsynService,
             if (jsonSoknad != null && jsonSoknad.mottaker != null) {
                 model.soknadsmottaker = Soknadsmottaker(jsonSoknad.mottaker.enhetsnummer, jsonSoknad.mottaker.navEnhetsnavn)
                 model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til ${jsonSoknad.mottaker.navEnhetsnavn}.", unixToLocalDateTime(timestampSendt)))
-                model.navKontorHistorikk.add(NavKontorInformasjon(SendtVideresendtType.SENDT, unixToLocalDateTime(timestampSendt), jsonSoknad.mottaker.enhetsnummer, jsonSoknad.mottaker.navEnhetsnavn))
+                model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, unixToLocalDateTime(timestampSendt), jsonSoknad.mottaker.enhetsnummer, jsonSoknad.mottaker.navEnhetsnavn))
             }
         }
 
