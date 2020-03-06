@@ -73,14 +73,22 @@ data class VedleggResponse(
 data class SoknadNoekkelinfoResponse(
         val tittel: String,
         val status: SoknadsStatus,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val sistOppdatert: LocalDateTime,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val sistOppdatert: LocalDate,
         val saksId: String?,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val sendtEllerMottattTidspunkt: LocalDateTime,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val sendtEllerMottattTidspunkt: LocalDate,
         val navKontor: String?,
-        val videresendt: Boolean,
+        val videresendtHistorikk: List<VideresendtInfo>?,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
         val tidspunktForelopigSvar: LocalDateTime?
+)
+
+data class VideresendtInfo(
+        val type: SendingType,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val tidspunkt: LocalDate,
+        val navKontor: String
 )
 
 data class SaksListeResponse(
