@@ -52,7 +52,7 @@ val digisosSoker = JsonDigisosSoker()
                         JsonTildeltNavKontor()
                                 .withType(JsonHendelse.Type.TILDELT_NAV_KONTOR)
                                 .withHendelsestidspunkt(toStringWithTimezone(DateTime.now().minusDays(10)))
-                                .withNavKontor("0301"),
+                                .withNavKontor("0302"),
 
                         JsonDokumentasjonEtterspurt()
                                 .withType(JsonHendelse.Type.DOKUMENTASJON_ETTERSPURT)
