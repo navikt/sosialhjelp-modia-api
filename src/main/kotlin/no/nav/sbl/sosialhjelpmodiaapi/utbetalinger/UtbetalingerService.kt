@@ -23,12 +23,12 @@ class UtbetalingerService(private val fiksClient: FiksClient,
 
         return digisosSaker
                 .flatMap { digisosSak -> utbetalingerForDigisosSak(digisosSak, token) }
-                .sortedByDescending { it.utbetalingsdato }
+                .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
     }
 
     fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak, token: String): List<UtbetalingerResponse> {
         return utbetalingerForDigisosSak(digisosSak, token)
-                .sortedByDescending { it.utbetalingsdato }
+                .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
     }
 
     private fun utbetalingerForDigisosSak(digisosSak: DigisosSak, token: String): List<UtbetalingerResponse> {
@@ -36,12 +36,12 @@ class UtbetalingerService(private val fiksClient: FiksClient,
         return model.saker
                 .flatMap { sak ->
                     sak.utbetalinger
-                            .filter { it.utbetalingsDato != null && (it.status == UtbetalingsStatus.UTBETALT || it.status == UtbetalingsStatus.ANNULLERT) }
+                            .filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
                             .map { utbetaling ->
                                 UtbetalingerResponse(
                                         tittel = utbetaling.beskrivelse,
                                         belop = utbetaling.belop.toDouble(),
-                                        utbetalingsdato = utbetaling.utbetalingsDato,
+                                        utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato ?: utbetaling.forfallsDato,
                                         status = utbetaling.status.name,
                                         fiksDigisosId = digisosSak.fiksDigisosId,
                                         fom = utbetaling.fom,

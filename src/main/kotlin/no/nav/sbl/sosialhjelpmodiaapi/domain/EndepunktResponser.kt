@@ -47,7 +47,7 @@ data class UtbetalingerResponse(
         val tittel: String?,
         val belop: Double,
         @JsonFormat(pattern = "yyyy-MM-dd")
-        val utbetalingsdato: LocalDate?,
+        val utbetalingEllerForfallDigisosSoker: LocalDate?,
         val status: String,
         val fiksDigisosId: String,
         @JsonFormat(pattern = "yyyy-MM-dd")

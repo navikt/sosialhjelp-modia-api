@@ -36,7 +36,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    fun `Skal returnere emptyList hvis soker ikke har noen digisosSaker`() {
+    fun `hentUtbetalinger skal returnere emptyList hvis soker ikke har noen digisosSaker`() {
         val model = InternalDigisosSoker()
         every { eventService.createModel(any(), any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns emptyList()
@@ -47,7 +47,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    fun `Skal returnere response med 1 utbetaling`() {
+    fun `hentUtbetalinger skal returnere response med 1 utbetaling`() {
         val model = InternalDigisosSoker()
         model.saker.add(Sak(
                 referanse = referanse,
@@ -84,7 +84,7 @@ internal class UtbetalingerServiceTest {
         assertThat(response[0].tittel).isEqualTo("Nødhjelp")
         assertThat(response[0].belop).isEqualTo(10.0)
         assertThat(response[0].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[0].utbetalingsdato).isEqualTo("2019-08-10")
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-10")
         assertThat(response[0].fom).isEqualTo("2019-08-01")
         assertThat(response[0].tom).isEqualTo("2019-08-31")
         assertThat(response[0].mottaker).isEqualTo("utleier")
@@ -93,7 +93,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    fun `Skal returnere response med 2 utbetalinger for 1 maned`() {
+    fun `hentUtbetalinger skal returnere response med 2 utbetalinger for 1 maned`() {
         val model = InternalDigisosSoker()
         model.saker.add(Sak(
                 referanse = referanse,
@@ -119,15 +119,15 @@ internal class UtbetalingerServiceTest {
         assertThat(response[0].tittel).isEqualTo("Tannlege")
         assertThat(response[0].belop).isEqualTo(10.0)
         assertThat(response[0].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[0].utbetalingsdato).isEqualTo("2019-08-12")
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-12")
         assertThat(response[1].tittel).isEqualTo("Nødhjelp")
         assertThat(response[1].belop).isEqualTo(10.0)
         assertThat(response[1].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[1].utbetalingsdato).isEqualTo("2019-08-10")
+        assertThat(response[1].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-10")
     }
 
     @Test
-    fun `Skal returnere response med 1 utbetaling for 2 maneder`() {
+    fun `hentUtbetalinger skal returnere response med 1 utbetaling for 2 maneder`() {
         val model = InternalDigisosSoker()
         model.saker.add(Sak(
                 referanse = referanse,
@@ -153,16 +153,16 @@ internal class UtbetalingerServiceTest {
         assertThat(response[0].tittel).isEqualTo("Tannlege")
         assertThat(response[0].belop).isEqualTo(10.0)
         assertThat(response[0].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[0].utbetalingsdato).isEqualTo("2019-09-12")
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-09-12")
 
         assertThat(response[1].tittel).isEqualTo("Nødhjelp")
         assertThat(response[1].belop).isEqualTo(10.0)
         assertThat(response[1].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[1].utbetalingsdato).isEqualTo("2019-08-10")
+        assertThat(response[1].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-10")
     }
 
     @Test
-    fun `Skal returnere response med 1 utbetaling med vilkar`() {
+    fun `hentUtbetalinger skal returnere response med 1 utbetaling med vilkar`() {
         val model = InternalDigisosSoker()
         val vilkar = Vilkar("vilkar1", mutableListOf(), "Skal hoppe", false)
         val utbetaling1 = Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
@@ -191,7 +191,7 @@ internal class UtbetalingerServiceTest {
 
     @Disabled("disabled frem til det blir bekreftet om dokumentasjonkrav skal være med i response")
     @Test
-    fun `Skal returnere response med 1 utbetaling med dokumentasjonkrav`() {
+    fun `hentUtbetalinger skal returnere response med 1 utbetaling med dokumentasjonkrav`() {
         val model = InternalDigisosSoker()
         val dokumentasjonkrav = Dokumentasjonkrav("dokumentasjonskrav", mutableListOf(), "Skal hoppe", false)
         val utbetaling1 = Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
@@ -265,16 +265,16 @@ internal class UtbetalingerServiceTest {
         assertThat(response[0].tittel).isEqualTo("Barnehage og SFO")
         assertThat(response[0].belop).isEqualTo(1.0)
         assertThat(response[0].fiksDigisosId).isEqualTo(id2)
-        assertThat(response[0].utbetalingsdato).isEqualTo("2019-09-12")
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-09-12")
 
         assertThat(response[1].tittel).isEqualTo("Nødhjelp")
         assertThat(response[1].belop).isEqualTo(10.0)
         assertThat(response[1].fiksDigisosId).isEqualTo(id1)
-        assertThat(response[1].utbetalingsdato).isEqualTo("2019-08-10")
+        assertThat(response[1].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-10")
     }
 
     @Test
-    internal fun `hentUtbetalingerForDigisosSak skal hente alle utbetalinger for én DigisosSak`() {
+    internal fun `hentUtbetalingerForDigisosSak skal hente alle utbetalinger for 1 DigisosSak`() {
         val model = InternalDigisosSoker()
         model.saker.add(Sak(
                 referanse = referanse,
@@ -311,11 +311,50 @@ internal class UtbetalingerServiceTest {
         assertThat(response[0].tittel).isEqualTo("Nødhjelp")
         assertThat(response[0].belop).isEqualTo(10.0)
         assertThat(response[0].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[0].utbetalingsdato).isEqualTo("2019-08-10")
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-10")
         assertThat(response[0].fom).isEqualTo("2019-08-01")
         assertThat(response[0].tom).isEqualTo("2019-08-31")
         assertThat(response[0].mottaker).isEqualTo("utleier")
         assertThat(response[0].kontonummer).isEqualTo("kontonr")
         assertThat(response[0].utbetalingsmetode).isEqualTo("utbetalingsmetode")
+    }
+
+    @Test
+    fun `hentUtbetalinger skal filtrere vekk annullerte utbetalinger`() {
+        val model = InternalDigisosSoker()
+        model.saker.add(Sak(
+                referanse = referanse,
+                saksStatus = SaksStatus.UNDER_BEHANDLING,
+                tittel = tittel,
+                vedtak = mutableListOf(),
+                utbetalinger = mutableListOf(
+                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 1), null, null, null, null, null, mutableListOf(), mutableListOf()),
+                        Utbetaling("Sak2", UtbetalingsStatus.PLANLAGT_UTBETALING, BigDecimal.TEN, "Tannlege", LocalDate.of(2019, 9, 1), null, null, null, null, null, null, mutableListOf(), mutableListOf()),
+                        Utbetaling("Sak3", UtbetalingsStatus.STOPPET, BigDecimal.TEN, "Depositum", null, LocalDate.of(2019, 10, 1), null, null, null, null, null, mutableListOf(), mutableListOf()),
+                        Utbetaling("Sak4", UtbetalingsStatus.ANNULLERT, BigDecimal.TEN, "Kinopenger", null, LocalDate.of(2019, 11, 1), null, null, null, null, null, mutableListOf(), mutableListOf())
+                        ),
+                vilkar = mutableListOf(),
+                dokumentasjonkrav = mutableListOf(),
+                datoOpprettet = LocalDate.now()
+        ))
+
+        every { eventService.createModel(any(), any()) } returns model
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token)
+
+        assertThat(response).isNotNull
+        assertThat(response).hasSize(3)
+        assertThat(response[0].tittel).isEqualTo("Depositum")
+        assertThat(response[0].status).isEqualTo(UtbetalingsStatus.STOPPET.name)
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-10-01")
+
+        assertThat(response[1].tittel).isEqualTo("Tannlege")
+        assertThat(response[1].status).isEqualTo(UtbetalingsStatus.PLANLAGT_UTBETALING.name)
+        assertThat(response[1].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-09-01")
+
+        assertThat(response[2].tittel).isEqualTo("Nødhjelp")
+        assertThat(response[2].status).isEqualTo(UtbetalingsStatus.UTBETALT.name)
+        assertThat(response[2].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-01")
     }
 }
