@@ -48,7 +48,7 @@ data class UtbetalingerResponse(
         val belop: Double,
         @JsonFormat(pattern = "yyyy-MM-dd")
         val utbetalingEllerForfallDigisosSoker: LocalDate?,
-        val status: String,
+        val status: UtbetalingsStatus,
         val fiksDigisosId: String,
         @JsonFormat(pattern = "yyyy-MM-dd")
         val fom: LocalDate?,

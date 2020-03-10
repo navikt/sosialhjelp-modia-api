@@ -346,15 +346,15 @@ internal class UtbetalingerServiceTest {
         assertThat(response).isNotNull
         assertThat(response).hasSize(3)
         assertThat(response[0].tittel).isEqualTo("Depositum")
-        assertThat(response[0].status).isEqualTo(UtbetalingsStatus.STOPPET.name)
+        assertThat(response[0].status).isEqualTo(UtbetalingsStatus.STOPPET)
         assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-10-01")
 
         assertThat(response[1].tittel).isEqualTo("Tannlege")
-        assertThat(response[1].status).isEqualTo(UtbetalingsStatus.PLANLAGT_UTBETALING.name)
+        assertThat(response[1].status).isEqualTo(UtbetalingsStatus.PLANLAGT_UTBETALING)
         assertThat(response[1].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-09-01")
 
         assertThat(response[2].tittel).isEqualTo("Nødhjelp")
-        assertThat(response[2].status).isEqualTo(UtbetalingsStatus.UTBETALT.name)
+        assertThat(response[2].status).isEqualTo(UtbetalingsStatus.UTBETALT)
         assertThat(response[2].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-01")
     }
 }
