@@ -20,7 +20,7 @@ const val soknadsmottaker = "The Office"
 const val enhetsnr = "2317"
 
 const val navKontor = "1337"
-const val navKontor2 = "2222"
+const val navKontor2 = "2244"
 
 const val tittel_1 = "tittel"
 const val tittel_2 = "tittel2"
@@ -144,15 +144,30 @@ val UTBETALING = JsonUtbetaling()
         .withBelop(1234.56)
         .withBeskrivelse(tittel_1)
         .withForfallsdato("2019-12-31")
-        .withStonadstype("type")
         .withUtbetalingsdato("2019-12-24")
-        .withFom(null)
-        .withTom(null)
+        .withFom("2019-12-01")
+        .withTom("2019-12-31")
         .withAnnenMottaker(false)
         .withMottaker("fnr")
         .withKontonummer("kontonummer")
         .withUtbetalingsmetode("pose med krølla femtilapper")
 
+val UTBETALING_ANNEN_MOTTAKER = JsonUtbetaling()
+        .withType(JsonHendelse.Type.UTBETALING)
+        .withUtbetalingsreferanse(utbetaling_ref_1)
+        .withSaksreferanse(referanse_1)
+        .withRammevedtaksreferanse(null)
+        .withStatus(JsonUtbetaling.Status.UTBETALT)
+        .withBelop(1234.56)
+        .withBeskrivelse(tittel_1)
+        .withForfallsdato("2019-12-31")
+        .withUtbetalingsdato("2019-12-24")
+        .withFom(null)
+        .withTom(null)
+        .withAnnenMottaker(true)
+        .withMottaker("utleier")
+        .withKontonummer(null)
+        .withUtbetalingsmetode("pose med krølla femtilapper")
 
 val VILKAR_OPPFYLT = JsonVilkar()
         .withType(JsonHendelse.Type.VILKAR)

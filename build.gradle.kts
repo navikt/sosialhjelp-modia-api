@@ -1,38 +1,41 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer
+import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "no.nav.sbl"
-version = "1.0-SNAPSHOT"
 
-val kotlinVersion = "1.3.60"
-val springBootVersion = "2.2.0.RELEASE"
+val kotlinVersion = "1.3.70"
+val springBootVersion = "2.2.5.RELEASE"
 val logbackVersion = "1.2.3"
-val logstashVersion = "5.3"
-val junitJupiterVersion = "5.5.2"
+val logstashVersion = "6.3"
+val junitJupiterVersion = "5.6.0"
 val mockkVersion = "1.9.3"
-val filformatVersion = "1.2019.10.29-12.39-6bf6917cf603"
-val micrometerRegistryVersion = "1.1.7"
-val prometheusVersion = "0.7.0"
-val tokenValidationVersion = "1.1.3"
-val jacksonVersion = "2.10.1"
-val jacksonDatabindVersion = "2.10.1"
-val guavaVersion = "28.0-jre"
+val filformatVersion = "1.2020.01.09-15.55-f18d10d7d76a"
+val micrometerRegistryVersion = "1.3.5"
+val prometheusVersion = "0.8.1"
+val tokenValidationVersion = "1.1.4"
+val jacksonVersion = "2.10.3"
+val jacksonDatabindVersion = "2.10.3"
+val guavaVersion = "28.2-jre"
 val swaggerVersion = "2.9.2"
-val resilience4jVersion = "1.0.0"
+val resilience4jVersion = "1.3.1"
 val rxKotlinVersion = "2.4.0"
-val vavrKotlinVersion = "0.10.0"
-val ktorVersion = "1.2.2"
-val kotlinCoroutinesVersion = "1.3.2"
+val vavrKotlinVersion = "0.10.2"
+val ktorVersion = "1.3.1"
+val kotlinCoroutinesVersion = "1.3.3"
 val abacAttributeConstantsVersion = "3.3.13"
 
 val mainClass = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
 
 plugins {
     application
-    kotlin("jvm") version "1.3.60"
-
-    id("org.jetbrains.kotlin.plugin.spring") version "1.3.60"
-    id("org.springframework.boot") version "2.2.0.RELEASE"
-    id("io.spring.dependency-management") version "1.0.8.RELEASE"
+    kotlin("jvm") version "1.3.70"
+//    id("org.jmailen.kotlinter") version "2.3.1" // TODO - burde tas i bruk
+    id("org.jetbrains.kotlin.plugin.spring") version "1.3.70"
+    id("com.github.johnrengelman.shadow") version "5.2.0"
+    id("io.spring.dependency-management") version "1.0.9.RELEASE"
+    id("com.github.ben-manes.versions") version "0.28.0"
 }
 
 application {
@@ -119,14 +122,14 @@ repositories {
     mavenCentral()
     jcenter()
     maven("https://plugins.gradle.org/m2/")
-    maven("http://repo.spring.io/plugins-release/")
+    maven("https://repo.spring.io/plugins-release/")
 }
 
 tasks {
     withType<KotlinCompile> {
         kotlinOptions {
-            jvmTarget = "1.8"
-            freeCompilerArgs = listOf("-Xjsr305=strict")
+            jvmTarget = "11"
+            freeCompilerArgs = listOf("-Xjsr305=strict", "-XXLanguage:+InlineClasses")
         }
     }
 
@@ -135,11 +138,20 @@ tasks {
             includeEngines("junit-jupiter")
         }
         testLogging {
-            events("passed", "skipped", "failed")
+            events("skipped", "failed")
         }
     }
-}
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    freeCompilerArgs = listOf("-XXLanguage:+InlineClasses")
+
+    withType<ShadowJar> {
+        classifier = ""
+        transform(ServiceFileTransformer::class.java) {
+            setPath("META-INF/cxf")
+            include("bus-extensions.txt")
+        }
+        transform(PropertiesFileTransformer::class.java) {
+            paths = listOf("META-INF/spring.factories")
+            mergeStrategy = "append"
+        }
+        mergeServiceFiles()
+    }
 }

@@ -3,6 +3,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.domain
 import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.*
 
 data class SoknadsStatusResponse(
         val status: SoknadsStatus
@@ -10,77 +11,107 @@ data class SoknadsStatusResponse(
 
 data class SaksStatusResponse(
         val tittel: String,
-        val status: SaksStatus?
+        val status: SaksStatus?,
+        val vedtak: List<VedtakResponse>?,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val datoOpprettet: LocalDate,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val datoAvsluttet: LocalDate?,
+        val utfall: UtfallVedtak?
+)
+
+data class VedtakResponse(
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val vedtakDato: LocalDate,
+        val utfall: UtfallVedtak?
 )
 
 data class HendelseResponse(
+        val tittel: String,
         val tidspunkt: String,
-        val beskrivelse: String
+        val beskrivelse: String?
 )
 
 data class OppgaveResponse(
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-        val innsendelsesfrist: LocalDateTime?,
         val dokumenttype: String,
         val tilleggsinformasjon: String?,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-        val datoLagtTil: LocalDateTime,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val innsendelsesfrist: LocalDate?,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val vedleggDatoLagtTil: LocalDate?,
         val antallVedlegg: Int,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-        val vedleggDatoLagtTil: LocalDateTime?,
         val erFraInnsyn: Boolean
 )
 
 data class UtbetalingerResponse(
-        val ar: Int,
-        val maned: String,
-        val sum: Double,
-        val utbetalinger: List<ManedUtbetaling>
-)
-
-data class ManedUtbetaling(
         val tittel: String?,
         val belop: Double,
         @JsonFormat(pattern = "yyyy-MM-dd")
-        val utbetalingsdato: LocalDate?,
-        val status: String,
+        val utbetalingEllerForfallDigisosSoker: LocalDate?,
+        val status: UtbetalingsStatus,
         val fiksDigisosId: String,
         @JsonFormat(pattern = "yyyy-MM-dd")
         val fom: LocalDate?,
         @JsonFormat(pattern = "yyyy-MM-dd")
         val tom: LocalDate?,
         val mottaker: String?,
+        val kontonummer: String?,
+        val utbetalingsmetode: String?,
         val harVilkar: Boolean
-)
-
-data class SakResponse(
-        val fiksDigisosId: String,
-        val soknadTittel: String,
-        val status: String,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-        val sistOppdatert: LocalDateTime,
-        val antallNyeOppgaver: Int?,
-        val kilde: String
 )
 
 data class VedleggResponse(
         val type: String,
         val tilleggsinfo: String?,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         val innsendelsesfrist: LocalDateTime?,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val datoLagtTil: LocalDateTime?
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val datoLagtTil: LocalDateTime?,
+        val antallVedlegg: Int
 )
 
-data class SoknadsInfoResponse(
-        val status: SoknadsStatus,
+data class SoknadNoekkelinfoResponse(
         val tittel: String,
+        val status: SoknadsStatus,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val sistOppdatert: LocalDate,
+        val saksId: String?,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val sendtEllerMottattTidspunkt: LocalDate,
+        val navKontor: String?,
+        val videresendtHistorikk: List<VideresendtInfo>?,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val sistOppdatert: LocalDateTime,
+        val tidspunktForelopigSvar: LocalDateTime?
+)
+
+data class VideresendtInfo(
+        val type: SendingType,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val tidspunkt: LocalDate,
+        val navKontor: String
+)
+
+data class SaksListeResponse(
+        val fiksDigisosId: String,
+        val soknadTittel: String,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val soknadSendtMottattTidspunkt: LocalDateTime,
-        val navKontorSoknad: String?,
-        val navKontorTildelt: String?,
-        val tidspunktForelopigSvar: LocalDateTime?,
-        val navKontorSaksbehandlingstid: String?
+        val sistOppdatert: Date,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val sendt: Date?,
+        val kilde: String
+)
+
+data class SaksDetaljerResponse(
+        val fiksDigisosId: String,
+        val soknadTittel: String,
+        val status: String,
+        val harNyeOppgaver: Boolean,
+        val harVilkar: Boolean
+)
+
+data class PersoninfoResponse(
+        val sammensattNavn: String?
+//        val alder: Int
+//        val fnr: String,
+//        val tlfnr: String
 )

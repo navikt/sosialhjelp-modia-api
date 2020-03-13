@@ -10,9 +10,14 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.DigisosApiWrapper
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 
 @Profile("mock")
@@ -29,9 +34,7 @@ class MockController(private val fiksClientMock: FiksClientMock,
     private val mapper = jacksonObjectMapper()
     private val sosialhjelpMapper = JsonSosialhjelpObjectMapper.createObjectMapper()
 
-    @PostMapping("/{soknadId}",
-            consumes = [APPLICATION_JSON_VALUE],
-            produces = [APPLICATION_JSON_VALUE])
+    @PostMapping("/{soknadId}", consumes = ["application/json;charset=UTF-8"], produces = ["application/json;charset=UTF-8"])
     fun postJsonDigisosSoker(@PathVariable soknadId: String, @RequestBody digisosApiWrapper: DigisosApiWrapper) {
         log.info("soknadId: $soknadId, jsonDigisosSoker: $digisosApiWrapper")
         val digisosSak = fiksClientMock.hentDigisosSak(soknadId, "Token")
@@ -41,8 +44,7 @@ class MockController(private val fiksClientMock: FiksClientMock,
         digisosSak.digisosSoker?.metadata?.let { fiksClientMock.postDokument(it, jsonDigisosSoker) }
     }
 
-    @GetMapping("/{soknadId}",
-            produces = [APPLICATION_JSON_VALUE])
+    @GetMapping("/{soknadId}", produces = ["application/json;charset=UTF-8"])
     fun getInnsynForSoknad(@PathVariable soknadId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<JsonDigisosSoker> {
         val digisosSak = fiksClientMock.hentDigisosSak(soknadId, token)
         val jsonDigisosSoker = innsynService.hentJsonDigisosSoker(soknadId, digisosSak.digisosSoker?.metadata, token)

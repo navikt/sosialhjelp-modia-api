@@ -3,3 +3,17 @@ no.nav.security.jwt:
     discoveryurl: http://metadata
     accepted_audience: aud-localhost
     cookie_name: localhost-idtoken
+
+client:
+  fiks_digisos_endpoint_url: digisosapiurl
+  fiks_integrasjonid: integrasjonid
+  fiks_integrasjonid_kommune: integrasjonidkommune
+  fiks_integrasjonpassord: integrasjonpw
+  fiks_integrasjonpassord_kommune: integrasjonpwkommune
+  id_porten_token_url: tokenurl
+  id_porten_client_id: clientid
+  id_porten_scope: scope
+  id_porten_config_url: configurl
+  norg_endpoint_url: norgurl
+  pdl_endpoint_url: pdlurl
+  sts_token_endpoint_url: stsurl

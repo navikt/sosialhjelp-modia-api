@@ -8,9 +8,11 @@ import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.sosialhjelpmodiaapi.common.NorgException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SendingType
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.innsyn.InnsynService
 import no.nav.sbl.sosialhjelpmodiaapi.norg.NorgClient
+import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -64,8 +66,17 @@ internal class TildeltNavKontorTest {
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
         assertThat(model.saker).hasSize(0)
         assertThat(model.historikk).hasSize(3)
+        assertThat(model.navKontorHistorikk).hasSize(2)
 
-        assertThat(model.historikk.last().tittel).contains(enhetNavn)
+        val last = model.navKontorHistorikk.last()
+        assertThat(last.type).isEqualTo(SendingType.VIDERESENDT)
+        assertThat(last.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
+        assertThat(last.navEnhetsnummer).isEqualTo(navKontor)
+        assertThat(last.navEnhetsnavn).isEqualTo(enhetNavn)
+
+        val hendelse = model.historikk.last()
+        assertThat(hendelse.tittel).isEqualTo(SOKNAD_VIDERESENDT)
+        assertThat(hendelse.beskrivelse).contains(enhetNavn)
     }
 
     @Test
@@ -86,8 +97,11 @@ internal class TildeltNavKontorTest {
         assertThat(model.saker).hasSize(0)
         assertThat(model.historikk).hasSize(3)
 
-        assertThat(model.historikk.last().tittel).doesNotContain(enhetNavn)
-        assertThat(model.historikk.last().tittel).contains("et annet NAV-kontor")
+        val hendelse = model.historikk.last()
+        assertThat(hendelse.tittel).isEqualTo(SOKNAD_VIDERESENDT)
+        assertThat(hendelse.beskrivelse)
+                .doesNotContain(enhetNavn)
+                .contains("et annet NAV-kontor")
     }
 
     @Test
@@ -110,7 +124,8 @@ internal class TildeltNavKontorTest {
         assertThat(model.saker).hasSize(0)
         assertThat(model.historikk).hasSize(2)
 
-        assertThat(model.historikk.last().tittel).contains("mottatt")
+        val hendelse = model.historikk.last()
+        assertThat(hendelse.tittel).isEqualTo(SOKNAD_MOTTATT)
     }
 
     @Test
@@ -133,7 +148,9 @@ internal class TildeltNavKontorTest {
         assertThat(model.saker).hasSize(0)
         assertThat(model.historikk).hasSize(3)
 
-        assertThat(model.historikk.last().tittel).contains(enhetNavn)
+        val hendelse = model.historikk.last()
+        assertThat(hendelse.tittel).isEqualTo(SOKNAD_VIDERESENDT)
+        assertThat(hendelse.beskrivelse).contains(enhetNavn)
     }
 
     @Test
@@ -158,7 +175,10 @@ internal class TildeltNavKontorTest {
         assertThat(model.saker).hasSize(0)
         assertThat(model.historikk).hasSize(4)
 
-        assertThat(model.historikk[2].tittel).contains(enhetNavn)
-        assertThat(model.historikk[3].tittel).contains(enhetNavn2)
+        assertThat(model.historikk[2].tittel).isEqualTo(SOKNAD_VIDERESENDT)
+        assertThat(model.historikk[2].beskrivelse).contains(enhetNavn)
+
+        assertThat(model.historikk[3].tittel).isEqualTo(SOKNAD_VIDERESENDT)
+        assertThat(model.historikk[3].beskrivelse).contains(enhetNavn2)
     }
 }

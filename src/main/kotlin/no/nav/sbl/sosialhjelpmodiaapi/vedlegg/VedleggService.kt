@@ -27,8 +27,7 @@ class VedleggService(private val fiksClient: FiksClient,
         val soknadVedlegg = hentSoknadVedleggMedStatus(LASTET_OPP_STATUS, fiksDigisosId, digisosSak.originalSoknadNAV, token)
         val ettersendteVedlegg = hentEttersendteVedlegg(fiksDigisosId, model, digisosSak.ettersendtInfoNAV, token)
 
-        // legg til utestående oppgaver som vedlegg med antallFiler=0 og datoLagtTil=null
-        val utestaendeOppgaver = hentUtestaendeOppgaver(model, ettersendteVedlegg)
+        val utestaendeOppgaver = hentUtestaendeOppgaverSomManglendeVedlegg(model, ettersendteVedlegg)
 
         return soknadVedlegg.plus(ettersendteVedlegg).plus(utestaendeOppgaver)
     }
@@ -74,7 +73,7 @@ class VedleggService(private val fiksClient: FiksClient,
                 } ?: emptyList()
     }
 
-    private fun hentUtestaendeOppgaver(model: InternalDigisosSoker, ettersendteVedlegg: List<InternalVedlegg>): List<InternalVedlegg> {
+    private fun hentUtestaendeOppgaverSomManglendeVedlegg(model: InternalDigisosSoker, ettersendteVedlegg: List<InternalVedlegg>): List<InternalVedlegg> {
         return model.oppgaver
                 .filterNot { oppgave ->
                     ettersendteVedlegg

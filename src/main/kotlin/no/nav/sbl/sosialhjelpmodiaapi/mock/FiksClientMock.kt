@@ -7,7 +7,12 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.EttersendtInfoNAV
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
 import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
-import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.*
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.defaultDigisosSak
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.defaultJsonSoknad
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.digisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.jsonVedleggSpesifikasjonEttersendelse
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.jsonVedleggSpesifikasjonEttersendelse_2
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.jsonVedleggSpesifikasjonSoknad
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime

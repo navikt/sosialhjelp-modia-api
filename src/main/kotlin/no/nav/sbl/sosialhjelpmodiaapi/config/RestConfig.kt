@@ -9,13 +9,25 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter
+import java.nio.charset.StandardCharsets
 
 @Configuration
 class RestConfig {
 
+    companion object {
+        const val SRVSOSIALHJELP_MODIA_API_USERNAME: String = "SRVSOSIALHJELP_MODIA_API_USERNAME"
+        const val SRVSOSIALHJELP_MODIA_API_PASSWORD: String = "SRVSOSIALHJELP_MODIA_API_PASSWORD"
+    }
+
     @Bean
     fun restTemplate(builder: RestTemplateBuilder): RestTemplate =
             builder.build()
+
+    @Bean
+    fun stsRestTemplate(builder: RestTemplateBuilder): RestTemplate =
+            builder
+                    .basicAuthentication(System.getenv(SRVSOSIALHJELP_MODIA_API_USERNAME), System.getenv(SRVSOSIALHJELP_MODIA_API_PASSWORD), StandardCharsets.UTF_8)
+                    .build()
 
     @Bean
     fun objectMapperCustomizer(): Jackson2ObjectMapperBuilderCustomizer {

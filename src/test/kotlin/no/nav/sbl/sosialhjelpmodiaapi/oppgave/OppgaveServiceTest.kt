@@ -75,7 +75,7 @@ internal class OppgaveServiceTest {
         assertThat(oppgaver).isNotNull
         assertThat(oppgaver[0].dokumenttype).isEqualTo(type)
         assertThat(oppgaver[0].tilleggsinformasjon).isEqualTo(tillegg)
-        assertThat(oppgaver[0].innsendelsesfrist).isEqualTo(frist)
+        assertThat(oppgaver[0].innsendelsesfrist).isEqualTo(frist.toLocalDate())
     }
 
     @Test
@@ -91,7 +91,7 @@ internal class OppgaveServiceTest {
         assertThat(oppgaver).isNotNull
         assertThat(oppgaver[0].dokumenttype).isEqualTo(type)
         assertThat(oppgaver[0].tilleggsinformasjon).isNull()
-        assertThat(oppgaver[0].innsendelsesfrist).isEqualTo(frist)
+        assertThat(oppgaver[0].innsendelsesfrist).isEqualTo(frist.toLocalDate())
     }
 
     @Test
@@ -112,19 +112,19 @@ internal class OppgaveServiceTest {
         assertThat(oppgaver.size == 4)
         assertThat(oppgaver[0].dokumenttype).isEqualTo(type)
         assertThat(oppgaver[0].tilleggsinformasjon).isEqualTo(tillegg)
-        assertThat(oppgaver[0].innsendelsesfrist).isEqualTo(frist)
+        assertThat(oppgaver[0].innsendelsesfrist).isEqualTo(frist.toLocalDate())
 
         assertThat(oppgaver[1].dokumenttype).isEqualTo(type2)
         assertThat(oppgaver[1].tilleggsinformasjon).isEqualTo(tillegg2)
-        assertThat(oppgaver[1].innsendelsesfrist).isEqualTo(frist2)
+        assertThat(oppgaver[1].innsendelsesfrist).isEqualTo(frist2.toLocalDate())
 
         assertThat(oppgaver[2].dokumenttype).isEqualTo(type3)
         assertThat(oppgaver[2].tilleggsinformasjon).isEqualTo(tillegg3)
-        assertThat(oppgaver[2].innsendelsesfrist).isEqualTo(frist3)
+        assertThat(oppgaver[2].innsendelsesfrist).isEqualTo(frist3.toLocalDate())
 
         assertThat(oppgaver[3].dokumenttype).isEqualTo(type4)
         assertThat(oppgaver[3].tilleggsinformasjon).isEqualTo(tillegg4)
-        assertThat(oppgaver[3].innsendelsesfrist).isEqualTo(frist4)
+        assertThat(oppgaver[3].innsendelsesfrist).isEqualTo(frist4.toLocalDate())
     }
 
     @Test
@@ -149,19 +149,19 @@ internal class OppgaveServiceTest {
 
         assertThat(oppgaver[0].dokumenttype).isEqualTo(type)
         assertThat(oppgaver[0].tilleggsinformasjon).isEqualTo(tillegg)
-        assertThat(oppgaver[0].innsendelsesfrist).isEqualTo(frist)
+        assertThat(oppgaver[0].innsendelsesfrist).isEqualTo(frist.toLocalDate())
         assertThat(oppgaver[0].antallVedlegg).isEqualTo(1)
-        assertThat(oppgaver[0].vedleggDatoLagtTil).isEqualTo(tidspunktEtterKrav)
+        assertThat(oppgaver[0].vedleggDatoLagtTil).isEqualTo(tidspunktEtterKrav.toLocalDate())
 
         assertThat(oppgaver[1].dokumenttype).isEqualTo(type2)
         assertThat(oppgaver[1].tilleggsinformasjon).isNull()
-        assertThat(oppgaver[1].innsendelsesfrist).isEqualTo(frist2)
+        assertThat(oppgaver[1].innsendelsesfrist).isEqualTo(frist2.toLocalDate())
         assertThat(oppgaver[1].antallVedlegg).isEqualTo(1)
-        assertThat(oppgaver[1].vedleggDatoLagtTil).isEqualTo(tidspunktEtterKrav)
+        assertThat(oppgaver[1].vedleggDatoLagtTil).isEqualTo(tidspunktEtterKrav.toLocalDate())
 
         assertThat(oppgaver[2].dokumenttype).isEqualTo(type3)
         assertThat(oppgaver[2].tilleggsinformasjon).isEqualTo(tillegg3)
-        assertThat(oppgaver[2].innsendelsesfrist).isEqualTo(frist3)
+        assertThat(oppgaver[2].innsendelsesfrist).isEqualTo(frist3.toLocalDate())
         assertThat(oppgaver[2].antallVedlegg).isEqualTo(0)
         assertThat(oppgaver[2].vedleggDatoLagtTil).isNull()
     }

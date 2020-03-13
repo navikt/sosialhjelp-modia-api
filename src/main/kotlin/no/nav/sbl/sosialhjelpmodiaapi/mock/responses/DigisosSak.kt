@@ -1,6 +1,11 @@
 package no.nav.sbl.sosialhjelpmodiaapi.mock.responses
 
-import no.nav.sbl.sosialhjelpmodiaapi.domain.*
+import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
+import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.domain.DokumentInfo
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Ettersendelse
+import no.nav.sbl.sosialhjelpmodiaapi.domain.EttersendtInfoNAV
+import no.nav.sbl.sosialhjelpmodiaapi.domain.OriginalSoknadNAV
 
 val defaultDigisosSak = DigisosSak(
         fiksDigisosId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",

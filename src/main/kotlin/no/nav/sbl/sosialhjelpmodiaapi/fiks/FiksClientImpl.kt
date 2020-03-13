@@ -9,12 +9,17 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
 import no.nav.sbl.sosialhjelpmodiaapi.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_PASSORD
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.springframework.context.annotation.Profile
-import org.springframework.http.*
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
@@ -39,7 +44,7 @@ class FiksClientImpl(clientProperties: ClientProperties,
     override fun hentDigisosSak(digisosId: String, sporingsId: String): DigisosSak {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
-        val headers = setIntegrasjonHeaders("Bearer ${virksomhetsToken.token}")
+        val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
 
         log.info("Forsøker å hente digisosSak fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId")
 
@@ -67,7 +72,7 @@ class FiksClientImpl(clientProperties: ClientProperties,
     override fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>, sporingsId: String): Any {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
-        val headers = setIntegrasjonHeaders("Bearer ${virksomhetsToken.token}")
+        val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
 
         val urlTemplate = "$baseUrl/digisos/api/v1/nav/soknader/{digisosId}/dokumenter/{dokumentlagerId}"
         val uriComponents = UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam("sporingsId", "{sporingsId}").build()
@@ -94,7 +99,7 @@ class FiksClientImpl(clientProperties: ClientProperties,
     override fun hentAlleDigisosSaker(sporingsId: String): List<DigisosSak> {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
-        val headers = setIntegrasjonHeaders("Bearer ${virksomhetsToken.token}")
+        val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
 
         val url = "$baseUrl/digisos/api/nav/v1/soknader"
         val uriComponents = UriComponentsBuilder.fromHttpUrl(url).queryParam("sporingsId", "{sporingsId}").build()
@@ -116,7 +121,7 @@ class FiksClientImpl(clientProperties: ClientProperties,
     override fun hentKommuneInfo(kommunenummer: String): KommuneInfo {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
-        val headers = setIntegrasjonHeaders("Bearer ${virksomhetsToken.token}")
+        val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
 
         try {
             val urlTemplate = "$baseUrl/digisos/api/v1/nav/kommune/{kommunenummer}"

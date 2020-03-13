@@ -7,6 +7,7 @@ import com.nimbusds.jose.crypto.RSASSASigner
 import com.nimbusds.jose.util.Base64
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
+import io.ktor.client.features.ServerResponseException
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.url
@@ -17,6 +18,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.defaultHttpClient
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.io.File
 import java.security.KeyPair
@@ -25,7 +27,7 @@ import java.security.PrivateKey
 import java.security.cert.X509Certificate
 import java.util.*
 
-
+@Profile("!mock")
 @Component
 class IdPortenService(clientProperties: ClientProperties) {
 
@@ -48,7 +50,7 @@ class IdPortenService(clientProperties: ClientProperties) {
     }
 
     suspend fun requestToken(attempts: Int = 10): AccessToken =
-            retry(callName = "Difi - Maskinporten", attempts = attempts) {
+            retry(attempts = attempts, retryableExceptions = *arrayOf(ServerResponseException::class)) {
                 val jws = createJws()
                 log.info("Got jws, getting token")
                 val response = defaultHttpClient.submitForm<IdPortenAccessTokenResponse>(

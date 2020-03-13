@@ -4,6 +4,7 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonSaksStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Sak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatus
+import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonSaksStatus) {
 
@@ -27,7 +28,8 @@ fun InternalDigisosSoker.apply(hendelse: JsonSaksStatus) {
                 mutableListOf(),
                 mutableListOf(),
                 mutableListOf(),
-                mutableListOf()
+                mutableListOf(),
+                hendelse.hendelsestidspunkt.toLocalDateTime().toLocalDate()
         ))
     }
 }

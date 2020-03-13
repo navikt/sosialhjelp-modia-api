@@ -24,4 +24,12 @@ object IntegrationUtils {
     const val HEADER_INTEGRASJON_PASSORD = "IntegrasjonPassord"
 
     const val KILDE_INNSYN_API = "innsyn-api"
+
+    const val BEARER = "Bearer "
+
+    const val TEMA_KOM = "KOM"
+
+    const val NAV_CALL_ID = "Nav-Call-Id"
+    const val NAV_CONSUMER_TOKEN = "Nav-Consumer-Token"
+    const val TEMA = "Tema"
 }

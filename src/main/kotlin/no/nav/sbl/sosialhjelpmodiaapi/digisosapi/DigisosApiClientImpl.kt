@@ -6,6 +6,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.DigisosApiWrapper
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_PASSORD
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
@@ -74,7 +75,7 @@ class DigisosApiClientImpl(clientProperties: ClientProperties, private val restT
         headers.accept = Collections.singletonList(MediaType.ALL)
         headers.set(HEADER_INTEGRASJON_ID, fiksIntegrasjonIdKommune)
         headers.set(HEADER_INTEGRASJON_PASSORD, fiksIntegrasjonPassordKommune)
-        headers.set(AUTHORIZATION, "Bearer " + accessToken.token)
+        headers.set(AUTHORIZATION, BEARER + accessToken.token)
         headers.contentType = MediaType.APPLICATION_JSON
         return headers
     }
