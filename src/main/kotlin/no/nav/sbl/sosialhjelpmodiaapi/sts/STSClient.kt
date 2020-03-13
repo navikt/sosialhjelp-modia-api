@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate
 import java.time.LocalDateTime
 
 @Component
-class STSClient(private val stsRestTemplate: RestTemplate,
+class STSClient(private val serviceuserBasicAuthRestTemplate: RestTemplate,
                 clientProperties: ClientProperties) {
 
     companion object {
@@ -26,7 +26,7 @@ class STSClient(private val stsRestTemplate: RestTemplate,
             try {
                 log.info("Henter nytt token fra STS")
                 val requestUrl = lagRequest(baseUrl)
-                val response = stsRestTemplate.exchange(requestUrl, GET, null, STSToken::class.java)
+                val response = serviceuserBasicAuthRestTemplate.exchange(requestUrl, GET, null, STSToken::class.java)
 
                 cachedToken = response.body
                 return response.body!!.access_token

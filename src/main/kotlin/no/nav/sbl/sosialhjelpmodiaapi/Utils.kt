@@ -62,19 +62,3 @@ fun hentSoknadTittel(digisosSak: DigisosSak, model: InternalDigisosSoker): Strin
         else -> model.saker.joinToString { it.tittel ?: DEFAULT_TITTEL }
     }
 }
-
-fun resolveSrvUser(): String {
-    return getFileAsString("/secrets/serviceuser/srvsosialhjelp-mod/username")
-}
-
-fun resolveSrvPassword(): String {
-    return getFileAsString("/secrets/serviceuser/srvsosialhjelp-mod/password")
-}
-
-private fun getFileAsString(path: String): String {
-    return String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8)
-}
-
-private fun getProperty(propertyName: String): String {
-    return System.getProperty(propertyName, System.getenv(propertyName))
-}

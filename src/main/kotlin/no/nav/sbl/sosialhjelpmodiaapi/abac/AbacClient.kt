@@ -5,8 +5,6 @@ import no.nav.abac.xacml.NavAttributter.RESOURCE_FELLES_DOMENE
 import no.nav.abac.xacml.StandardAttributter.ACTION_ID
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
-import no.nav.sbl.sosialhjelpmodiaapi.resolveSrvPassword
-import no.nav.sbl.sosialhjelpmodiaapi.resolveSrvUser
 import org.slf4j.LoggerFactory.getLogger
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -17,7 +15,7 @@ import org.springframework.web.client.RestTemplate
 
 @Component
 class AbacClient(clientProperties: ClientProperties,
-                 private val restTemplate: RestTemplate) {
+                 private val serviceuserBasicAuthRestTemplate: RestTemplate) {
 
     private val url = clientProperties.abacPdpEndpointUrl
 
@@ -33,7 +31,7 @@ class AbacClient(clientProperties: ClientProperties,
 
     fun ping(): Decision {
         val ping = Attribute(ACTION_ID, "ping")
-        val env = Attribute(ENVIRONMENT_FELLES_PEP_ID, resolveSrvUser())
+        val env = Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod")
         val domene = Attribute(RESOURCE_FELLES_DOMENE, "domene for digisos") // FIXME
         val request = Request(
                 environment = Attributes(mutableListOf(env)),
@@ -54,7 +52,7 @@ class AbacClient(clientProperties: ClientProperties,
     private fun request(postingString: String): String {
         val requestEntity = HttpEntity(postingString, headers())
         try {
-            val response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String::class.java)
+            val response = serviceuserBasicAuthRestTemplate.exchange(url, HttpMethod.POST, requestEntity, String::class.java)
 
             log.info(response.body)
             return response.body!!
@@ -71,7 +69,6 @@ class AbacClient(clientProperties: ClientProperties,
     private fun headers(): HttpHeaders {
         val headers = HttpHeaders()
         headers.set("Content-Type", MEDIA_TYPE)
-        headers.setBasicAuth(resolveSrvUser(), resolveSrvPassword())
         return headers
     }
 

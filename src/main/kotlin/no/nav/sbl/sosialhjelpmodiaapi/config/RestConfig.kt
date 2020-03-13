@@ -24,7 +24,7 @@ class RestConfig {
             builder.build()
 
     @Bean
-    fun stsRestTemplate(builder: RestTemplateBuilder): RestTemplate =
+    fun serviceuserBasicAuthRestTemplate(builder: RestTemplateBuilder): RestTemplate =
             builder
                     .basicAuthentication(System.getenv(SRVSOSIALHJELP_MODIA_API_USERNAME), System.getenv(SRVSOSIALHJELP_MODIA_API_PASSWORD), StandardCharsets.UTF_8)
                     .build()
