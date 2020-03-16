@@ -1,3 +1,7 @@
+spring:
+  profiles:
+    active: mock
+
 no.nav.security.jwt:
   issuer.veileder:
     discoveryurl: http://metadata
@@ -5,6 +9,7 @@ no.nav.security.jwt:
     cookie_name: localhost-idtoken
 
 client:
+  abac_pdp_endpoint_url: abac_url
   fiks_digisos_endpoint_url: digisosapiurl
   fiks_integrasjonid: integrasjonid
   fiks_integrasjonid_kommune: integrasjonidkommune
@@ -17,3 +22,9 @@ client:
   norg_endpoint_url: norgurl
   pdl_endpoint_url: pdlurl
   sts_token_endpoint_url: stsurl
+
+management:
+  endpoints:
+    web:
+      exposure:
+        exclude: '*'
