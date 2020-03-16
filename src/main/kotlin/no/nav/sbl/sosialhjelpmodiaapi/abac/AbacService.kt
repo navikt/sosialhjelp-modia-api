@@ -19,7 +19,7 @@ class AbacService (private val client: AbacClient) {
                         Attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, token))),
                 action = null,
                 resource = Attributes(mutableListOf(
-                        Attribute(RESOURCE_FELLES_DOMENE, "domene for digisos"), //TODO?
+                        Attribute(RESOURCE_FELLES_DOMENE, "sosialhjelp"),
                         Attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.sosialhjelp"),
                         Attribute(RESOURCE_FELLES_PERSON_TILKNYTTET_FNR, soker))),
                 accessSubject = null

@@ -32,7 +32,7 @@ class AbacClient(clientProperties: ClientProperties,
     fun ping(): Decision {
         val ping = Attribute(ACTION_ID, "ping")
         val env = Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod")
-        val domene = Attribute(RESOURCE_FELLES_DOMENE, "domene for digisos") // FIXME
+        val domene = Attribute(RESOURCE_FELLES_DOMENE, "sosialhjelp")
         val request = Request(
                 environment = Attributes(mutableListOf(env)),
                 action = Attributes(mutableListOf(ping)),
