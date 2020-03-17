@@ -6,21 +6,33 @@ import no.nav.abac.xacml.NavAttributter.RESOURCE_FELLES_DOMENE
 import no.nav.abac.xacml.NavAttributter.RESOURCE_FELLES_RESOURCE_TYPE
 import no.nav.abac.xacml.StandardAttributter.ACTION_ID
 import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
+import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import org.springframework.stereotype.Component
 
 @Component
 class AbacService(private val abacClient: AbacClient) {
 
+    companion object {
+        private val log by logger()
+    }
+
     fun harTilgang(soker: String, token: String): Boolean {
+        var tokenToUse = token
+        if (token.startsWith(BEARER)){
+            log.info("stripper bearer-prefiks fra token?")
+            tokenToUse = token.substring(7)
+        }
         val request = Request(
                 environment = Attributes(mutableListOf(
                         Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod"),
-                        Attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, token))),
-                action = null,
+//                        Attribute("no.nav.abac.attributter.environment.felles.azure_jwt_token_body", token))),
+                        Attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenToUse))),
+                action = Attributes(mutableListOf()),
                 resource = Attributes(mutableListOf(
                         Attribute(RESOURCE_FELLES_DOMENE, "sosialhjelp"),
                         Attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.sosialhjelp"))),
-                accessSubject = null
+                accessSubject = Attributes(mutableListOf())
         )
         val decision = abacClient.sjekkTilgang(request)
         return when (decision) {
