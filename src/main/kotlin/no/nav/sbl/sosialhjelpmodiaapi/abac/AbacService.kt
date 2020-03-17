@@ -9,7 +9,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import org.springframework.stereotype.Component
 
 @Component
-class AbacService (private val client: AbacClient) {
+class AbacService (private val abacClient: AbacClient) {
 
     fun harTilgang(soker: String, token: String): Boolean {
 
@@ -24,7 +24,7 @@ class AbacService (private val client: AbacClient) {
                         Attribute(RESOURCE_FELLES_PERSON_TILKNYTTET_FNR, soker))),
                 accessSubject = null
         )
-        val decision = client.sjekkTilgang(request)
+        val decision = abacClient.sjekkTilgang(request)
         return when (decision) {
             Decision.Permit -> true
             Decision.Deny -> false
@@ -33,7 +33,7 @@ class AbacService (private val client: AbacClient) {
     }
 
     fun ping(): Boolean {
-        val decision = client.ping()
+        val decision = abacClient.ping()
         return if (decision == Decision.Permit) true else throw RuntimeException("Abac - ping, decision != Permit")
     }
 }
