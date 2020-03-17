@@ -53,6 +53,7 @@ class AbacClient(clientProperties: ClientProperties,
         val requestEntity = HttpEntity(postingString, headers())
         try {
             val response = serviceuserBasicAuthRestTemplate.exchange(url, HttpMethod.POST, requestEntity, String::class.java)
+            log.info("abac response: ${response.body}")
             return response.body!!
         } catch (e: HttpStatusCodeException) {
             log.warn("Abac - feil, response: ${e.responseBodyAsString}")
