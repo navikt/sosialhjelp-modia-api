@@ -29,20 +29,6 @@ class AbacClient(clientProperties: ClientProperties,
         return decision
     }
 
-    fun ping(): Decision {
-        val ping = Attribute(ACTION_ID, "ping")
-        val env = Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod")
-        val domene = Attribute(RESOURCE_FELLES_DOMENE, "sosialhjelp")
-        val request = Request(
-                environment = Attributes(mutableListOf(env)),
-                action = Attributes(mutableListOf(ping)),
-                resource = Attributes(mutableListOf(domene)),
-                accessSubject = null)
-
-        val xacmlResponse = askForPermission(XacmlRequest(request))
-        return xacmlResponse.response.decision
-    }
-
     private fun askForPermission(request: XacmlRequest): XacmlResponse { // flagg for useCache?
         val postingString = XacmlMapper.mapRequestToEntity(request)
         val content = request(postingString)
