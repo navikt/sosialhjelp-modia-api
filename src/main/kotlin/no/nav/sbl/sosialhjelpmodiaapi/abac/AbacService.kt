@@ -26,8 +26,8 @@ class AbacService(private val abacClient: AbacClient) {
         val request = Request(
                 environment = Attributes(mutableListOf(
                         Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod"),
-//                        Attribute("no.nav.abac.attributter.environment.felles.azure_jwt_token_body", token))),
-                        Attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenToUse))),
+//                        Attribute("no.nav.abac.attributter.environment.felles.azure_jwt_token_body", token))), // azure token??
+                        Attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody(tokenToUse)))),
                 action = Attributes(mutableListOf()),
                 resource = Attributes(mutableListOf(
                         Attribute(RESOURCE_FELLES_DOMENE, "sosialhjelp"),
@@ -54,5 +54,10 @@ class AbacService(private val abacClient: AbacClient) {
 
         val decision = abacClient.sjekkTilgang(request)
         return if (decision == Decision.Permit) true else throw RuntimeException("Abac - ping, decision != Permit")
+    }
+
+    private fun tokenBody(token: String): String {
+        val parts = token.split('.')
+        return if (parts.size == 1) parts[0] else parts[1]
     }
 }
