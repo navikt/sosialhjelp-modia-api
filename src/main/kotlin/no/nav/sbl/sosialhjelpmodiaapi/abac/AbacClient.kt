@@ -18,7 +18,6 @@ class AbacClient(clientProperties: ClientProperties,
                  private val serviceuserBasicAuthRestTemplate: RestTemplate) {
 
     private val url = clientProperties.abacPdpEndpointUrl
-    private val fiksurl = clientProperties.fiksDigisosEndpointUrl
 
     fun sjekkTilgang(request: Request): Decision {
         //logg request-info til auditlogger
@@ -54,7 +53,6 @@ class AbacClient(clientProperties: ClientProperties,
         val requestEntity = HttpEntity(postingString, headers())
         try {
             log.info("url: $url")
-            log.info("fiksUrl: $fiksurl")
             val response = serviceuserBasicAuthRestTemplate.exchange(url, HttpMethod.POST, requestEntity, String::class.java)
             return response.body!!
         } catch (e: HttpStatusCodeException) {
