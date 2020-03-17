@@ -1,8 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.abac
 
-import no.nav.abac.xacml.NavAttributter.ENVIRONMENT_FELLES_PEP_ID
-import no.nav.abac.xacml.NavAttributter.RESOURCE_FELLES_DOMENE
-import no.nav.abac.xacml.StandardAttributter.ACTION_ID
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import org.slf4j.LoggerFactory.getLogger
@@ -22,25 +19,13 @@ class AbacClient(clientProperties: ClientProperties,
     fun sjekkTilgang(request: Request): Decision {
         //logg request-info til auditlogger
 
-        val xacmlResponse = askForPermission(XacmlRequest(request))
-        val decision = xacmlResponse.response.decision
-
-        //logg response-info til auditlogger
-        return decision
-    }
-
-    private fun askForPermission(request: XacmlRequest): XacmlResponse { // flagg for useCache?
-        val postingString = XacmlMapper.mapRequestToEntity(request)
-        val content = request(postingString)
-        return XacmlMapper.mapRawResponse(content)
-    }
-
-    private fun request(postingString: String): String {
+        val postingString = XacmlMapper.mapRequestToEntity(XacmlRequest(request))
         val requestEntity = HttpEntity(postingString, headers())
-        try {
+
+        val responseBody = try {
             val response = serviceuserBasicAuthRestTemplate.exchange(url, HttpMethod.POST, requestEntity, String::class.java)
             log.info("abac response: ${response.body}")
-            return response.body!!
+            response.body!!
         } catch (e: HttpStatusCodeException) {
             log.warn("Abac - feil, response: ${e.responseBodyAsString}")
             log.error("Abac - noe feilet - ${e.statusCode} ${e.message}", e)
@@ -49,6 +34,11 @@ class AbacClient(clientProperties: ClientProperties,
             log.error("Abac - noe feilet", e)
             throw RuntimeException("Noe feilet ved kall til Abac", e)
         }
+
+        val xacmlResponse = XacmlMapper.mapRawResponse(responseBody)
+
+        //logg response-info til auditlogger
+        return xacmlResponse.response.decision
     }
 
     private fun headers(): HttpHeaders {
