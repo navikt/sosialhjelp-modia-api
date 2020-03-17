@@ -78,7 +78,7 @@ data class SoknadNoekkelinfoResponse(
         val saksId: String?,
         @JsonFormat(pattern = "yyyy-MM-dd")
         val sendtEllerMottattTidspunkt: LocalDate,
-        val navKontor: String?,
+        val navKontor: NavKontor?,
         val videresendtHistorikk: List<VideresendtInfo>?,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
         val tidspunktForelopigSvar: LocalDateTime?
@@ -88,7 +88,12 @@ data class VideresendtInfo(
         val type: SendingType,
         @JsonFormat(pattern = "yyyy-MM-dd")
         val tidspunkt: LocalDate,
-        val navKontor: String
+        val navKontor: NavKontor
+)
+
+data class NavKontor(
+        val enhetsNavn: String,
+        val enhetsNr: String
 )
 
 data class SaksListeResponse(
