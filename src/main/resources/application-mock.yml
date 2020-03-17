@@ -9,7 +9,7 @@ no.nav.security.jwt:
     cookie_name: localhost-idtoken
 
 client:
-  abac_pdp_endpoint_url: abac_url
+  abac_pdp_endpoint_url: abac_pdp_endpoint_url
   fiks_digisos_endpoint_url: digisosapiurl
   fiks_integrasjonid: integrasjonid
   fiks_integrasjonid_kommune: integrasjonidkommune
