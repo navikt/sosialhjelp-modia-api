@@ -57,7 +57,8 @@ data class UtbetalingerResponse(
         val mottaker: String?,
         val kontonummer: String?,
         val utbetalingsmetode: String?,
-        val harVilkar: Boolean
+        val harVilkar: Boolean,
+        val navKontor: NavKontor?
 )
 
 data class VedleggResponse(

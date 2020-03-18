@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.utbetalinger
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
+import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontor
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
@@ -33,6 +34,8 @@ class UtbetalingerService(private val fiksClient: FiksClient,
 
     private fun utbetalingerForDigisosSak(digisosSak: DigisosSak, token: String): List<UtbetalingerResponse> {
         val model = eventService.createModel(digisosSak, token)
+        val behandlendeNavKontor = model.navKontorHistorikk.lastOrNull()
+
         return model.saker
                 .flatMap { sak ->
                     sak.utbetalinger
@@ -49,7 +52,8 @@ class UtbetalingerService(private val fiksClient: FiksClient,
                                         mottaker = utbetaling.mottaker,
                                         kontonummer = utbetaling.kontonummer,
                                         utbetalingsmetode = utbetaling.utbetalingsmetode,
-                                        harVilkar = !utbetaling.vilkar.isNullOrEmpty()
+                                        harVilkar = !utbetaling.vilkar.isNullOrEmpty(),
+                                        navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }
                                 )
                             }
                 }
