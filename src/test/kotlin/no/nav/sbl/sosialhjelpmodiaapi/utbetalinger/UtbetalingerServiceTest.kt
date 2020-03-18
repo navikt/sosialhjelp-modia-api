@@ -3,7 +3,17 @@ package no.nav.sbl.sosialhjelpmodiaapi.utbetalinger
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.sosialhjelpmodiaapi.domain.*
+import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Dokumentasjonkrav
+import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontorInformasjon
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Sak
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatus
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SendingType
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Utbetaling
+import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
+import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Vilkar
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import org.assertj.core.api.Assertions.assertThat
@@ -12,6 +22,7 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 internal class UtbetalingerServiceTest {
     private val fiksClient: FiksClient = mockk()
@@ -27,6 +38,9 @@ internal class UtbetalingerServiceTest {
 
     private val tittel = "tittel"
     private val referanse = "referanse"
+
+    private val enhetsnr = "1337"
+    private val enhetsnavn = "NAV nav nav"
 
     @BeforeEach
     fun init() {
@@ -73,6 +87,7 @@ internal class UtbetalingerServiceTest {
                 dokumentasjonkrav = mutableListOf(),
                 datoOpprettet = LocalDate.now()
         ))
+        model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
         every { eventService.createModel(any(), any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
@@ -90,6 +105,8 @@ internal class UtbetalingerServiceTest {
         assertThat(response[0].mottaker).isEqualTo("utleier")
         assertThat(response[0].kontonummer).isEqualTo("kontonr")
         assertThat(response[0].utbetalingsmetode).isEqualTo("utbetalingsmetode")
+        assertThat(response[0].navKontor?.enhetsNr).isEqualTo(enhetsnr)
+        assertThat(response[0].navKontor?.enhetsNavn).isEqualTo(enhetsnavn)
     }
 
     @Test
@@ -332,7 +349,7 @@ internal class UtbetalingerServiceTest {
                         Utbetaling("Sak2", UtbetalingsStatus.PLANLAGT_UTBETALING, BigDecimal.TEN, "Tannlege", LocalDate.of(2019, 9, 1), null, null, null, null, null, null, mutableListOf(), mutableListOf()),
                         Utbetaling("Sak3", UtbetalingsStatus.STOPPET, BigDecimal.TEN, "Depositum", null, LocalDate.of(2019, 10, 1), null, null, null, null, null, mutableListOf(), mutableListOf()),
                         Utbetaling("Sak4", UtbetalingsStatus.ANNULLERT, BigDecimal.TEN, "Kinopenger", null, LocalDate.of(2019, 11, 1), null, null, null, null, null, mutableListOf(), mutableListOf())
-                        ),
+                ),
                 vilkar = mutableListOf(),
                 dokumentasjonkrav = mutableListOf(),
                 datoOpprettet = LocalDate.now()

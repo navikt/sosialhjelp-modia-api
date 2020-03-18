@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.noekkelinfo
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontor
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontorInformasjon
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadNoekkelinfoResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.VideresendtInfo
@@ -26,7 +27,7 @@ class NoekkelinfoService(private val fiksClient: FiksClient,
                 sistOppdatert = unixToLocalDateTime(digisosSak.sistEndret).toLocalDate(),
                 saksId = null, // TODO: saksreferanse eller behandlingsid?
                 sendtEllerMottattTidspunkt = model.historikk[0].tidspunkt.toLocalDate(), // Første hendelse i historikk er alltid SENDT eller MOTTATT (hvis papirsøknad)
-                navKontor = behandlendeNavKontor?.navEnhetsnavn, // null hvis papirsøknad og ikke enda mottatt
+                navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }, // null hvis papirsøknad og ikke enda mottatt
                 videresendtHistorikk = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
                 tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt
         )
@@ -39,7 +40,7 @@ class NoekkelinfoService(private val fiksClient: FiksClient,
                     VideresendtInfo(
                             type = it.type,
                             tidspunkt = it.tidspunkt.toLocalDate(),
-                            navKontor = it.navEnhetsnavn
+                            navKontor = NavKontor(it.navEnhetsnavn, it.navEnhetsnummer)
                     )
                 }
         else null
