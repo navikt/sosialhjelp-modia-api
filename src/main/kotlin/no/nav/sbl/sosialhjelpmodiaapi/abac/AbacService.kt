@@ -8,16 +8,22 @@ import no.nav.abac.xacml.StandardAttributter.ACTION_ID
 import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
+import no.nav.sbl.sosialhjelpmodiaapi.utils.SpringUtils
 import org.springframework.stereotype.Component
 
 @Component
-class AbacService(private val abacClient: AbacClient) {
+class AbacService(private val abacClient: AbacClient,
+                  private val springUtils: SpringUtils) {
 
     companion object {
         private val log by logger()
     }
 
     fun harTilgang(soker: String, token: String): Boolean {
+        if (springUtils.isProfileMockOrLocal()) {
+            return true
+        }
+
         var tokenToUse = token
         if (token.startsWith(BEARER)){
             log.info("stripper bearer-prefiks fra token?")
@@ -43,6 +49,10 @@ class AbacService(private val abacClient: AbacClient) {
     }
 
     fun ping(): Boolean {
+        if (springUtils.isProfileMockOrLocal()) {
+            return true
+        }
+
         val request = Request(
                 environment = Attributes(mutableListOf(
                         Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod"))),

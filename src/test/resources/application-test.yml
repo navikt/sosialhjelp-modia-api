@@ -3,6 +3,8 @@
 spring:
   main:
     banner-mode: 'off'
+  profiles:
+    active: test
 
 client:
   abac_pdp_endpoint_url: "abacurl"
