@@ -28,7 +28,7 @@ class MockController(private val fiksClientMock: FiksClientMock,
                      private val innsynService: InnsynService) {
 
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     private val mapper = jacksonObjectMapper()

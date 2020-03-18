@@ -20,7 +20,7 @@ class KommuneService(private val fiksClient: FiksClient,
                      private val innsynService: InnsynService) {
 
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     fun hentKommuneStatus(fiksDigisosId: String, token: String): KommuneStatus {

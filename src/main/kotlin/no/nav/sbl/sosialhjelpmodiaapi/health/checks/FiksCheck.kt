@@ -33,7 +33,7 @@ class FiksCheck(private val restTemplate: RestTemplate,
         Importance.WARNING
 ) {
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     override fun doCheck() {

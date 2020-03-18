@@ -29,7 +29,7 @@ class PdlClientImpl(clientProperties: ClientProperties,
                     private val stsClient: STSClient) : PdlClient {
 
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     private val baseurl = clientProperties.pdlEndpointUrl
