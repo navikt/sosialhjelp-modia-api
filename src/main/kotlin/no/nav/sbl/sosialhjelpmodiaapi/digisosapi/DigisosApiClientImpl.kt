@@ -27,7 +27,7 @@ import java.util.*
 class DigisosApiClientImpl(clientProperties: ClientProperties, private val restTemplate: RestTemplate, private val idPortenService: IdPortenService) : DigisosApiClient {
 
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl

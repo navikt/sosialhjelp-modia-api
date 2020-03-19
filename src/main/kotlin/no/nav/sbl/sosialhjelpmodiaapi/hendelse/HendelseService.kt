@@ -21,6 +21,6 @@ class HendelseService(private val fiksClient: FiksClient,
     }
 
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 }

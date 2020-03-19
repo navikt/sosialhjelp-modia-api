@@ -34,7 +34,7 @@ class FiksClientImpl(clientProperties: ClientProperties,
                      private val idPortenService: IdPortenService) : FiksClient {
 
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl

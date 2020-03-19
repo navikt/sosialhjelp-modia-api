@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 class ExceptionHandler : ResponseEntityExceptionHandler() {
 
     companion object {
-        val log by logger()
+        private val log by logger()
 
         private const val UNEXPECTED_ERROR = "unexpected_error"
         private const val FIKS_ERROR = "fiks_error"

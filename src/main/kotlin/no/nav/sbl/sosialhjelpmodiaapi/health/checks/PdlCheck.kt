@@ -20,7 +20,7 @@ class PdlCheck(clientProperties: ClientProperties,
         Importance.WARNING
 ) {
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     override fun doCheck() {

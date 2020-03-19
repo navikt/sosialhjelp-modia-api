@@ -22,7 +22,7 @@ abstract class AbstractDependencyCheck(
         private val importance: Importance) {
 
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     private val circuitBreaker = CircuitBreaker.ofDefaults("selftest")
