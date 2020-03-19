@@ -11,14 +11,14 @@ data class Response(
         @JsonProperty("Decision")
         val decision: Decision,
         @JsonProperty("AssociatedAdvice")
-        val associatedAdvice: Advice?
+        val associatedAdvice: List<Advice>?
 )
 
 data class Advice(
         @JsonProperty("Id")
         val id: String,
         @JsonProperty("AttributeAssignment")
-        val attributeAssignment: List<Attribute>
+        val attributeAssignment: List<Attribute>?
 )
 
 enum class Decision {
