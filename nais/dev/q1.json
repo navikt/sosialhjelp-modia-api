@@ -9,7 +9,7 @@
     "/serviceuser/srvsosialhjelp-mod": "/serviceuser/data/dev/srvsosialhjelp-mod"
   },
   "env": {
-    "ABAC_PDP_ENDPOINT_URL": "https://wasapp-q1.adeo.no/asm-pdp/authorize",
+    "ABAC_PDP_ENDPOINT_URL": "https://abac-sosialhjelp.nais.preprod.local/application/",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.test.ks.no",
     "ID_PORTEN_TOKEN_URL": "https://oidc-ver2.difi.no/idporten-oidc-provider/token",
     "ID_PORTEN_CONFIG_URL": "https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration",
