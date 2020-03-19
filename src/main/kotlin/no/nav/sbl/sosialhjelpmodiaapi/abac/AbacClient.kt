@@ -38,7 +38,7 @@ class AbacClient(clientProperties: ClientProperties,
         val xacmlResponse = XacmlMapper.mapRawResponse(responseBody)
 
         //logg response-info til auditlogger
-        return xacmlResponse.response.decision
+        return xacmlResponse.response[0].decision
     }
 
     private fun headers(): HttpHeaders {

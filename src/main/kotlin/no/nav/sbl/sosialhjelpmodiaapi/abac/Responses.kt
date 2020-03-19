@@ -2,11 +2,9 @@ package no.nav.sbl.sosialhjelpmodiaapi.abac
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class Advice(
-        @JsonProperty("Id")
-        val id: String,
-        @JsonProperty("AttributeAssignment")
-        val attributeAssignment: List<Attribute>
+data class XacmlResponse(
+        @JsonProperty("Response")
+        val response: List<Response>
 )
 
 data class Response(
@@ -16,9 +14,11 @@ data class Response(
         val associatedAdvice: Advice?
 )
 
-data class XacmlResponse(
-        @JsonProperty("Response")
-        val response: Response
+data class Advice(
+        @JsonProperty("Id")
+        val id: String,
+        @JsonProperty("AttributeAssignment")
+        val attributeAssignment: List<Attribute>
 )
 
 enum class Decision {
