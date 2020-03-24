@@ -4,7 +4,7 @@ import javax.validation.Constraint
 
 
 @MustBeDocumented
-@Constraint(validatedBy = [ModiaSosialhjelpTilgangConstraint::class])
+@Constraint(validatedBy = [ModiaSosialhjelpTilgang::class])
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.VALUE_PARAMETER)
 annotation class Abac(

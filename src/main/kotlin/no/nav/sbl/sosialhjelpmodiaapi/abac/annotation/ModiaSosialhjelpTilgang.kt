@@ -7,7 +7,7 @@ import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 
 @Component
-class ModiaSosialhjelpTilgangConstraint(private val abacService: AbacService) : ConstraintValidator<Abac, String> {
+class ModiaSosialhjelpTilgang(private val abacService: AbacService) : ConstraintValidator<Abac, String> {
 
     companion object {
         private val log by logger()
