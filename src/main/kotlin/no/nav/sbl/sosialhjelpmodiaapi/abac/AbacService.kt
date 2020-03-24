@@ -24,11 +24,8 @@ class AbacService(private val abacClient: AbacClient,
             return true
         }
 
-        var tokenToUse = token
-        if (token.startsWith(BEARER)){
-            log.info("stripper bearer-prefiks fra token?")
-            tokenToUse = token.substring(7)
-        }
+        val tokenToUse = stripBearerPrefix(token)
+
         val request = Request(
                 environment = Attributes(mutableListOf(
                         Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod"),
@@ -40,10 +37,11 @@ class AbacService(private val abacClient: AbacClient,
                         Attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.sosialhjelp"))),
                 accessSubject = Attributes(mutableListOf())
         )
-        val decision = abacClient.sjekkTilgang(request)
-        return when (decision) {
+        return when (abacClient.sjekkTilgang(request)) {
             Decision.Permit -> true
             Decision.Deny -> false
+            Decision.NotApplicable -> false
+            Decision.Indeterminate -> false
             else -> throw TilgangskontrollException("Ukjent decision", null)
         }
     }
@@ -64,6 +62,14 @@ class AbacService(private val abacClient: AbacClient,
 
         val decision = abacClient.sjekkTilgang(request)
         return if (decision == Decision.Permit) true else throw RuntimeException("Abac - ping, decision != Permit")
+    }
+
+    private fun stripBearerPrefix(token: String): String {
+        if (token.startsWith(BEARER)){
+            log.info("stripper bearer-prefiks fra token(!)")
+            return token.substring(7)
+        }
+        return token
     }
 
     private fun tokenBody(token: String): String {
