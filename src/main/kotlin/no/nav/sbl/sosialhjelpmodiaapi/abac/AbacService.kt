@@ -19,7 +19,7 @@ class AbacService(private val abacClient: AbacClient,
         private val log by logger()
     }
 
-    fun harTilgang(soker: String, token: String): Boolean {
+    fun harTilgang(token: String): Boolean {
         if (springUtils.isProfileMockOrLocal()) {
             return true
         }
