@@ -23,9 +23,10 @@ class PersonInfoController(private val personinfoService: PersoninfoService,
     fun hentPersonInfo(@RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<PersoninfoResponse> {
         // hardkodet testbruker som saksbehandler med tilgang
         val testbrukerNatalie = "26104500284"
+        val testbrukerLotte = "17108102454"
 
         if (abacService.harTilgang(testbrukerNatalie, token)) {
-            val personinfoResponse = personinfoService.hentPersoninfo(testbrukerNatalie)
+            val personinfoResponse = personinfoService.hentPersoninfo(testbrukerLotte)
             return ResponseEntity.ok(personinfoResponse)
         }
 
