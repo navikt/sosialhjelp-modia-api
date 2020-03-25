@@ -25,7 +25,7 @@ class PersonInfoController(private val personinfoService: PersoninfoService,
         val testbrukerNatalie = "26104500284"
         val testbrukerLotte = "17108102454"
 
-        if (abacService.harTilgang(testbrukerNatalie, token)) {
+        if (abacService.harTilgang(testbrukerLotte, token)) {
             val personinfoResponse = personinfoService.hentPersoninfo(testbrukerLotte)
             return ResponseEntity.ok(personinfoResponse)
         }
