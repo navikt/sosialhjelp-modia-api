@@ -21,12 +21,14 @@ class PersonInfoController(private val personinfoService: PersoninfoService,
 
     @GetMapping("/personinfo", produces = ["application/json;charset=UTF-8"])
     fun hentPersonInfo(@RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<PersoninfoResponse> {
-        // hardkodet testbruker som saksbehandler med tilgang
-        val testbrukerNatalie = "26104500284"
-        val testbrukerLotte = "17108102454"
 
-        if (abacService.harTilgang(testbrukerLotte, token)) {
-            val personinfoResponse = personinfoService.hentPersoninfo(testbrukerLotte)
+        val testbrukerNatalie = "26104500284"
+        val testbrukerLotte = "17108102454" // kode7 -> gir Deny
+
+        // TODO: Finne ut hvor fnr skal komme fra
+
+        if (abacService.harTilgang(testbrukerNatalie, token)) {
+            val personinfoResponse = personinfoService.hentPersoninfo(testbrukerNatalie)
             return ResponseEntity.ok(personinfoResponse)
         }
 
