@@ -27,11 +27,11 @@ class PersonInfoController(private val personinfoService: PersoninfoService,
 
         // TODO: Finne ut hvor fnr skal komme fra
 
-        if (abacService.harTilgang(testbrukerNatalie, token)) {
-            val personinfoResponse = personinfoService.hentPersoninfo(testbrukerNatalie)
-            return ResponseEntity.ok(personinfoResponse)
+        if (!abacService.harTilgang(testbrukerNatalie, token)) {
+            throw TilgangskontrollException("Ingen tilgang til ressurs", null)
         }
 
-        throw TilgangskontrollException("Ingen tilgang til ressurs", null)
+        val personinfoResponse = personinfoService.hentPersoninfo(testbrukerNatalie)
+        return ResponseEntity.ok(personinfoResponse)
     }
 }
