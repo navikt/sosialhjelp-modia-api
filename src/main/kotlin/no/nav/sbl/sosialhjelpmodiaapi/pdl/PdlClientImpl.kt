@@ -35,7 +35,6 @@ class PdlClientImpl(clientProperties: ClientProperties,
     private val baseurl = clientProperties.pdlEndpointUrl
 
     override fun hentPerson(ident: String): PdlHentPerson? {
-        // fixme: sjekk at veileder har tilgang til å hente personinfo for bruker med ident?
         val query = getResourceAsString("/pdl/hentPerson.graphql").replace("[\n\r]", "")
         try {
             val requestEntity = createRequestEntity(PdlRequest(query, Variables(ident)))

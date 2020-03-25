@@ -3,38 +3,37 @@ package no.nav.sbl.sosialhjelpmodiaapi.abac
 import no.nav.abac.xacml.NavAttributter.ENVIRONMENT_FELLES_OIDC_TOKEN_BODY
 import no.nav.abac.xacml.NavAttributter.ENVIRONMENT_FELLES_PEP_ID
 import no.nav.abac.xacml.NavAttributter.RESOURCE_FELLES_DOMENE
+import no.nav.abac.xacml.NavAttributter.RESOURCE_FELLES_PERSON_FNR
 import no.nav.abac.xacml.NavAttributter.RESOURCE_FELLES_RESOURCE_TYPE
 import no.nav.abac.xacml.StandardAttributter.ACTION_ID
 import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
-import no.nav.sbl.sosialhjelpmodiaapi.utils.SpringUtils
+import no.nav.sbl.sosialhjelpmodiaapi.utils.MiljoUtils.isProfileMockOrLocal
 import org.springframework.stereotype.Component
 
 @Component
-class AbacService(private val abacClient: AbacClient,
-                  private val springUtils: SpringUtils) {
+class AbacService(private val abacClient: AbacClient) {
 
     companion object {
         private val log by logger()
     }
 
-    fun harTilgang(token: String): Boolean {
-        if (springUtils.isProfileMockOrLocal()) {
+    fun harTilgang(fnr: String, token: String): Boolean {
+        if (isProfileMockOrLocal()) {
             return true
         }
-
-        val tokenToUse = stripBearerPrefix(token)
 
         val request = Request(
                 environment = Attributes(mutableListOf(
                         Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod"),
 //                        Attribute("no.nav.abac.attributter.environment.felles.azure_jwt_token_body", token))), // azure token??
-                        Attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody(tokenToUse)))),
+                        Attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody(stripBearerPrefix(token))))),
                 action = Attributes(mutableListOf()),
                 resource = Attributes(mutableListOf(
                         Attribute(RESOURCE_FELLES_DOMENE, "sosialhjelp"),
-                        Attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.sosialhjelp"))),
+                        Attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.sosialhjelp"),
+                        Attribute(RESOURCE_FELLES_PERSON_FNR, fnr))),
                 accessSubject = Attributes(mutableListOf())
         )
         return when (abacClient.sjekkTilgang(request)) {
@@ -47,7 +46,7 @@ class AbacService(private val abacClient: AbacClient,
     }
 
     fun ping(): Boolean {
-        if (springUtils.isProfileMockOrLocal()) {
+        if (isProfileMockOrLocal()) {
             return true
         }
 

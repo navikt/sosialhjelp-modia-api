@@ -1,33 +1,45 @@
 package no.nav.sbl.sosialhjelpmodiaapi.abac
 
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.slot
+import io.mockk.unmockkAll
 import io.mockk.verify
 import no.nav.abac.xacml.NavAttributter
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
-import no.nav.sbl.sosialhjelpmodiaapi.utils.SpringUtils
+import no.nav.sbl.sosialhjelpmodiaapi.utils.MiljoUtils
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class AbacServiceTest {
 
     private val abacClient: AbacClient = mockk()
-    private val springUtils: SpringUtils = mockk()
+    private val service = AbacService(abacClient)
 
-    private val service = AbacService(abacClient, springUtils)
+    private val fnr = "fnr"
 
     @BeforeEach
     internal fun setUp() {
-        every { springUtils.isProfileMockOrLocal() } returns false
+        clearAllMocks()
+        mockkObject(MiljoUtils)
+
+        every { MiljoUtils.isProfileMockOrLocal() } returns false
+    }
+
+    @AfterEach
+    internal fun tearDown() {
+        unmockkAll()
     }
 
     @Test
     internal fun `harTilgang - profile mock eller local returnerer true`() {
-        every { springUtils.isProfileMockOrLocal() } returns true
+        every { MiljoUtils.isProfileMockOrLocal() } returns true
 
-        val tilgang = service.harTilgang("token")
+        val tilgang = service.harTilgang(fnr, "token")
 
         verify(exactly = 0) { abacClient.sjekkTilgang(any()) }
         assertThat(tilgang).isTrue()
@@ -37,7 +49,7 @@ internal class AbacServiceTest {
     internal fun `harTilgang - abacClient gir Permit, skal returnerer true`() {
         every { abacClient.sjekkTilgang(any()) } returns Decision.Permit
 
-        val tilgang = service.harTilgang("token")
+        val tilgang = service.harTilgang(fnr, "token")
 
         assertThat(tilgang).isTrue()
     }
@@ -46,7 +58,7 @@ internal class AbacServiceTest {
     internal fun `harTilgang - abacClient gir Deny, skal returnerer false`() {
         every { abacClient.sjekkTilgang(any()) } returns Decision.Deny
 
-        val tilgang = service.harTilgang("token")
+        val tilgang = service.harTilgang(fnr, "token")
 
         assertThat(tilgang).isFalse()
     }
@@ -55,7 +67,7 @@ internal class AbacServiceTest {
     internal fun `harTilgang - abacClient gir NotApplicable, skal returnerer false`() {
         every { abacClient.sjekkTilgang(any()) } returns Decision.NotApplicable
 
-        val tilgang = service.harTilgang("token")
+        val tilgang = service.harTilgang(fnr, "token")
 
         assertThat(tilgang).isFalse()
     }
@@ -64,7 +76,7 @@ internal class AbacServiceTest {
     internal fun `harTilgang - abacClient gir Indeterminate, skal returnerer false`() {
         every { abacClient.sjekkTilgang(any()) } returns Decision.Indeterminate
 
-        val tilgang = service.harTilgang("token")
+        val tilgang = service.harTilgang(fnr, "token")
 
         assertThat(tilgang).isFalse()
     }
@@ -75,7 +87,7 @@ internal class AbacServiceTest {
 
         every { abacClient.sjekkTilgang(capture(request)) } returns Decision.Permit
 
-        val tilgang = service.harTilgang("$BEARER part1.part2.part3")
+        val tilgang = service.harTilgang(fnr, "$BEARER part1.part2.part3")
 
         assertThat(tilgang).isTrue()
 
