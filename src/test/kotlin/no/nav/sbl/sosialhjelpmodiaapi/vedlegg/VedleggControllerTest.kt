@@ -3,6 +3,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.vedlegg
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.VedleggResponse
 import no.nav.sbl.sosialhjelpmodiaapi.vedlegg.VedleggService.InternalVedlegg
 import org.assertj.core.api.Assertions.assertThat
@@ -38,7 +39,7 @@ internal class VedleggControllerTest {
                 InternalVedlegg(dokumenttype, tilleggsinfo, frist, 1, datoLagtTil)
         )
 
-        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(fnr, id, "token")
+        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
 
         val body = vedleggResponses.body
 
@@ -63,7 +64,7 @@ internal class VedleggControllerTest {
                 InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil)
         )
 
-        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(fnr, id, "token")
+        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
 
         val body = vedleggResponses.body
 
@@ -88,7 +89,7 @@ internal class VedleggControllerTest {
                 InternalVedlegg(dokumenttype_2, tilleggsinfo, frist, 1, datoLagtTil_2)
         )
 
-        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(fnr, id, "token")
+        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
 
         val body = vedleggResponses.body
 
@@ -121,7 +122,7 @@ internal class VedleggControllerTest {
                 InternalVedlegg(dokumenttype, null, frist, 0, null)
         )
 
-        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(fnr, id, "token")
+        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
 
         val body = vedleggResponses.body
 

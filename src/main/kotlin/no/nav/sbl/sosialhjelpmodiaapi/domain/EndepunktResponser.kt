@@ -121,3 +121,7 @@ data class PersoninfoResponse(
 //        val fnr: String,
 //        val tlfnr: String
 )
+
+data class Ident(
+        val fnr: String
+)

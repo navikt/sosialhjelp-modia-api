@@ -67,7 +67,7 @@ internal class SoknadsoversiktControllerTest {
 
         every { model2.saker } returns mutableListOf(sak1, sak2)
 
-        val response = controller.hentAlleSaker(fnr, "token")
+        val response = controller.hentAlleSaker("token", Ident(fnr))
 
         val saker = response.body
         assertThat(saker).isNotNull
@@ -110,7 +110,7 @@ internal class SoknadsoversiktControllerTest {
         every { model1.saker } returns mutableListOf()
         every { model2.saker } returns mutableListOf(sak1, sak2)
 
-        val response1 = controller.hentSaksDetaljer(fnr, id_1, "token")
+        val response1 = controller.hentSaksDetaljer(id_1, "token", Ident(fnr))
         val sak1 = response1.body
 
         assertThat(response1.statusCode.value()).isEqualTo(HttpStatus.SC_OK)
@@ -119,7 +119,7 @@ internal class SoknadsoversiktControllerTest {
         assertThat(sak1?.harNyeOppgaver).isTrue()
         assertThat(sak1?.harVilkar).isFalse()
 
-        val response2 = controller.hentSaksDetaljer(fnr, id_2, "token")
+        val response2 = controller.hentSaksDetaljer(id_2, "token", Ident(fnr))
         val sak2 = response2.body
 
         assertThat(response2.statusCode.value()).isEqualTo(HttpStatus.SC_OK)
@@ -139,7 +139,7 @@ internal class SoknadsoversiktControllerTest {
         every { model1.oppgaver.isEmpty() } returns true
         every { model1.saker } returns mutableListOf()
 
-        val response = controller.hentSaksDetaljer(fnr, id_1, "token")
+        val response = controller.hentSaksDetaljer(id_1, "token", Ident(fnr))
         val sak = response.body
 
         assertThat(sak).isNotNull
