@@ -47,7 +47,7 @@ internal class AbacServiceTest {
 
     @Test
     internal fun `harTilgang - abacClient gir Permit, skal returnerer true`() {
-        every { abacClient.sjekkTilgang(any()) } returns Decision.Permit
+        every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Permit, null)
 
         val tilgang = service.harTilgang(fnr, "token")
 
@@ -56,7 +56,7 @@ internal class AbacServiceTest {
 
     @Test
     internal fun `harTilgang - abacClient gir Deny, skal returnerer false`() {
-        every { abacClient.sjekkTilgang(any()) } returns Decision.Deny
+        every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Deny, null)
 
         val tilgang = service.harTilgang(fnr, "token")
 
@@ -65,7 +65,7 @@ internal class AbacServiceTest {
 
     @Test
     internal fun `harTilgang - abacClient gir NotApplicable, skal returnerer false`() {
-        every { abacClient.sjekkTilgang(any()) } returns Decision.NotApplicable
+        every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.NotApplicable, null)
 
         val tilgang = service.harTilgang(fnr, "token")
 
@@ -74,7 +74,7 @@ internal class AbacServiceTest {
 
     @Test
     internal fun `harTilgang - abacClient gir Indeterminate, skal returnerer false`() {
-        every { abacClient.sjekkTilgang(any()) } returns Decision.Indeterminate
+        every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Indeterminate, null)
 
         val tilgang = service.harTilgang(fnr, "token")
 
@@ -85,7 +85,7 @@ internal class AbacServiceTest {
     internal fun `harTilgang - skal strippe bearer-prefiks fra token`() {
         val request = slot<Request>()
 
-        every { abacClient.sjekkTilgang(capture(request)) } returns Decision.Permit
+        every { abacClient.sjekkTilgang(capture(request)) } returns AbacResponse(Decision.Permit, null)
 
         val tilgang = service.harTilgang(fnr, "$BEARER part1.part2.part3")
 
