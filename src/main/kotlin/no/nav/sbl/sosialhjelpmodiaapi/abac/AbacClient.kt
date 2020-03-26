@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.abac
 
+import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import org.slf4j.LoggerFactory.getLogger
@@ -28,12 +29,11 @@ class AbacClient(
             val response = serviceuserBasicAuthRestTemplate.exchange(url, HttpMethod.POST, requestEntity, String::class.java)
             response.body!!
         } catch (e: HttpStatusCodeException) {
-            log.warn("Abac - feil, response: ${e.responseBodyAsString}")
-            log.error("Abac - noe feilet - ${e.statusCode} ${e.message}", e)
-            throw RuntimeException("Noe feilet ved kall til Abac", e)
+            log.error("Abac - noe feilet. Status: ${e.statusCode}, message: ${e.message}.", e)
+            throw TilgangskontrollException("Noe feilet ved kall til Abac.", e)
         } catch (e: Exception) {
-            log.error("Abac - noe feilet", e)
-            throw RuntimeException("Noe feilet ved kall til Abac", e)
+            log.error("Abac - noe feilet.", e)
+            throw TilgangskontrollException("Noe feilet ved kall til Abac.", e)
         }
 
         val xacmlResponse = XacmlMapper.mapRawResponse(responseBody)
