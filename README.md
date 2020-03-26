@@ -27,3 +27,9 @@ Prosjektet bruker Github Actions for bygg og deploy
 ### Vault
 - Lag PR til `vault-iac` slik at man kan lagre secrets på vault.
 - Denne må godkjennes og merges før man kan opprette secrets i din apps katalog `.../app/namespace`.
+
+## Lokal kjøring
+Bruk spring profile `local` eller `mock`.
+
+#### Environment variabler
+Sett dummy-verdier for `SRVSOSIALHJELP_MODIA_API_USERNAME` og `SRVSOSIALHJELP_MODIA_API_PASSWORD`
