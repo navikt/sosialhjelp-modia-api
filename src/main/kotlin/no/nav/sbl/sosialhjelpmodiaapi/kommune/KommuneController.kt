@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RestController
 
 @ProtectedWithClaims(issuer = "veileder")
 @RestController
-@RequestMapping("/api/v1/innsyn/kommune")
+@RequestMapping("/api/v1/innsyn/{fnr}")
 class KommuneController(private val kommuneService: KommuneService) {
 
-    @GetMapping("/{fiksDigisosId}", produces = ["application/json;charset=UTF-8"])
-    fun hentKommuneInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<String> {
+    @GetMapping("/{fiksDigisosId}/kommune", produces = ["application/json;charset=UTF-8"])
+    fun hentKommuneInfo(@PathVariable fnr: String, @PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<String> {
+        // sjekk tilgang til fnr hvis vi skal kalle fiks med fiksDigisosId som tilhører bruker?
+        // kan ikke bruke saksbehandlers token for å hente digisosSak fra fiks?
         val kommuneStatus = kommuneService.hentKommuneStatus(fiksDigisosId, token)
 
         return ResponseEntity.ok(kommuneStatus.toString())
