@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RestController
 
 @ProtectedWithClaims(issuer = "veileder")
 @RestController
-@RequestMapping("/api/v1/innsyn")
+@RequestMapping("/api/v1/innsyn/{fnr}")
 class SaksStatusController(private val saksStatusService: SaksStatusService) {
 
     @GetMapping("/{fiksDigisosId}/saksStatus", produces = ["application/json;charset=UTF-8"])
-    fun hentSaksStatuser(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<List<SaksStatusResponse>> {
+    fun hentSaksStatuser(@PathVariable fnr: String, @PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<List<SaksStatusResponse>> {
+        // sjekk tilgang til fnr
+        // kan ikke bruke saksbehandlers token til å hente saksStatuser?
         val saksStatuser = saksStatusService.hentSaksStatuser(fiksDigisosId, token)
         if (saksStatuser.isEmpty()) {
             return ResponseEntity(HttpStatus.NO_CONTENT)

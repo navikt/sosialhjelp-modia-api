@@ -24,13 +24,15 @@ import org.springframework.web.bind.annotation.RestController
 
 @ProtectedWithClaims(issuer = "veileder")
 @RestController
-@RequestMapping("/api/v1/innsyn")
+@RequestMapping("/api/v1/innsyn/{fnr}")
 class SoknadsoversiktController(private val fiksClient: FiksClient,
                                 private val eventService: EventService,
                                 private val oppgaveService: OppgaveService) {
 
     @GetMapping("/saker", produces = ["application/json;charset=UTF-8"])
-    fun hentAlleSaker(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<List<SaksListeResponse>> {
+    fun hentAlleSaker(@PathVariable fnr: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<List<SaksListeResponse>> {
+        // sjekk tilgang til fnr
+        // kan ikke bruke saksbehandlers token til å hente alle DigisosSaker for søker?
         val saker = try {
             fiksClient.hentAlleDigisosSaker(token)
         } catch (e: FiksException) {
@@ -52,8 +54,10 @@ class SoknadsoversiktController(private val fiksClient: FiksClient,
         return ResponseEntity.ok().body(responselist.sortedByDescending { it.sistOppdatert })
     }
 
-    @GetMapping("{fiksDigisosId}/saksDetaljer", produces = ["application/json;charset=UTF-8"])
-    fun hentSaksDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<SaksDetaljerResponse> {
+    @GetMapping("/{fiksDigisosId}/saksDetaljer", produces = ["application/json;charset=UTF-8"])
+    fun hentSaksDetaljer(@PathVariable fnr: String, @PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<SaksDetaljerResponse> {
+        // sjekk tilgang til fnr
+        // kan ikke bruke saksbehandlers token til å hente saksDetaljer for søknad?
         val sak = fiksClient.hentDigisosSak(fiksDigisosId, token)
         val model = eventService.createSoknadsoversiktModel(token, sak)
         val saksDetaljerResponse = SaksDetaljerResponse(

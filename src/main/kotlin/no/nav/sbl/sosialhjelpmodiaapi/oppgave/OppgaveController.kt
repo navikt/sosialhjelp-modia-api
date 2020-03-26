@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RestController
 
 @ProtectedWithClaims(issuer = "veileder")
 @RestController
-@RequestMapping("/api/v1/innsyn")
+@RequestMapping("/api/v1/innsyn/{fnr}")
 class OppgaveController(val oppgaveService: OppgaveService) {
 
     @GetMapping("/{fiksDigisosId}/oppgaver", produces = ["application/json;charset=UTF-8"])
-    fun hentOppgaver(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<List<OppgaveResponse>> {
+    fun hentOppgaver(@PathVariable fnr: String, @PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<List<OppgaveResponse>> {
+        // sjekk tilgang til fnr
+        // kan ikke bruke saksbehandlers token til å hente oppgaver?
         val oppgaver = oppgaveService.hentOppgaver(fiksDigisosId, token)
         if (oppgaver.isEmpty()) {
             return ResponseEntity(HttpStatus.NO_CONTENT)

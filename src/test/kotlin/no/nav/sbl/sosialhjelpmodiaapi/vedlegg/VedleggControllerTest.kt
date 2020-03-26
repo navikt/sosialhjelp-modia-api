@@ -17,6 +17,7 @@ internal class VedleggControllerTest {
 
     private val controller = VedleggController(vedleggService)
 
+    private val fnr = "11111111111"
     private val id = "123"
 
     private val dokumenttype = "type"
@@ -37,7 +38,7 @@ internal class VedleggControllerTest {
                 InternalVedlegg(dokumenttype, tilleggsinfo, frist, 1, datoLagtTil)
         )
 
-        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token")
+        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(fnr, id, "token")
 
         val body = vedleggResponses.body
 
@@ -62,7 +63,7 @@ internal class VedleggControllerTest {
                 InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil)
         )
 
-        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token")
+        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(fnr, id, "token")
 
         val body = vedleggResponses.body
 
@@ -87,7 +88,7 @@ internal class VedleggControllerTest {
                 InternalVedlegg(dokumenttype_2, tilleggsinfo, frist, 1, datoLagtTil_2)
         )
 
-        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token")
+        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(fnr, id, "token")
 
         val body = vedleggResponses.body
 
@@ -120,7 +121,7 @@ internal class VedleggControllerTest {
                 InternalVedlegg(dokumenttype, null, frist, 0, null)
         )
 
-        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token")
+        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(fnr, id, "token")
 
         val body = vedleggResponses.body
 
