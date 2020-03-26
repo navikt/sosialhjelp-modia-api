@@ -24,7 +24,11 @@ import java.util.*
 
 @Profile("!mock")
 @Component
-class DigisosApiClientImpl(clientProperties: ClientProperties, private val restTemplate: RestTemplate, private val idPortenService: IdPortenService) : DigisosApiClient {
+class DigisosApiClientImpl(
+        clientProperties: ClientProperties,
+        private val restTemplate: RestTemplate,
+        private val idPortenService: IdPortenService
+) : DigisosApiClient {
 
     companion object {
         private val log by logger()

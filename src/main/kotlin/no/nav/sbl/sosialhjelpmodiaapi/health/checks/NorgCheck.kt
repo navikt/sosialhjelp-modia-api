@@ -18,8 +18,10 @@ import org.springframework.web.client.RestTemplate
 
 @Profile("!mock")
 @Component
-class NorgCheck(private val restTemplate: RestTemplate,
-                clientProperties: ClientProperties) : AbstractDependencyCheck(
+class NorgCheck(
+        private val restTemplate: RestTemplate,
+        clientProperties: ClientProperties
+) : AbstractDependencyCheck(
         DependencyType.REST,
         "NORG2",
         clientProperties.norgEndpointUrl,

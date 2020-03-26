@@ -12,8 +12,10 @@ import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import org.springframework.stereotype.Component
 
 @Component
-class NoekkelinfoService(private val fiksClient: FiksClient,
-                         private val eventService: EventService) {
+class NoekkelinfoService(
+        private val fiksClient: FiksClient,
+        private val eventService: EventService
+) {
 
     fun hentNoekkelInfo(fiksDigisosId: String, sporingsId: String): SoknadNoekkelinfoResponse {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, sporingsId)

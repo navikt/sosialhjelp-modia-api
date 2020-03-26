@@ -12,9 +12,11 @@ import java.time.LocalDate
 
 
 @Component
-class OppgaveService(private val fiksClient: FiksClient,
-                     private val eventService: EventService,
-                     private val vedleggService: VedleggService) {
+class OppgaveService(
+        private val fiksClient: FiksClient,
+        private val eventService: EventService,
+        private val vedleggService: VedleggService
+) {
 
     fun hentOppgaver(fiksDigisosId: String, token: String): List<OppgaveResponse> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)

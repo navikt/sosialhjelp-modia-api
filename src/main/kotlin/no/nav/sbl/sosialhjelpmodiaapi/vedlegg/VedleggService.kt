@@ -17,8 +17,10 @@ const val LASTET_OPP_STATUS = "LastetOpp"
 const val VEDLEGG_KREVES_STATUS = "VedleggKreves"
 
 @Component
-class VedleggService(private val fiksClient: FiksClient,
-                     private val eventService: EventService) {
+class VedleggService(
+        private val fiksClient: FiksClient,
+        private val eventService: EventService
+) {
 
     fun hentAlleOpplastedeVedlegg(fiksDigisosId: String, token: String): List<InternalVedlegg> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)

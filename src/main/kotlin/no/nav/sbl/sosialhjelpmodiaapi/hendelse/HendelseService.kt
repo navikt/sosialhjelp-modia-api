@@ -8,8 +8,10 @@ import org.springframework.stereotype.Component
 
 
 @Component
-class HendelseService(private val fiksClient: FiksClient,
-                      private val eventService: EventService) {
+class HendelseService(
+        private val fiksClient: FiksClient,
+        private val eventService: EventService
+) {
 
     fun hentHendelser(fiksDigisosId: String, sporingsId: String): List<HendelseResponse> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, sporingsId)

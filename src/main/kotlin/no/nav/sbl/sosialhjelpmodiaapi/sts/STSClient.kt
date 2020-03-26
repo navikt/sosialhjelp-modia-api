@@ -10,8 +10,10 @@ import org.springframework.web.client.RestTemplate
 import java.time.LocalDateTime
 
 @Component
-class STSClient(private val serviceuserBasicAuthRestTemplate: RestTemplate,
-                clientProperties: ClientProperties) {
+class STSClient(
+        private val serviceuserBasicAuthRestTemplate: RestTemplate,
+        clientProperties: ClientProperties
+) {
 
     companion object {
         private val log by logger()

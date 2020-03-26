@@ -9,7 +9,10 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.SendingType
 import no.nav.sbl.sosialhjelpmodiaapi.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 
-fun InternalDigisosSoker.apply(hendelse: JsonTildeltNavKontor, norgClient: NorgClient) {
+fun InternalDigisosSoker.apply(
+        hendelse: JsonTildeltNavKontor,
+        norgClient: NorgClient
+) {
 
     val behandlendeNavKontor = navKontorHistorikk.lastOrNull()
     if (hendelse.navKontor == behandlendeNavKontor?.navEnhetsnummer) {

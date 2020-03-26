@@ -26,8 +26,10 @@ import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import org.springframework.stereotype.Component
 
 @Component
-class EventService(private val innsynService: InnsynService,
-                   private val norgClient: NorgClient) {
+class EventService(
+        private val innsynService: InnsynService,
+        private val norgClient: NorgClient
+) {
 
     fun createModel(digisosSak: DigisosSak, token: String): InternalDigisosSoker {
         val jsonDigisosSoker: JsonDigisosSoker? = innsynService.hentJsonDigisosSoker(digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata, token)

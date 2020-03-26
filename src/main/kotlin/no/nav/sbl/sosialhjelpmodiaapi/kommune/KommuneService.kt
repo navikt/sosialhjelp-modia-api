@@ -16,8 +16,10 @@ import no.nav.sbl.sosialhjelpmodiaapi.logger
 import org.springframework.stereotype.Component
 
 @Component
-class KommuneService(private val fiksClient: FiksClient,
-                     private val innsynService: InnsynService) {
+class KommuneService(
+        private val fiksClient: FiksClient,
+        private val innsynService: InnsynService
+) {
 
     companion object {
         private val log by logger()

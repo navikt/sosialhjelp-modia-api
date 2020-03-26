@@ -10,8 +10,10 @@ import org.springframework.stereotype.Component
 
 
 @Component
-class AbacCheck(private val abacService: AbacService,
-                clientProperties: ClientProperties) : AbstractDependencyCheck(
+class AbacCheck(
+        private val abacService: AbacService,
+        clientProperties: ClientProperties
+) : AbstractDependencyCheck(
         DependencyType.REST,
         "ABAC",
         clientProperties.abacPdpEndpointUrl,

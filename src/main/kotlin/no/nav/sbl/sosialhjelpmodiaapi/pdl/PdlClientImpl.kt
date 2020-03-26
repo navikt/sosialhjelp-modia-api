@@ -24,9 +24,11 @@ import org.springframework.web.client.RestTemplate
 
 @Profile("!(mock | local)")
 @Component
-class PdlClientImpl(clientProperties: ClientProperties,
-                    private val restTemplate: RestTemplate,
-                    private val stsClient: STSClient) : PdlClient {
+class PdlClientImpl(
+        clientProperties: ClientProperties,
+        private val restTemplate: RestTemplate,
+        private val stsClient: STSClient
+) : PdlClient {
 
     companion object {
         private val log by logger()

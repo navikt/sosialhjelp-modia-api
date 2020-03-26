@@ -11,8 +11,10 @@ import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
 
 @Component
-class AbacClient(clientProperties: ClientProperties,
-                 private val serviceuserBasicAuthRestTemplate: RestTemplate) {
+class AbacClient(
+        clientProperties: ClientProperties,
+        private val serviceuserBasicAuthRestTemplate: RestTemplate
+) {
 
     private val url = clientProperties.abacPdpEndpointUrl
 

@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.RestController
 @Unprotected
 @RestController
 @RequestMapping("/api/v1/mock/innsyn")
-class MockController(private val fiksClientMock: FiksClientMock,
-                     private val innsynService: InnsynService) {
+class MockController(
+        private val fiksClientMock: FiksClientMock,
+        private val innsynService: InnsynService
+) {
 
     companion object {
         private val log by logger()
