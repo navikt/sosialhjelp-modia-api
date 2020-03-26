@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav.sbl"
 
 val kotlinVersion = "1.3.70"
-val springBootVersion = "2.2.5.RELEASE"
+val springBootVersion = "2.2.6.RELEASE"
 val logbackVersion = "1.2.3"
 val logstashVersion = "6.3"
 val junitJupiterVersion = "5.6.0"
