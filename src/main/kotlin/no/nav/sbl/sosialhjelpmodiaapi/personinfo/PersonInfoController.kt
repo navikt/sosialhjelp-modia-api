@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.RestController
 @ProtectedWithClaims(issuer = "veileder")
 @RestController
 @RequestMapping("/api/v1/innsyn", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
-class PersonInfoController(private val personinfoService: PersoninfoService,
-                           private val abacService: AbacService) {
+class PersonInfoController(
+        private val personinfoService: PersoninfoService,
+        private val abacService: AbacService
+) {
 
     @PostMapping("/personinfo")
     fun hentPersonInfo(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<PersoninfoResponse> {
-        val testbrukerNatalie = "26104500284"
-        val testbrukerLotte = "17108102454" // kode7
-
         if (!abacService.harTilgang(ident.fnr, token)) {
             throw TilgangskontrollException("Ingen tilgang til ressurs", null)
         }
+
         val personinfoResponse = personinfoService.hentPersoninfo(ident.fnr)
         return ResponseEntity.ok(personinfoResponse)
     }
