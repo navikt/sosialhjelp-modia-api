@@ -26,7 +26,7 @@ class KommuneController(
     @PostMapping("/{fiksDigisosId}/kommune")
     fun hentKommuneInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<String> {
         if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs", null)
+            throw TilgangskontrollException("Ingen tilgang til ressurs")
         }
 
         // kan ikke bruke saksbehandlers token for å hente digisosSak fra fiks?

@@ -28,7 +28,7 @@ class UtbetalingerController(
     @PostMapping("/utbetalinger")
     fun hentUtbetalinger(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<UtbetalingerResponse>> {
         if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs", null)
+            throw TilgangskontrollException("Ingen tilgang til ressurs")
         }
 
         // kan ikke bruker saksbehandlers token for å hente utbetalinger?
@@ -39,7 +39,7 @@ class UtbetalingerController(
     @PostMapping("/{fiksDigisosId}/utbetalinger")
     fun hentUtbetalingerForDigisosSak(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<UtbetalingerResponse>> {
         if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs", null)
+            throw TilgangskontrollException("Ingen tilgang til ressurs")
         }
 
         // kan ikke bruker saksbehandlers token for å hente utbetalinger?

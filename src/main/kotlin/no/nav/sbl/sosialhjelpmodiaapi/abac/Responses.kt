@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class XacmlResponse(
         @JsonProperty("Response")
-        val response: List<Response>
+        val response: List<AbacResponse>
 )
 
-data class Response(
+data class AbacResponse(
         @JsonProperty("Decision")
         val decision: Decision,
         @JsonProperty("AssociatedAdvice")

@@ -18,7 +18,7 @@ class AbacClient(
 
     private val url = clientProperties.abacPdpEndpointUrl
 
-    fun sjekkTilgang(request: Request): Decision {
+    fun sjekkTilgang(request: Request): AbacResponse {
         //logg request-info til auditlogger
 
         val postingString = XacmlMapper.mapRequestToEntity(XacmlRequest(request))
@@ -39,7 +39,7 @@ class AbacClient(
         val xacmlResponse = XacmlMapper.mapRawResponse(responseBody)
 
         //logg response-info til auditlogger
-        return xacmlResponse.response[0].decision
+        return xacmlResponse.response[0]
     }
 
     private fun headers(): HttpHeaders {

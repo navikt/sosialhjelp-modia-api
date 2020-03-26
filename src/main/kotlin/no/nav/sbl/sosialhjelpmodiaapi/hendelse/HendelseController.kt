@@ -25,7 +25,7 @@ class HendelseController(
     @PostMapping("/{fiksDigisosId}/hendelser")
     fun hentHendelser(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<HendelseResponse>> {
         if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs", null)
+            throw TilgangskontrollException("Ingen tilgang til ressurs")
         }
 
         // kan ikke bruke saksbehandlers token for å hente hendelser?

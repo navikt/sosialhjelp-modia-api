@@ -25,7 +25,7 @@ class NoekkelinfoController(
     @PostMapping("/{fiksDigisosId}/noekkelinfo")
     fun hentNoekkelInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadNoekkelinfoResponse> {
         if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs", null)
+            throw TilgangskontrollException("Ingen tilgang til ressurs")
         }
 
         // kan ikke bruke saksbehandlers token til å hente noekkelinfo for søknad?

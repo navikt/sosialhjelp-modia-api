@@ -26,7 +26,7 @@ class SaksStatusController(
     @PostMapping("/{fiksDigisosId}/saksStatus")
     fun hentSaksStatuser(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SaksStatusResponse>> {
         if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs", null)
+            throw TilgangskontrollException("Ingen tilgang til ressurs")
         }
 
         // kan ikke bruke saksbehandlers token til å hente saksStatuser?

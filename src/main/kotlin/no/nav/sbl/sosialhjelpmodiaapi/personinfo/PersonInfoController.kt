@@ -24,7 +24,7 @@ class PersonInfoController(
     @PostMapping("/personinfo")
     fun hentPersonInfo(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<PersoninfoResponse> {
         if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs", null)
+            throw TilgangskontrollException("Ingen tilgang til ressurs")
         }
 
         val personinfoResponse = personinfoService.hentPersoninfo(ident.fnr)

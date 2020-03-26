@@ -36,12 +36,13 @@ class AbacService(private val abacClient: AbacClient) {
                         Attribute(RESOURCE_FELLES_PERSON_FNR, fnr))),
                 accessSubject = Attributes(mutableListOf())
         )
-        return when (abacClient.sjekkTilgang(request)) {
+        val abacResponse = abacClient.sjekkTilgang(request)
+        return when (abacResponse.decision) {
             Decision.Permit -> true
-            Decision.Deny -> false
-            Decision.NotApplicable -> false
-            Decision.Indeterminate -> false
-            else -> throw TilgangskontrollException("Ukjent decision", null)
+            else -> {
+                log.warn("AbacResponse er ${abacResponse.decision}.")
+                false
+            }
         }
     }
 
@@ -59,8 +60,12 @@ class AbacService(private val abacClient: AbacClient) {
                         Attribute(RESOURCE_FELLES_DOMENE, "sosialhjelp"))),
                 accessSubject = null)
 
-        val decision = abacClient.sjekkTilgang(request)
-        return if (decision == Decision.Permit) true else throw RuntimeException("Abac - ping, decision != Permit")
+        val abacResponse = abacClient.sjekkTilgang(request)
+        return if (abacResponse.decision == Decision.Permit){
+           true
+        } else {
+            throw TilgangskontrollException("Abac - ping, decision er ikke Permit, men ${abacResponse.decision}.")
+        }
     }
 
     private fun stripBearerPrefix(token: String): String {
