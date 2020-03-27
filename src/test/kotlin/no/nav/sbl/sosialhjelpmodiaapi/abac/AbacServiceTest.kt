@@ -18,16 +18,16 @@ import org.junit.jupiter.api.Test
 internal class AbacServiceTest {
 
     private val abacClient: AbacClient = mockk()
-    private val service = AbacService(abacClient)
+    private val miljoUtils: MiljoUtils = mockk()
+    private val service = AbacService(abacClient, miljoUtils)
 
     private val fnr = "fnr"
 
     @BeforeEach
     internal fun setUp() {
         clearAllMocks()
-        mockkObject(MiljoUtils)
 
-        every { MiljoUtils.isProfileMockOrLocal() } returns false
+        every { miljoUtils.isProfileMockOrLocal() } returns false
     }
 
     @AfterEach
@@ -37,7 +37,7 @@ internal class AbacServiceTest {
 
     @Test
     internal fun `harTilgang - profile mock eller local returnerer true`() {
-        every { MiljoUtils.isProfileMockOrLocal() } returns true
+        every { miljoUtils.isProfileMockOrLocal() } returns true
 
         val tilgang = service.harTilgang(fnr, "token")
 

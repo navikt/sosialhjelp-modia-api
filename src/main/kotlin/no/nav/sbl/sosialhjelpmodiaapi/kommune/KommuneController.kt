@@ -21,8 +21,6 @@ class KommuneController(
         private val abacService: AbacService
 ) {
 
-    // TODO: kan fjernes (sammen med kommuneservice etc)?
-
     @PostMapping("/{fiksDigisosId}/kommune")
     fun hentKommuneInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<String> {
         if (!abacService.harTilgang(ident.fnr, token)) {

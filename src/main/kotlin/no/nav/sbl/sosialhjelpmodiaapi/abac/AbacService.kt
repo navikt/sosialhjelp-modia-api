@@ -9,18 +9,21 @@ import no.nav.abac.xacml.StandardAttributter.ACTION_ID
 import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
-import no.nav.sbl.sosialhjelpmodiaapi.utils.MiljoUtils.isProfileMockOrLocal
+import no.nav.sbl.sosialhjelpmodiaapi.utils.MiljoUtils
 import org.springframework.stereotype.Component
 
 @Component
-class AbacService(private val abacClient: AbacClient) {
+class AbacService(
+        private val abacClient: AbacClient,
+        private val miljoUtils: MiljoUtils
+) {
 
     companion object {
         private val log by logger()
     }
 
     fun harTilgang(fnr: String, token: String): Boolean {
-        if (isProfileMockOrLocal()) {
+        if (miljoUtils.isProfileMockOrLocal()) {
             return true
         }
 
@@ -47,7 +50,7 @@ class AbacService(private val abacClient: AbacClient) {
     }
 
     fun ping(): Boolean {
-        if (isProfileMockOrLocal()) {
+        if (miljoUtils.isProfileMockOrLocal()) {
             return true
         }
 

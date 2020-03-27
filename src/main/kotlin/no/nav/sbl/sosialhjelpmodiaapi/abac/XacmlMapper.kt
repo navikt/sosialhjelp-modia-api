@@ -14,7 +14,6 @@ object XacmlMapper {
             .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-//    @SneakyThrows // try catch IOException
     fun mapRawResponse(content: String): XacmlResponse {
         return objectMapper.readValue(content, XacmlResponse::class.java)
     }
