@@ -9,7 +9,7 @@
     "/serviceuser/srvsosialhjelp-mod": "/serviceuser/data/prod/srvsosialhjelp-mod"
   },
   "env": {
-    "ABAC_PDP_ENDPOINT_URL": "https://wasapp.adeo.no/asm-pdp/authorize"
+    "ABAC_PDP_ENDPOINT_URL": "https://abac-sosialhjelp.nais.adeo.no/application/authorize",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.ks.no",
     "ID_PORTEN_TOKEN_URL": "https://oidc.difi.no/idporten-oidc-provider/token",
     "ID_PORTEN_CONFIG_URL": "https://oidc.difi.no/idporten-oidc-provider/.well-known/openid-configuration",
@@ -17,7 +17,7 @@
     "ID_PORTEN_SCOPE": "ks:fiks",
     "NORG_ENDPOINT_URL": "https://app.adeo.no/norg2/api/v1",
     "PDL_ENDPOINT_URL": "https://pdl-api.nais.adeo.no/graphql",
-    "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.adeo.no/rest/v1/sts",
+    "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.adeo.no/rest/v1/sts"
   },
   "minReplicas": "2",
   "maxReplicas": "4",
