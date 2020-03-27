@@ -40,7 +40,7 @@ internal class SoknadsoversiktControllerTest {
     internal fun setUp() {
         clearAllMocks()
 
-        every { abacService.harTilgang(any(), any()) } returns true
+        every { abacService.harTilgang(any(), any()) } just Runs
 
         every { digisosSak1.fiksDigisosId } returns id_1
         every { digisosSak1.sistEndret } returns 0L

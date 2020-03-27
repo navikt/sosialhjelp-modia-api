@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.kommune
 
 import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
-import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.HttpHeaders.AUTHORIZATION
@@ -23,9 +22,7 @@ class KommuneController(
 
     @PostMapping("/{fiksDigisosId}/kommune")
     fun hentKommuneInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<String> {
-        if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs")
-        }
+        abacService.harTilgang(ident.fnr, token)
 
         // kan ikke bruke saksbehandlers token for å hente digisosSak fra fiks?
 

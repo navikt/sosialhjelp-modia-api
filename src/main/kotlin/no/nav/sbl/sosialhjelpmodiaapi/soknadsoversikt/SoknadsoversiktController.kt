@@ -2,7 +2,6 @@ package no.nav.sbl.sosialhjelpmodiaapi.soknadsoversikt
 
 import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
-import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksDetaljerResponse
@@ -38,9 +37,7 @@ class SoknadsoversiktController(
 
     @PostMapping("/saker")
     fun hentAlleSaker(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SaksListeResponse>> {
-        if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs")
-        }
+        abacService.harTilgang(ident.fnr, token)
 
         // kan ikke bruke saksbehandlers token til å hente alle DigisosSaker for søker?
 
@@ -67,9 +64,7 @@ class SoknadsoversiktController(
 
     @PostMapping("/{fiksDigisosId}/saksDetaljer")
     fun hentSaksDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SaksDetaljerResponse> {
-        if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs")
-        }
+        abacService.harTilgang(ident.fnr, token)
 
         // kan ikke bruke saksbehandlers token til å hente saksDetaljer for søknad?
         val sak = fiksClient.hentDigisosSak(fiksDigisosId, token)

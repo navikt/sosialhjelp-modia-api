@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.noekkelinfo
 
 import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
-import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadNoekkelinfoResponse
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -24,9 +23,7 @@ class NoekkelinfoController(
 
     @PostMapping("/{fiksDigisosId}/noekkelinfo")
     fun hentNoekkelInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadNoekkelinfoResponse> {
-        if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs")
-        }
+        abacService.harTilgang(ident.fnr, token)
 
         // kan ikke bruke saksbehandlers token til å hente noekkelinfo for søknad?
 

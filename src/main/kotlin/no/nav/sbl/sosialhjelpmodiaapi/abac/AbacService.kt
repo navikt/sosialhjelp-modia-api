@@ -22,16 +22,16 @@ class AbacService(
         private val log by logger()
     }
 
-    fun harTilgang(fnr: String, token: String): Boolean {
+    fun harTilgang(fnr: String, token: String) {
         if (miljoUtils.isProfileMockOrLocal()) {
-            return true
+            return
         }
 
         val request = Request(
                 environment = Attributes(mutableListOf(
                         Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod"),
 //                        Attribute("no.nav.abac.attributter.environment.felles.azure_jwt_token_body", token))), // azure token??
-                        Attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody(stripBearerPrefix(token))))),
+                        Attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody(token)))),
                 action = Attributes(mutableListOf()),
                 resource = Attributes(mutableListOf(
                         Attribute(RESOURCE_FELLES_DOMENE, "sosialhjelp"),
@@ -40,18 +40,15 @@ class AbacService(
                 accessSubject = Attributes(mutableListOf())
         )
         val abacResponse = abacClient.sjekkTilgang(request)
-        return when (abacResponse.decision) {
-            Decision.Permit -> true
-            else -> {
-                log.warn("AbacResponse er ${abacResponse.decision}.")
-                false
-            }
+        if (abacResponse.decision != Decision.Permit) {
+            log.warn("AbacResponse med decision=${abacResponse.decision}.")
+            throw TilgangskontrollException("AbacResponse med decision=${abacResponse.decision}.")
         }
     }
 
-    fun ping(): Boolean {
+    fun ping() {
         if (miljoUtils.isProfileMockOrLocal()) {
-            return true
+            return
         }
 
         val request = Request(
@@ -64,23 +61,22 @@ class AbacService(
                 accessSubject = null)
 
         val abacResponse = abacClient.sjekkTilgang(request)
-        return if (abacResponse.decision == Decision.Permit){
-           true
-        } else {
+        if (abacResponse.decision != Decision.Permit) {
             throw TilgangskontrollException("Abac - ping, decision er ikke Permit, men ${abacResponse.decision}.")
         }
     }
 
+    private fun tokenBody(token: String): String {
+        val tokenToSplit = stripBearerPrefix(token)
+        val parts = tokenToSplit.split('.')
+        return if (parts.size == 1) parts[0] else parts[1]
+    }
+
     private fun stripBearerPrefix(token: String): String {
-        if (token.startsWith(BEARER)){
-            log.info("stripper bearer-prefiks fra token(!)")
+        if (token.startsWith(BEARER)) {
             return token.substring(7)
         }
         return token
     }
 
-    private fun tokenBody(token: String): String {
-        val parts = token.split('.')
-        return if (parts.size == 1) parts[0] else parts[1]
-    }
 }

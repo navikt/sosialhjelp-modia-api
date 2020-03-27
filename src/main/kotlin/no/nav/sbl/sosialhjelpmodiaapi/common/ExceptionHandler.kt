@@ -58,7 +58,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(TilgangskontrollException::class)
     fun handleTilgangskontrollException(e: TilgangskontrollException): ResponseEntity<ErrorMessage> {
-        log.warn("Abac - Ingen tilgang til ressurs")
+        log.warn("Abac - Ingen tilgang til ressurs", e)
         val error = ErrorMessage(INGEN_TILGANG, "Ingen tilgang til ressurs")
         return ResponseEntity(error, HttpStatus.FORBIDDEN)
     }

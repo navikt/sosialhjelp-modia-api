@@ -1,7 +1,9 @@
 package no.nav.sbl.sosialhjelpmodiaapi.vedlegg
 
+import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
@@ -31,7 +33,7 @@ internal class VedleggControllerTest {
     internal fun setUp() {
         clearAllMocks()
 
-        every { abacService.harTilgang(any(), any()) } returns true
+        every { abacService.harTilgang(any(), any()) } just Runs
     }
 
     @Test

@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.personinfo
 
 import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
-import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.PersoninfoResponse
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -23,9 +22,7 @@ class PersonInfoController(
 
     @PostMapping("/personinfo")
     fun hentPersonInfo(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<PersoninfoResponse> {
-        if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs")
-        }
+        abacService.harTilgang(ident.fnr, token)
 
         val personinfoResponse = personinfoService.hentPersoninfo(ident.fnr)
         return ResponseEntity.ok(personinfoResponse)

@@ -26,9 +26,7 @@ class VedleggController(
 
     @PostMapping("/{fiksDigisosId}/vedlegg")
     fun hentVedlegg(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<VedleggResponse>> {
-        if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs")
-        }
+        abacService.harTilgang(ident.fnr, token)
 
         // kan ikke bruker saksbehandlers token for å hente vedleggsinfo?
 

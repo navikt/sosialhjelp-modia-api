@@ -2,7 +2,6 @@ package no.nav.sbl.sosialhjelpmodiaapi.utbetalinger
 
 
 import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
-import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
 import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
@@ -27,9 +26,7 @@ class UtbetalingerController(
 
     @PostMapping("/utbetalinger")
     fun hentUtbetalinger(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<UtbetalingerResponse>> {
-        if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs")
-        }
+        abacService.harTilgang(ident.fnr, token)
 
         // kan ikke bruker saksbehandlers token for å hente utbetalinger?
 
@@ -38,9 +35,7 @@ class UtbetalingerController(
 
     @PostMapping("/{fiksDigisosId}/utbetalinger")
     fun hentUtbetalingerForDigisosSak(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<UtbetalingerResponse>> {
-        if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs")
-        }
+        abacService.harTilgang(ident.fnr, token)
 
         // kan ikke bruker saksbehandlers token for å hente utbetalinger?
 

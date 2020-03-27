@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.hendelse
 
 import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
-import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.HendelseResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -24,9 +23,7 @@ class HendelseController(
 
     @PostMapping("/{fiksDigisosId}/hendelser")
     fun hentHendelser(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<HendelseResponse>> {
-        if (!abacService.harTilgang(ident.fnr, token)) {
-            throw TilgangskontrollException("Ingen tilgang til ressurs")
-        }
+        abacService.harTilgang(ident.fnr, token)
 
         // kan ikke bruke saksbehandlers token for å hente hendelser?
 
