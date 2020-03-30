@@ -25,6 +25,13 @@ spec:
     min: {{minReplicas}}
     max: {{maxReplicas}}
   webproxy: {{webProxyEnabled}}
+{{#if accessPoliciesForGcpEnabled}}
+  accessPolicy:
+    outbound:
+      external:
+        - host: "oidc-ver2.difi.no"
+      rules: []
+{{/if}}
   vault:
     enabled: {{vaultEnabled}}
 {{#if vaultEnabled}}

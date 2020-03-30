@@ -1,0 +1,15 @@
+{
+  "namespace": "teamdigisos",
+  "ingress": [
+    "https://sosialhjelp-modia-api.labs.nais.io/"
+  ],
+  "env": {
+    "SPRING_PROFILES_ACTIVE": "mock"
+  },
+  "minReplicas": "1",
+  "maxReplicas": "1",
+  "prometheusEnabled": false,
+  "webProxyEnabled": false,
+  "accessPoliciesForGcpEnabled": true,
+  "vaultEnabled": false
+}

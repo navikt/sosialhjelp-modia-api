@@ -25,5 +25,6 @@
   "maxReplicas": "4",
   "prometheusEnabled": true,
   "webProxyEnabled": true,
+  "accessPoliciesForGcpEnabled": false,
   "vaultEnabled": true
 }
