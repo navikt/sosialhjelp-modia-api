@@ -42,9 +42,9 @@ jobs:
         run: |
           PROJECT_NAME=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)-2
           echo "docker.pkg.github.com/$GITHUB_REPOSITORY/$PROJECT_NAME:$VERSION" > DOCKER_TAG
+          echo ::set-env name=IMAGE::$(echo "docker.pkg.github.com/$GITHUB_REPOSITORY/$PROJECT_NAME:$VERSION")
         env:
           VERSION: ${{ steps.artifact-version.outputs.version }}
-          DOCKER_TAG: docker.pkg.github.com/$GITHUB_REPOSITORY/$PROJECT_NAME:$VERSION
 
       - name: Build docker image
         run: docker build -t $(cat DOCKER_TAG) .
@@ -72,4 +72,4 @@ jobs:
           VARS: nais/dev/labs-gcp.json
           REF: ${{ env.VERSION }}
           PRINT_PAYLOAD: true
-          IMAGE: ${{ env.DOCKER_TAG }}
+          IMAGE: ${{ env.IMAGE }}
