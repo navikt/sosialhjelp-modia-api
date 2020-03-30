@@ -12,15 +12,15 @@ import org.springframework.web.client.RestClientException
 
 @Profile("!mock")
 @Component
-class PdlCheck (clientProperties: ClientProperties,
-                private val pdlClient: PdlClient) : AbstractDependencyCheck(
+class PdlCheck(clientProperties: ClientProperties,
+               private val pdlClient: PdlClient) : AbstractDependencyCheck(
         DependencyType.REST,
         "PDL",
         clientProperties.pdlEndpointUrl,
         Importance.WARNING
 ) {
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     override fun doCheck() {

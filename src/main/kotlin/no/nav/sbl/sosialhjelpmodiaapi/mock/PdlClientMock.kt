@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @Profile("mock | local")
-class PdlClientMock: PdlClient {
+class PdlClientMock : PdlClient {
 
     private val pdlHentPersonMap = mutableMapOf<String, PdlHentPerson>()
 

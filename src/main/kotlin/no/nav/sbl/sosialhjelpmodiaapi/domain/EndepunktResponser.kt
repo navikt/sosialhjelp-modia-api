@@ -47,8 +47,8 @@ data class UtbetalingerResponse(
         val tittel: String?,
         val belop: Double,
         @JsonFormat(pattern = "yyyy-MM-dd")
-        val utbetalingsdato: LocalDate?,
-        val status: String,
+        val utbetalingEllerForfallDigisosSoker: LocalDate?,
+        val status: UtbetalingsStatus,
         val fiksDigisosId: String,
         @JsonFormat(pattern = "yyyy-MM-dd")
         val fom: LocalDate?,
@@ -57,7 +57,8 @@ data class UtbetalingerResponse(
         val mottaker: String?,
         val kontonummer: String?,
         val utbetalingsmetode: String?,
-        val harVilkar: Boolean
+        val harVilkar: Boolean,
+        val navKontor: NavKontor?
 )
 
 data class VedleggResponse(
@@ -73,14 +74,27 @@ data class VedleggResponse(
 data class SoknadNoekkelinfoResponse(
         val tittel: String,
         val status: SoknadsStatus,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val sistOppdatert: LocalDateTime,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val sistOppdatert: LocalDate,
         val saksId: String?,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val sendtEllerMottattTidspunkt: LocalDate,
+        val navKontor: NavKontor?,
+        val videresendtHistorikk: List<VideresendtInfo>?,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val sendtEllerMottattTidspunkt: LocalDateTime,
-        val navKontor: String?,
-        val videresendt: Boolean,
         val tidspunktForelopigSvar: LocalDateTime?
+)
+
+data class VideresendtInfo(
+        val type: SendingType,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val tidspunkt: LocalDate,
+        val navKontor: NavKontor
+)
+
+data class NavKontor(
+        val enhetsNavn: String,
+        val enhetsNr: String
 )
 
 data class SaksListeResponse(
@@ -106,4 +120,8 @@ data class PersoninfoResponse(
 //        val alder: Int
 //        val fnr: String,
 //        val tlfnr: String
+)
+
+data class Ident(
+        val fnr: String
 )

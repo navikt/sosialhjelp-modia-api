@@ -50,6 +50,6 @@ class NorgClientImpl(clientProperties: ClientProperties,
     }
 
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 }

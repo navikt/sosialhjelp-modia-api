@@ -30,22 +30,26 @@ internal class SoknadsoversiktControllerTest {
 
     private val oppgaveResponseMock: OppgaveResponse = mockk()
 
+    private val fnr = "11111111111"
+    private val id_1 = "123"
+    private val id_2 = "456"
+
     @BeforeEach
     internal fun setUp() {
         clearAllMocks()
 
-        every { digisosSak1.fiksDigisosId } returns "123"
+        every { digisosSak1.fiksDigisosId } returns id_1
         every { digisosSak1.sistEndret } returns 0L
         every { digisosSak1.digisosSoker } returns null
         every { digisosSak1.originalSoknadNAV } returns null
 
-        every { digisosSak2.fiksDigisosId } returns "456"
+        every { digisosSak2.fiksDigisosId } returns id_2
         every { digisosSak2.sistEndret } returns 1000L
         every { digisosSak2.digisosSoker } returns mockk()
         every { digisosSak2.originalSoknadNAV?.timestampSendt } returns System.currentTimeMillis()
 
-        every { oppgaveService.hentOppgaver("123", any()) } returns listOf(oppgaveResponseMock, oppgaveResponseMock) // 2 oppgaver
-        every { oppgaveService.hentOppgaver("456", any()) }  returns listOf(oppgaveResponseMock) // 1 oppgave
+        every { oppgaveService.hentOppgaver(id_1, any()) } returns listOf(oppgaveResponseMock, oppgaveResponseMock) // 2 oppgaver
+        every { oppgaveService.hentOppgaver(id_2, any()) }  returns listOf(oppgaveResponseMock) // 1 oppgave
     }
 
     @Test
@@ -63,7 +67,7 @@ internal class SoknadsoversiktControllerTest {
 
         every { model2.saker } returns mutableListOf(sak1, sak2)
 
-        val response = controller.hentAlleSaker("token")
+        val response = controller.hentAlleSaker("token", Ident(fnr))
 
         val saker = response.body
         assertThat(saker).isNotNull
@@ -84,8 +88,8 @@ internal class SoknadsoversiktControllerTest {
 
     @Test
     fun `hentSaksDetaljer - skal mappe fra DigisosSak til SakResponse for detaljer`() {
-        every { fiksClient.hentDigisosSak("123", "token") } returns digisosSak1
-        every { fiksClient.hentDigisosSak("456", "token") } returns digisosSak2
+        every { fiksClient.hentDigisosSak(id_1, "token") } returns digisosSak1
+        every { fiksClient.hentDigisosSak(id_2, "token") } returns digisosSak2
         every { eventService.createSoknadsoversiktModel(any(), digisosSak1) } returns model1
         every { eventService.createSoknadsoversiktModel(any(), digisosSak2) } returns model2
 
@@ -106,7 +110,7 @@ internal class SoknadsoversiktControllerTest {
         every { model1.saker } returns mutableListOf()
         every { model2.saker } returns mutableListOf(sak1, sak2)
 
-        val response1 = controller.hentSaksDetaljer("123", "token")
+        val response1 = controller.hentSaksDetaljer(id_1, "token", Ident(fnr))
         val sak1 = response1.body
 
         assertThat(response1.statusCode.value()).isEqualTo(HttpStatus.SC_OK)
@@ -115,7 +119,7 @@ internal class SoknadsoversiktControllerTest {
         assertThat(sak1?.harNyeOppgaver).isTrue()
         assertThat(sak1?.harVilkar).isFalse()
 
-        val response2 = controller.hentSaksDetaljer("456", "token")
+        val response2 = controller.hentSaksDetaljer(id_2, "token", Ident(fnr))
         val sak2 = response2.body
 
         assertThat(response2.statusCode.value()).isEqualTo(HttpStatus.SC_OK)
@@ -128,14 +132,14 @@ internal class SoknadsoversiktControllerTest {
 
     @Test
     fun `hentSaksDetaljer - hvis model ikke har noen oppgaver, skal ikke oppgaveService kalles`() {
-        every { fiksClient.hentDigisosSak("123", "token") } returns digisosSak1
+        every { fiksClient.hentDigisosSak(id_1, "token") } returns digisosSak1
         every { eventService.createSoknadsoversiktModel(any(), digisosSak1) } returns model1
 
         every { model1.status } returns SoknadsStatus.MOTTATT
         every { model1.oppgaver.isEmpty() } returns true
         every { model1.saker } returns mutableListOf()
 
-        val response = controller.hentSaksDetaljer(digisosSak1.fiksDigisosId, "token")
+        val response = controller.hentSaksDetaljer(id_1, "token", Ident(fnr))
         val sak = response.body
 
         assertThat(sak).isNotNull

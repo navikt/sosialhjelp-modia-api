@@ -1,9 +1,22 @@
 package no.nav.sbl.sosialhjelpmodiaapi.mock.responses
 
-import no.nav.sbl.soknadsosialhjelp.digisos.soker.*
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonAvsender
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonFilreferanse
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonForvaltningsbrev
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonVedlegg
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.filreferanse.JsonDokumentlagerFilreferanse
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.filreferanse.JsonSvarUtFilreferanse
-import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.*
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonDokumentasjonEtterspurt
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonDokumenter
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonForelopigSvar
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonSaksStatus
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonSoknadsStatus
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonTildeltNavKontor
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonUtbetaling
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtakFattet
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtaksfil
 import org.joda.time.DateTime
 import java.text.DateFormatSymbols
 import java.time.format.DateTimeFormatter
@@ -14,11 +27,13 @@ private fun toStringWithTimezone(dateTime: DateTime): String? {
     val zoned = dateTime.toGregorianCalendar().toZonedDateTime()
     return zoned.format(zonedDateTimeFormatter)
 }
+
 private fun toDateString(dateTime: DateTime): String? {
     val zonedDateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val zoned = dateTime.toGregorianCalendar().toZonedDateTime()
     return zoned.format(zonedDateTimeFormatter)
 }
+
 private fun monthToString(month: Int) = DateFormatSymbols(Locale.forLanguageTag("no-NO")).months[month - 1]
 
 val digisosSoker = JsonDigisosSoker()
@@ -37,7 +52,7 @@ val digisosSoker = JsonDigisosSoker()
                         JsonTildeltNavKontor()
                                 .withType(JsonHendelse.Type.TILDELT_NAV_KONTOR)
                                 .withHendelsestidspunkt(toStringWithTimezone(DateTime.now().minusDays(10)))
-                                .withNavKontor("0301"),
+                                .withNavKontor("0302"),
 
                         JsonDokumentasjonEtterspurt()
                                 .withType(JsonHendelse.Type.DOKUMENTASJON_ETTERSPURT)

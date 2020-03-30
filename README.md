@@ -9,7 +9,7 @@ Backend-app som skal gi innsyn i sosialhjelp-saker for saksbehandlere ved NKS.
 Henvendelser kan sendes via Slack i kanalen #digisos.
 
 ## Oppsett av nytt prosjekt
-Dette prosjektet bygger og deployer vha Github Actions
+Prosjektet bruker Github Actions for bygg og deploy
 
 ### Github package registry
 - Docker image pushes til github package registry [https://github.com/navikt/sosialhjelp-modia-api/packages/](https://github.com/navikt/sosialhjelp-modia-api/packages/)
@@ -27,3 +27,9 @@ Dette prosjektet bygger og deployer vha Github Actions
 ### Vault
 - Lag PR til `vault-iac` slik at man kan lagre secrets på vault.
 - Denne må godkjennes og merges før man kan opprette secrets i din apps katalog `.../app/namespace`.
+
+## Lokal kjøring
+Bruk spring profile `local` eller `mock`.
+
+#### Environment variabler
+Sett dummy-verdier for `SRVSOSIALHJELP_MODIA_API_USERNAME` og `SRVSOSIALHJELP_MODIA_API_PASSWORD`

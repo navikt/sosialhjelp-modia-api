@@ -12,11 +12,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 class ExceptionHandler : ResponseEntityExceptionHandler() {
 
     companion object {
-        val log by logger()
+        private val log by logger()
 
         private const val UNEXPECTED_ERROR = "unexpected_error"
         private const val FIKS_ERROR = "fiks_error"
         private const val NORG_ERROR = "norg_error"
+        private const val PDL_ERROR = "pdl_error"
     }
 
     @ExceptionHandler(Throwable::class)
@@ -44,6 +45,13 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     fun handleNorgError(e: NorgException): ResponseEntity<ErrorMessage> {
         log.error("Noe feilet ved kall til Norg", e)
         val error = ErrorMessage(NORG_ERROR, "Noe uventet feilet")
+        return ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @ExceptionHandler(PdlException::class)
+    fun handlePdlError(e: PdlException): ResponseEntity<ErrorMessage> {
+//        log.error("Noe feilet ved kall til Pdl", e)
+        val error = ErrorMessage(PDL_ERROR, "Noe uventet feilet")
         return ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 

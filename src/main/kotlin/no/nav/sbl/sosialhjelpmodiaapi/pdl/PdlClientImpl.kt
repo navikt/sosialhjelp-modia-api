@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.pdl
 
+import no.nav.sbl.sosialhjelpmodiaapi.common.PdlException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.sts.STSClient
@@ -14,6 +15,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientException
@@ -27,7 +29,7 @@ class PdlClientImpl(clientProperties: ClientProperties,
                     private val stsClient: STSClient) : PdlClient {
 
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     private val baseurl = clientProperties.pdlEndpointUrl
@@ -40,14 +42,19 @@ class PdlClientImpl(clientProperties: ClientProperties,
             val response = restTemplate.exchange(baseurl, HttpMethod.POST, requestEntity, PdlPersonResponse::class.java)
 
             val pdlPersonResponse: PdlPersonResponse = response.body!!
-            if (pdlPersonResponse.errors != null) {
+            if (pdlPersonResponse.errors != null && pdlPersonResponse.errors.isNotEmpty()) {
                 pdlPersonResponse.errors
                         .forEach { log.error("PDL - noe feilet. Message=${it.message}, path=${it.path}, code=${it.extensions.code}, classification=${it.extensions.classification}") }
+                val firstError = pdlPersonResponse.errors[0]
+                throw PdlException(
+                        firstError.extensions.code?.toUpperCase()?.let { HttpStatus.valueOf(it) },
+                        "Message: ${firstError.message}, Classification: ${firstError.extensions.classification}"
+                )
             }
             return pdlPersonResponse.data
         } catch (e: RestClientResponseException) {
             log.error("PDL - ${e.rawStatusCode} ${e.statusText} feil ved henting av navn, requesturl: $baseurl", e)
-            throw e
+            throw PdlException(HttpStatus.valueOf(e.rawStatusCode), e.message)
         }
     }
 

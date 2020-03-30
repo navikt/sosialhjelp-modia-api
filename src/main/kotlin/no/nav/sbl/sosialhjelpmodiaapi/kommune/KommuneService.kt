@@ -5,7 +5,13 @@ import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
 import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.innsyn.InnsynService
-import no.nav.sbl.sosialhjelpmodiaapi.kommune.KommuneStatus.*
+import no.nav.sbl.sosialhjelpmodiaapi.kommune.KommuneStatus.HAR_KONFIGURASJON_MEN_SKAL_SENDE_VIA_SVARUT
+import no.nav.sbl.sosialhjelpmodiaapi.kommune.KommuneStatus.IKKE_STOTTET_CASE
+import no.nav.sbl.sosialhjelpmodiaapi.kommune.KommuneStatus.MANGLER_KONFIGURASJON
+import no.nav.sbl.sosialhjelpmodiaapi.kommune.KommuneStatus.SKAL_SENDE_SOKNADER_OG_ETTERSENDELSER_VIA_FDA
+import no.nav.sbl.sosialhjelpmodiaapi.kommune.KommuneStatus.SKAL_VISE_MIDLERTIDIG_FEILSIDE_FOR_SOKNAD_OG_ETTERSENDELSER_INNSYN_IKKE_MULIG
+import no.nav.sbl.sosialhjelpmodiaapi.kommune.KommuneStatus.SKAL_VISE_MIDLERTIDIG_FEILSIDE_FOR_SOKNAD_OG_ETTERSENDELSER_INNSYN_SKAL_VISE_FEILSIDE
+import no.nav.sbl.sosialhjelpmodiaapi.kommune.KommuneStatus.SKAL_VISE_MIDLERTIDIG_FEILSIDE_FOR_SOKNAD_OG_ETTERSENDELSER_INNSYN_SOM_VANLIG
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import org.springframework.stereotype.Component
 
@@ -14,7 +20,7 @@ class KommuneService(private val fiksClient: FiksClient,
                      private val innsynService: InnsynService) {
 
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     fun hentKommuneStatus(fiksDigisosId: String, token: String): KommuneStatus {

@@ -2,7 +2,12 @@ package no.nav.sbl.sosialhjelpmodiaapi.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtakFattet
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtaksfil
-import no.nav.sbl.sosialhjelpmodiaapi.domain.*
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
+import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Sak
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatus
+import no.nav.sbl.sosialhjelpmodiaapi.domain.UtfallVedtak
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Vedtak
 import no.nav.sbl.sosialhjelpmodiaapi.saksstatus.DEFAULT_TITTEL
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 
@@ -13,7 +18,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
 
     val vedtak = Vedtak(utfall, hendelse.hendelsestidspunkt.toLocalDateTime().toLocalDate())
 
-    var sakForReferanse = saker.firstOrNull { it.referanse == hendelse.saksreferanse || it.referanse == "default"}
+    var sakForReferanse = saker.firstOrNull { it.referanse == hendelse.saksreferanse || it.referanse == "default" }
 
     if (sakForReferanse == null) {
         // Opprett ny Sak

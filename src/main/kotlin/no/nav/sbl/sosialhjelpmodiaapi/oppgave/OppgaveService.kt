@@ -53,13 +53,13 @@ class OppgaveService(private val fiksClient: FiksClient,
     private fun hentVedleggDatoLagtTil(oppgave: Oppgave, vedleggListe: List<InternalVedlegg>): LocalDate? {
         return vedleggListe
                 .filter { it.type == oppgave.tittel && it.tilleggsinfo == oppgave.tilleggsinfo }
-                .filter{ it.datoLagtTil != null && it.datoLagtTil.isAfter(oppgave.tidspunktForKrav) }
+                .filter { it.datoLagtTil != null && it.datoLagtTil.isAfter(oppgave.tidspunktForKrav) }
                 .maxBy { it.datoLagtTil!! }
                 ?.datoLagtTil?.toLocalDate()
     }
 
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
 }

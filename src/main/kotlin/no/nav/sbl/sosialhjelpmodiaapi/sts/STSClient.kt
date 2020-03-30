@@ -14,7 +14,7 @@ class STSClient(private val stsRestTemplate: RestTemplate,
                 clientProperties: ClientProperties) {
 
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     private val baseUrl = clientProperties.stsTokenEndpointUrl

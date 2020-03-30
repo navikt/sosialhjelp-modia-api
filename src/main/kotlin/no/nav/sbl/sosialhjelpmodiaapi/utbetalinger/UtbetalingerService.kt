@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.utbetalinger
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
+import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontor
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
@@ -23,40 +24,43 @@ class UtbetalingerService(private val fiksClient: FiksClient,
 
         return digisosSaker
                 .flatMap { digisosSak -> utbetalingerForDigisosSak(digisosSak, token) }
-                .sortedByDescending { it.utbetalingsdato }
+                .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
     }
 
     fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak, token: String): List<UtbetalingerResponse> {
         return utbetalingerForDigisosSak(digisosSak, token)
-                .sortedByDescending { it.utbetalingsdato }
+                .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
     }
 
     private fun utbetalingerForDigisosSak(digisosSak: DigisosSak, token: String): List<UtbetalingerResponse> {
         val model = eventService.createModel(digisosSak, token)
+        val behandlendeNavKontor = model.navKontorHistorikk.lastOrNull()
+
         return model.saker
                 .flatMap { sak ->
                     sak.utbetalinger
-                            .filter { it.utbetalingsDato != null && (it.status == UtbetalingsStatus.UTBETALT || it.status == UtbetalingsStatus.ANNULLERT) }
+                            .filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
                             .map { utbetaling ->
                                 UtbetalingerResponse(
                                         tittel = utbetaling.beskrivelse,
                                         belop = utbetaling.belop.toDouble(),
-                                        utbetalingsdato = utbetaling.utbetalingsDato,
-                                        status = utbetaling.status.name,
+                                        utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato ?: utbetaling.forfallsDato,
+                                        status = utbetaling.status,
                                         fiksDigisosId = digisosSak.fiksDigisosId,
                                         fom = utbetaling.fom,
                                         tom = utbetaling.tom,
                                         mottaker = utbetaling.mottaker,
                                         kontonummer = utbetaling.kontonummer,
                                         utbetalingsmetode = utbetaling.utbetalingsmetode,
-                                        harVilkar = !utbetaling.vilkar.isNullOrEmpty()
+                                        harVilkar = !utbetaling.vilkar.isNullOrEmpty(),
+                                        navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }
                                 )
                             }
                 }
     }
 
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
 }

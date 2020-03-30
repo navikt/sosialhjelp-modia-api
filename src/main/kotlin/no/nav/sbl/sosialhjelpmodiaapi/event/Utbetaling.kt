@@ -10,7 +10,8 @@ import java.math.BigDecimal
 fun InternalDigisosSoker.apply(hendelse: JsonUtbetaling) {
     val utbetaling = Utbetaling(
             referanse = hendelse.utbetalingsreferanse,
-            status = UtbetalingsStatus.valueOf(hendelse.status?.value() ?: JsonUtbetaling.Status.PLANLAGT_UTBETALING.value()),
+            status = UtbetalingsStatus.valueOf(hendelse.status?.value()
+                    ?: JsonUtbetaling.Status.PLANLAGT_UTBETALING.value()),
             belop = BigDecimal.valueOf(hendelse.belop ?: 0.0),
             beskrivelse = hendelse.beskrivelse,
             forfallsDato = if (hendelse.forfallsdato == null) null else hendelse.forfallsdato.toLocalDate(),

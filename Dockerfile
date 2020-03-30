@@ -6,4 +6,4 @@ ENV TZ="Europe/Oslo"
 
 COPY /nais/scripts /init-scripts
 
-COPY sosialhjelp-modia-api-*.jar app.jar
+COPY build/libs/*.jar app.jar
