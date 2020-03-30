@@ -61,6 +61,7 @@ jobs:
           docker push $(cat DOCKER_TAG)
 
   deploy:
+    needs: build
     name: Deploy to labs-gcp
     runs-on: ubuntu-latest
     steps:
