@@ -51,8 +51,6 @@ class AbacClient(
     companion object {
         private val log by logger()
 
-        private val auditLog = getLogger("AuditLogger")
-
         private const val MEDIA_TYPE = "application/xacml+json"
     }
 
