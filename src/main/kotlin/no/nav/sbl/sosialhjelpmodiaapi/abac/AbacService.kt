@@ -9,13 +9,11 @@ import no.nav.abac.xacml.StandardAttributter.ACTION_ID
 import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
-import no.nav.sbl.sosialhjelpmodiaapi.utils.MiljoUtils
 import org.springframework.stereotype.Component
 
 @Component
 class AbacService(
-        private val abacClient: AbacClient,
-        private val miljoUtils: MiljoUtils
+        private val abacClient: AbacClient
 ) {
 
     companion object {
@@ -25,22 +23,18 @@ class AbacService(
     }
 
     fun harTilgang(fnr: String, token: String) {
-        if (miljoUtils.isProfileMockOrLocal()) {
-            return
-        }
-
         val request = Request(
                 environment = Attributes(mutableListOf(
                         Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod"),
 //                        Attribute(ENVIRONMENT_FELLES_AZURE_JWT_TOKEN_BODY, token))), // azure token eller oidc token?
                         Attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody(token)))),
-                action = Attributes(mutableListOf()),
+                action = null,
                 resource = Attributes(mutableListOf(
                         Attribute(RESOURCE_FELLES_DOMENE, "sosialhjelp"),
                         Attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.sosialhjelp"),
                         Attribute(RESOURCE_FELLES_PERSON_FNR, fnr))),
-                accessSubject = Attributes(mutableListOf())
-        )
+                accessSubject = null)
+
         val abacResponse = abacClient.sjekkTilgang(request)
         if (abacResponse.decision != Decision.Permit) {
             log.warn("AbacResponse med decision=${abacResponse.decision}.")
@@ -49,10 +43,6 @@ class AbacService(
     }
 
     fun ping() {
-        if (miljoUtils.isProfileMockOrLocal()) {
-            return
-        }
-
         val request = Request(
                 environment = Attributes(mutableListOf(
                         Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod"))),

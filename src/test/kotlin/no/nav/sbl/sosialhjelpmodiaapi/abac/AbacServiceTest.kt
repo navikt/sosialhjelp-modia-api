@@ -5,11 +5,9 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.unmockkAll
-import io.mockk.verify
 import no.nav.abac.xacml.NavAttributter
 import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
-import no.nav.sbl.sosialhjelpmodiaapi.utils.MiljoUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatCode
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -20,16 +18,13 @@ import org.junit.jupiter.api.Test
 internal class AbacServiceTest {
 
     private val abacClient: AbacClient = mockk()
-    private val miljoUtils: MiljoUtils = mockk()
-    private val service = AbacService(abacClient, miljoUtils)
+    private val service = AbacService(abacClient)
 
     private val fnr = "fnr"
 
     @BeforeEach
     internal fun setUp() {
         clearAllMocks()
-
-        every { miljoUtils.isProfileMockOrLocal() } returns false
     }
 
     @AfterEach
@@ -38,17 +33,7 @@ internal class AbacServiceTest {
     }
 
     @Test
-    internal fun `harTilgang - profile mock eller local returnerer true`() {
-        every { miljoUtils.isProfileMockOrLocal() } returns true
-
-        assertThatCode{ service.harTilgang(fnr, "token") }
-                .doesNotThrowAnyException()
-
-        verify(exactly = 0) { abacClient.sjekkTilgang(any()) }
-    }
-
-    @Test
-    internal fun `harTilgang - abacClient gir Permit, skal returnerer true`() {
+    internal fun `harTilgang - abacClient gir Permit - kaster ingen exception`() {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Permit, null)
 
         assertThatCode{ service.harTilgang(fnr, "token") }
@@ -56,7 +41,7 @@ internal class AbacServiceTest {
     }
 
     @Test
-    internal fun `harTilgang - abacClient gir Deny, skal returnerer false`() {
+    internal fun `harTilgang - abacClient gir Deny - kaster TilgangskontrollException`() {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Deny, null)
 
         assertThatThrownBy { service.harTilgang(fnr, "token") }
@@ -65,7 +50,7 @@ internal class AbacServiceTest {
     }
 
     @Test
-    internal fun `harTilgang - abacClient gir NotApplicable, skal returnerer false`() {
+    internal fun `harTilgang - abacClient gir NotApplicable - kaster TilgangskontrollException`() {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.NotApplicable, null)
 
         assertThatThrownBy { service.harTilgang(fnr, "token") }
@@ -74,7 +59,7 @@ internal class AbacServiceTest {
     }
 
     @Test
-    internal fun `harTilgang - abacClient gir Indeterminate, skal returnerer false`() {
+    internal fun `harTilgang - abacClient gir Indeterminate - kaster TilgangskontrollException`() {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Indeterminate, null)
 
         assertThatThrownBy { service.harTilgang(fnr, "token") }

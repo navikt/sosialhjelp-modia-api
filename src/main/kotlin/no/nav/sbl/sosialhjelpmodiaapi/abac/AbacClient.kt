@@ -3,6 +3,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.abac
 import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -10,15 +11,22 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
 
+interface AbacClient {
+
+    fun sjekkTilgang(request: Request): AbacResponse
+
+}
+
+@Profile("!(mock | local")
 @Component
-class AbacClient(
+class AbacClientImpl(
         clientProperties: ClientProperties,
         private val serviceuserBasicAuthRestTemplate: RestTemplate
-) {
+) : AbacClient {
 
     private val url = clientProperties.abacPdpEndpointUrl
 
-    fun sjekkTilgang(request: Request): AbacResponse {
+    override fun sjekkTilgang(request: Request): AbacResponse {
         //logg request-info til auditlogger
 
         val postingString = XacmlMapper.mapRequestToEntity(XacmlRequest(request))
