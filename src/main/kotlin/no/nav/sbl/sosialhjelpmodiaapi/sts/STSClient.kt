@@ -3,12 +3,14 @@ package no.nav.sbl.sosialhjelpmodiaapi.sts
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.sts.STSToken.Companion.shouldRenewToken
+import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpMethod.GET
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import java.time.LocalDateTime
 
+@Profile("!(mock | local)")
 @Component
 class STSClient(
         private val serviceuserBasicAuthRestTemplate: RestTemplate,
