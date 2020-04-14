@@ -11,8 +11,10 @@ import org.springframework.stereotype.Component
 
 
 @Component
-class UtbetalingerService(private val fiksClient: FiksClient,
-                          private val eventService: EventService) {
+class UtbetalingerService(
+        private val fiksClient: FiksClient,
+        private val eventService: EventService
+) {
 
     fun hentUtbetalinger(token: String): List<UtbetalingerResponse> {
         val digisosSaker = fiksClient.hentAlleDigisosSaker(token)

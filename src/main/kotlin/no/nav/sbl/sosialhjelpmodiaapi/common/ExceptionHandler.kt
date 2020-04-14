@@ -18,6 +18,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         private const val FIKS_ERROR = "fiks_error"
         private const val NORG_ERROR = "norg_error"
         private const val PDL_ERROR = "pdl_error"
+        private const val INGEN_TILGANG = "ingen_tilgang"
     }
 
     @ExceptionHandler(Throwable::class)
@@ -55,6 +56,12 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         return ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
+    @ExceptionHandler(TilgangskontrollException::class)
+    fun handleTilgangskontrollException(e: TilgangskontrollException): ResponseEntity<ErrorMessage> {
+        log.warn("Abac - Ingen tilgang til ressurs", e)
+        val error = ErrorMessage(INGEN_TILGANG, "Ingen tilgang til ressurs")
+        return ResponseEntity(error, HttpStatus.FORBIDDEN)
+    }
 }
 
 data class ErrorMessage(

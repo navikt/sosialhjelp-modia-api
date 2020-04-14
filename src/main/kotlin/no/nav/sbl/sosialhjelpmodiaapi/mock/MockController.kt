@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.RestController
 @Unprotected
 @RestController
 @RequestMapping("/api/v1/mock/innsyn")
-class MockController(private val fiksClientMock: FiksClientMock,
-                     private val innsynService: InnsynService) {
+class MockController(
+        private val fiksClientMock: FiksClientMock,
+        private val innsynService: InnsynService
+) {
 
     companion object {
         private val log by logger()
@@ -40,7 +42,7 @@ class MockController(private val fiksClientMock: FiksClientMock,
         val digisosSak = fiksClientMock.hentDigisosSak(soknadId, "Token")
 
         val jsonNode = mapper.convertValue(digisosApiWrapper.sak.soker, JsonNode::class.java)
-        val jsonDigisosSoker = sosialhjelpMapper.convertValue<JsonDigisosSoker>(jsonNode, JsonDigisosSoker::class.java)
+        val jsonDigisosSoker = sosialhjelpMapper.convertValue(jsonNode, JsonDigisosSoker::class.java)
         digisosSak.digisosSoker?.metadata?.let { fiksClientMock.postDokument(it, jsonDigisosSoker) }
     }
 

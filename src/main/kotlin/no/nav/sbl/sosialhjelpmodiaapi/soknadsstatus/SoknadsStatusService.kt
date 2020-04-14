@@ -8,8 +8,10 @@ import org.springframework.stereotype.Component
 
 
 @Component
-class SoknadsStatusService(private val fiksClient: FiksClient,
-                           private val eventService: EventService) {
+class SoknadsStatusService(
+        private val fiksClient: FiksClient,
+        private val eventService: EventService
+) {
 
     fun hentSoknadsStatus(fiksDigisosId: String, token: String): SoknadsStatusResponse {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)

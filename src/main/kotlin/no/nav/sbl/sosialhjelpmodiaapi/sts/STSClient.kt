@@ -12,8 +12,10 @@ import java.time.LocalDateTime
 
 @Profile("!(mock | local)")
 @Component
-class STSClient(private val stsRestTemplate: RestTemplate,
-                clientProperties: ClientProperties) {
+class STSClient(
+        private val serviceuserBasicAuthRestTemplate: RestTemplate,
+        clientProperties: ClientProperties
+) {
 
     companion object {
         private val log by logger()
@@ -28,7 +30,7 @@ class STSClient(private val stsRestTemplate: RestTemplate,
             try {
                 log.info("Henter nytt token fra STS")
                 val requestUrl = lagRequest(baseUrl)
-                val response = stsRestTemplate.exchange(requestUrl, GET, null, STSToken::class.java)
+                val response = serviceuserBasicAuthRestTemplate.exchange(requestUrl, GET, null, STSToken::class.java)
 
                 cachedToken = response.body
                 return response.body!!.access_token

@@ -13,8 +13,10 @@ import org.springframework.web.client.RestTemplate
 
 @Profile("!mock")
 @Component
-class STSCheck(clientProperties: ClientProperties,
-               private val restTemplate: RestTemplate) : AbstractDependencyCheck(
+class STSCheck(
+        clientProperties: ClientProperties,
+        private val restTemplate: RestTemplate
+) : AbstractDependencyCheck(
         DependencyType.REST,
         "STS",
         clientProperties.stsTokenEndpointUrl,

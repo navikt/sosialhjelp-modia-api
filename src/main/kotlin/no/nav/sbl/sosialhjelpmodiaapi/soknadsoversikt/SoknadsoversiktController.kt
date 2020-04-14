@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.soknadsoversikt
 
+import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
@@ -27,14 +28,19 @@ import org.springframework.web.bind.annotation.RestController
 @ProtectedWithClaims(issuer = "veileder")
 @RestController
 @RequestMapping("/api/v1/innsyn", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
-class SoknadsoversiktController(private val fiksClient: FiksClient,
-                                private val eventService: EventService,
-                                private val oppgaveService: OppgaveService) {
+class SoknadsoversiktController(
+        private val fiksClient: FiksClient,
+        private val eventService: EventService,
+        private val oppgaveService: OppgaveService,
+        private val abacService: AbacService
+) {
 
     @PostMapping("/saker")
     fun hentAlleSaker(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SaksListeResponse>> {
-        // sjekk tilgang til fnr
+        abacService.harTilgang(ident.fnr, token)
+
         // kan ikke bruke saksbehandlers token til å hente alle DigisosSaker for søker?
+
         val saker = try {
             fiksClient.hentAlleDigisosSaker(token)
         } catch (e: FiksException) {
@@ -58,7 +64,8 @@ class SoknadsoversiktController(private val fiksClient: FiksClient,
 
     @PostMapping("/{fiksDigisosId}/saksDetaljer")
     fun hentSaksDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SaksDetaljerResponse> {
-        // sjekk tilgang til fnr
+        abacService.harTilgang(ident.fnr, token)
+
         // kan ikke bruke saksbehandlers token til å hente saksDetaljer for søknad?
         val sak = fiksClient.hentDigisosSak(fiksDigisosId, token)
         val model = eventService.createSoknadsoversiktModel(token, sak)

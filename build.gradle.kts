@@ -24,6 +24,7 @@ val rxKotlinVersion = "2.4.0"
 val vavrKotlinVersion = "0.10.2"
 val ktorVersion = "1.3.1"
 val kotlinCoroutinesVersion = "1.3.3"
+val abacAttributeConstantsVersion = "3.3.13"
 
 val mainClass = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
 
@@ -93,6 +94,8 @@ dependencies {
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
     implementation("io.springfox:springfox-swagger2:$swaggerVersion")
     implementation("io.springfox:springfox-swagger-ui:$swaggerVersion")
+
+    implementation("no.nav.abac.policies:abac-attribute-constants:$abacAttributeConstantsVersion")
 
     //spesifikke versjoner oppgradert etter ønske fra snyk
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion")

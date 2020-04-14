@@ -29,9 +29,11 @@ import java.util.Collections.singletonList
 
 @Profile("!mock")
 @Component
-class FiksClientImpl(clientProperties: ClientProperties,
-                     private val restTemplate: RestTemplate,
-                     private val idPortenService: IdPortenService) : FiksClient {
+class FiksClientImpl(
+        clientProperties: ClientProperties,
+        private val restTemplate: RestTemplate,
+        private val idPortenService: IdPortenService
+) : FiksClient {
 
     companion object {
         private val log by logger()

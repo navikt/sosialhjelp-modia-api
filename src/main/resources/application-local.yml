@@ -1,14 +1,12 @@
+spring:
+  profiles:
+    active: local
+
 no.nav.security.jwt:
   issuer.veileder:
     discoveryurl: http://metadata
     accepted_audience: aud-localhost
     cookie_name: localhost-idtoken
-
-management:
-  endpoints:
-    web:
-      exposure:
-        exclude: '*'
 
 client:
   abac_pdp_endpoint_url: ${ABAC_PDP_ENDPOINT_URL:abac_pdp_endpoint_url}

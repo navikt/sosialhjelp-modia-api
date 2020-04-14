@@ -3,8 +3,11 @@
 spring:
   main:
     banner-mode: 'off'
+  profiles:
+    active: test
 
 client:
+  abac_pdp_endpoint_url: "abacurl"
   fiks_digisos_endpoint_url: 'fiks-digisos.com'
   norg_endpoint_url: 'http://localhost:51234'
   fiks_integrasjonid: "id"

@@ -24,7 +24,11 @@ import java.util.*
 
 @Profile("!mock")
 @Component
-class DigisosApiClientImpl(clientProperties: ClientProperties, private val restTemplate: RestTemplate, private val idPortenService: IdPortenService) : DigisosApiClient {
+class DigisosApiClientImpl(
+        clientProperties: ClientProperties,
+        private val restTemplate: RestTemplate,
+        private val idPortenService: IdPortenService
+) : DigisosApiClient {
 
     companion object {
         private val log by logger()
@@ -38,7 +42,7 @@ class DigisosApiClientImpl(clientProperties: ClientProperties, private val restT
         var id = fiksDigisosId
         if (fiksDigisosId == null || fiksDigisosId == "001" || fiksDigisosId == "002" || fiksDigisosId == "003") {
             id = opprettDigisosSak()
-            log.info("Laget ny digisossak: " + id)
+            log.info("Laget ny digisossak: $id")
         }
         val httpEntity = HttpEntity(objectMapper.writeValueAsString(digisosApiWrapper), headers())
         try {

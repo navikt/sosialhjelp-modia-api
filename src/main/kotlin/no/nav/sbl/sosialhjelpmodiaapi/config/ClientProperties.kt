@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component
 @ConfigurationProperties(prefix = "client")
 class ClientProperties {
 
+    lateinit var abacPdpEndpointUrl: String
+
     lateinit var fiksDigisosEndpointUrl: String
 
     lateinit var fiksIntegrasjonId: String

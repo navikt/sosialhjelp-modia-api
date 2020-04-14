@@ -24,9 +24,11 @@ import org.springframework.web.client.RestTemplate
 
 @Profile("!(mock | local)")
 @Component
-class PdlClientImpl(clientProperties: ClientProperties,
-                    private val restTemplate: RestTemplate,
-                    private val stsClient: STSClient) : PdlClient {
+class PdlClientImpl(
+        clientProperties: ClientProperties,
+        private val restTemplate: RestTemplate,
+        private val stsClient: STSClient
+) : PdlClient {
 
     companion object {
         private val log by logger()
@@ -35,7 +37,6 @@ class PdlClientImpl(clientProperties: ClientProperties,
     private val baseurl = clientProperties.pdlEndpointUrl
 
     override fun hentPerson(ident: String): PdlHentPerson? {
-        // fixme: sjekk at veileder har tilgang til å hente personinfo for bruker med ident?
         val query = getResourceAsString("/pdl/hentPerson.graphql").replace("[\n\r]", "")
         try {
             val requestEntity = createRequestEntity(PdlRequest(query, Variables(ident)))

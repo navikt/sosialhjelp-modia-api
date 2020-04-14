@@ -7,4 +7,6 @@ class FiksNotFoundException(status: HttpStatus?, override val message: String?, 
 
 class NorgException(status: HttpStatus?, override val message: String?, override val cause: Throwable?) : RuntimeException(message, cause)
 
+class TilgangskontrollException(override val message: String?, override val cause: Throwable? = null): RuntimeException(message, cause)
+
 class PdlException(status: HttpStatus?, override val message: String?) : RuntimeException(message)

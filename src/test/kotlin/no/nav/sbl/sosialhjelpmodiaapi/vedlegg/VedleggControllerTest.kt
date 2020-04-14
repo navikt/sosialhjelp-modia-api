@@ -1,8 +1,11 @@
 package no.nav.sbl.sosialhjelpmodiaapi.vedlegg
 
-import io.mockk.clearMocks
+import io.mockk.Runs
+import io.mockk.clearAllMocks
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.VedleggResponse
 import no.nav.sbl.sosialhjelpmodiaapi.vedlegg.VedleggService.InternalVedlegg
@@ -15,8 +18,9 @@ import java.time.LocalDateTime
 internal class VedleggControllerTest {
 
     private val vedleggService: VedleggService = mockk()
+    private val abacService: AbacService = mockk()
 
-    private val controller = VedleggController(vedleggService)
+    private val controller = VedleggController(vedleggService, abacService)
 
     private val fnr = "11111111111"
     private val id = "123"
@@ -27,7 +31,9 @@ internal class VedleggControllerTest {
 
     @BeforeEach
     internal fun setUp() {
-        clearMocks(vedleggService)
+        clearAllMocks()
+
+        every { abacService.harTilgang(any(), any()) } just Runs
     }
 
     @Test

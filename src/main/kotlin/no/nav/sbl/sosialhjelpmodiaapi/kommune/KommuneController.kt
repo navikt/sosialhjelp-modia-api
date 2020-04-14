@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.kommune
 
+import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.HttpHeaders.AUTHORIZATION
@@ -14,14 +15,18 @@ import org.springframework.web.bind.annotation.RestController
 @ProtectedWithClaims(issuer = "veileder")
 @RestController
 @RequestMapping("/api/v1/innsyn", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
-class KommuneController(private val kommuneService: KommuneService) {
+class KommuneController(
+        private val kommuneService: KommuneService,
+        private val abacService: AbacService
+) {
 
     @PostMapping("/{fiksDigisosId}/kommune")
     fun hentKommuneInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<String> {
-        // sjekk tilgang til fnr hvis vi skal kalle fiks med fiksDigisosId som tilhører bruker?
-        // kan ikke bruke saksbehandlers token for å hente digisosSak fra fiks?
-        val kommuneStatus = kommuneService.hentKommuneStatus(fiksDigisosId, token)
+        abacService.harTilgang(ident.fnr, token)
 
+        // kan ikke bruke saksbehandlers token for å hente digisosSak fra fiks?
+
+        val kommuneStatus = kommuneService.hentKommuneStatus(fiksDigisosId, token)
         return ResponseEntity.ok(kommuneStatus.toString())
     }
 

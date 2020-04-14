@@ -3,6 +3,8 @@ spring:
     banner-mode: 'off'
   application:
     name: "sosialhjelp-modia-api"
+  profiles:
+    active: ${NAIS_CLUSTER_NAME}
 
 # Prometheus
 management:

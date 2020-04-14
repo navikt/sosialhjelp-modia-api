@@ -18,8 +18,10 @@ import org.springframework.web.client.RestTemplate
 
 @Profile("!mock & !local")
 @Component
-class NorgClientImpl(clientProperties: ClientProperties,
-                     private val restTemplate: RestTemplate) : NorgClient {
+class NorgClientImpl(
+        clientProperties: ClientProperties,
+        private val restTemplate: RestTemplate
+) : NorgClient {
 
     private val baseUrl = clientProperties.norgEndpointUrl
 

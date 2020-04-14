@@ -24,9 +24,11 @@ import java.util.*
 
 @Profile("!mock")
 @Component
-class FiksCheck(private val restTemplate: RestTemplate,
-                private val clientProperties: ClientProperties,
-                private val idPortenService: IdPortenService) : AbstractDependencyCheck(
+class FiksCheck(
+        private val restTemplate: RestTemplate,
+        private val clientProperties: ClientProperties,
+        private val idPortenService: IdPortenService
+) : AbstractDependencyCheck(
         DependencyType.REST,
         "Fiks Digisos API",
         clientProperties.fiksDigisosEndpointUrl,

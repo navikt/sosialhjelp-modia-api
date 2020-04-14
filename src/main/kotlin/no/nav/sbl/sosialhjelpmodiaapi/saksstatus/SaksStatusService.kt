@@ -12,8 +12,10 @@ import org.springframework.stereotype.Component
 const val DEFAULT_TITTEL: String = "Økonomisk sosialhjelp"
 
 @Component
-class SaksStatusService(private val fiksClient: FiksClient,
-                        private val eventService: EventService) {
+class SaksStatusService(
+        private val fiksClient: FiksClient,
+        private val eventService: EventService
+) {
 
     fun hentSaksStatuser(fiksDigisosId: String, token: String): List<SaksStatusResponse> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)

@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.soknadsoversikt
 
 import io.mockk.*
+import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.domain.*
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
@@ -16,8 +17,9 @@ internal class SoknadsoversiktControllerTest {
     private val fiksClient: FiksClient = mockk()
     private val eventService: EventService = mockk()
     private val oppgaveService: OppgaveService = mockk()
+    private val abacService: AbacService = mockk()
 
-    private val controller = SoknadsoversiktController(fiksClient, eventService, oppgaveService)
+    private val controller = SoknadsoversiktController(fiksClient, eventService, oppgaveService, abacService)
 
     private val digisosSak1: DigisosSak = mockk()
     private val digisosSak2: DigisosSak = mockk()
@@ -37,6 +39,8 @@ internal class SoknadsoversiktControllerTest {
     @BeforeEach
     internal fun setUp() {
         clearAllMocks()
+
+        every { abacService.harTilgang(any(), any()) } just Runs
 
         every { digisosSak1.fiksDigisosId } returns id_1
         every { digisosSak1.sistEndret } returns 0L
