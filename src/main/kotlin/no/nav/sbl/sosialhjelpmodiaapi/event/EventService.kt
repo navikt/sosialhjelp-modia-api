@@ -48,11 +48,9 @@ class EventService(
             }
         }
 
-        if (jsonDigisosSoker != null) {
-            jsonDigisosSoker.hendelser
-                    .sortedBy { it.hendelsestidspunkt }
-                    .forEach { model.applyHendelse(it) }
-        }
+        jsonDigisosSoker?.hendelser
+                ?.sortedBy { it.hendelsestidspunkt }
+                ?.forEach { model.applyHendelse(it) }
 
         return model
     }

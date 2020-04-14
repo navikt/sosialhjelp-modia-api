@@ -42,7 +42,7 @@ class MockController(
         val digisosSak = fiksClientMock.hentDigisosSak(soknadId, "Token")
 
         val jsonNode = mapper.convertValue(digisosApiWrapper.sak.soker, JsonNode::class.java)
-        val jsonDigisosSoker = sosialhjelpMapper.convertValue<JsonDigisosSoker>(jsonNode, JsonDigisosSoker::class.java)
+        val jsonDigisosSoker = sosialhjelpMapper.convertValue(jsonNode, JsonDigisosSoker::class.java)
         digisosSak.digisosSoker?.metadata?.let { fiksClientMock.postDokument(it, jsonDigisosSoker) }
     }
 
