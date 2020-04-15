@@ -1,7 +1,7 @@
 {
   "namespace": "q1",
   "ingress": [
-    "https://sosialhjelp-modia-api-q1.nais.preprod.local"
+    "https://sosialhjelp-modia-api-q1.nais.preprod.local/sosialhjelp/modia-api"
   ],
   "virksomhetssertifikat_vault_path": "/secret/virksomhetssertifikat/preprod/shared",
   "application_vault_path": "/kv/preprod/fss/sosialhjelp-modia-api/q1",

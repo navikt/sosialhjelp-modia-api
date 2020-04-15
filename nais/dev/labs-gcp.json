@@ -1,7 +1,7 @@
 {
   "namespace": "teamdigisos",
   "ingress": [
-    "https://sosialhjelp-modia-api.labs.nais.io/"
+    "https://sosialhjelp-modia-api.labs.nais.io/sosialhjelp/modia-api"
   ],
   "env": {
     "SPRING_PROFILES_ACTIVE": "mock"
