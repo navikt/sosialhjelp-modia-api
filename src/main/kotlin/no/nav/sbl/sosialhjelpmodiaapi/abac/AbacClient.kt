@@ -3,6 +3,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.abac
 import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditLogger
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -26,6 +27,14 @@ class AbacClientImpl(
 
     private val url = clientProperties.abacPdpEndpointUrl
 
+    companion object {
+        private val log by logger()
+
+        private const val MEDIA_TYPE = "application/xacml+json"
+
+        private val auditlogger = AuditLogger()
+    }
+
     override fun sjekkTilgang(request: Request): AbacResponse {
         //logg request-info til auditlogger
 
@@ -45,7 +54,9 @@ class AbacClientImpl(
 
         val xacmlResponse = XacmlMapper.mapRawResponse(responseBody)
 
-        //logg response-info til auditlogger
+        // auditlogg abac-kall
+        auditlogger.logAbac(request, xacmlResponse.response[0].decision)
+
         return xacmlResponse.response[0]
     }
 
@@ -55,10 +66,5 @@ class AbacClientImpl(
         return headers
     }
 
-    companion object {
-        private val log by logger()
-
-        private const val MEDIA_TYPE = "application/xacml+json"
-    }
 
 }
