@@ -6,6 +6,10 @@ spring:
   profiles:
     active: ${NAIS_CLUSTER_NAME}
 
+server:
+  servlet:
+    context-path: '/sosialhjelp/modia-api'
+
 # Prometheus
 management:
   endpoints:

@@ -1,7 +1,7 @@
 {
   "namespace": "default",
   "ingress": [
-    "https://sosialhjelp-modia-api.nais.adeo.no"
+    "https://sosialhjelp-modia-api.nais.adeo.no/sosialhjelp/modia-api"
   ],
   "virksomhetssertifikat_vault_path": "/kv/prod/fss/sosialhjelp-modia-api/default",
   "application_vault_path": "/kv/prod/fss/sosialhjelp-modia-api/default",

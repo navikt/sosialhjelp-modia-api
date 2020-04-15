@@ -9,18 +9,18 @@ spec:
   image: {{image}}
   port: 8080
   liveness:
-    path: /internal/isAlive
+    path: /sosialhjelp/modia-api/internal/isAlive
     initialDelay: 20
     timeout: 1
     periodSeconds: 5
     failureThreshold: 10
   readiness:
-    path: /internal/isReady
+    path: /sosialhjelp/modia-api/internal/isReady
     initialDelay: 20
     timeout: 1
   prometheus:
     enabled: {{prometheusEnabled}}
-    path: /internal/prometheus
+    path: /sosialhjelp/modia-api/internal/prometheus
   replicas:
     min: {{minReplicas}}
     max: {{maxReplicas}}
