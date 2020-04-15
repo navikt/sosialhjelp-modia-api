@@ -6,9 +6,11 @@ import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.AbstractDependencyCheck
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.DependencyType
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.Importance
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 
+@Profile("!mock")
 @Component
 class AbacCheck(
         private val abacService: AbacService,
