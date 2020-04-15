@@ -30,7 +30,7 @@ class NorgClientMock : NorgClient {
 
     private val sosialetjenesterInfo: String = """
         Til saksbehandler:
-        Flere vakttelefoner:ø
+        Flere vakttelefoner:
         Mottak (nye brukere): 11112222
         Ungdom (18-24år, samt OT-ungdom 16år+): 11112222
         Avklaring (enslige over 20år u/hovedutford. rus/psyk.): 11112222
