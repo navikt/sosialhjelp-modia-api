@@ -16,7 +16,6 @@ val micrometerRegistryVersion = "1.3.5"
 val prometheusVersion = "0.8.1"
 val tokenValidationVersion = "1.1.4"
 val jacksonVersion = "2.10.3"
-val jacksonDatabindVersion = "2.10.3"
 val guavaVersion = "28.2-jre"
 val swaggerVersion = "2.9.2"
 val resilience4jVersion = "1.3.1"
@@ -25,6 +24,8 @@ val vavrKotlinVersion = "0.10.2"
 val ktorVersion = "1.3.1"
 val kotlinCoroutinesVersion = "1.3.3"
 val abacAttributeConstantsVersion = "3.3.13"
+val logbackSyslog4jVersion = "1.0.0"
+val syslog4jVersion = "0.9.30"
 
 val mainClass = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
 
@@ -57,6 +58,7 @@ configurations {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.hamcrest", module = "hamcrest-library")
         exclude(group = "org.hamcrest", module = "hamcrest-core")
+        exclude(group = "org.mockito", module = "mockito-core")
     }
 }
 
@@ -64,6 +66,7 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
 
+//    Ktor
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-auth:$ktorVersion")
     implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
@@ -72,46 +75,59 @@ dependencies {
     implementation("io.ktor:ktor-client-apache:$ktorVersion")
     implementation("io.ktor:ktor-client-json:$ktorVersion")
     implementation("io.ktor:ktor-client-jackson:$ktorVersion")
+
+//    Kotlin coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:${kotlinCoroutinesVersion}")
 
+//    Spring
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-logging:$springBootVersion")
 
+//    Micrometer // Prometheus
     implementation("io.micrometer:micrometer-registry-prometheus:$micrometerRegistryVersion")
     implementation("io.prometheus:simpleclient_common:$prometheusVersion")
     implementation("io.prometheus:simpleclient_hotspot:$prometheusVersion")
 
+//    Logging
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
 
+//    Auditlogger syslog
+    implementation("com.papertrailapp:logback-syslog4j:$logbackSyslog4jVersion")
+    implementation("org.syslog4j:syslog4j:$syslog4jVersion")
+
+//    Filformat
     implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:$filformatVersion")
 
+//    Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
 
+//    Token-validering
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
+
+//    Swagger
     implementation("io.springfox:springfox-swagger2:$swaggerVersion")
     implementation("io.springfox:springfox-swagger-ui:$swaggerVersion")
 
+//    Abac attributter
     implementation("no.nav.abac.policies:abac-attribute-constants:$abacAttributeConstantsVersion")
 
-    //spesifikke versjoner oppgradert etter ønske fra snyk
-    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion")
+//    spesifikke versjoner oppgradert etter ønske fra snyk
     implementation("com.google.guava:guava:$guavaVersion")
 
-    //selftest
+//    Selftest
     implementation ("io.github.resilience4j:resilience4j-kotlin:$resilience4jVersion")
     implementation ("io.github.resilience4j:resilience4j-timelimiter:$resilience4jVersion")
     implementation ("io.github.resilience4j:resilience4j-circuitbreaker:$resilience4jVersion")
     implementation ("io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion")
     implementation ("io.vavr:vavr-kotlin:$vavrKotlinVersion")
 
-    //Test dependencies
-    testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion") {
-        exclude(group = "org.mockito", module = "mockito-core")
-    }
+//    Test dependencies
+    testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
     testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("no.nav.security:token-validation-test-support:$tokenValidationVersion")
