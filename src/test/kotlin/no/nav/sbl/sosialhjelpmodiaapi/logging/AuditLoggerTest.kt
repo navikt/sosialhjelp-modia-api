@@ -78,7 +78,7 @@ internal class AuditLoggerTest {
                 .contains("duid=11111122222")
                 .contains("flexString1=Deny flexString1Label=Decision")
                 .contains("flexString2=1_denyPolicy,2_denyPolicy flexString2Label=deny_policy")
-                .contains("cs1=1_cause,2_cause cs1Label=deny_cause")
+                .contains("cs3=1_cause,2_cause cs3Label=deny_cause")
     }
 
     @Test
@@ -95,7 +95,7 @@ internal class AuditLoggerTest {
                 // extension
                 .contains("suid=Z999888")
                 .contains("duid=11111122222")
-                .contains("cs2=123123 cs2Label=fiksRequestId")
+                .contains("cs5=123123 cs5Label=fiksRequestId")
     }
 
     private fun createAbacDeny(): AbacResponse {

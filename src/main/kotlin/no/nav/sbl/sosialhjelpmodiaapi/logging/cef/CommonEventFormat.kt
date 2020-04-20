@@ -57,7 +57,7 @@ data class Abac(
         val denyCause: String
 ) {
     override fun toString(): String {
-        return " flexString1=$decision flexString1Label=Decision flexString2=$denyPolicy flexString2Label=deny_policy cs1=$denyCause cs1Label=deny_cause"
+        return " flexString1=$decision flexString1Label=Decision flexString2=$denyPolicy flexString2Label=deny_policy cs3=$denyCause cs3Label=deny_cause"
     }
 }
 
@@ -66,6 +66,6 @@ data class Fiks(
         val fiksRequestId: String
 ) {
     override fun toString(): String {
-        return " cs2=$fiksRequestId cs2Label=fiksRequestId"
+        return " cs5=$fiksRequestId cs5Label=fiksRequestId"
     }
 }
