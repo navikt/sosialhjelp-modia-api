@@ -2,9 +2,6 @@ spring:
   profiles:
     active: mock
 
-#server:
-#  port: 8383
-
 no.nav.security.jwt:
   issuer.veileder:
     discoveryurl: http://metadata
