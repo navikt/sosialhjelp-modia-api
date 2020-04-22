@@ -18,7 +18,8 @@
     "ID_PORTEN_SCOPE": "ks:fiks",
     "NORG_ENDPOINT_URL": "https://app.adeo.no/norg2/api/v1",
     "PDL_ENDPOINT_URL": "https://pdl-api.nais.adeo.no/graphql",
-    "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.adeo.no/rest/v1/sts"
+    "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.adeo.no/rest/v1/sts",
+    "SPRING_PROFILES_ACTIVE": "prod-sbs,log-kibana"
   },
   "minReplicas": "2",
   "maxReplicas": "4",
