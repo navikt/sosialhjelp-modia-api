@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 
-@Profile("!(mock | local")
+@Profile("!(mock | local)")
 @Component
 class AuditService(
         private val auditLogger: AuditLogger

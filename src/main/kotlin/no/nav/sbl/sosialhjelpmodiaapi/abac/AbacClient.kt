@@ -19,7 +19,7 @@ interface AbacClient {
 
 }
 
-@Profile("!(mock | local")
+@Profile("!(mock | local)")
 @Component
 class AbacClientImpl(
         clientProperties: ClientProperties,
