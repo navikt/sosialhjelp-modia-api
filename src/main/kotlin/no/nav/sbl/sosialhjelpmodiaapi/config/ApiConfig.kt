@@ -30,7 +30,9 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 "https://www.nav.no",
                 "https://tjenester.nav.no",
                 "http://localhost:3000",
-                "http://localhost:3001")
+                "http://localhost:3001",
+                "https://sosialhjelp-modia.labs.nais.io",
+                "https://digisos.labs.nais.io")
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
         configuration.allowedHeaders = listOf("Origin", "Content-Type", "Accept", "Authorization")
         configuration.allowCredentials = true

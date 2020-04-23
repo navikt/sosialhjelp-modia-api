@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
-    </appender>
+    <springProfile name="log-kibana">
+        <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+        </appender>
 
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%green(%d{HH:mm:ss}) %cyan([%-5.5t]) %boldCyan(%0.-5p) %yellow(%-20.20logger{19}) %cyan(:) %m%n
-            </pattern>
-        </encoder>
-    </appender>
+        <logger name="no.nav.sbl.sosialhjelpmodiaapi" level="INFO"/>
 
-    <logger name="no.nav.sbl.sosialhjelpmodiaapi" level="INFO"/>
-
-    <springProfile name="!(local | mock)">
         <root level="INFO">
             <appender-ref ref="stdout_json"/>
         </root>
@@ -36,10 +29,12 @@
         </logger>
     </springProfile>
 
-    <springProfile name="local | mock">
-        <root level="INFO">
-            <appender-ref ref="CONSOLE"/>
-        </root>
+    <springProfile name="log-console">
+        <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%green(%d{HH:mm:ss}) %cyan([%-5.5t]) %boldCyan(%0.-5p) %yellow(%-20.20logger{19}) %cyan(:) %m%n</pattern>
+            </encoder>
+        </appender>
 
         <appender name="auditLogger" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
@@ -57,6 +52,9 @@
         <logger name="org.springframework.security" level="INFO"/>
         <logger name="org.springframework.web" level="INFO"/>
 
+        <root level="INFO">
+            <appender-ref ref="console"/>
+        </root>
     </springProfile>
 
 </configuration>
