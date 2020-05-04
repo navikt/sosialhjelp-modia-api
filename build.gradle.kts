@@ -5,26 +5,30 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "no.nav.sbl"
 
-val kotlinVersion = "1.3.70"
-val springBootVersion = "2.2.6.RELEASE"
-val logbackVersion = "1.2.3"
-val logstashVersion = "6.3"
-val junitJupiterVersion = "5.6.0"
-val mockkVersion = "1.9.3"
-val filformatVersion = "1.2020.01.09-15.55-f18d10d7d76a"
-val micrometerRegistryVersion = "1.3.5"
-val prometheusVersion = "0.8.1"
-val tokenValidationVersion = "1.1.4"
-val jacksonVersion = "2.10.3"
-val jacksonDatabindVersion = "2.10.3"
-val guavaVersion = "28.2-jre"
-val swaggerVersion = "2.9.2"
-val resilience4jVersion = "1.3.1"
-val rxKotlinVersion = "2.4.0"
-val vavrKotlinVersion = "0.10.2"
-val ktorVersion = "1.3.1"
-val kotlinCoroutinesVersion = "1.3.3"
-val abacAttributeConstantsVersion = "3.3.13"
+object Versions {
+    const val kotlin = "1.3.70"
+    const val springBoot = "2.2.6.RELEASE"
+    const val logback = "1.2.3"
+    const val logstash = "6.3"
+    const val filformat = "1.2020.01.09-15.55-f18d10d7d76a"
+    const val micrometerRegistry = "1.3.5"
+    const val prometheus = "0.8.1"
+    const val tokenValidation = "1.1.4"
+    const val jackson = "2.10.3"
+    const val jacksonDatabind = "2.10.3"
+    const val guava = "28.2-jre"
+    const val swagger = "2.9.2"
+    const val resilience4j = "1.3.1"
+    const val rxKotlin = "2.4.0"
+    const val vavrKotlin = "0.10.2"
+    const val ktor = "1.3.1"
+    const val kotlinCoroutines = "1.3.3"
+    const val abacAttributeConstants = "3.3.13"
+
+    // Test only
+    const val junitJupiter = "5.6.0"
+    const val mockk = "1.9.3"
+}
 
 val mainClass = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
 
@@ -64,58 +68,58 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
 
-    implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("io.ktor:ktor-auth:$ktorVersion")
-    implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
-    implementation("io.ktor:ktor-jackson:$ktorVersion")
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-apache:$ktorVersion")
-    implementation("io.ktor:ktor-client-json:$ktorVersion")
-    implementation("io.ktor:ktor-client-jackson:$ktorVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:${kotlinCoroutinesVersion}")
+    implementation("io.ktor:ktor-server-netty:${Versions.ktor}")
+    implementation("io.ktor:ktor-auth:${Versions.ktor}")
+    implementation("io.ktor:ktor-auth-jwt:${Versions.ktor}")
+    implementation("io.ktor:ktor-jackson:${Versions.ktor}")
+    implementation("io.ktor:ktor-client-core:${Versions.ktor}")
+    implementation("io.ktor:ktor-client-apache:${Versions.ktor}")
+    implementation("io.ktor:ktor-client-json:${Versions.ktor}")
+    implementation("io.ktor:ktor-client-jackson:${Versions.ktor}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:${Versions.kotlinCoroutines}")
 
-    implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-logging:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter-web:${Versions.springBoot}")
+    implementation("org.springframework.boot:spring-boot-starter-jetty:${Versions.springBoot}")
+    implementation("org.springframework.boot:spring-boot-starter-security:${Versions.springBoot}")
+    implementation("org.springframework.boot:spring-boot-starter-actuator:${Versions.springBoot}")
+    implementation("org.springframework.boot:spring-boot-starter-logging:${Versions.springBoot}")
 
-    implementation("io.micrometer:micrometer-registry-prometheus:$micrometerRegistryVersion")
-    implementation("io.prometheus:simpleclient_common:$prometheusVersion")
-    implementation("io.prometheus:simpleclient_hotspot:$prometheusVersion")
+    implementation("io.micrometer:micrometer-registry-prometheus:${Versions.micrometerRegistry}")
+    implementation("io.prometheus:simpleclient_common:${Versions.prometheus}")
+    implementation("io.prometheus:simpleclient_hotspot:${Versions.prometheus}")
 
-    implementation("ch.qos.logback:logback-classic:$logbackVersion")
-    implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
+    implementation("ch.qos.logback:logback-classic:${Versions.logback}")
+    implementation("net.logstash.logback:logstash-logback-encoder:${Versions.logstash}")
 
-    implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:$filformatVersion")
+    implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:${Versions.filformat}")
 
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jackson}")
 
-    implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
-    implementation("io.springfox:springfox-swagger2:$swaggerVersion")
-    implementation("io.springfox:springfox-swagger-ui:$swaggerVersion")
+    implementation("no.nav.security:token-validation-spring:${Versions.tokenValidation}")
+    implementation("io.springfox:springfox-swagger2:${Versions.swagger}")
+    implementation("io.springfox:springfox-swagger-ui:${Versions.swagger}")
 
-    implementation("no.nav.abac.policies:abac-attribute-constants:$abacAttributeConstantsVersion")
+    implementation("no.nav.abac.policies:abac-attribute-constants:${Versions.abacAttributeConstants}")
 
     //spesifikke versjoner oppgradert etter ønske fra snyk
-    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion")
-    implementation("com.google.guava:guava:$guavaVersion")
+    implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.jacksonDatabind}")
+    implementation("com.google.guava:guava:${Versions.guava}")
 
     //selftest
-    implementation ("io.github.resilience4j:resilience4j-kotlin:$resilience4jVersion")
-    implementation ("io.github.resilience4j:resilience4j-timelimiter:$resilience4jVersion")
-    implementation ("io.github.resilience4j:resilience4j-circuitbreaker:$resilience4jVersion")
-    implementation ("io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion")
-    implementation ("io.vavr:vavr-kotlin:$vavrKotlinVersion")
+    implementation ("io.github.resilience4j:resilience4j-kotlin:${Versions.resilience4j}")
+    implementation ("io.github.resilience4j:resilience4j-timelimiter:${Versions.resilience4j}")
+    implementation ("io.github.resilience4j:resilience4j-circuitbreaker:${Versions.resilience4j}")
+    implementation ("io.reactivex.rxjava2:rxkotlin:${Versions.rxKotlin}")
+    implementation ("io.vavr:vavr-kotlin:${Versions.vavrKotlin}")
 
     //Test dependencies
-    testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion") {
-        exclude(group = "org.mockito", module = "mockito-core")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}") {
+        exclude(group = "org.mockito", module = "mockito-core}")
     }
-    testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
-    testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("no.nav.security:token-validation-test-support:$tokenValidationVersion")
-    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junitJupiter}")
+    testImplementation("io.mockk:mockk:${Versions.mockk}")
+    testImplementation("no.nav.security:token-validation-test-support:${Versions.tokenValidation}")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:${Versions.kotlin}")
 }
 
 repositories {
