@@ -31,6 +31,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 "https://tjenester.nav.no",
                 "http://localhost:3000",
                 "http://localhost:3001",
+                "http://localhost:3003",
                 "https://sosialhjelp-modia.labs.nais.io",
                 "https://digisos.labs.nais.io")
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
