@@ -63,5 +63,4 @@ class OppgaveService(
     companion object {
         private val log by logger()
     }
-
 }

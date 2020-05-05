@@ -34,10 +34,6 @@ class FiksCheck(
         clientProperties.fiksDigisosEndpointUrl,
         Importance.WARNING
 ) {
-    companion object {
-        private val log by logger()
-    }
-
     override fun doCheck() {
         try {
             val headers = HttpHeaders()
@@ -56,5 +52,9 @@ class FiksCheck(
             log.warn("Selftest - Fiks hentKommuneInfo feilet", e)
             throw FiksException(null, e.message, e)
         }
+    }
+
+    companion object {
+        private val log by logger()
     }
 }

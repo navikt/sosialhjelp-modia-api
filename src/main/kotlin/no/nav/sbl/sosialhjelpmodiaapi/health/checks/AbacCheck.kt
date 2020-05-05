@@ -19,11 +19,11 @@ class AbacCheck(
         clientProperties.abacPdpEndpointUrl,
         Importance.WARNING
 ) {
-    companion object {
-        val log by logger()
-    }
-
     override fun doCheck() {
         abacService.ping()
+    }
+
+    companion object {
+        val log by logger()
     }
 }

@@ -15,11 +15,6 @@ import java.nio.charset.StandardCharsets
 @Configuration
 class RestConfig {
 
-    companion object {
-        private const val SRVSOSIALHJELP_MODIA_API_USERNAME: String = "SRVSOSIALHJELP_MODIA_API_USERNAME"
-        private const val SRVSOSIALHJELP_MODIA_API_PASSWORD: String = "SRVSOSIALHJELP_MODIA_API_PASSWORD"
-    }
-
     @Bean
     fun restTemplate(builder: RestTemplateBuilder): RestTemplate =
             builder.build()
@@ -51,4 +46,8 @@ class RestConfig {
         return jackson
     }
 
+    companion object {
+        private const val SRVSOSIALHJELP_MODIA_API_USERNAME: String = "SRVSOSIALHJELP_MODIA_API_USERNAME"
+        private const val SRVSOSIALHJELP_MODIA_API_PASSWORD: String = "SRVSOSIALHJELP_MODIA_API_PASSWORD"
+    }
 }

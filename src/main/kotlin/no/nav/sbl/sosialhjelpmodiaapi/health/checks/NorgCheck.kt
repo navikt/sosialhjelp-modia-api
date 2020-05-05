@@ -27,10 +27,6 @@ class NorgCheck(
         clientProperties.norgEndpointUrl,
         Importance.WARNING
 ) {
-    companion object {
-        private val log by logger()
-    }
-
     override fun doCheck() {
         try {
             val headers = HttpHeaders()
@@ -45,5 +41,9 @@ class NorgCheck(
             log.warn("Selftest - Norg2 - noe feilet", e)
             throw NorgException(null, e.message, e)
         }
+    }
+
+    companion object {
+        private val log by logger()
     }
 }

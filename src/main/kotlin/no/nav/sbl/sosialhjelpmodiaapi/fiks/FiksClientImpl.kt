@@ -35,10 +35,6 @@ class FiksClientImpl(
         private val idPortenService: IdPortenService
 ) : FiksClient {
 
-    companion object {
-        private val log by logger()
-    }
-
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
     private val fiksIntegrasjonid = clientProperties.fiksIntegrasjonId
     private val fiksIntegrasjonpassord = clientProperties.fiksIntegrasjonpassord
@@ -148,5 +144,9 @@ class FiksClientImpl(
         headers.set(HEADER_INTEGRASJON_ID, fiksIntegrasjonid)
         headers.set(HEADER_INTEGRASJON_PASSORD, fiksIntegrasjonpassord)
         return headers
+    }
+
+    companion object {
+        private val log by logger()
     }
 }

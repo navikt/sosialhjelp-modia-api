@@ -129,6 +129,10 @@ class IdPortenService(clientProperties: ClientProperties) {
         private val log by logger()
     }
 
-    private data class VirksertCredentials(val alias: String, val password: String, val type: String)
+    private data class VirksertCredentials(
+            val alias: String,
+            val password: String,
+            val type: String
+    )
 
 }

@@ -29,10 +29,6 @@ class MockController(
         private val innsynService: InnsynService
 ) {
 
-    companion object {
-        private val log by logger()
-    }
-
     private val mapper = jacksonObjectMapper()
     private val sosialhjelpMapper = JsonSosialhjelpObjectMapper.createObjectMapper()
 
@@ -51,5 +47,9 @@ class MockController(
         val digisosSak = fiksClientMock.hentDigisosSak(soknadId, token)
         val jsonDigisosSoker = innsynService.hentJsonDigisosSoker(soknadId, digisosSak.digisosSoker?.metadata, token)
         return ResponseEntity.ok(jsonDigisosSoker!!)
+    }
+
+    companion object {
+        private val log by logger()
     }
 }

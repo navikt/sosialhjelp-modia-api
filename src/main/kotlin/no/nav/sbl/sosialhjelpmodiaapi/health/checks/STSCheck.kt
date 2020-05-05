@@ -22,10 +22,6 @@ class STSCheck(
         clientProperties.stsTokenEndpointUrl,
         Importance.WARNING
 ) {
-    companion object {
-        private val log by logger()
-    }
-
     override fun doCheck() {
         try {
             val requestUrl = "$address/.well-known/openid-configuration"
@@ -34,5 +30,9 @@ class STSCheck(
             log.warn("Selftest - PDL - noe feilet", e)
             throw e
         }
+    }
+
+    companion object {
+        private val log by logger()
     }
 }
