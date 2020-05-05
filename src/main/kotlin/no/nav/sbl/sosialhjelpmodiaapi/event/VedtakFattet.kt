@@ -28,8 +28,6 @@ fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
                 DEFAULT_TITTEL,
                 mutableListOf(),
                 mutableListOf(),
-                mutableListOf(),
-                mutableListOf(),
                 hendelse.hendelsestidspunkt.toLocalDateTime().toLocalDate()
         )
         saker.add(sakForReferanse)

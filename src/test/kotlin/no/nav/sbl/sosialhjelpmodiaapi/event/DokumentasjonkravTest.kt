@@ -67,7 +67,6 @@ internal class DokumentasjonkravTest {
         assertThat(utbetaling.dokumentasjonkrav).hasSize(1)
         assertThat(utbetaling.dokumentasjonkrav[0].referanse).isEqualTo(dokumentasjonkrav_ref_1)
         assertThat(utbetaling.dokumentasjonkrav[0].beskrivelse).isEqualTo("beskrivelse")
-        assertThat(utbetaling.dokumentasjonkrav[0].utbetalinger).hasSize(1)
         assertThat(utbetaling.dokumentasjonkrav[0].oppfyllt).isEqualTo(true)
     }
 

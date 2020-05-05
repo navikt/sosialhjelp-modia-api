@@ -2,14 +2,16 @@ package no.nav.sbl.sosialhjelpmodiaapi.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVilkar
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
-import no.nav.sbl.sosialhjelpmodiaapi.domain.Sak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Utbetaling
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Vilkar
+import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonVilkar) {
 
+    val log by logger()
+
     val utbetalinger = mutableListOf<Utbetaling>()
-    val vilkarSaker = mutableListOf<Sak>()
     for (utbetalingsreferanse in hendelse.utbetalingsreferanse) {
         for (sak in saker) {
             for (utbetaling in sak.utbetalinger) {
@@ -19,14 +21,34 @@ fun InternalDigisosSoker.apply(hendelse: JsonVilkar) {
             }
         }
     }
-    val vilkar = Vilkar(hendelse.vilkarreferanse, utbetalinger, hendelse.beskrivelse, hendelse.status == JsonVilkar.Status.OPPFYLT)
 
-    vilkarSaker.forEach { sak ->
-        sak.vilkar.add(vilkar)
+    if (utbetalinger.isEmpty()) {
+        log.warn("Fant ingen utbetalinger å knytte vilkår til. Utbetalingsreferanser: ${hendelse.utbetalingsreferanse}")
+        return
     }
 
-    utbetalinger.forEach { utbetaling ->
-        utbetaling.vilkar.add(vilkar)
-    }
+    val vilkar = Vilkar(
+            referanse = hendelse.vilkarreferanse,
+            beskrivelse = hendelse.beskrivelse,
+            oppfyllt = hendelse.status == JsonVilkar.Status.OPPFYLT,
+            datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
+            datoSistEndret = hendelse.hendelsestidspunkt.toLocalDateTime()
+    )
 
+    utbetalinger.forEach { it.vilkar.oppdaterEllerLeggTilVilkar(hendelse, vilkar) }
+}
+
+private fun MutableList<Vilkar>.oppdaterEllerLeggTilVilkar(hendelse: JsonVilkar, vilkar: Vilkar) {
+    if (any { it.referanse == hendelse.vilkarreferanse }) {
+        filter { it.referanse == hendelse.vilkarreferanse }
+                .forEach { it.oppdaterFelter(hendelse) }
+    } else {
+        this.add(vilkar)
+    }
+}
+
+private fun Vilkar.oppdaterFelter(hendelse: JsonVilkar) {
+    datoSistEndret = hendelse.hendelsestidspunkt.toLocalDateTime()
+    beskrivelse = hendelse.beskrivelse
+    oppfyllt = hendelse.status == JsonVilkar.Status.OPPFYLT
 }

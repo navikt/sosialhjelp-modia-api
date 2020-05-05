@@ -11,6 +11,7 @@ import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.LocalDateTime
 
 internal class SoknadsoversiktControllerTest {
 
@@ -29,6 +30,9 @@ internal class SoknadsoversiktControllerTest {
 
     private val sak1: Sak = mockk()
     private val sak2: Sak = mockk()
+
+    private val utbetaling1: Utbetaling = mockk()
+    private val utbetaling2: Utbetaling = mockk()
 
     private val oppgaveResponseMock: OppgaveResponse = mockk()
 
@@ -105,11 +109,13 @@ internal class SoknadsoversiktControllerTest {
 
         every { sak1.tittel } returns "Livsopphold"
         every { sak1.saksStatus } returns SaksStatus.UNDER_BEHANDLING
-        every { sak1.vilkar } returns mutableListOf(Vilkar("", mutableListOf(), "", true))
+        every { sak1.utbetalinger } returns mutableListOf(utbetaling1)
+        every { utbetaling1.vilkar } returns mutableListOf(Vilkar("referanse", "beskrivelse", true, LocalDateTime.now(), LocalDateTime.now()))
 
         every { sak2.tittel } returns "Strøm"
         every { sak2.saksStatus } returns SaksStatus.UNDER_BEHANDLING
-        every { sak2.vilkar } returns mutableListOf(Vilkar("", mutableListOf(), "", false))
+        every { sak1.utbetalinger } returns mutableListOf(utbetaling2)
+        every { utbetaling2.vilkar } returns mutableListOf(Vilkar("referanse2", "beskrivelse2", false, LocalDateTime.now(), LocalDateTime.now()))
 
         every { model1.saker } returns mutableListOf()
         every { model2.saker } returns mutableListOf(sak1, sak2)

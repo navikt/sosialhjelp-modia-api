@@ -83,8 +83,6 @@ internal class UtbetalingerServiceTest {
                                 utbetalingsmetode = "utbetalingsmetode",
                                 vilkar = mutableListOf(),
                                 dokumentasjonkrav = mutableListOf())),
-                vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf(),
                 datoOpprettet = LocalDate.now()
         ))
         model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
@@ -121,8 +119,6 @@ internal class UtbetalingerServiceTest {
                         Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf()),
                         Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 8, 12), null, null, null, null, null, mutableListOf(), mutableListOf())
                 ),
-                vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf(),
                 datoOpprettet = LocalDate.now()
         ))
 
@@ -155,8 +151,6 @@ internal class UtbetalingerServiceTest {
                         Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf()),
                         Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 9, 12), null, null, null, null, null, mutableListOf(), mutableListOf())
                 ),
-                vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf(),
                 datoOpprettet = LocalDate.now()
         ))
 
@@ -181,18 +175,15 @@ internal class UtbetalingerServiceTest {
     @Test
     fun `hentUtbetalinger skal returnere response med 1 utbetaling med vilkar`() {
         val model = InternalDigisosSoker()
-        val vilkar = Vilkar("vilkar1", mutableListOf(), "Skal hoppe", false)
+        val vilkar = Vilkar("vilkar1", "Skal hoppe", false, LocalDateTime.now(), LocalDateTime.now())
         val utbetaling1 = Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
                 null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(vilkar), mutableListOf())
-        vilkar.utbetalinger.add(utbetaling1)
         model.saker.add(Sak(
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING,
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(utbetaling1),
-                vilkar = mutableListOf(vilkar),
-                dokumentasjonkrav = mutableListOf(),
                 datoOpprettet = LocalDate.now()
         ))
 
@@ -210,18 +201,15 @@ internal class UtbetalingerServiceTest {
     @Test
     fun `hentUtbetalinger skal returnere response med 1 utbetaling med dokumentasjonkrav`() {
         val model = InternalDigisosSoker()
-        val dokumentasjonkrav = Dokumentasjonkrav("dokumentasjonskrav", mutableListOf(), "Skal hoppe", false)
+        val dokumentasjonkrav = Dokumentasjonkrav("dokumentasjonskrav", "Skal hoppe", false)
         val utbetaling1 = Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
                 null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf(dokumentasjonkrav))
-        dokumentasjonkrav.utbetalinger.add(utbetaling1)
         model.saker.add(Sak(
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING,
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(utbetaling1),
-                vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf(dokumentasjonkrav),
                 datoOpprettet = LocalDate.now()
         ))
 
@@ -245,8 +233,6 @@ internal class UtbetalingerServiceTest {
                 utbetalinger = mutableListOf(
                         Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null,
                                 LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf())),
-                vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf(),
                 datoOpprettet = LocalDate.now()
         ))
 
@@ -259,8 +245,6 @@ internal class UtbetalingerServiceTest {
                 utbetalinger = mutableListOf(
                         Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.ONE, "Barnehage og SFO", null,
                                 LocalDate.of(2019, 9, 12), null, null, null, null, null, mutableListOf(), mutableListOf())),
-                vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf(),
                 datoOpprettet = LocalDate.now()
         ))
 
@@ -313,8 +297,6 @@ internal class UtbetalingerServiceTest {
                                 utbetalingsmetode = "utbetalingsmetode",
                                 vilkar = mutableListOf(),
                                 dokumentasjonkrav = mutableListOf())),
-                vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf(),
                 datoOpprettet = LocalDate.now()
         ))
 
@@ -350,8 +332,6 @@ internal class UtbetalingerServiceTest {
                         Utbetaling("Sak3", UtbetalingsStatus.STOPPET, BigDecimal.TEN, "Depositum", null, LocalDate.of(2019, 10, 1), null, null, null, null, null, mutableListOf(), mutableListOf()),
                         Utbetaling("Sak4", UtbetalingsStatus.ANNULLERT, BigDecimal.TEN, "Kinopenger", null, LocalDate.of(2019, 11, 1), null, null, null, null, null, mutableListOf(), mutableListOf())
                 ),
-                vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf(),
                 datoOpprettet = LocalDate.now()
         ))
 

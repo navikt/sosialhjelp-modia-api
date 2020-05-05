@@ -51,8 +51,6 @@ internal class SaksStatusServiceTest {
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(),
-                vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf(),
                 datoOpprettet = now
         ))
 
@@ -82,8 +80,6 @@ internal class SaksStatusServiceTest {
                         utfall = UtfallVedtak.INNVILGET,
                         datoFattet = now)),
                 utbetalinger = mutableListOf(),
-                vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf(),
                 datoOpprettet = now
         ))
 
@@ -115,8 +111,6 @@ internal class SaksStatusServiceTest {
                         utfall = UtfallVedtak.DELVIS_INNVILGET,
                         datoFattet = now)),
                 utbetalinger = mutableListOf(),
-                vilkar = mutableListOf(),
-                dokumentasjonkrav = mutableListOf(),
                 datoOpprettet = now
         ))
 
@@ -153,8 +147,6 @@ internal class SaksStatusServiceTest {
                                         utfall = UtfallVedtak.DELVIS_INNVILGET,
                                         datoFattet = now.plusDays(2))),
                         utbetalinger = mutableListOf(),
-                        vilkar = mutableListOf(),
-                        dokumentasjonkrav = mutableListOf(),
                         datoOpprettet = now),
                 Sak(
                         referanse = referanse,
@@ -162,8 +154,6 @@ internal class SaksStatusServiceTest {
                         tittel = DEFAULT_TITTEL,
                         vedtak = mutableListOf(),
                         utbetalinger = mutableListOf(),
-                        vilkar = mutableListOf(),
-                        dokumentasjonkrav = mutableListOf(),
                         datoOpprettet = now
                 )
         ))
