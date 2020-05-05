@@ -21,10 +21,6 @@ abstract class AbstractDependencyCheck(
         protected val address: String,
         private val importance: Importance) {
 
-    companion object {
-        private val log by logger()
-    }
-
     private val circuitBreaker = CircuitBreaker.ofDefaults("selftest")
     private val dispatcher: ExecutorCoroutineDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
@@ -92,5 +88,9 @@ abstract class AbstractDependencyCheck(
             return "Call to dependency timed out by circuitbreaker"
         }
         return if (e.cause == null) e.message else e.cause!!.message
+    }
+
+    companion object {
+        private val log by logger()
     }
 }

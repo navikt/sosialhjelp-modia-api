@@ -11,16 +11,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 class ExceptionHandler : ResponseEntityExceptionHandler() {
 
-    companion object {
-        private val log by logger()
-
-        private const val UNEXPECTED_ERROR = "unexpected_error"
-        private const val FIKS_ERROR = "fiks_error"
-        private const val NORG_ERROR = "norg_error"
-        private const val PDL_ERROR = "pdl_error"
-        private const val INGEN_TILGANG = "ingen_tilgang"
-    }
-
     @ExceptionHandler(Throwable::class)
     fun handleAll(e: Throwable): ResponseEntity<ErrorMessage> {
         log.error(e.message, e)
@@ -61,6 +51,16 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         log.warn("Abac - Ingen tilgang til ressurs", e)
         val error = ErrorMessage(INGEN_TILGANG, "Ingen tilgang til ressurs")
         return ResponseEntity(error, HttpStatus.FORBIDDEN)
+    }
+
+    companion object {
+        private val log by logger()
+
+        private const val UNEXPECTED_ERROR = "unexpected_error"
+        private const val FIKS_ERROR = "fiks_error"
+        private const val NORG_ERROR = "norg_error"
+        private const val PDL_ERROR = "pdl_error"
+        private const val INGEN_TILGANG = "ingen_tilgang"
     }
 }
 

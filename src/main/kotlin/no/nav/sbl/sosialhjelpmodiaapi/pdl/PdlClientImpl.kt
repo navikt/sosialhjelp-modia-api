@@ -30,10 +30,6 @@ class PdlClientImpl(
         private val stsClient: STSClient
 ) : PdlClient {
 
-    companion object {
-        private val log by logger()
-    }
-
     private val baseurl = clientProperties.pdlEndpointUrl
 
     override fun hentPerson(ident: String): PdlHentPerson? {
@@ -80,5 +76,9 @@ class PdlClientImpl(
         headers.set(AUTHORIZATION, BEARER + stsToken)
         headers.set(TEMA, TEMA_KOM)
         return HttpEntity(request, headers)
+    }
+
+    companion object {
+        private val log by logger()
     }
 }

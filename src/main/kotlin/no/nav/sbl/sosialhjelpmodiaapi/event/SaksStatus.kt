@@ -21,15 +21,14 @@ fun InternalDigisosSoker.apply(hendelse: JsonSaksStatus) {
         sakForReferanse.tittel = hendelse.tittel
     } else {
         // Opprett ny Sak
+        val status = SaksStatus.valueOf(hendelse.status?.name ?: JsonSaksStatus.Status.UNDER_BEHANDLING.name)
         saker.add(Sak(
-                hendelse.referanse,
-                SaksStatus.valueOf(hendelse.status?.name ?: JsonSaksStatus.Status.UNDER_BEHANDLING.name),
-                hendelse.tittel,
-                mutableListOf(),
-                mutableListOf(),
-                mutableListOf(),
-                mutableListOf(),
-                hendelse.hendelsestidspunkt.toLocalDateTime().toLocalDate()
+                referanse = hendelse.referanse,
+                saksStatus = status,
+                tittel = hendelse.tittel,
+                vedtak = mutableListOf(),
+                utbetalinger = mutableListOf(),
+                datoOpprettet = hendelse.hendelsestidspunkt.toLocalDateTime().toLocalDate()
         ))
     }
 }

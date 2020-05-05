@@ -6,12 +6,6 @@ import org.springframework.stereotype.Component
 @Component
 class MiljoUtils {
 
-    companion object {
-        private const val LOCAL = "local"
-        private const val MOCK = "mock"
-        private const val PROD_FSS = "prod-fss"
-    }
-
     @Value("\${spring.profiles.active}")
     private var activeProfile: String = PROD_FSS // default verdi er prod-fss
 
@@ -23,4 +17,9 @@ class MiljoUtils {
         return activeProfile == PROD_FSS
     }
 
+    companion object {
+        private const val LOCAL = "local"
+        private const val MOCK = "mock"
+        private const val PROD_FSS = "prod-fss"
+    }
 }

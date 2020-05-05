@@ -104,7 +104,8 @@ class SoknadsoversiktController(
         // forenkle?
         return model.saker
                 .any { sak ->
-                    sak.vilkar
+                    sak.utbetalinger
+                            .flatMap { utbetaling -> utbetaling.vilkar }
                             .any { vilkar -> !vilkar.oppfyllt }
                 }
     }

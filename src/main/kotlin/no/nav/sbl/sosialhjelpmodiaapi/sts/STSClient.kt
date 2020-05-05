@@ -17,10 +17,6 @@ class STSClient(
         clientProperties: ClientProperties
 ) {
 
-    companion object {
-        private val log by logger()
-    }
-
     private val baseUrl = clientProperties.stsTokenEndpointUrl
 
     private var cachedToken: STSToken? = null
@@ -45,6 +41,10 @@ class STSClient(
 
     private fun lagRequest(baseurl: String): String {
         return "$baseurl/token?grant_type=client_credentials&scope=openid"
+    }
+
+    companion object {
+        private val log by logger()
     }
 }
 

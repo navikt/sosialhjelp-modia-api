@@ -16,12 +16,6 @@ class AbacService(
         private val abacClient: AbacClient
 ) {
 
-    companion object {
-        private const val ENVIRONMENT_FELLES_AZURE_JWT_TOKEN_BODY = "no.nav.abac.attributter.environment.felles.azure_jwt_token_body"
-
-        private val log by logger()
-    }
-
     fun harTilgang(fnr: String, token: String) {
         val request = Request(
                 environment = Attributes(mutableListOf(
@@ -71,4 +65,9 @@ class AbacService(
         return token
     }
 
+    companion object {
+        private const val ENVIRONMENT_FELLES_AZURE_JWT_TOKEN_BODY = "no.nav.abac.attributter.environment.felles.azure_jwt_token_body"
+
+        private val log by logger()
+    }
 }

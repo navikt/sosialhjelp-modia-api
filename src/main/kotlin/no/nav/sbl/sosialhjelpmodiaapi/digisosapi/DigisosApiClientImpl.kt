@@ -30,10 +30,6 @@ class DigisosApiClientImpl(
         private val idPortenService: IdPortenService
 ) : DigisosApiClient {
 
-    companion object {
-        private val log by logger()
-    }
-
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
     private val fiksIntegrasjonIdKommune = clientProperties.fiksIntegrasjonIdKommune
     private val fiksIntegrasjonPassordKommune = clientProperties.fiksIntegrasjonPassordKommune
@@ -82,5 +78,9 @@ class DigisosApiClientImpl(
         headers.set(AUTHORIZATION, BEARER + accessToken.token)
         headers.contentType = MediaType.APPLICATION_JSON
         return headers
+    }
+
+    companion object {
+        private val log by logger()
     }
 }

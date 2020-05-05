@@ -67,7 +67,6 @@ internal class VilkarTest {
         assertThat(utbetaling.vilkar).hasSize(1)
         assertThat(utbetaling.vilkar[0].referanse).isEqualTo(vilkar_ref_1)
         assertThat(utbetaling.vilkar[0].beskrivelse).isEqualTo("beskrivelse")
-        assertThat(utbetaling.vilkar[0].utbetalinger).hasSize(1)
         assertThat(utbetaling.vilkar[0].oppfyllt).isEqualTo(true)
     }
 

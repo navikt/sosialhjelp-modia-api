@@ -21,10 +21,6 @@ class PdlCheck(
         clientProperties.pdlEndpointUrl,
         Importance.WARNING
 ) {
-    companion object {
-        private val log by logger()
-    }
-
     override fun doCheck() {
         try {
             pdlClient.ping()
@@ -32,5 +28,9 @@ class PdlCheck(
             log.warn("Selftest - PDL - noe feilet", e)
             throw e
         }
+    }
+
+    companion object {
+        private val log by logger()
     }
 }

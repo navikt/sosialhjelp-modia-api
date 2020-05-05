@@ -21,10 +21,6 @@ class KommuneService(
         private val innsynService: InnsynService
 ) {
 
-    companion object {
-        private val log by logger()
-    }
-
     fun hentKommuneStatus(fiksDigisosId: String, token: String): KommuneStatus {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)
 
@@ -56,6 +52,10 @@ class KommuneService(
                 return IKKE_STOTTET_CASE
             }
         }
+    }
+
+    companion object {
+        private val log by logger()
     }
 }
 
