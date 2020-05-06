@@ -4,8 +4,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.common.NorgException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
 import no.nav.sbl.sosialhjelpmodiaapi.logger
-import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.NAV_CALL_ID
-import no.nav.sbl.sosialhjelpmodiaapi.utils.generateCallId
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CALL_ID
+import no.nav.sbl.sosialhjelpmodiaapi.utils.MDCUtils.getCallId
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
@@ -47,7 +47,7 @@ class NorgClientImpl(
 
     private fun createRequestEntity(): HttpEntity<Nothing> {
         val headers = HttpHeaders()
-        headers.set(NAV_CALL_ID, generateCallId())
+        headers.set(HEADER_CALL_ID, getCallId())
         return HttpEntity(headers)
     }
 
