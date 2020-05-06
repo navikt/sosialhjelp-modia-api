@@ -5,6 +5,7 @@ spring:
     name: "sosialhjelp-modia-api"
 
 server:
+  port: 8383
   servlet:
     context-path: '/sosialhjelp/modia-api'
 

@@ -4,8 +4,7 @@
     "https://sosialhjelp-modia-api.labs.nais.io/sosialhjelp/modia-api"
   ],
   "env": {
-    "SPRING_PROFILES_ACTIVE": "mock,log-console",
-    "GCP_PORT": "8383"
+    "SPRING_PROFILES_ACTIVE": "mock,log-console"
   },
   "minReplicas": "1",
   "maxReplicas": "1",
