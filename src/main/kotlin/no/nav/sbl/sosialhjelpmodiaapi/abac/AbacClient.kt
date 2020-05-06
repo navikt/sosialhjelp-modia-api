@@ -29,12 +29,6 @@ class AbacClientImpl(
 
     private val url = clientProperties.abacPdpEndpointUrl
 
-    companion object {
-        private val log by logger()
-
-        private const val MEDIA_TYPE = "application/xacml+json"
-    }
-
     override fun sjekkTilgang(request: Request): AbacResponse {
 
         val postingString = XacmlMapper.mapRequestToEntity(XacmlRequest(request))
@@ -70,4 +64,10 @@ class AbacClientImpl(
         get() {
             return resource?.attributes?.first { it.attributeId == NavAttributter.RESOURCE_FELLES_PERSON_FNR }?.value!!
         }
+
+    companion object {
+        private val log by logger()
+
+        private const val MEDIA_TYPE = "application/xacml+json"
+    }
 }

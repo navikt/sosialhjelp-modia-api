@@ -51,11 +51,6 @@ class IssoSubjectHandlerImpl(
         private val tokenValidationContextHolder: TokenValidationContextHolder
 ) : SubjectHandler {
 
-    companion object {
-        private const val ISSUER = "veileder" // todo blir dette riktig?
-        private val log by logger()
-    }
-
     private val tokenValidationContext: TokenValidationContext
         get() {
             val tokenValidationContext = tokenValidationContextHolder.tokenValidationContext
@@ -76,5 +71,10 @@ class IssoSubjectHandlerImpl(
 
     override fun getConsumerId(): String {
         return System.getProperty("consumerid")
+    }
+
+    companion object {
+        private const val ISSUER = "veileder" // todo blir dette riktig?
+        private val log by logger()
     }
 }

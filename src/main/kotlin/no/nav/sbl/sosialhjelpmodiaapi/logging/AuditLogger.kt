@@ -21,11 +21,6 @@ import org.springframework.stereotype.Component
 @Component
 class AuditLogger {
 
-    companion object {
-        // TODO: burde være private, men er public for å få testet klassen (https://github.com/mockk/mockk/issues/147)
-        val auditlog: Logger = LoggerFactory.getLogger("auditLogger")
-    }
-
     fun report(values: Map<String, Any>) {
         val cef = createCef(values)
         if (cef.headers.severity == Severity.WARN) {
@@ -104,5 +99,10 @@ class AuditLogger {
         } else {
             (values[SEVERITY] ?: Severity.INFO) as Severity
         }
+    }
+
+    companion object {
+        // TODO: burde være private, men er public for å få testet klassen (https://github.com/mockk/mockk/issues/147)
+        val auditlog: Logger = LoggerFactory.getLogger("auditLogger")
     }
 }
