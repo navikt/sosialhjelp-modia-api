@@ -47,7 +47,7 @@ class FiksClientImpl(
         log.info("Forsøker å hente digisosSak fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId")
 
         val urlTemplate = "$baseUrl/digisos/api/v1/nav/soknader/{digisosId}"
-        val uriComponents = UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam("sporingsId", "{sporingsId}").build()
+        val uriComponents = UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam("sporingsId", "%7BsporingsId%7D").build()
         try {
             val vars = mapOf("digisosId" to digisosId, "sporingsId" to sporingsId)
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
@@ -56,7 +56,7 @@ class FiksClientImpl(
             return objectMapper.readValue(response.body!!, DigisosSak::class.java)
 
         } catch (e: HttpStatusCodeException) {
-            log.warn("Fiks - hentDigisosSak feilet - ${e.statusCode} ${e.statusText}", e)
+            log.warn("Fiks - hentDigisosSak feilet for id ${digisosId} - ${e.statusCode} ${e.statusText}")
             if (e.statusCode == HttpStatus.NOT_FOUND) {
                 throw FiksNotFoundException(e.statusCode, e.message, e)
             }
@@ -73,7 +73,7 @@ class FiksClientImpl(
         val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
 
         val urlTemplate = "$baseUrl/digisos/api/v1/nav/soknader/{digisosId}/dokumenter/{dokumentlagerId}"
-        val uriComponents = UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam("sporingsId", "{sporingsId}").build()
+        val uriComponents = UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam("sporingsId", "%7BsporingsId%7D").build()
         log.info("Forsøker å hente dokument fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId")
         try {
             val vars = mapOf(
@@ -100,12 +100,12 @@ class FiksClientImpl(
         val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
 
         val url = "$baseUrl/digisos/api/nav/v1/soknader"
-        val uriComponents = UriComponentsBuilder.fromHttpUrl(url).queryParam("sporingsId", "{sporingsId}").build()
+        val uriComponents = UriComponentsBuilder.fromHttpUrl(url).queryParam("sporingsId", "%7BsporingsId%7D").build()
         try {
             val vars = mapOf("sporingsId" to sporingsId)
-            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), typeRef<List<String>>(), vars)
+            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), typeRef<List<DigisosSak>>(), vars)
 
-            return response.body!!.map { s: String -> objectMapper.readValue(s, DigisosSak::class.java) }
+            return response.body!!
 
         } catch (e: HttpStatusCodeException) {
             log.warn("Fiks - hentAlleDigisosSaker feilet - ${e.statusCode} ${e.statusText}", e)

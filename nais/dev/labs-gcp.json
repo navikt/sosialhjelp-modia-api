@@ -5,7 +5,7 @@
   ],
   "env": {
     "SPRING_PROFILES_ACTIVE": "mock,log-console",
-    "GCP_PORT": "8080"
+    "GCP_PORT": "8383"
   },
   "minReplicas": "1",
   "maxReplicas": "1",
