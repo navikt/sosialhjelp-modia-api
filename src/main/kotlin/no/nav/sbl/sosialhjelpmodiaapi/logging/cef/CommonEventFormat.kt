@@ -2,8 +2,6 @@ package no.nav.sbl.sosialhjelpmodiaapi.logging.cef
 
 import no.nav.sbl.sosialhjelpmodiaapi.abac.Decision
 import org.springframework.http.HttpMethod
-import java.util.*
-
 
 data class CommonEventFormat(
         val headers: Headers,
@@ -45,9 +43,9 @@ data class Extension(
         val fiks: Fiks?
 ) {
     override fun toString(): String {
-        return "end=${System.currentTimeMillis()} suid=$navIdent duid=$brukerFnr sproc=$callId dproc=$consumerId request=$url requestMethod=${httpMethod.name}" +
-                (abac?.toString() ?: "") +
-                (fiks?.toString() ?: "")
+        return "end=${System.currentTimeMillis()} suid=$navIdent duid=$brukerFnr sproc=$callId dproc=$consumerId request=$url requestMethod=${httpMethod.name}"
+                .plus(abac?.toString() ?: "")
+                .plus(fiks?.toString() ?: "")
     }
 }
 
