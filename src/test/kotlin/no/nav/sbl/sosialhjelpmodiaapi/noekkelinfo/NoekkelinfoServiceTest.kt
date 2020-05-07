@@ -7,7 +7,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.SOKNAD_DEFAULT_TITTEL
 import no.nav.sbl.sosialhjelpmodiaapi.domain.*
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus.MOTTATT
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.event.SOKNAD_SENDT
+import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_SENDT
 import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import org.assertj.core.api.Assertions.assertThat
