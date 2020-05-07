@@ -27,9 +27,9 @@ object IntegrationUtils {
 
     const val BEARER = "Bearer "
 
+    const val HEADER_TEMA = "Tema"
     const val TEMA_KOM = "KOM"
 
-    const val NAV_CALL_ID = "Nav-Call-Id"
-    const val NAV_CONSUMER_TOKEN = "Nav-Consumer-Token"
-    const val TEMA = "Tema"
+    const val HEADER_CALL_ID = "Nav-Call-Id"
+    const val HEADER_CONSUMER_TOKEN = "Nav-Consumer-Token"
 }

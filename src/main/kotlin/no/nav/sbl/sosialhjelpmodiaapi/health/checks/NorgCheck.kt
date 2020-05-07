@@ -6,8 +6,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.AbstractDependencyCheck
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.DependencyType
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.Importance
 import no.nav.sbl.sosialhjelpmodiaapi.logger
-import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.NAV_CALL_ID
-import no.nav.sbl.sosialhjelpmodiaapi.utils.generateCallId
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CALL_ID
+import no.nav.sbl.sosialhjelpmodiaapi.utils.MDCUtils.getCallId
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -30,7 +30,7 @@ class NorgCheck(
     override fun doCheck() {
         try {
             val headers = HttpHeaders()
-            headers.set(NAV_CALL_ID, generateCallId())
+            headers.set(HEADER_CALL_ID, getCallId())
 
             // samme kall som selftest i soknad-api
             restTemplate.exchange("$address/kodeverk/EnhetstyperNorg", HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java)
