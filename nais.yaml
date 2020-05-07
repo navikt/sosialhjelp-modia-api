@@ -30,6 +30,7 @@ spec:
     outbound:
       external:
         - host: "oidc-ver2.difi.no"
+        - host: "digisos.labs.nais.io"
       rules: []
 {{/if}}
   vault:
