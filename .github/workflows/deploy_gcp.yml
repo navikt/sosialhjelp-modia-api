@@ -28,3 +28,10 @@ jobs:
           REF: ${{ github.event.client_payload.TAG }}
           PRINT_PAYLOAD: true
           IMAGE: ${{ env.IMAGE }}
+          ABAC_PDP_ENDPOINT_URL: https://digisos.labs.nais.io/sosialhjelp/mock-alt-api/abac/application/authorize
+          FIKS_DIGISOS_ENDPOINT_URL: https://digisos.labs.nais.io/sosialhjelp/mock-alt-api/fiks
+          ID_PORTEN_TOKEN_URL: https://digisos.labs.nais.io/sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/token
+          ID_PORTEN_CONFIG_URL: https://digisos.labs.nais.io/sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/.well-known/openid-configuration
+          NORG_ENDPOINT_URL: https://digisos.labs.nais.io/sosialhjelp/mock-alt-api/norg_endpoint_url
+          PDL_ENDPOINT_URL: https://digisos.labs.nais.io/sosialhjelp/mock-alt-api/pdl_endpoint_url
+          STS_TOKEN_ENDPOINT_URL: https://digisos.labs.nais.io/sosialhjelp/mock-alt-api/sts_token_endpoint_url
