@@ -30,8 +30,9 @@ spec:
     outbound:
       external:
         - host: "oidc-ver2.difi.no"
+        - host: "sosialhjelp-mock-alt-api.nais.labs.io"
       rules:
-        - application: digisos
+        - application: sosialhjelp-mock-alt-api
 {{/if}}
   vault:
     enabled: {{vaultEnabled}}
