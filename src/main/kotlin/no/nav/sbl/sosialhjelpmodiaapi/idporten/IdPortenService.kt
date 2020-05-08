@@ -8,18 +8,17 @@ import com.nimbusds.jose.util.Base64
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
 import io.ktor.client.features.ServerResponseException
-import io.ktor.client.request.forms.submitForm
-import io.ktor.client.request.get
-import io.ktor.client.request.url
-import io.ktor.http.parametersOf
-import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.common.retry
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
-import no.nav.sbl.sosialhjelpmodiaapi.utils.defaultHttpClient
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.springframework.context.annotation.Profile
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
+import org.springframework.web.client.RestTemplate
+import org.springframework.web.util.UriComponentsBuilder
 import java.io.File
 import java.security.KeyPair
 import java.security.KeyStore
@@ -30,7 +29,8 @@ import java.util.*
 @Profile("!mock")
 @Component
 class IdPortenService(
-        clientProperties: ClientProperties
+        clientProperties: ClientProperties,
+        private val restTemplate: RestTemplate
 ) {
 
     private val idPortenTokenUrl = clientProperties.idPortenTokenUrl
@@ -39,28 +39,16 @@ class IdPortenService(
     private val idPortenConfigUrl = clientProperties.idPortenConfigUrl
     private val VIRKSERT_STI: String? = System.getenv("VIRKSERT_STI")
             ?: "/var/run/secrets/nais.io/virksomhetssertifikat"
-
-    val oidcConfiguration: IdPortenOidcConfiguration = runBlocking {
-        log.info("Henter config fra $idPortenConfigUrl")
-        val config = defaultHttpClient.get<IdPortenOidcConfiguration> {
-            url(idPortenConfigUrl)
-        }
-        log.info("Hentet config fra $idPortenConfigUrl")
-        config
-    }.also {
-        log.info("IdPorten: OIDC configuration initialized")
-    }
+    private var oidcConfiguration: IdPortenOidcConfiguration? = null
 
     suspend fun requestToken(attempts: Int = 10): AccessToken =
             retry(attempts = attempts, retryableExceptions = *arrayOf(ServerResponseException::class)) {
                 val jws = createJws()
                 log.info("Got jws, getting token")
-                val response = defaultHttpClient.submitForm<IdPortenAccessTokenResponse>(
-                        parametersOf(GRANT_TYPE_PARAM to listOf(GRANT_TYPE), ASSERTION_PARAM to listOf(jws.token))
-                ) {
-                    url(idPortenTokenUrl)
-                }
-                AccessToken(response.accessToken)
+                val uriComponents = UriComponentsBuilder.fromHttpUrl(idPortenTokenUrl).build()
+                val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(HttpHeaders()), String::class.java)
+                val returnObject : IdPortenAccessTokenResponse = objectMapper.readValue(response.body!!)
+                AccessToken(returnObject.accessToken)
             }
 
     fun createJws(
@@ -99,13 +87,22 @@ class IdPortenService(
             ) to cert.encoded
         }
 
+        if(oidcConfiguration == null) {
+            val uriComponents = UriComponentsBuilder.fromHttpUrl(idPortenConfigUrl).build()
+            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(HttpHeaders()), String::class.java)
+            log.warn("DEBUG Hentet config: ${response.body}")
+            log.info("Hentet config fra $idPortenConfigUrl")
+            val returnObject : IdPortenOidcConfiguration = objectMapper.readValue(response.body!!)
+            log.warn("DEBUG Unjacsonifisert : $returnObject")
+            oidcConfiguration = returnObject
+        }
 
         log.info("Public certificate length " + pair.first.public.encoded.size)
 
         return SignedJWT(
                 JWSHeader.Builder(JWSAlgorithm.RS256).x509CertChain(mutableListOf(Base64.encode(pair.second))).build(),
                 JWTClaimsSet.Builder()
-                        .audience(oidcConfiguration.issuer)
+                        .audience(oidcConfiguration!!.issuer)
                         .issuer(issuer)
                         .issueTime(date)
                         .jwtID(UUID.randomUUID().toString())
