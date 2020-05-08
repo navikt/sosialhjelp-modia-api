@@ -30,8 +30,8 @@ spec:
     outbound:
       external:
         - host: "oidc-ver2.difi.no"
-        - host: "digisos.labs.nais.io"
-      rules: []
+      rules:
+        - application: digisos
 {{/if}}
   vault:
     enabled: {{vaultEnabled}}
