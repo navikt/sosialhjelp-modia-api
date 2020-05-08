@@ -16,7 +16,7 @@
   "minReplicas": "1",
   "maxReplicas": "1",
   "prometheusEnabled": false,
-  "webProxyEnabled": false,
+  "webProxyEnabled": true,
   "accessPoliciesForGcpEnabled": true,
   "vaultEnabled": false
 }
