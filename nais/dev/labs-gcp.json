@@ -5,7 +5,6 @@
   ],
   "env": {
     "SPRING_PROFILES_ACTIVE": "mock-alt,log-console",
-    "GCP_PORT": "8383",
     "ABAC_PDP_ENDPOINT_URL": "https://digisos.labs.nais.io/sosialhjelp/mock-alt-api/abac/application/authorize",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://digisos.labs.nais.io/sosialhjelp/mock-alt-api/fiks",
     "ID_PORTEN_TOKEN_URL": "https://digisos.labs.nais.io/sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/token",
@@ -17,7 +16,7 @@
   "minReplicas": "1",
   "maxReplicas": "1",
   "prometheusEnabled": false,
-  "webProxyEnabled": true,
+  "webProxyEnabled": false,
   "accessPoliciesForGcpEnabled": true,
   "vaultEnabled": false
 }

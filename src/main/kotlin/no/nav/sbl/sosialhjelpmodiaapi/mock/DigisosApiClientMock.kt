@@ -17,7 +17,10 @@ import java.util.*
 
 @Profile("mock")
 @Component
-class DigisosApiClientMock(private val fiksClientMock: FiksClientMock) : DigisosApiClient {
+class DigisosApiClientMock(
+        private val fiksClientMock: FiksClientMock
+) : DigisosApiClient {
+
     override fun oppdaterDigisosSak(fiksDigisosId: String?, digisosApiWrapper: DigisosApiWrapper): String? {
         val dokumentlagerId = UUID.randomUUID().toString()
         fiksClientMock.postDokument(dokumentlagerId, digisosApiWrapper.sak.soker)

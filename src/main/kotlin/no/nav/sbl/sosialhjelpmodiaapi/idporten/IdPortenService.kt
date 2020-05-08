@@ -29,7 +29,9 @@ import java.util.*
 
 @Profile("!mock")
 @Component
-class IdPortenService(clientProperties: ClientProperties) {
+class IdPortenService(
+        clientProperties: ClientProperties
+) {
 
     private val idPortenTokenUrl = clientProperties.idPortenTokenUrl
     private val idPortenClientId = clientProperties.idPortenClientId

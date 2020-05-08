@@ -6,7 +6,9 @@ import no.nav.sbl.sosialhjelpmodiaapi.pdl.getNavn
 import org.springframework.stereotype.Component
 
 @Component
-class PersoninfoService(private val pdlClient: PdlClient) {
+class PersoninfoService(
+        private val pdlClient: PdlClient
+) {
 
     fun hentPersoninfo(ident: String): PersoninfoResponse {
 

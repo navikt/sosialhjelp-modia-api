@@ -16,8 +16,8 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.reflect.full.companionObject
 
-const val NAIS_CLUSTER_NAME = "NAIS_CLUSTER_NAME"
-const val NAIS_NAMESPACE = "NAIS_NAMESPACE"
+private const val NAIS_CLUSTER_NAME = "NAIS_CLUSTER_NAME"
+private const val NAIS_NAMESPACE = "NAIS_NAMESPACE"
 const val SOKNAD_DEFAULT_TITTEL = "Søknad om økonomisk sosialhjelp"
 
 inline fun <reified T : Any> typeRef(): ParameterizedTypeReference<T> = object : ParameterizedTypeReference<T>() {}

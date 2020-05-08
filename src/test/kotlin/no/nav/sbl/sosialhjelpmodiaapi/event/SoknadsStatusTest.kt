@@ -8,6 +8,10 @@ import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
+import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_FERDIGBEHANDLET
+import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_MOTTATT
+import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_SENDT
+import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_UNDER_BEHANDLING
 import no.nav.sbl.sosialhjelpmodiaapi.innsyn.InnsynService
 import no.nav.sbl.sosialhjelpmodiaapi.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime

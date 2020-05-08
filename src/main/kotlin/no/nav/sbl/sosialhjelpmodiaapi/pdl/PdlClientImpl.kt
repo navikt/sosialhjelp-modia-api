@@ -5,11 +5,11 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.sts.STSClient
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
-import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.NAV_CALL_ID
-import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.NAV_CONSUMER_TOKEN
-import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.TEMA
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CALL_ID
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CONSUMER_TOKEN
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_TEMA
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.TEMA_KOM
-import no.nav.sbl.sosialhjelpmodiaapi.utils.generateCallId
+import no.nav.sbl.sosialhjelpmodiaapi.utils.MDCUtils.getCallId
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.RestTemplate
+import java.util.*
 
 @Profile("!(mock | local)")
 @Component
@@ -71,10 +72,10 @@ class PdlClientImpl(
 
         val headers = HttpHeaders()
         headers.contentType = APPLICATION_JSON
-        headers.set(NAV_CALL_ID, generateCallId())
-        headers.set(NAV_CONSUMER_TOKEN, BEARER + stsToken)
+        headers.set(HEADER_CALL_ID, getCallId())
+        headers.set(HEADER_CONSUMER_TOKEN, BEARER + stsToken)
         headers.set(AUTHORIZATION, BEARER + stsToken)
-        headers.set(TEMA, TEMA_KOM)
+        headers.set(HEADER_TEMA, TEMA_KOM)
         return HttpEntity(request, headers)
     }
 

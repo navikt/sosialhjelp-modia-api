@@ -6,7 +6,9 @@ import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
 import org.springframework.stereotype.Component
 
 @Component
-class InnsynService(private val fiksClient: FiksClient) {
+class InnsynService(
+        private val fiksClient: FiksClient
+) {
 
     fun hentJsonDigisosSoker(digisosId: String, digisosSokerMetadata: String?, token: String): JsonDigisosSoker? {
         return when {
