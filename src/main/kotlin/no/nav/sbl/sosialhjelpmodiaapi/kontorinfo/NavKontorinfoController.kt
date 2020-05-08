@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController
 @ProtectedWithClaims(issuer = "veileder")
 @RestController
 @RequestMapping("/api/v1/innsyn")
-class NavKontorinfoController(private val norgClient: NorgClient) {
+class NavKontorinfoController(
+        private val norgClient: NorgClient
+) {
 
     @GetMapping("/kontorinfo", produces = ["application/json;charset=UTF-8"])
     fun hentPersonInfo(@RequestParam(name = "enhetsnr") enhetsnr: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<String> {
