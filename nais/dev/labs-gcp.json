@@ -3,6 +3,7 @@
   "ingress": [
     "https://sosialhjelp-modia-api.labs.nais.io/sosialhjelp/modia-api"
   ],
+  "virksomhetssertifikat_vault_path": "/secret/teamdigisos/labs-gcp",
   "env": {
     "SPRING_PROFILES_ACTIVE": "mock-alt,log-console",
     "ABAC_PDP_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/abac/application/authorize",
