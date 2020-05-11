@@ -32,6 +32,8 @@ spec:
         - host: "oidc-ver2.difi.no"
       rules:
         - application: sosialhjelp-mock-alt-api
+  filesFrom:
+    - secret: virksomhetssertifikat
 {{/if}}
   vault:
     enabled: {{vaultEnabled}}

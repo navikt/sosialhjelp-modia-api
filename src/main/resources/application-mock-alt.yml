@@ -11,7 +11,7 @@ client:
   fiks_integrasjonid_kommune: ${INTEGRASJONSID_FIKS_KOMMUNE}
   fiks_integrasjonpassord: ${INTEGRASJONPASSORD_FIKS}
   fiks_integrasjonpassord_kommune: ${INTEGRASJONPASSORD_FIKS_KOMMUNE}
-  id_porten_token_url: ${ID_PORTEN_TOKEN_URLhttp://127.0.0.1:8989/sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/token}
+  id_porten_token_url: ${ID_PORTEN_TOKEN_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/token}
   id_porten_client_id: ${ID_PORTEN_CLIENT_ID:1c3631f4-dbf2-4c12-bdc4-156cbd53c625}
   id_porten_scope: ${ID_PORTEN_SCOPE:ks:fiks}
   id_porten_config_url: ${ID_PORTEN_CONFIG_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/.well-known/openid-configuration}
