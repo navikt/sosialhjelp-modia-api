@@ -17,6 +17,7 @@ client:
   idPortenTokenUrl: "test"
   idPortenClientId: "test"
   idPortenScope: "test"
+  idPortenDefaultIssuer: "test"
   idPortenConfigUrl: "https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration"
 
 no.nav.security.jwt:

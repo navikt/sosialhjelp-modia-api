@@ -24,6 +24,8 @@ import java.security.KeyPair
 import java.security.KeyStore
 import java.security.PrivateKey
 import java.security.cert.X509Certificate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.*
 
 @Profile("!mock")
@@ -37,13 +39,15 @@ class IdPortenService(
     private val idPortenClientId = clientProperties.idPortenClientId
     private val idPortenScope = clientProperties.idPortenScope
     private val idPortenConfigUrl = clientProperties.idPortenConfigUrl
-    private val VIRKSERT_STI: String? = System.getenv("VIRKSERT_STI")
-            ?: "/var/run/secrets/nais.io/virksomhetssertifikat"
-    private var oidcConfiguration: IdPortenOidcConfiguration? = null
+    private val idPortenDefaultIssuer = clientProperties.idPortenDefaultIssuer
+    private val VIRKSERT_STI: String? = System.getenv("VIRKSERT_STI") ?: "/var/run/secrets/nais.io/virksomhetssertifikat"
+
+    private var oidcConfigurationTimeStamp: Long = -1
+    private var oidcConfiguration: IdPortenOidcConfiguration = IdPortenOidcConfiguration(idPortenDefaultIssuer, idPortenTokenUrl)
 
     suspend fun requestToken(attempts: Int = 10): AccessToken =
             retry(attempts = attempts, retryableExceptions = *arrayOf(ServerResponseException::class)) {
-                val jws = createJws()
+                val jws = createJws() // TODO: Burde ikke denne brukes?
                 log.info("Got jws, getting token")
                 val uriComponents = UriComponentsBuilder.fromHttpUrl(idPortenTokenUrl).build()
                 val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(HttpHeaders()), String::class.java)
@@ -87,14 +91,17 @@ class IdPortenService(
             ) to cert.encoded
         }
 
-        if(oidcConfiguration == null) {
-            val uriComponents = UriComponentsBuilder.fromHttpUrl(idPortenConfigUrl).build()
-            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(HttpHeaders()), String::class.java)
-            log.warn("DEBUG Hentet config: ${response.body}")
-            log.info("Hentet config fra $idPortenConfigUrl")
-            val returnObject : IdPortenOidcConfiguration = objectMapper.readValue(response.body!!)
-            log.warn("DEBUG Unjacsonifisert : $returnObject")
-            oidcConfiguration = returnObject
+        if(oidcConfigurationTimeStamp == -1L) {
+            try {
+                val uriComponents = UriComponentsBuilder.fromHttpUrl(idPortenConfigUrl).build()
+                val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(HttpHeaders()), String::class.java)
+                val returnObject: IdPortenOidcConfiguration = objectMapper.readValue(response.body!!)
+                log.info("Hentet config fra $idPortenConfigUrl")
+                oidcConfiguration = returnObject
+                oidcConfigurationTimeStamp = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+            } catch (e:Exception) {
+                log.error("Error når vi henter IdPorten konfiguration fra: $idPortenConfigUrl", e)
+            }
         }
 
         log.info("Public certificate length " + pair.first.public.encoded.size)
@@ -102,7 +109,7 @@ class IdPortenService(
         return SignedJWT(
                 JWSHeader.Builder(JWSAlgorithm.RS256).x509CertChain(mutableListOf(Base64.encode(pair.second))).build(),
                 JWTClaimsSet.Builder()
-                        .audience(oidcConfiguration!!.issuer)
+                        .audience(oidcConfiguration.issuer)
                         .issuer(issuer)
                         .issueTime(date)
                         .jwtID(UUID.randomUUID().toString())

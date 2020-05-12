@@ -15,6 +15,7 @@ client:
   id_porten_client_id: ${ID_PORTEN_CLIENT_ID:1c3631f4-dbf2-4c12-bdc4-156cbd53c625}
   id_porten_scope: ${ID_PORTEN_SCOPE:ks:fiks}
   id_porten_config_url: ${ID_PORTEN_CONFIG_URL:https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration}
+  id_porten_default_issuer: ${ID_PORTEN_DEFAULT_ISSUER:dummyIssuer}
   norg_endpoint_url: ${NORG_ENDPOINT_URL:norg_endpoint_url}
   pdl_endpoint_url: ${PDL_ENDPOINT_URL:pdl_endpoint_url}
   sts_token_endpoint_url: ${STS_TOKEN_ENDPOINT_URL:sts_token_endpoint_url}
