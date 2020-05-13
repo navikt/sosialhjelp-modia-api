@@ -17,6 +17,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
+import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import java.io.File
@@ -50,7 +51,10 @@ class IdPortenService(
                 val jws = createJws() // TODO: Burde ikke denne brukes?
                 log.info("Got jws, getting token")
                 val uriComponents = UriComponentsBuilder.fromHttpUrl(idPortenTokenUrl).build()
-                val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(HttpHeaders()), String::class.java)
+                val body = LinkedMultiValueMap<String, String>()
+                body.add(GRANT_TYPE_PARAM, listOf(GRANT_TYPE).toString())
+                body.add(ASSERTION_PARAM, listOf(jws.token).toString())
+                val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.POST, HttpEntity(body, HttpHeaders()), String::class.java)
                 val returnObject : IdPortenAccessTokenResponse = objectMapper.readValue(response.body!!)
                 AccessToken(returnObject.accessToken)
             }
@@ -100,7 +104,7 @@ class IdPortenService(
                 oidcConfiguration = returnObject
                 oidcConfigurationTimeStamp = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
             } catch (e:Exception) {
-                log.error("Error når vi henter IdPorten konfiguration fra: $idPortenConfigUrl", e)
+                log.error("Feil har oppstått når vi henter IdPorten konfiguration fra: $idPortenConfigUrl", e)
             }
         }
 
