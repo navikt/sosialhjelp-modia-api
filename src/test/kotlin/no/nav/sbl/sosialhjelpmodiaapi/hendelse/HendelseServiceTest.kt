@@ -10,7 +10,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_MOTTATT
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_SENDT
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_UNDER_BEHANDLING
-import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.service.hendelse.HendelseService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

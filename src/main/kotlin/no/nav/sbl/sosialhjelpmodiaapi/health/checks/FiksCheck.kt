@@ -6,7 +6,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.AbstractDependencyCheck
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.DependencyType
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.Importance
-import no.nav.sbl.sosialhjelpmodiaapi.idporten.IdPortenService
+import no.nav.sbl.sosialhjelpmodiaapi.client.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_ID

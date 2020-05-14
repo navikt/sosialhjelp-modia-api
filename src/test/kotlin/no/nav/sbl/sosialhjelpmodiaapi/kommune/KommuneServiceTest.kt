@@ -6,9 +6,10 @@ import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
-import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
-import no.nav.sbl.sosialhjelpmodiaapi.innsyn.InnsynService
-import no.nav.sbl.sosialhjelpmodiaapi.kommune.KommuneStatus.*
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
+import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneService
+import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.*
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.BeforeEach

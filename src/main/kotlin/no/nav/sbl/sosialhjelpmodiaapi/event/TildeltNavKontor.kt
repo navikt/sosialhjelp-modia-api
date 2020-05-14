@@ -7,7 +7,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontorInformasjon
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SendingType
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_VIDERESENDT
-import no.nav.sbl.sosialhjelpmodiaapi.norg.NorgClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 
 fun InternalDigisosSoker.apply(

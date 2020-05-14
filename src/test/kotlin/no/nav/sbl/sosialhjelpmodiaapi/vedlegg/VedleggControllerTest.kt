@@ -5,10 +5,12 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
+import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.VedleggResponse
-import no.nav.sbl.sosialhjelpmodiaapi.vedlegg.VedleggService.InternalVedlegg
+import no.nav.sbl.sosialhjelpmodiaapi.rest.VedleggController
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService.InternalVedlegg
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

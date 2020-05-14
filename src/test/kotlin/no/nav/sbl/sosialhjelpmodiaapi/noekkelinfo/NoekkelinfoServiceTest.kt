@@ -8,7 +8,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.*
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus.MOTTATT
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_SENDT
-import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.service.noekkelinfo.NoekkelinfoService
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach

@@ -15,7 +15,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Vilkar
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.service.utbetalinger.UtbetalingerService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled

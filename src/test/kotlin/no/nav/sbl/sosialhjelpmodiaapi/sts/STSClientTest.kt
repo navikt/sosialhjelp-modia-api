@@ -4,6 +4,8 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import no.nav.sbl.sosialhjelpmodiaapi.client.sts.STSClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.sts.STSToken
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach

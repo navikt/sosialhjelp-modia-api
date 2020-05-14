@@ -5,7 +5,9 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.sosialhjelpmodiaapi.domain.*
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.service.saksstatus.DEFAULT_TITTEL
+import no.nav.sbl.sosialhjelpmodiaapi.service.saksstatus.SaksStatusService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

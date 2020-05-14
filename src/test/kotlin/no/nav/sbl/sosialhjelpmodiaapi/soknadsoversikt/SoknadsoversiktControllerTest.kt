@@ -1,11 +1,12 @@
 package no.nav.sbl.sosialhjelpmodiaapi.soknadsoversikt
 
 import io.mockk.*
-import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacService
+import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.domain.*
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
-import no.nav.sbl.sosialhjelpmodiaapi.oppgave.OppgaveService
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.rest.SoknadsoversiktController
+import no.nav.sbl.sosialhjelpmodiaapi.service.oppgave.OppgaveService
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.KILDE_INNSYN_API
 import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions.assertThat

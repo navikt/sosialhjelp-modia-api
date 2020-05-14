@@ -4,10 +4,11 @@ import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClientImpl
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
-import no.nav.sbl.sosialhjelpmodiaapi.idporten.IdPortenService
+import no.nav.sbl.sosialhjelpmodiaapi.client.idporten.IdPortenService
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.BeforeEach

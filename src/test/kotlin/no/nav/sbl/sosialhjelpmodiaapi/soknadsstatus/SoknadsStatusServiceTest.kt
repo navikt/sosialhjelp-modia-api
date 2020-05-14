@@ -8,7 +8,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatusResponse
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.service.soknadsstatus.SoknadsStatusService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

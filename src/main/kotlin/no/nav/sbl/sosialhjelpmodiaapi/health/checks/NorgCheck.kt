@@ -7,7 +7,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.DependencyType
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.Importance
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CALL_ID
-import no.nav.sbl.sosialhjelpmodiaapi.utils.MDCUtils.getCallId
+import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils.getCallId
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders

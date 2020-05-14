@@ -4,9 +4,10 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.client.digisosapi.DigisosApiClientImpl
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
-import no.nav.sbl.sosialhjelpmodiaapi.idporten.AccessToken
-import no.nav.sbl.sosialhjelpmodiaapi.idporten.IdPortenService
+import no.nav.sbl.sosialhjelpmodiaapi.client.idporten.AccessToken
+import no.nav.sbl.sosialhjelpmodiaapi.client.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_komplett_jsondigisossoker_response
 import no.nav.sbl.sosialhjelpmodiaapi.utils.DigisosApiWrapper
 import no.nav.sbl.sosialhjelpmodiaapi.utils.SakWrapper

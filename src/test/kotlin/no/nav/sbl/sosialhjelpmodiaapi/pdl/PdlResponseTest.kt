@@ -1,5 +1,9 @@
 package no.nav.sbl.sosialhjelpmodiaapi.pdl
 
+import no.nav.sbl.sosialhjelpmodiaapi.client.pdl.PdlHentPerson
+import no.nav.sbl.sosialhjelpmodiaapi.client.pdl.PdlPerson
+import no.nav.sbl.sosialhjelpmodiaapi.client.pdl.PdlPersonNavn
+import no.nav.sbl.sosialhjelpmodiaapi.client.pdl.getNavn
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

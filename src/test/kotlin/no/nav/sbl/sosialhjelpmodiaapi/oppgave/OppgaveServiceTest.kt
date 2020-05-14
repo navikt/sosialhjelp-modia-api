@@ -8,9 +8,10 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.EttersendtInfoNAV
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Oppgave
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
-import no.nav.sbl.sosialhjelpmodiaapi.vedlegg.VedleggService
-import no.nav.sbl.sosialhjelpmodiaapi.vedlegg.VedleggService.InternalVedlegg
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.service.oppgave.OppgaveService
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService.InternalVedlegg
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

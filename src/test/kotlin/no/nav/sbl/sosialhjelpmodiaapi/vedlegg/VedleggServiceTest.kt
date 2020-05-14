@@ -8,7 +8,10 @@ import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelpmodiaapi.domain.*
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.LASTET_OPP_STATUS
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VEDLEGG_KREVES_STATUS
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

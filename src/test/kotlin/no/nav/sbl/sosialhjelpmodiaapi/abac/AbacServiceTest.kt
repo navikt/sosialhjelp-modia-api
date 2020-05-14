@@ -6,7 +6,12 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.unmockkAll
 import no.nav.abac.xacml.NavAttributter
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacResponse
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Decision
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Request
 import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
+import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatCode
