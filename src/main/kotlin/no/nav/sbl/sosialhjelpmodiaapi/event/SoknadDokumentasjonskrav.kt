@@ -4,8 +4,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Oppgave
 import no.nav.sbl.sosialhjelpmodiaapi.domain.OriginalSoknadNAV
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
-import no.nav.sbl.sosialhjelpmodiaapi.vedlegg.VEDLEGG_KREVES_STATUS
-import no.nav.sbl.sosialhjelpmodiaapi.vedlegg.VedleggService
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VEDLEGG_KREVES_STATUS
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
 
 fun InternalDigisosSoker.applySoknadKrav(
         fiksDigisosId: String,

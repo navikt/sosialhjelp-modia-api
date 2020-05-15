@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.json.JsonSosialhjelpObjectMapper
-import no.nav.sbl.sosialhjelpmodiaapi.innsyn.InnsynService
+import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.DigisosApiWrapper
 import no.nav.security.token.support.core.api.Unprotected

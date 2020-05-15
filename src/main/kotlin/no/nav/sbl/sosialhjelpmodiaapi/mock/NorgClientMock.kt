@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.mock
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
-import no.nav.sbl.sosialhjelpmodiaapi.norg.NorgClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 

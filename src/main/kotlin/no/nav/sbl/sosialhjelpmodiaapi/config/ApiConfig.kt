@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.config
 
-import no.nav.sbl.sosialhjelpmodiaapi.utils.MDCFilter
+import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
