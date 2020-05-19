@@ -1,0 +1,24 @@
+spring:
+  profiles:
+    active: local
+
+no.nav.security.jwt:
+  issuer.veileder:
+    discoveryurl: http://metadata
+    accepted_audience: aud-localhost
+    cookie_name: localhost-idtoken
+
+client:
+  abac_pdp_endpoint_url: ${ABAC_PDP_ENDPOINT_URL:http://127.0.0.1:8989/abac/application/authorize}
+  fiks_digisos_endpoint_url: ${FIKS_DIGISOS_ENDPOINT_URL:http://127.0.0.1:8989/fiks}
+  fiks_integrasjonid: ${INTEGRASJONSID_FIKS}
+  fiks_integrasjonid_kommune: ${INTEGRASJONSID_FIKS_KOMMUNE}
+  fiks_integrasjonpassord: ${INTEGRASJONPASSORD_FIKS}
+  fiks_integrasjonpassord_kommune: ${INTEGRASJONPASSORD_FIKS_KOMMUNE}
+  id_porten_token_url: ${ID_PORTEN_TOKEN_URLhttp://127.0.0.1:8989/idporten/idporten-oidc-provider/token}
+  id_porten_client_id: ${ID_PORTEN_CLIENT_ID:1c3631f4-dbf2-4c12-bdc4-156cbd53c625}
+  id_porten_scope: ${ID_PORTEN_SCOPE:ks:fiks}
+  id_porten_config_url: ${ID_PORTEN_CONFIG_URL:http://127.0.0.1:8989/idporten/idporten-oidc-provider/.well-known/openid-configuration}
+  norg_endpoint_url: ${NORG_ENDPOINT_URL:http://127.0.0.1:8989/norg_endpoint_url}
+  pdl_endpoint_url: ${PDL_ENDPOINT_URL:http://127.0.0.1:8989/pdl_endpoint_url}
+  sts_token_endpoint_url: ${STS_TOKEN_ENDPOINT_URL:http://127.0.0.1:8989/sts_token_endpoint_url}

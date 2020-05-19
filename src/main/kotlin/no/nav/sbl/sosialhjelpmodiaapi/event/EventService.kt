@@ -20,8 +20,9 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontorInformasjon
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SendingType
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Soknadsmottaker
-import no.nav.sbl.sosialhjelpmodiaapi.innsyn.InnsynService
-import no.nav.sbl.sosialhjelpmodiaapi.norg.NorgClient
+import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_SENDT
+import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
+import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import org.springframework.stereotype.Component
 

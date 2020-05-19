@@ -4,6 +4,7 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonDokumentasjonEtte
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Oppgave
+import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.DOKUMENTASJONSKRAV
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonEtterspurt) {

@@ -22,7 +22,9 @@ const val APPLICATION_READY = "Application is ready!"
 @Unprotected
 @RestController
 @RequestMapping(value = ["/internal"])
-class HealthController(private val dependencyCheckList: List<AbstractDependencyCheck>) {
+class HealthController(
+        private val dependencyCheckList: List<AbstractDependencyCheck>
+) {
 
     val isAlive: String
         @ResponseBody

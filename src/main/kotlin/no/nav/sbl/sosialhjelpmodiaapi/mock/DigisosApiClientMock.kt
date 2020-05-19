@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.mock
 
-import no.nav.sbl.sosialhjelpmodiaapi.digisosapi.DigisosApiClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.digisosapi.DigisosApiClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DokumentInfo
@@ -17,7 +17,10 @@ import java.util.*
 
 @Profile("mock")
 @Component
-class DigisosApiClientMock(private val fiksClientMock: FiksClientMock) : DigisosApiClient {
+class DigisosApiClientMock(
+        private val fiksClientMock: FiksClientMock
+) : DigisosApiClient {
+
     override fun oppdaterDigisosSak(fiksDigisosId: String?, digisosApiWrapper: DigisosApiWrapper): String? {
         val dokumentlagerId = UUID.randomUUID().toString()
         fiksClientMock.postDokument(dokumentlagerId, digisosApiWrapper.sak.soker)
