@@ -7,15 +7,14 @@ group = "no.nav.sbl"
 
 object Versions {
     const val kotlin = "1.3.70"
-    const val springBoot = "2.2.6.RELEASE"
+    const val springBoot = "2.2.7.RELEASE"
     const val logback = "1.2.3"
     const val logstash = "6.3"
     const val filformat = "1.2020.01.09-15.55-f18d10d7d76a"
-    const val micrometerRegistry = "1.3.5"
+    const val micrometerRegistry = "1.3.8"
     const val prometheus = "0.8.1"
-    const val tokenValidation = "1.1.4"
-    const val jackson = "2.10.3"
-    const val jacksonDatabind = "2.10.3"
+    const val tokenValidation = "1.1.5"
+    const val jackson = "2.11.0"
     const val guava = "28.2-jre"
     const val swagger = "2.9.2"
     const val resilience4j = "1.3.1"
@@ -24,6 +23,7 @@ object Versions {
     const val ktor = "1.3.1"
     const val kotlinCoroutines = "1.3.3"
     const val abacAttributeConstants = "3.3.13"
+    const val nettyCodec = "4.1.50.Final"
 
     // Test only
     const val junitJupiter = "5.6.0"
@@ -102,8 +102,8 @@ dependencies {
     implementation("no.nav.abac.policies:abac-attribute-constants:${Versions.abacAttributeConstants}")
 
     //spesifikke versjoner oppgradert etter ønske fra snyk
-    implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.jacksonDatabind}")
     implementation("com.google.guava:guava:${Versions.guava}")
+    implementation("io.netty:netty-codec-http2:${Versions.nettyCodec}")
 
     //selftest
     implementation ("io.github.resilience4j:resilience4j-kotlin:${Versions.resilience4j}")
