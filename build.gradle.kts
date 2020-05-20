@@ -23,6 +23,7 @@ object Versions {
     const val ktor = "1.3.1"
     const val kotlinCoroutines = "1.3.3"
     const val abacAttributeConstants = "3.3.13"
+    const val nettyCodec = "4.1.50.Final"
 
     // Test only
     const val junitJupiter = "5.6.0"
@@ -102,6 +103,7 @@ dependencies {
 
     //spesifikke versjoner oppgradert etter ønske fra snyk
     implementation("com.google.guava:guava:${Versions.guava}")
+    implementation("io.netty:netty-codec-http2:${Versions.nettyCodec}")
 
     //selftest
     implementation ("io.github.resilience4j:resilience4j-kotlin:${Versions.resilience4j}")
