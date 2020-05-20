@@ -2,8 +2,8 @@ package no.nav.sbl.sosialhjelpmodiaapi.logging
 
 import no.nav.abac.xacml.NavAttributter.ADVICEOROBLIGATION_CAUSE
 import no.nav.abac.xacml.NavAttributter.ADVICEOROBLIGATION_DENY_POLICY
-import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacResponse
-import no.nav.sbl.sosialhjelpmodiaapi.abac.Decision
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacResponse
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Decision
 import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Abac
 import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.CommonEventFormat
 import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Extension

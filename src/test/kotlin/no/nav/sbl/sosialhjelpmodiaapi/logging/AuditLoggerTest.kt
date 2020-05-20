@@ -7,10 +7,10 @@ import io.mockk.just
 import io.mockk.mockkObject
 import io.mockk.slot
 import no.nav.abac.xacml.NavAttributter
-import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacResponse
-import no.nav.sbl.sosialhjelpmodiaapi.abac.Advice
-import no.nav.sbl.sosialhjelpmodiaapi.abac.Attribute
-import no.nav.sbl.sosialhjelpmodiaapi.abac.Decision
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacResponse
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Advice
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Attribute
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Decision
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditLogger.Companion.auditlog
 import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Log
 import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Severity

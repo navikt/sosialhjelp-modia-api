@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.logging.cef
 
-import no.nav.sbl.sosialhjelpmodiaapi.abac.Decision
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Decision
 import org.springframework.http.HttpMethod
 
 data class CommonEventFormat(

@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.logging
 
-import no.nav.sbl.sosialhjelpmodiaapi.abac.AbacResponse
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacResponse
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.getConsumerId
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.getUserIdFromToken
 import org.springframework.context.annotation.Profile
