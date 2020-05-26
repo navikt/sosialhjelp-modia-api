@@ -15,6 +15,7 @@ client:
   id_porten_client_id: clientid
   id_porten_scope: scope
   id_porten_config_url: configurl
+  id_porten_default_issuer: dummyIssuer
   norg_endpoint_url: norgurl
   pdl_endpoint_url: pdlurl
   sts_token_endpoint_url: stsurl

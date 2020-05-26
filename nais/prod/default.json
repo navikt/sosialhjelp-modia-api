@@ -4,9 +4,9 @@
     "https://sosialhjelp-modia-api.nais.adeo.no/sosialhjelp/modia-api",
     "https://sosialhjelp-modia-api.prod-fss.nais.io/sosialhjelp/modia-api"
   ],
-  "virksomhetssertifikat_vault_path": "/kv/prod/fss/sosialhjelp-modia-api/default",
-  "application_vault_path": "/kv/prod/fss/sosialhjelp-modia-api/default",
   "secretKvPaths": {
+    "/var/run/secrets/nais.io/virksomhetssertifikat": "/secret/virksomhetssertifikat/prod/maskinporten",
+    "/var/run/secrets/nais.io/vault": "/kv/prod/fss/sosialhjelp-modia-api/default",
     "/serviceuser/srvsosialhjelp-mod": "/serviceuser/data/prod/srvsosialhjelp-mod"
   },
   "env": {
