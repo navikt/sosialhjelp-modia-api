@@ -7,10 +7,10 @@ import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.service.oppgave.OppgaveService
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.KILDE_INNSYN_API
-import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpStatus
 import java.time.LocalDateTime
 
 internal class SoknadsoversiktControllerTest {
@@ -123,7 +123,7 @@ internal class SoknadsoversiktControllerTest {
         val response1 = controller.hentSaksDetaljer(id_1, "token", Ident(fnr))
         val sak1 = response1.body
 
-        assertThat(response1.statusCode.value()).isEqualTo(HttpStatus.SC_OK)
+        assertThat(response1.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(sak1).isNotNull
         assertThat(sak1?.soknadTittel).isEqualTo("")
         assertThat(sak1?.harNyeOppgaver).isTrue()
@@ -132,7 +132,7 @@ internal class SoknadsoversiktControllerTest {
         val response2 = controller.hentSaksDetaljer(id_2, "token", Ident(fnr))
         val sak2 = response2.body
 
-        assertThat(response2.statusCode.value()).isEqualTo(HttpStatus.SC_OK)
+        assertThat(response2.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(sak2).isNotNull
         assertThat(sak2?.soknadTittel).contains("Livsopphold", "Strøm")
         assertThat(sak2?.status).isEqualTo("UNDER BEHANDLING")
@@ -153,7 +153,7 @@ internal class SoknadsoversiktControllerTest {
         val sak = response.body
 
         assertThat(sak).isNotNull
-        assertThat(response.statusCode.value()).isEqualTo(HttpStatus.SC_OK)
+        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
 
         verify { oppgaveService wasNot Called }
 

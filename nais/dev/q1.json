@@ -7,6 +7,8 @@
   "virksomhetssertifikat_vault_path": "/secret/virksomhetssertifikat/preprod/shared",
   "application_vault_path": "/kv/preprod/fss/sosialhjelp-modia-api/q1",
   "secretKvPaths": {
+    "/var/run/secrets/nais.io/virksomhetssertifikat": "/secret/virksomhetssertifikat/preprod/shared",
+    "/var/run/secrets/nais.io/vault": "/kv/preprod/fss/sosialhjelp-modia-api/q1",
     "/serviceuser/srvsosialhjelp-mod": "/serviceuser/data/dev/srvsosialhjelp-mod"
   },
   "env": {

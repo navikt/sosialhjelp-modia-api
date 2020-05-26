@@ -4,12 +4,20 @@
     "https://sosialhjelp-modia-api.labs.nais.io/sosialhjelp/modia-api"
   ],
   "env": {
-    "SPRING_PROFILES_ACTIVE": "mock,log-console"
+    "SPRING_PROFILES_ACTIVE": "mock-alt,log-console",
+    "ABAC_PDP_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/abac/application/authorize",
+    "FIKS_DIGISOS_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/fiks",
+    "ID_PORTEN_TOKEN_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/token",
+    "ID_PORTEN_CONFIG_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/.well-known/openid-configuration",
+    "NORG_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/norg_endpoint_url",
+    "PDL_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/pdl_endpoint_url",
+    "STS_TOKEN_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/sts_token_endpoint_url",
+    "VIRKSERT_STI": "/var/run/secrets"
   },
   "minReplicas": "1",
   "maxReplicas": "1",
   "prometheusEnabled": false,
-  "webProxyEnabled": false,
+  "webProxyEnabled": true,
   "accessPoliciesForGcpEnabled": true,
   "vaultEnabled": false
 }
