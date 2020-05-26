@@ -7,7 +7,6 @@ import com.nimbusds.jose.crypto.RSASSASigner
 import com.nimbusds.jose.util.Base64
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
-import io.ktor.client.features.ServerResponseException
 import no.nav.sbl.sosialhjelpmodiaapi.common.retry
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
@@ -18,6 +17,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
+import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import java.io.File
@@ -47,8 +47,8 @@ class IdPortenService(
     private var oidcConfiguration: IdPortenOidcConfiguration = IdPortenOidcConfiguration(idPortenDefaultIssuer, idPortenTokenUrl)
 
     suspend fun requestToken(attempts: Int = 10): AccessToken =
-            retry(attempts = attempts, retryableExceptions = *arrayOf(ServerResponseException::class)) {
-                val jws = createJws() // TODO: Burde ikke denne brukes?
+            retry(attempts = attempts, retryableExceptions = *arrayOf(HttpServerErrorException::class)) {
+                val jws = createJws()
                 log.info("Got jws, getting token")
                 val uriComponents = UriComponentsBuilder.fromHttpUrl(idPortenTokenUrl).build()
                 val body = LinkedMultiValueMap<String, String>()

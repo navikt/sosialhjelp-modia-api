@@ -21,7 +21,6 @@ object Versions {
     const val resilience4j = "1.3.1"
     const val rxKotlin = "2.4.0"
     const val vavrKotlin = "0.10.2"
-    const val ktor = "1.3.1"
     const val kotlinCoroutines = "1.3.3"
     const val abacAttributeConstants = "3.3.13"
 
@@ -68,14 +67,6 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
 
-    implementation("io.ktor:ktor-server-netty:${Versions.ktor}")
-    implementation("io.ktor:ktor-auth:${Versions.ktor}")
-    implementation("io.ktor:ktor-auth-jwt:${Versions.ktor}")
-    implementation("io.ktor:ktor-jackson:${Versions.ktor}")
-    implementation("io.ktor:ktor-client-core:${Versions.ktor}")
-    implementation("io.ktor:ktor-client-apache:${Versions.ktor}")
-    implementation("io.ktor:ktor-client-json:${Versions.ktor}")
-    implementation("io.ktor:ktor-client-jackson:${Versions.ktor}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:${Versions.kotlinCoroutines}")
 
     implementation("org.springframework.boot:spring-boot-starter-web:${Versions.springBoot}")
