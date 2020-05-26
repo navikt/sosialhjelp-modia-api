@@ -59,6 +59,7 @@ configurations {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.hamcrest", module = "hamcrest-library")
         exclude(group = "org.hamcrest", module = "hamcrest-core")
+        exclude(group = "org.mockito", module = "mockito-core}")
     }
 }
 
@@ -66,8 +67,10 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
 
+//    Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:${Versions.kotlinCoroutines}")
 
+//    Spring
     implementation("org.springframework.boot:spring-boot-starter-web:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-jetty:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-security:${Versions.springBoot}")
@@ -75,38 +78,44 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-logging:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.springBoot}")
 
+//    Micrometer/prometheus
     implementation("io.micrometer:micrometer-registry-prometheus:${Versions.micrometerRegistry}")
     implementation("io.prometheus:simpleclient_common:${Versions.prometheus}")
     implementation("io.prometheus:simpleclient_hotspot:${Versions.prometheus}")
 
+//    Logging
     implementation("ch.qos.logback:logback-classic:${Versions.logback}")
     implementation("net.logstash.logback:logstash-logback-encoder:${Versions.logstash}")
 
+//    Filformat
     implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:${Versions.filformat}")
 
+//    Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jackson}")
 
+//    Token-validation
     implementation("no.nav.security:token-validation-spring:${Versions.tokenValidation}")
+
+//    Swagger
     implementation("io.springfox:springfox-swagger2:${Versions.swagger}")
     implementation("io.springfox:springfox-swagger-ui:${Versions.swagger}")
 
+//    Abac
     implementation("no.nav.abac.policies:abac-attribute-constants:${Versions.abacAttributeConstants}")
 
-    //spesifikke versjoner oppgradert etter ønske fra snyk
+//    Spesifikke versjoner oppgradert etter ønske fra snyk
     implementation("com.google.guava:guava:${Versions.guava}")
     implementation("io.netty:netty-codec-http2:${Versions.nettyCodec}")
 
-    //selftest
+//    Selftest
     implementation ("io.github.resilience4j:resilience4j-kotlin:${Versions.resilience4j}")
     implementation ("io.github.resilience4j:resilience4j-timelimiter:${Versions.resilience4j}")
     implementation ("io.github.resilience4j:resilience4j-circuitbreaker:${Versions.resilience4j}")
     implementation ("io.reactivex.rxjava2:rxkotlin:${Versions.rxKotlin}")
     implementation ("io.vavr:vavr-kotlin:${Versions.vavrKotlin}")
 
-    //Test dependencies
-    testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}") {
-        exclude(group = "org.mockito", module = "mockito-core}")
-    }
+//    Test
+    testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
     testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junitJupiter}")
     testImplementation("io.mockk:mockk:${Versions.mockk}")
     testImplementation("no.nav.security:token-validation-test-support:${Versions.tokenValidation}")
