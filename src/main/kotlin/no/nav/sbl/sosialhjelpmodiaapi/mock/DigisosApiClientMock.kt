@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.mock
 
-import no.nav.sbl.sosialhjelpmodiaapi.digisosapi.DigisosApiClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.digisosapi.DigisosApiClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DokumentInfo

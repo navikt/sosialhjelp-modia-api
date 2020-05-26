@@ -6,7 +6,7 @@ import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.EttersendtInfoNAV
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
-import no.nav.sbl.sosialhjelpmodiaapi.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.defaultDigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.defaultJsonSoknad
 import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.digisosSoker

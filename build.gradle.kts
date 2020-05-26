@@ -6,16 +6,15 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav.sbl"
 
 object Versions {
-    const val kotlin = "1.3.70"
-    const val springBoot = "2.2.6.RELEASE"
+    const val kotlin = "1.3.72"
+    const val springBoot = "2.3.0.RELEASE"
     const val logback = "1.2.3"
     const val logstash = "6.3"
     const val filformat = "1.2020.01.09-15.55-f18d10d7d76a"
-    const val micrometerRegistry = "1.3.5"
+    const val micrometerRegistry = "1.5.1"
     const val prometheus = "0.8.1"
-    const val tokenValidation = "1.1.4"
-    const val jackson = "2.10.3"
-    const val jacksonDatabind = "2.10.3"
+    const val tokenValidation = "1.1.5"
+    const val jackson = "2.11.0"
     const val guava = "28.2-jre"
     const val swagger = "2.9.2"
     const val resilience4j = "1.3.1"
@@ -23,6 +22,7 @@ object Versions {
     const val vavrKotlin = "0.10.2"
     const val kotlinCoroutines = "1.3.3"
     const val abacAttributeConstants = "3.3.13"
+    const val nettyCodec = "4.1.50.Final"
 
     // Test only
     const val junitJupiter = "5.6.0"
@@ -33,11 +33,10 @@ val mainClass = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
 
 plugins {
     application
-    kotlin("jvm") version "1.3.70"
+    kotlin("jvm") version "1.3.72"
 //    id("org.jmailen.kotlinter") version "2.3.1" // TODO - burde tas i bruk
-    id("org.jetbrains.kotlin.plugin.spring") version "1.3.70"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.3.72"
     id("com.github.johnrengelman.shadow") version "5.2.0"
-    id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("com.github.ben-manes.versions") version "0.28.0"
 }
 
@@ -74,6 +73,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-actuator:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-logging:${Versions.springBoot}")
+    implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.springBoot}")
 
     implementation("io.micrometer:micrometer-registry-prometheus:${Versions.micrometerRegistry}")
     implementation("io.prometheus:simpleclient_common:${Versions.prometheus}")
@@ -93,8 +93,8 @@ dependencies {
     implementation("no.nav.abac.policies:abac-attribute-constants:${Versions.abacAttributeConstants}")
 
     //spesifikke versjoner oppgradert etter ønske fra snyk
-    implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.jacksonDatabind}")
     implementation("com.google.guava:guava:${Versions.guava}")
+    implementation("io.netty:netty-codec-http2:${Versions.nettyCodec}")
 
     //selftest
     implementation ("io.github.resilience4j:resilience4j-kotlin:${Versions.resilience4j}")

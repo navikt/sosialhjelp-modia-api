@@ -1,9 +1,9 @@
 package no.nav.sbl.sosialhjelpmodiaapi.mock
 
-import no.nav.sbl.sosialhjelpmodiaapi.pdl.PdlClient
-import no.nav.sbl.sosialhjelpmodiaapi.pdl.PdlHentPerson
-import no.nav.sbl.sosialhjelpmodiaapi.pdl.PdlPerson
-import no.nav.sbl.sosialhjelpmodiaapi.pdl.PdlPersonNavn
+import no.nav.sbl.sosialhjelpmodiaapi.client.pdl.PdlClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.pdl.PdlHentPerson
+import no.nav.sbl.sosialhjelpmodiaapi.client.pdl.PdlPerson
+import no.nav.sbl.sosialhjelpmodiaapi.client.pdl.PdlPersonNavn
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 

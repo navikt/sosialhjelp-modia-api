@@ -4,9 +4,9 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.innsyn.InnsynService
+import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
 import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.digisosSoker
-import no.nav.sbl.sosialhjelpmodiaapi.norg.NorgClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
 import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.Test
 
