@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.health.checks
 
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
-import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.AbstractDependencyCheck
+import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.DependencyCheck
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.DependencyType
 import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.Importance
 import no.nav.sbl.sosialhjelpmodiaapi.logger
@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate
 class STSCheck(
         clientProperties: ClientProperties,
         private val restTemplate: RestTemplate
-) : AbstractDependencyCheck(
+) : DependencyCheck(
         DependencyType.REST,
         "STS",
         clientProperties.stsTokenEndpointUrl,
