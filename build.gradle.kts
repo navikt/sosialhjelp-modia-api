@@ -11,6 +11,7 @@ object Versions {
     const val springBoot = "2.3.0.RELEASE"
     const val logback = "1.2.3"
     const val logstash = "6.3"
+    const val sosialhjelpCommon = "1.30b7301-SNAPSHOT" // TODO: endre til ikke-snapshot versjon
     const val filformat = "1.2020.01.09-15.55-f18d10d7d76a"
     const val micrometerRegistry = "1.5.1"
     const val prometheus = "0.8.1"
@@ -75,6 +76,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-logging:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.springBoot}")
 
+//    Sosialhjelp-common
+    implementation("no.nav.sosialhjelp-common:sosialhjelp-common-selftest:${Versions.sosialhjelpCommon}")
+
 //    Micrometer/prometheus
     implementation("io.micrometer:micrometer-registry-prometheus:${Versions.micrometerRegistry}")
     implementation("io.prometheus:simpleclient_common:${Versions.prometheus}")
@@ -112,11 +116,20 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test:${Versions.kotlin}")
 }
 
+val githubUser: String by project
+val githubPassword: String by project
+
 repositories {
     mavenCentral()
     jcenter()
     maven("https://plugins.gradle.org/m2/")
-    maven("https://repo.spring.io/plugins-release/")
+    maven {
+        url = uri("https://maven.pkg.github.com/navikt/sosialhjelp-common")
+        credentials {
+            username = githubUser
+            password = githubPassword
+        }
+    }
 }
 
 tasks {
