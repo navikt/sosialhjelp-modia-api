@@ -116,10 +116,11 @@ data class SaksDetaljerResponse(
 )
 
 data class PersoninfoResponse(
-        val sammensattNavn: String?
-//        val alder: Int
+        val sammensattNavn: String?,
+        val alder: Int?,
+        val kjoenn: String?,
 //        val fnr: String,
-//        val tlfnr: String
+        val tlfnr: String?
 )
 
 data class Ident(

@@ -4,12 +4,17 @@ query($ident: ID!, $navnHistorikk: Boolean!){
             fornavn
             mellomnavn
             etternavn
-            forkortetNavn
-            originaltNavn {
-                fornavn
-                mellomnavn
-                etternavn
-            }
+        }
+        kjoenn {
+            kjoenn
+        }
+        foedsel {
+            foedselsdato
+        }
+        telefonnummer {
+            landskode
+            nummer
+            prioritet
         }
     }
 }
