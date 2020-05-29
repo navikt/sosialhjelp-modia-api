@@ -29,8 +29,8 @@ class PdlClientMock : PdlClient {
         return PdlHentPerson(
                 PdlPerson(
                         listOf(PdlPersonNavn("Bruce", "mock", "Banner")),
-                        PdlKjoenn(Kjoenn.KVINNE),
-                        PdlFoedselsdato("2000-01-01"),
+                        listOf(PdlKjoenn(Kjoenn.KVINNE)),
+                        listOf(PdlFoedselsdato("2000-01-01")),
                         listOf(PdlTelefonnummer("+47", "12345678", 1))
                 )
         )

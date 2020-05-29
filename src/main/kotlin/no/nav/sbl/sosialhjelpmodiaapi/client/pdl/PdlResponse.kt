@@ -31,9 +31,9 @@ data class PdlHentPerson(
 
 data class PdlPerson(
         val navn: List<PdlPersonNavn>,
-        val kjoenn: PdlKjoenn,
-        val foedsel: PdlFoedselsdato?,
-        val telefonnummer: List<PdlTelefonnummer>?
+        val kjoenn: List<PdlKjoenn>,
+        val foedsel: List<PdlFoedselsdato>,
+        val telefonnummer: List<PdlTelefonnummer>
 )
 
 data class PdlPersonNavn(
@@ -85,12 +85,12 @@ private fun String.capitalizeEachWord(): String {
 
 val PdlHentPerson.alder: Int?
     get() {
-        return hentPerson?.foedsel?.foedselsdato?.let { Period.between(LocalDate.parse(it), LocalDate.now()).years }
+        return hentPerson?.foedsel?.firstOrNull()?.foedselsdato?.let { Period.between(LocalDate.parse(it), LocalDate.now()).years }
     }
 
 val PdlHentPerson.kjoenn: String?
     get() {
-        return hentPerson?.kjoenn?.kjoenn.toString()
+        return hentPerson?.kjoenn?.firstOrNull()?.kjoenn.toString()
     }
 
 val PdlHentPerson.telefonnummer: String?
