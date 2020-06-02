@@ -27,7 +27,7 @@ jobs:
 #          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
 #          restore-keys: ${{ runner.os }}-gradle-wrapper-
       - name: Run tests
-        run: ./gradlew test --info
+        run: ./gradlew test --debug
         env:
           ORG_GRADLE_PROJECT_githubUser: x-access-token
           ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.GITHUB_TOKEN }}
