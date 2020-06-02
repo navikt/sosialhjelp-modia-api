@@ -7,7 +7,9 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
 import no.nav.sbl.sosialhjelpmodiaapi.client.idporten.IdPortenService
+import no.nav.sbl.sosialhjelpmodiaapi.feilmeldingUtenFnr
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.toFiksErrorResponse
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_ID
@@ -21,6 +23,8 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
@@ -56,7 +60,9 @@ class FiksClientImpl(
             return objectMapper.readValue(response.body!!, DigisosSak::class.java)
 
         } catch (e: HttpStatusCodeException) {
-            log.warn("Fiks - hentDigisosSak feilet for id ${digisosId} - ${e.statusCode} ${e.statusText}")
+            val fiksErrorResponse = e.toFiksErrorResponse()?.feilmeldingUtenFnr
+            val errorMessage = e.message?.feilmeldingUtenFnr
+            log.warn("Fiks - hentDigisosSak feilet for id $digisosId - $errorMessage - $fiksErrorResponse", e)
             if (e.statusCode == HttpStatus.NOT_FOUND) {
                 throw FiksNotFoundException(e.statusCode, e.message, e)
             }
@@ -86,7 +92,9 @@ class FiksClientImpl(
             return objectMapper.readValue(response.body!!, requestedClass)
 
         } catch (e: HttpStatusCodeException) {
-            log.warn("Fiks - hentDokument feilet - ${e.statusCode} ${e.statusText}", e)
+            val fiksErrorResponse = e.toFiksErrorResponse()?.feilmeldingUtenFnr
+            val errorMessage = e.message?.feilmeldingUtenFnr
+            log.warn("Fiks - hentDokument feilet - $errorMessage - $fiksErrorResponse", e)
             throw FiksException(e.statusCode, e.message, e)
         } catch (e: Exception) {
             log.warn("Fiks - hentDokument feilet", e)
@@ -108,7 +116,9 @@ class FiksClientImpl(
             return response.body!!
 
         } catch (e: HttpStatusCodeException) {
-            log.warn("Fiks - hentAlleDigisosSaker feilet - ${e.statusCode} ${e.statusText}", e)
+            val fiksErrorResponse = e.toFiksErrorResponse()?.feilmeldingUtenFnr
+            val errorMessage = e.message?.feilmeldingUtenFnr
+            log.warn("Fiks - hentAlleDigisosSaker feilet - $errorMessage - $fiksErrorResponse", e)
             throw FiksException(e.statusCode, e.message, e)
         } catch (e: Exception) {
             log.warn("Fiks - hentAlleDigisosSaker feilet", e)
@@ -122,18 +132,41 @@ class FiksClientImpl(
         val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
 
         try {
-            val urlTemplate = "$baseUrl/digisos/api/v1/nav/kommune/{kommunenummer}"
+            val urlTemplate = "$baseUrl/digisos/api/v1/nav/kommuner/{kommunenummer}"
             val vars = mapOf("kommunenummer" to kommunenummer)
             val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), KommuneInfo::class.java, vars)
 
             return response.body!!
 
         } catch (e: HttpStatusCodeException) {
-            log.warn("Fiks - hentKommuneInfo feilet - ${e.statusCode} ${e.statusText}", e)
+            val fiksErrorResponse = e.toFiksErrorResponse()?.feilmeldingUtenFnr
+            val errorMessage = e.message?.feilmeldingUtenFnr
+            log.warn("Fiks - hentKommuneInfo feilet - $errorMessage - $fiksErrorResponse", e)
             throw FiksException(e.statusCode, e.message, e)
         } catch (e: Exception) {
             log.warn("Fiks - hentKommuneInfo feilet", e)
             throw FiksException(null, e.message, e)
+        }
+    }
+
+    override fun hentKommuneInfoForAlle(): List<KommuneInfo> {
+        val virksomhetsToken = runBlocking { idPortenService.requestToken() }
+
+        val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
+
+        try {
+            val response = restTemplate.exchange("$baseUrl/digisos/api/v1/nav/kommuner", HttpMethod.GET, HttpEntity<Nothing>(headers), typeRef<List<KommuneInfo>>())
+
+            return response.body!!
+
+        } catch (e: HttpStatusCodeException) {
+            val fiksErrorResponse = e.toFiksErrorResponse()?.feilmeldingUtenFnr
+            val errorMessage = e.message?.feilmeldingUtenFnr
+            log.warn("Fiks - hentKommuneInfoForAlle feilet - $errorMessage - $fiksErrorResponse", e)
+            throw FiksException(e.statusCode, errorMessage, e)
+        } catch (e: Exception) {
+            log.warn("Fiks - hentKommuneInfoForAlle feilet", e)
+            throw FiksException(null, e.message?.feilmeldingUtenFnr, e)
         }
     }
 
