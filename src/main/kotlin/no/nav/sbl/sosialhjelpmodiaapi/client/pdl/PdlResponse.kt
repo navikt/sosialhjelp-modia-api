@@ -97,5 +97,5 @@ val PdlHentPerson.telefonnummer: String?
     get() {
         return hentPerson?.telefonnummer
                 ?.minBy { it.prioritet }
-                ?.let { "${it.landskode} ${it.nummer}" }
+                ?.let { it.landskode.plus(it.nummer) }
     }

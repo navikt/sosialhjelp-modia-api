@@ -94,6 +94,6 @@ internal class PdlResponseTest {
                 PdlTelefonnummer("+2", "98765432", 1)
         )
 
-        assertThat(pdlHentPerson.telefonnummer).isEqualTo("+2 98765432")
+        assertThat(pdlHentPerson.telefonnummer).isEqualTo("+298765432")
     }
 }
