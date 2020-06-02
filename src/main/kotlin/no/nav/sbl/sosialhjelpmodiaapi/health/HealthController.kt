@@ -21,7 +21,7 @@ class HealthController(
         private val dependencyChecks: List<DependencyCheck>
 ) {
 
-    val selftestService = SelftestService()
+    val selftestService = SelftestService("sosialhjelp-modia-api", Miljo.getAppImage(), dependencyChecks)
 
     val isAlive: String
         @ResponseBody
@@ -36,7 +36,7 @@ class HealthController(
     @ResponseBody
     @GetMapping("/selftest")
     fun nySelftest(): SelftestResult {
-        return selftestService.getSelftest("sosialhjelp-modia-api", Miljo.getAppImage(), dependencyChecks)
+        return selftestService.getSelftest()
     }
 
 }
