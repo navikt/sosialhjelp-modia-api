@@ -31,7 +31,7 @@ class UtbetalingerController(
 
         // kan ikke bruker saksbehandlers token for å hente utbetalinger?
 
-        return ResponseEntity.ok().body(utbetalingerService.hentUtbetalinger(token))
+        return ResponseEntity.ok().body(utbetalingerService.hentUtbetalinger(token, ident.fnr))
     }
 
     @PostMapping("/{fiksDigisosId}/utbetalinger")

@@ -42,7 +42,7 @@ class SoknadsoversiktController(
         // kan ikke bruke saksbehandlers token til å hente alle DigisosSaker for søker?
 
         val saker = try {
-            fiksClient.hentAlleDigisosSaker(token)
+            fiksClient.hentAlleDigisosSaker(token, ident.fnr)
         } catch (e: FiksException) {
             return ResponseEntity.status(503).build()
         }
