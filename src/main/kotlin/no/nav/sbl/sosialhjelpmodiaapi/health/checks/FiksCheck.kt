@@ -20,7 +20,6 @@ class FiksCheck(
         Importance.WARNING
 ) {
     override fun doCheck() {
-        // midlertidig settes kommunenummer lik Trondheim kommune
-        fiksClient.hentKommuneInfo("5001")
+        fiksClient.hentKommuneInfoForAlle()
     }
 }
