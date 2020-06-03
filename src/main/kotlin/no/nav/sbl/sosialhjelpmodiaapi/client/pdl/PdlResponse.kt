@@ -1,5 +1,8 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.pdl
 
+import java.time.LocalDate
+import java.time.Period
+
 data class PdlPersonResponse(
         val errors: List<PdlError>?,
         val data: PdlHentPerson?
@@ -27,7 +30,10 @@ data class PdlHentPerson(
 )
 
 data class PdlPerson(
-        val navn: List<PdlPersonNavn>
+        val navn: List<PdlPersonNavn>,
+        val kjoenn: List<PdlKjoenn>,
+        val foedsel: List<PdlFoedselsdato>,
+        val telefonnummer: List<PdlTelefonnummer>
 )
 
 data class PdlPersonNavn(
@@ -36,26 +42,60 @@ data class PdlPersonNavn(
         val etternavn: String
 )
 
-fun PdlHentPerson.getNavn(): String? {
-    val navneListe = this.hentPerson?.navn
-    if (navneListe.isNullOrEmpty()) {
-        return null
-    }
-    navneListe[0].let {
-        val fornavn = it.fornavn.capitalizeEachWord()
-        val mellomnavn = it.mellomnavn?.capitalizeEachWord()
-        val etternavn = it.etternavn.capitalizeEachWord()
+data class PdlKjoenn(
+        val kjoenn: Kjoenn
+)
 
-        return if (mellomnavn.isNullOrBlank()) {
-            "$fornavn $etternavn"
-        } else {
-            "$fornavn $mellomnavn $etternavn"
+data class PdlFoedselsdato(
+        val foedselsdato: String?
+)
+
+data class PdlTelefonnummer(
+        val landskode: String,
+        val nummer: String,
+        val prioritet: Int
+)
+
+enum class Kjoenn { MANN, KVINNE, UKJENT }
+
+val PdlHentPerson.navn: String?
+    get() {
+        val navneListe = this.hentPerson?.navn
+        if (navneListe.isNullOrEmpty()) {
+            return null
+        }
+        navneListe[0].let {
+            val fornavn = it.fornavn.capitalizeEachWord()
+            val mellomnavn = it.mellomnavn?.capitalizeEachWord()
+            val etternavn = it.etternavn.capitalizeEachWord()
+
+            return if (mellomnavn.isNullOrBlank()) {
+                "$fornavn $etternavn"
+            } else {
+                "$fornavn $mellomnavn $etternavn"
+            }
         }
     }
-}
 
-fun String.capitalizeEachWord(): String {
+private fun String.capitalizeEachWord(): String {
     return this.split(" ").toList()
             .joinToString(separator = " ") { it.toLowerCase().capitalize() }
 
 }
+
+val PdlHentPerson.alder: Int?
+    get() {
+        return hentPerson?.foedsel?.firstOrNull()?.foedselsdato?.let { Period.between(LocalDate.parse(it), LocalDate.now()).years }
+    }
+
+val PdlHentPerson.kjoenn: String?
+    get() {
+        return hentPerson?.kjoenn?.firstOrNull()?.kjoenn.toString()
+    }
+
+val PdlHentPerson.telefonnummer: String?
+    get() {
+        return hentPerson?.telefonnummer
+                ?.minBy { it.prioritet }
+                ?.let { it.landskode.plus(it.nummer) }
+    }

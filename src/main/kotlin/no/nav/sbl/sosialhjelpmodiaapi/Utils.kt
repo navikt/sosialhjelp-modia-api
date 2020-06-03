@@ -1,11 +1,15 @@
 package no.nav.sbl.sosialhjelpmodiaapi
 
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksErrorResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.service.saksstatus.DEFAULT_TITTEL
+import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.ParameterizedTypeReference
+import org.springframework.web.client.HttpStatusCodeException
+import java.io.IOException
 import java.sql.Timestamp
 import java.time.Instant
 import java.time.LocalDate
@@ -59,3 +63,21 @@ fun hentSoknadTittel(digisosSak: DigisosSak, model: InternalDigisosSoker): Strin
         else -> model.saker.joinToString { it.tittel ?: DEFAULT_TITTEL }
     }
 }
+
+fun <T : HttpStatusCodeException> T.toFiksErrorResponse(): FiksErrorResponse? {
+    return try {
+        objectMapper.readValue(this.responseBodyAsByteArray, FiksErrorResponse::class.java)
+    } catch (e: IOException) {
+        null
+    }
+}
+
+val String.feilmeldingUtenFnr: String?
+    get() {
+        return this.replace(Regex("""\b[0-9]{11}\b"""), "[FNR]")
+    }
+
+val FiksErrorResponse.feilmeldingUtenFnr: String?
+    get() {
+        return this.message?.feilmeldingUtenFnr
+    }

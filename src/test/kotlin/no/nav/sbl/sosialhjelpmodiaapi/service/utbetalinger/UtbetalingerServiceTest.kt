@@ -33,6 +33,7 @@ internal class UtbetalingerServiceTest {
     private val mockDigisosSak: DigisosSak = mockk()
 
     private val token = "token"
+    private val fnr = "fnr"
 
     private val digisosId = "some id"
 
@@ -53,9 +54,9 @@ internal class UtbetalingerServiceTest {
     fun `hentUtbetalinger skal returnere emptyList hvis soker ikke har noen digisosSaker`() {
         val model = InternalDigisosSoker()
         every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentAlleDigisosSaker(any()) } returns emptyList()
+        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns emptyList()
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
 
         assertThat(response).isEmpty()
     }
@@ -88,9 +89,9 @@ internal class UtbetalingerServiceTest {
         model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
         every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
 
         assertThat(response).isNotEmpty
         assertThat(response).hasSize(1)
@@ -123,9 +124,9 @@ internal class UtbetalingerServiceTest {
         ))
 
         every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(2)
@@ -155,9 +156,9 @@ internal class UtbetalingerServiceTest {
         ))
 
         every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(2)
@@ -188,9 +189,9 @@ internal class UtbetalingerServiceTest {
         ))
 
         every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
@@ -214,9 +215,9 @@ internal class UtbetalingerServiceTest {
         ))
 
         every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
@@ -256,9 +257,9 @@ internal class UtbetalingerServiceTest {
         every { mockDigisosSak2.fiksDigisosId } returns id2
         every { eventService.createModel(mockDigisosSak, any()) } returns model
         every { eventService.createModel(mockDigisosSak2, any()) } returns model2
-        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak, mockDigisosSak2)
+        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(mockDigisosSak, mockDigisosSak2)
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
 
         assertThat(response).isNotEmpty
         assertThat(response).hasSize(2)
@@ -336,9 +337,9 @@ internal class UtbetalingerServiceTest {
         ))
 
         every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(3)

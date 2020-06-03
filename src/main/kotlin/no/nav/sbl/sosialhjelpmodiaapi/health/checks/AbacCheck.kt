@@ -2,11 +2,9 @@ package no.nav.sbl.sosialhjelpmodiaapi.health.checks
 
 import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
-import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.AbstractDependencyCheck
-import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.DependencyType
-import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.Importance
-import no.nav.sbl.sosialhjelpmodiaapi.logger
-import org.springframework.context.annotation.Profile
+import no.nav.sosialhjelp.selftest.DependencyCheck
+import no.nav.sosialhjelp.selftest.DependencyType
+import no.nav.sosialhjelp.selftest.Importance
 import org.springframework.stereotype.Component
 
 
@@ -15,7 +13,7 @@ import org.springframework.stereotype.Component
 class AbacCheck(
         private val abacService: AbacService,
         clientProperties: ClientProperties
-) : AbstractDependencyCheck(
+) : DependencyCheck(
         DependencyType.REST,
         "ABAC",
         clientProperties.abacPdpEndpointUrl,
@@ -25,7 +23,4 @@ class AbacCheck(
         abacService.ping()
     }
 
-    companion object {
-        val log by logger()
-    }
 }
