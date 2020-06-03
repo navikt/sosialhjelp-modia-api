@@ -5,7 +5,9 @@ import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.client.sts.STSToken.Companion.shouldRenewToken
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod.POST
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
@@ -41,7 +43,10 @@ class STSClient(
     }
 
     private fun requestEntity(): HttpEntity<STSRequest> {
-        return HttpEntity(STSRequest(CLIENT_CREDENTIALS, OPENID))
+        val headers = HttpHeaders()
+        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+        headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        return HttpEntity(STSRequest(CLIENT_CREDENTIALS, OPENID), headers)
     }
 
     companion object {
