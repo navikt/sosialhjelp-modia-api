@@ -4,7 +4,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.client.sts.STSToken.Companion.shouldRenewToken
 import org.springframework.context.annotation.Profile
-import org.springframework.http.HttpMethod.GET
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpMethod.POST
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
@@ -25,8 +26,8 @@ class STSClient(
         if (shouldRenewToken(cachedToken)) {
             try {
                 log.info("Henter nytt token fra STS")
-                val requestUrl = lagRequest(baseUrl)
-                val response = serviceuserBasicAuthRestTemplate.exchange(requestUrl, GET, null, STSToken::class.java)
+                val requestUrl = "$baseUrl/token"
+                val response = serviceuserBasicAuthRestTemplate.exchange(requestUrl, POST, requestEntity(), STSToken::class.java)
 
                 cachedToken = response.body
                 return response.body!!.access_token
@@ -39,14 +40,22 @@ class STSClient(
         return cachedToken!!.access_token
     }
 
-    private fun lagRequest(baseurl: String): String {
-        return "$baseurl/token?grant_type=client_credentials&scope=openid"
+    private fun requestEntity(): HttpEntity<STSRequest> {
+        return HttpEntity(STSRequest(CLIENT_CREDENTIALS, OPENID))
     }
 
     companion object {
         private val log by logger()
+
+        private const val CLIENT_CREDENTIALS = "client_credentials"
+        private const val OPENID = "openid"
     }
 }
+
+data class STSRequest(
+        val grant_type: String,
+        val scope: String
+)
 
 data class STSToken(
         val access_token: String,
