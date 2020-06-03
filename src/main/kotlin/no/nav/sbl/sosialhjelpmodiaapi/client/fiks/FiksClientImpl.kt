@@ -1,12 +1,12 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.fiks
 
 import kotlinx.coroutines.runBlocking
+import no.nav.sbl.sosialhjelpmodiaapi.client.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksNotFoundException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
-import no.nav.sbl.sosialhjelpmodiaapi.client.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.feilmeldingUtenFnr
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.toFiksErrorResponse
@@ -23,8 +23,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
-import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
@@ -50,11 +48,10 @@ class FiksClientImpl(
 
         log.info("Forsøker å hente digisosSak fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId")
 
-        val urlTemplate = "$baseUrl/digisos/api/v1/nav/soknader/{digisosId}"
-        val uriComponents = UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam("sporingsId", "%7BsporingsId%7D").build()
+        val urlTemplate = "$baseUrl/digisos/api/v1/nav/soknader/{digisosId}/{sporingsId}"
         try {
             val vars = mapOf("digisosId" to digisosId, "sporingsId" to sporingsId)
-            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
+            val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
 
             log.info("Hentet DigisosSak $digisosId fra Fiks")
             return objectMapper.readValue(response.body!!, DigisosSak::class.java)
@@ -102,16 +99,16 @@ class FiksClientImpl(
         }
     }
 
-    override fun hentAlleDigisosSaker(sporingsId: String): List<DigisosSak> {
+    override fun hentAlleDigisosSaker(sporingsId: String, fnr: String): List<DigisosSak> {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
         val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
 
-        val url = "$baseUrl/digisos/api/nav/v1/soknader"
-        val uriComponents = UriComponentsBuilder.fromHttpUrl(url).queryParam("sporingsId", "%7BsporingsId%7D").build()
+        val urlTemplate = "$baseUrl/digisos/api/nav/v1/soknader/soknader/{sporingsId}"
         try {
             val vars = mapOf("sporingsId" to sporingsId)
-            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), typeRef<List<DigisosSak>>(), vars)
+            val body = Fnr(fnr)
+            val response = restTemplate.exchange(urlTemplate, HttpMethod.POST, HttpEntity(body, headers), typeRef<List<DigisosSak>>(), vars)
 
             return response.body!!
 
@@ -131,8 +128,8 @@ class FiksClientImpl(
 
         val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
 
+        val urlTemplate = "$baseUrl/digisos/api/v1/nav/kommuner/{kommunenummer}"
         try {
-            val urlTemplate = "$baseUrl/digisos/api/v1/nav/kommuner/{kommunenummer}"
             val vars = mapOf("kommunenummer" to kommunenummer)
             val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), KommuneInfo::class.java, vars)
 
@@ -182,4 +179,8 @@ class FiksClientImpl(
     companion object {
         private val log by logger()
     }
+
+    private data class Fnr(
+            val fnr: String
+    )
 }

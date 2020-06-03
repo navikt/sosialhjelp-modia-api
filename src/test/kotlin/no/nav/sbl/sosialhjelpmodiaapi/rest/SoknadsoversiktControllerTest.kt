@@ -62,7 +62,7 @@ internal class SoknadsoversiktControllerTest {
 
     @Test
     fun `hentAlleSaker - skal mappe fra DigisosSak til SakResponse`() {
-        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1, digisosSak2)
+        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(digisosSak1, digisosSak2)
 
         every { model1.status } returns SoknadsStatus.MOTTATT
         every { model2.status } returns SoknadsStatus.UNDER_BEHANDLING

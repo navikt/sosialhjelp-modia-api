@@ -16,8 +16,8 @@ class UtbetalingerService(
         private val eventService: EventService
 ) {
 
-    fun hentUtbetalinger(token: String): List<UtbetalingerResponse> {
-        val digisosSaker = fiksClient.hentAlleDigisosSaker(token)
+    fun hentUtbetalinger(token: String, fnr: String): List<UtbetalingerResponse> {
+        val digisosSaker = fiksClient.hentAlleDigisosSaker(token, fnr)
 
         if (digisosSaker.isEmpty()) {
             log.info("Fant ingen søknader for bruker")

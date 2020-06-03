@@ -4,8 +4,13 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.client.sts.STSToken.Companion.shouldRenewToken
 import org.springframework.context.annotation.Profile
-import org.springframework.http.HttpMethod.GET
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod.POST
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import java.time.LocalDateTime
@@ -25,8 +30,8 @@ class STSClient(
         if (shouldRenewToken(cachedToken)) {
             try {
                 log.info("Henter nytt token fra STS")
-                val requestUrl = lagRequest(baseUrl)
-                val response = serviceuserBasicAuthRestTemplate.exchange(requestUrl, GET, null, STSToken::class.java)
+                val requestUrl = "$baseUrl/token"
+                val response = serviceuserBasicAuthRestTemplate.exchange(requestUrl, POST, requestEntity(), STSToken::class.java)
 
                 cachedToken = response.body
                 return response.body!!.access_token
@@ -39,12 +44,24 @@ class STSClient(
         return cachedToken!!.access_token
     }
 
-    private fun lagRequest(baseurl: String): String {
-        return "$baseurl/token?grant_type=client_credentials&scope=openid"
+    private fun requestEntity(): HttpEntity<MultiValueMap<String, String>> {
+        val headers = HttpHeaders()
+        headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+
+        val map = LinkedMultiValueMap<String, String>()
+        map.add(GRANT_TYPE, CLIENT_CREDENTIALS)
+        map.add(SCOPE, OPENID)
+
+        return HttpEntity(map, headers)
     }
 
     companion object {
         private val log by logger()
+
+        private const val GRANT_TYPE = "grant_type"
+        private const val CLIENT_CREDENTIALS = "client_credentials"
+        private const val SCOPE = "scope"
+        private const val OPENID = "openid"
     }
 }
 
