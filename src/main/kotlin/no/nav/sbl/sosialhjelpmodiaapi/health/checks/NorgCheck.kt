@@ -2,9 +2,9 @@ package no.nav.sbl.sosialhjelpmodiaapi.health.checks
 
 import no.nav.sbl.sosialhjelpmodiaapi.common.NorgException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
-import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.AbstractDependencyCheck
-import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.DependencyType
-import no.nav.sbl.sosialhjelpmodiaapi.health.selftest.Importance
+import no.nav.sosialhjelp.selftest.DependencyCheck
+import no.nav.sosialhjelp.selftest.DependencyType
+import no.nav.sosialhjelp.selftest.Importance
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CALL_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils.getCallId
@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate
 class NorgCheck(
         private val restTemplate: RestTemplate,
         clientProperties: ClientProperties
-) : AbstractDependencyCheck(
+) : DependencyCheck(
         DependencyType.REST,
         "NORG2",
         clientProperties.norgEndpointUrl,
