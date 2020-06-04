@@ -101,9 +101,11 @@ class FiksClientImpl(
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
         try {
+            val sporingsIdTilFiks = "ianksdfasdf"
+
             val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
             val uriComponents = urlWithSporingsId(baseUrl + PATH_ALLE_DIGISOSSAKER)
-            val vars = mapOf("sporingsId" to sporingsId)
+            val vars = mapOf("sporingsId" to sporingsIdTilFiks)
             val body = Fnr(fnr)
 
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.POST, HttpEntity(body, headers), typeRef<List<DigisosSak>>(), vars)
