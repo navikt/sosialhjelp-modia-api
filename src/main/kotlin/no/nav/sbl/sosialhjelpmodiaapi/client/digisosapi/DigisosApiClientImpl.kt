@@ -22,7 +22,7 @@ import org.springframework.web.client.RestTemplate
 import java.util.*
 
 
-@Profile("!mock")
+@Profile("!(prod-fss|mock)")
 @Component
 class DigisosApiClientImpl(
         clientProperties: ClientProperties,
