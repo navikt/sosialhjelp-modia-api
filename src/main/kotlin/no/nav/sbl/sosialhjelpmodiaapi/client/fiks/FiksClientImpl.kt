@@ -48,7 +48,7 @@ class FiksClientImpl(
         try {
             val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
             val uriComponents = urlWithSporingsId(baseUrl + PATH_DIGISOSSAK)
-            val vars = mapOf("digisosId" to digisosId)
+            val vars = mapOf(DIGISOSID to digisosId, SPORINGSID to sporingsId)
 
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
 
@@ -77,9 +77,9 @@ class FiksClientImpl(
             val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
             val uriComponents = urlWithSporingsId(baseUrl + PATH_DOKUMENT)
             val vars = mapOf(
-                    "digisosId" to digisosId,
-                    "dokumentlagerId" to dokumentlagerId,
-                    "sporingsId" to sporingsId)
+                    DIGISOSID to digisosId,
+                    DOKUMENTLAGERID to dokumentlagerId,
+                    SPORINGSID to sporingsId)
 
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
 
@@ -105,7 +105,7 @@ class FiksClientImpl(
 
             val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
             val uriComponents = urlWithSporingsId(baseUrl + PATH_ALLE_DIGISOSSAKER)
-            val vars = mapOf("sporingsId" to sporingsIdTilFiks)
+            val vars = mapOf(SPORINGSID to sporingsIdTilFiks)
             val body = Fnr(fnr)
 
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.POST, HttpEntity(body, headers), typeRef<List<DigisosSak>>(), vars)
@@ -129,7 +129,7 @@ class FiksClientImpl(
         try {
             val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
             val urlTemplate = baseUrl + PATH_KOMMUNEINFO
-            val vars = mapOf("kommunenummer" to kommunenummer)
+            val vars = mapOf(KOMMUNENUMMER to kommunenummer)
 
             val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), KommuneInfo::class.java, vars)
 
@@ -178,16 +178,23 @@ class FiksClientImpl(
     }
 
     private fun urlWithSporingsId(urlTemplate: String) =
-            UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam("sporingsId", "%7BsporingsId%7D").build()
+            UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam(SPORINGSID, "%7BsporingsId%7D").build()
 
     companion object {
         private val log by logger()
 
+//        Paths til fiks-api
         private const val PATH_DIGISOSSAK = "/digisos/api/v1/nav/soknader/{digisosId}"
         private const val PATH_ALLE_DIGISOSSAKER = "/digisos/api/nav/v1/soknader/soknader"
         private const val PATH_DOKUMENT = "/digisos/api/v1/nav/soknader/{digisosId}/dokumenter/{dokumentlagerId}"
         private const val PATH_KOMMUNEINFO = "/digisos/api/v1/nav/kommuner/{kommunenummer}"
         private const val PATH_ALLE_KOMMUNEINFO = "/digisos/api/v1/nav/kommuner"
+
+//        Query param navn
+        private const val SPORINGSID = "sporingsId"
+        private const val DIGISOSID = "digisosId"
+        private const val DOKUMENTLAGERID = "dokumentlagerId"
+        private const val KOMMUNENUMMER = "kommunenummer"
     }
 
     private data class Fnr(
