@@ -101,11 +101,9 @@ class FiksClientImpl(
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
         try {
-            val sporingsIdTilFiks = "ianksdfasdf"
-
             val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
             val uriComponents = urlWithSporingsId(baseUrl + PATH_ALLE_DIGISOSSAKER)
-            val vars = mapOf(SPORINGSID to sporingsIdTilFiks)
+            val vars = mapOf(SPORINGSID to sporingsId)
             val body = Fnr(fnr)
 
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.POST, HttpEntity(body, headers), typeRef<List<DigisosSak>>(), vars)
@@ -178,7 +176,7 @@ class FiksClientImpl(
     }
 
     private fun urlWithSporingsId(urlTemplate: String) =
-            UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam(SPORINGSID, "%7BsporingsId%7D").build()
+            UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam(SPORINGSID, "{$SPORINGSID}").build()
 
     companion object {
         private val log by logger()

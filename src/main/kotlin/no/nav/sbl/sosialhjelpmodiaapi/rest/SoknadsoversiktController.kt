@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @ProtectedWithClaims(issuer = "veileder")
@@ -36,13 +37,13 @@ class SoknadsoversiktController(
 ) {
 
     @PostMapping("/saker")
-    fun hentAlleSaker(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SaksListeResponse>> {
+    fun hentAlleSaker(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident, @RequestParam sporingsId: String): ResponseEntity<List<SaksListeResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
         // kan ikke bruke saksbehandlers token til å hente alle DigisosSaker for søker?
 
         val saker = try {
-            fiksClient.hentAlleDigisosSaker(token, ident.fnr)
+            fiksClient.hentAlleDigisosSaker(sporingsId, ident.fnr)
         } catch (e: FiksException) {
             return ResponseEntity.status(503).build()
         }

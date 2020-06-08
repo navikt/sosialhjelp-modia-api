@@ -75,7 +75,7 @@ internal class SoknadsoversiktControllerTest {
 
         every { model2.saker } returns mutableListOf(sak1, sak2)
 
-        val response = controller.hentAlleSaker("token", Ident(fnr))
+        val response = controller.hentAlleSaker("token", Ident(fnr), "sporingsId")
 
         val saker = response.body
         assertThat(saker).isNotNull
