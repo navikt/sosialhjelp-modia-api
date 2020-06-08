@@ -183,7 +183,7 @@ class FiksClientImpl(
 
 //        Paths til fiks-api
         private const val PATH_DIGISOSSAK = "/digisos/api/v1/nav/soknader/{digisosId}"
-        private const val PATH_ALLE_DIGISOSSAKER = "/digisos/api/nav/v1/soknader/soknader"
+        private const val PATH_ALLE_DIGISOSSAKER = "/digisos/api/v1/nav/soknader/soknader"
         private const val PATH_DOKUMENT = "/digisos/api/v1/nav/soknader/{digisosId}/dokumenter/{dokumentlagerId}"
         private const val PATH_KOMMUNEINFO = "/digisos/api/v1/nav/kommuner/{kommunenummer}"
         private const val PATH_ALLE_KOMMUNEINFO = "/digisos/api/v1/nav/kommuner"
