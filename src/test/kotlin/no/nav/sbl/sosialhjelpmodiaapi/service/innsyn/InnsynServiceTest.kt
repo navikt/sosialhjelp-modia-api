@@ -24,16 +24,16 @@ internal class InnsynServiceTest {
     fun `Should gather innsyn data`() {
         val mockJsonDigisosSoker: JsonDigisosSoker = mockk()
 
-        every { fiksClient.hentDokument(any(), any(), JsonDigisosSoker::class.java, "token") } returns mockJsonDigisosSoker
+        every { fiksClient.hentDokument(any(), any(), JsonDigisosSoker::class.java) } returns mockJsonDigisosSoker
 
-        val jsonDigisosSoker: JsonDigisosSoker? = service.hentJsonDigisosSoker("123", "abc", "token")
+        val jsonDigisosSoker: JsonDigisosSoker? = service.hentJsonDigisosSoker("123", "abc")
 
         assertThat(jsonDigisosSoker).isNotNull
     }
 
     @Test
     fun `Should return null if DigisosSoker is null`() {
-        val jsonDigisosSoker = service.hentJsonDigisosSoker("123", null, "token")
+        val jsonDigisosSoker = service.hentJsonDigisosSoker("123", null)
 
         assertThat(jsonDigisosSoker).isNull()
     }
@@ -41,16 +41,16 @@ internal class InnsynServiceTest {
     @Test
     fun `Should return originalSoknad`() {
         val mockJsonSoknad: JsonSoknad = mockk()
-        every { fiksClient.hentDokument(any(), any(), JsonSoknad::class.java, "token") } returns mockJsonSoknad
+        every { fiksClient.hentDokument(any(), any(), JsonSoknad::class.java) } returns mockJsonSoknad
 
-        val jsonSoknad: JsonSoknad? = service.hentOriginalSoknad("123", "abc", "token")
+        val jsonSoknad: JsonSoknad? = service.hentOriginalSoknad("123", "abc")
 
         assertThat(jsonSoknad).isNotNull
     }
 
     @Test
     fun `Should return null if originalSoknadNAV is null`() {
-        val jsonSoknad: JsonSoknad? = service.hentOriginalSoknad("123", null, "token")
+        val jsonSoknad: JsonSoknad? = service.hentOriginalSoknad("123", null)
 
         assertThat(jsonSoknad).isNull()
     }

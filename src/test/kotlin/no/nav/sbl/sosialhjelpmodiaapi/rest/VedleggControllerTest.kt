@@ -42,7 +42,7 @@ internal class VedleggControllerTest {
         val frist = LocalDateTime.now().plusDays(7)
         val datoLagtTil = LocalDateTime.now()
 
-        every { vedleggService.hentAlleOpplastedeVedlegg(any(), any()) } returns listOf(
+        every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns listOf(
                 InternalVedlegg(dokumenttype, tilleggsinfo, frist, 1, datoLagtTil)
         )
 
@@ -66,7 +66,7 @@ internal class VedleggControllerTest {
         val frist = LocalDateTime.now().plusDays(7)
         val datoLagtTil = LocalDateTime.now()
 
-        every { vedleggService.hentAlleOpplastedeVedlegg(any(), any()) } returns listOf(
+        every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns listOf(
                 InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
                 InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil)
         )
@@ -88,7 +88,7 @@ internal class VedleggControllerTest {
         val datoLagtTil = LocalDateTime.now().plusDays(1)
         val datoLagtTil_2 = LocalDateTime.now()
 
-        every { vedleggService.hentAlleOpplastedeVedlegg(any(), any()) } returns listOf(
+        every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns listOf(
                 InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
                 InternalVedlegg(dokumenttype, tilleggsinfo, frist_2, 1, datoLagtTil_2),
                 InternalVedlegg(dokumenttype, tilleggsinfo, frist_2, 1, datoLagtTil),
@@ -125,7 +125,7 @@ internal class VedleggControllerTest {
     fun `vedlegg med antallFiler lik 0 og ingen datoLagtTil`() {
         val frist = LocalDateTime.now().plusDays(7)
 
-        every { vedleggService.hentAlleOpplastedeVedlegg(any(), any()) } returns listOf(
+        every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns listOf(
                 InternalVedlegg(dokumenttype, null, frist, 0, null)
         )
 

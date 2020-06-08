@@ -36,7 +36,7 @@ internal class HendelseServiceTest {
     fun init() {
         clearMocks(eventService, fiksClient)
 
-        every { fiksClient.hentDigisosSak(any(), any()) } returns mockDigisosSak
+        every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
         every { mockDigisosSak.ettersendtInfoNAV } returns mockk()
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_sendt.toInstant(ZoneOffset.UTC).toEpochMilli()
     }
@@ -46,9 +46,9 @@ internal class HendelseServiceTest {
         val model = InternalDigisosSoker()
         model.historikk.add(Hendelse(SOKNAD_SENDT, tittel_sendt, tidspunkt_sendt))
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val hendelser = service.hentHendelser("123", "Token")
+        val hendelser = service.hentHendelser("123")
 
         assertThat(hendelser).hasSize(1)
         assertThat(hendelser[0].beskrivelse).isEqualTo(tittel_sendt)
@@ -63,9 +63,9 @@ internal class HendelseServiceTest {
                 Hendelse(SOKNAD_MOTTATT, tittel_mottatt, tidspunkt_mottatt),
                 Hendelse(SOKNAD_UNDER_BEHANDLING, tittel3, tidspunkt3)))
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val hendelser = service.hentHendelser("123", "Token")
+        val hendelser = service.hentHendelser("123")
 
         assertThat(hendelser).hasSize(3)
     }

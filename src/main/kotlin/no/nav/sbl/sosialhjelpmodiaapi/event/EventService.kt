@@ -32,9 +32,9 @@ class EventService(
         private val norgClient: NorgClient
 ) {
 
-    fun createModel(digisosSak: DigisosSak, token: String): InternalDigisosSoker {
-        val jsonDigisosSoker: JsonDigisosSoker? = innsynService.hentJsonDigisosSoker(digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata, token)
-        val jsonSoknad: JsonSoknad? = innsynService.hentOriginalSoknad(digisosSak.fiksDigisosId, digisosSak.originalSoknadNAV?.metadata, token)
+    fun createModel(digisosSak: DigisosSak): InternalDigisosSoker {
+        val jsonDigisosSoker: JsonDigisosSoker? = innsynService.hentJsonDigisosSoker(digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata)
+        val jsonSoknad: JsonSoknad? = innsynService.hentOriginalSoknad(digisosSak.fiksDigisosId, digisosSak.originalSoknadNAV?.metadata)
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
 
         val model = InternalDigisosSoker()
@@ -56,8 +56,8 @@ class EventService(
         return model
     }
 
-    fun createSoknadsoversiktModel(token: String, digisosSak: DigisosSak): InternalDigisosSoker {
-        val jsonDigisosSoker: JsonDigisosSoker? = innsynService.hentJsonDigisosSoker(digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata, token)
+    fun createSoknadsoversiktModel(digisosSak: DigisosSak): InternalDigisosSoker {
+        val jsonDigisosSoker: JsonDigisosSoker? = innsynService.hentJsonDigisosSoker(digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata)
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
 
         val model = InternalDigisosSoker()

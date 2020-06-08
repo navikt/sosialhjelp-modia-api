@@ -36,7 +36,7 @@ internal class UtbetalingTest {
         every { mockJsonSoknad.mottaker.navEnhetsnavn } returns soknadsmottaker
         every { mockJsonSoknad.mottaker.enhetsnummer } returns enhetsnr
         every { mockDigisosSak.ettersendtInfoNAV } returns null
-        every { innsynService.hentOriginalSoknad(any(), any(), any()) } returns mockJsonSoknad
+        every { innsynService.hentOriginalSoknad(any(), any()) } returns mockJsonSoknad
         every { norgClient.hentNavEnhet(enhetsnr) } returns mockNavEnhet
 
         resetHendelser()
@@ -44,7 +44,7 @@ internal class UtbetalingTest {
 
     @Test
     fun `utbetaling ETTER vedtakFattet og saksStatus`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -57,7 +57,7 @@ internal class UtbetalingTest {
                                 UTBETALING.withHendelsestidspunkt(tidspunkt_6)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.FERDIGBEHANDLET)
@@ -85,7 +85,7 @@ internal class UtbetalingTest {
 
     @Test
     fun `utbetaling UTEN vedtakFattet`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -95,7 +95,7 @@ internal class UtbetalingTest {
                                 UTBETALING.withHendelsestidspunkt(tidspunkt_3)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -105,7 +105,7 @@ internal class UtbetalingTest {
 
     @Test
     fun `utbetaling kontonummer settes kun hvis annenMottaker er false`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -115,7 +115,7 @@ internal class UtbetalingTest {
                                 UTBETALING_ANNEN_MOTTAKER.withHendelsestidspunkt(tidspunkt_3)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)

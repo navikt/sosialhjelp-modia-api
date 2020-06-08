@@ -40,7 +40,7 @@ internal class SoknadsStatusTest {
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockJsonSoknad.mottaker.navEnhetsnavn } returns soknadsmottaker
         every { mockJsonSoknad.mottaker.enhetsnummer } returns enhetsnr
-        every { innsynService.hentOriginalSoknad(any(), any(), any()) } returns mockJsonSoknad
+        every { innsynService.hentOriginalSoknad(any(), any()) } returns mockJsonSoknad
         every { norgClient.hentNavEnhet(enhetsnr) } returns mockNavEnhet
 
         resetHendelser()
@@ -48,9 +48,9 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus SENDT`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns null
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns null
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.SENDT)
@@ -64,7 +64,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus MOTTATT`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -72,7 +72,7 @@ internal class SoknadsStatusTest {
                                 SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
@@ -87,7 +87,7 @@ internal class SoknadsStatusTest {
     @Test
     fun `soknadsStatus MOTTATT papirsoknad`() {
         every { mockJsonSoknad.mottaker } returns null
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -95,7 +95,7 @@ internal class SoknadsStatusTest {
                                 SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
@@ -109,7 +109,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus UNDER_BEHANDLING`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -118,7 +118,7 @@ internal class SoknadsStatusTest {
                                 SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -133,7 +133,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus FERDIGBEHANDLET`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -143,7 +143,7 @@ internal class SoknadsStatusTest {
                                 SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_3)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.FERDIGBEHANDLET)

@@ -10,16 +10,16 @@ class InnsynService(
         private val fiksClient: FiksClient
 ) {
 
-    fun hentJsonDigisosSoker(digisosId: String, digisosSokerMetadata: String?, token: String): JsonDigisosSoker? {
+    fun hentJsonDigisosSoker(digisosId: String, digisosSokerMetadata: String?): JsonDigisosSoker? {
         return when {
-            digisosSokerMetadata != null -> fiksClient.hentDokument(digisosId, digisosSokerMetadata, JsonDigisosSoker::class.java, token) as JsonDigisosSoker
+            digisosSokerMetadata != null -> fiksClient.hentDokument(digisosId, digisosSokerMetadata, JsonDigisosSoker::class.java) as JsonDigisosSoker
             else -> null
         }
     }
 
-    fun hentOriginalSoknad(digisosId: String, originalSoknadNAVMetadata: String?, token: String): JsonSoknad? {
+    fun hentOriginalSoknad(digisosId: String, originalSoknadNAVMetadata: String?): JsonSoknad? {
         return when {
-            originalSoknadNAVMetadata != null -> fiksClient.hentDokument(digisosId, originalSoknadNAVMetadata, JsonSoknad::class.java, token) as JsonSoknad
+            originalSoknadNAVMetadata != null -> fiksClient.hentDokument(digisosId, originalSoknadNAVMetadata, JsonSoknad::class.java) as JsonSoknad
             else -> null
         }
     }

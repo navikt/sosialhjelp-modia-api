@@ -19,8 +19,6 @@ internal class SaksStatusServiceTest {
 
     private val mockDigisosSak: DigisosSak = mockk()
 
-    private val token = "token"
-
     private val tittel = "tittel"
     private val referanse = "referanse"
 
@@ -28,15 +26,15 @@ internal class SaksStatusServiceTest {
     fun init() {
         clearMocks(fiksClient, eventService)
 
-        every { fiksClient.hentDigisosSak(any(), any()) } returns mockDigisosSak
+        every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
     }
 
     @Test
     fun `Skal returnere emptyList hvis model_saker er null`() {
         val model = InternalDigisosSoker()
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123", token)
+        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123")
 
         assertThat(response).isEmpty()
     }
@@ -54,9 +52,9 @@ internal class SaksStatusServiceTest {
                 datoOpprettet = now
         ))
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123", token)
+        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123")
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
@@ -83,9 +81,9 @@ internal class SaksStatusServiceTest {
                 datoOpprettet = now
         ))
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123", token)
+        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123")
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
@@ -114,9 +112,9 @@ internal class SaksStatusServiceTest {
                 datoOpprettet = now
         ))
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123", token)
+        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123")
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
@@ -158,9 +156,9 @@ internal class SaksStatusServiceTest {
                 )
         ))
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123", token)
+        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123")
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(2)

@@ -36,7 +36,7 @@ internal class ForelopigSvarTest {
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockJsonSoknad.mottaker.navEnhetsnavn } returns soknadsmottaker
         every { mockJsonSoknad.mottaker.enhetsnummer } returns enhetsnr
-        every { innsynService.hentOriginalSoknad(any(), any(), any()) } returns mockJsonSoknad
+        every { innsynService.hentOriginalSoknad(any(), any()) } returns mockJsonSoknad
         every { norgClient.hentNavEnhet(enhetsnr) } returns mockNavEnhet
 
         resetHendelser()
@@ -44,7 +44,7 @@ internal class ForelopigSvarTest {
 
     @Test
     fun `ingen forelopigSvar`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -52,7 +52,7 @@ internal class ForelopigSvarTest {
                                 SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
@@ -62,7 +62,7 @@ internal class ForelopigSvarTest {
 
     @Test
     fun `forelopigSvar mottatt`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -71,7 +71,7 @@ internal class ForelopigSvarTest {
                                 FORELOPIGSVAR.withHendelsestidspunkt(tidspunkt_2)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)

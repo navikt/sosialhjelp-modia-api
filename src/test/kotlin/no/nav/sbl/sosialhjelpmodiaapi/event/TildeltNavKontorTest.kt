@@ -44,7 +44,7 @@ internal class TildeltNavKontorTest {
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockJsonSoknad.mottaker.navEnhetsnavn } returns soknadsmottaker
         every { mockJsonSoknad.mottaker.enhetsnummer } returns enhetsnr
-        every { innsynService.hentOriginalSoknad(any(), any(), any()) } returns mockJsonSoknad
+        every { innsynService.hentOriginalSoknad(any(), any()) } returns mockJsonSoknad
         every { norgClient.hentNavEnhet(enhetsnr) } returns mockNavEnhet
 
         resetHendelser()
@@ -54,7 +54,7 @@ internal class TildeltNavKontorTest {
     fun `tildeltNavKontor skal hente navenhets navn fra Norg`() {
         every { norgClient.hentNavEnhet(navKontor) } returns mockNavEnhet
         every { mockNavEnhet.navn } returns enhetNavn
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -62,7 +62,7 @@ internal class TildeltNavKontorTest {
                                 SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                                 TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2)))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
@@ -84,7 +84,7 @@ internal class TildeltNavKontorTest {
     @Test
     fun `tildeltNavKontor skal gi generell melding hvis NorgClient kaster FiksException`() {
         every { norgClient.hentNavEnhet(navKontor) } throws NorgException(HttpStatus.INTERNAL_SERVER_ERROR, "noe feilet", null)
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -92,7 +92,7 @@ internal class TildeltNavKontorTest {
                                 SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                                 TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2)))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
@@ -111,7 +111,7 @@ internal class TildeltNavKontorTest {
         every { mockJsonSoknad.mottaker.enhetsnummer } returns navKontor
         every { norgClient.hentNavEnhet(navKontor) } returns mockNavEnhet
         every { mockNavEnhet.navn } returns enhetNavn
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -119,7 +119,7 @@ internal class TildeltNavKontorTest {
                                 SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                                 TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2)))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
@@ -134,7 +134,7 @@ internal class TildeltNavKontorTest {
     fun `flere identiske tildeltNavKontor-hendelser skal kun gi en hendelse i historikk`() {
         every { norgClient.hentNavEnhet(navKontor) } returns mockNavEnhet
         every { mockNavEnhet.navn } returns enhetNavn
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -143,7 +143,7 @@ internal class TildeltNavKontorTest {
                                 TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2),
                                 TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_3)))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
@@ -161,7 +161,7 @@ internal class TildeltNavKontorTest {
         every { norgClient.hentNavEnhet(navKontor2) } returns mockNavEnhet2
         every { mockNavEnhet.navn } returns enhetNavn
         every { mockNavEnhet2.navn } returns enhetNavn2
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -170,7 +170,7 @@ internal class TildeltNavKontorTest {
                                 TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2),
                                 TILDELT_NAV_KONTOR_2.withHendelsestidspunkt(tidspunkt_3)))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)

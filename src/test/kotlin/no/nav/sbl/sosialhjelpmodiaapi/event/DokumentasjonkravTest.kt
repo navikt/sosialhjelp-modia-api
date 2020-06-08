@@ -34,7 +34,7 @@ internal class DokumentasjonkravTest {
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockJsonSoknad.mottaker.navEnhetsnavn } returns soknadsmottaker
         every { mockJsonSoknad.mottaker.enhetsnummer } returns enhetsnr
-        every { innsynService.hentOriginalSoknad(any(), any(), any()) } returns mockJsonSoknad
+        every { innsynService.hentOriginalSoknad(any(), any()) } returns mockJsonSoknad
         every { norgClient.hentNavEnhet(enhetsnr) } returns mockNavEnhet
 
         resetHendelser()
@@ -42,7 +42,7 @@ internal class DokumentasjonkravTest {
 
     @Test
     fun `dokumentasjonskrav ETTER utbetaling`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -55,7 +55,7 @@ internal class DokumentasjonkravTest {
                                 DOKUMENTASJONKRAV_OPPFYLT.withHendelsestidspunkt(tidspunkt_6)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.FERDIGBEHANDLET)
@@ -72,7 +72,7 @@ internal class DokumentasjonkravTest {
 
     @Test
     fun `dokumentasjonkrav UTEN utbetaling`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -82,7 +82,7 @@ internal class DokumentasjonkravTest {
                                 DOKUMENTASJONKRAV_OPPFYLT.withHendelsestidspunkt(tidspunkt_3)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)

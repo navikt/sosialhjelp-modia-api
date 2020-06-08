@@ -21,10 +21,10 @@ class KommuneService(
         private val innsynService: InnsynService
 ) {
 
-    fun hentKommuneStatus(fiksDigisosId: String, token: String): KommuneStatus {
-        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)
+    fun hentKommuneStatus(fiksDigisosId: String): KommuneStatus {
+        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
 
-        val originalSoknad: JsonSoknad? = innsynService.hentOriginalSoknad(fiksDigisosId, digisosSak.originalSoknadNAV?.metadata, token)
+        val originalSoknad: JsonSoknad? = innsynService.hentOriginalSoknad(fiksDigisosId, digisosSak.originalSoknadNAV?.metadata)
 
         val kommunenummer: String? = originalSoknad?.mottaker?.kommunenummer
         if (kommunenummer == null) {

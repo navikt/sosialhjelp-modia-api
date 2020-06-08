@@ -11,10 +11,9 @@ fun InternalDigisosSoker.applySoknadKrav(
         fiksDigisosId: String,
         originalSoknadNAV: OriginalSoknadNAV,
         vedleggService: VedleggService,
-        timestampSendt: Long,
-        token: String
+        timestampSendt: Long
 ) {
-    val vedleggKreves = vedleggService.hentSoknadVedleggMedStatus(VEDLEGG_KREVES_STATUS, fiksDigisosId, originalSoknadNAV, token)
+    val vedleggKreves = vedleggService.hentSoknadVedleggMedStatus(VEDLEGG_KREVES_STATUS, fiksDigisosId, originalSoknadNAV)
 
     oppgaver = vedleggKreves
             .filterNot { it.type == "annet" && it.tilleggsinfo == "annet" }

@@ -3,7 +3,6 @@ package no.nav.sbl.sosialhjelpmodiaapi.event
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonDokumentasjonkrav
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Dokumentasjonkrav
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
-import no.nav.sbl.sosialhjelpmodiaapi.domain.Sak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Utbetaling
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 

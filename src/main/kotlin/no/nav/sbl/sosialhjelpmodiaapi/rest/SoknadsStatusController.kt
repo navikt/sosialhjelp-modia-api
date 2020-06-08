@@ -26,9 +26,7 @@ class SoknadsStatusController(
     fun hentSoknadsStatus(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadsStatusResponse> {
         abacService.harTilgang(ident.fnr, token)
 
-        // kan ikke bruke saksbehandlers token til å hente soknadsStatus?
-
-        val soknadsStatus: SoknadsStatusResponse = soknadsStatusService.hentSoknadsStatus(fiksDigisosId, token)
+        val soknadsStatus: SoknadsStatusResponse = soknadsStatusService.hentSoknadsStatus(fiksDigisosId)
         return ResponseEntity.ok().body(soknadsStatus)
     }
 

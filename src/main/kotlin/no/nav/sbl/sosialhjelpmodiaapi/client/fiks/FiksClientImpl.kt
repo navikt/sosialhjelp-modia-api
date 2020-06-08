@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
+import java.util.*
 import java.util.Collections.singletonList
 
 
@@ -41,8 +42,9 @@ class FiksClientImpl(
     private val fiksIntegrasjonid = clientProperties.fiksIntegrasjonId
     private val fiksIntegrasjonpassord = clientProperties.fiksIntegrasjonpassord
 
-    override fun hentDigisosSak(digisosId: String, sporingsId: String): DigisosSak {
+    override fun hentDigisosSak(digisosId: String): DigisosSak {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
+        val sporingsId = genererSporingsId()
 
         log.info("Forsøker å hente digisosSak fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId")
         try {
@@ -69,8 +71,9 @@ class FiksClientImpl(
         }
     }
 
-    override fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>, sporingsId: String): Any {
+    override fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
+        val sporingsId = genererSporingsId()
 
         log.info("Forsøker å hente dokument fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId")
         try {
@@ -97,9 +100,9 @@ class FiksClientImpl(
         }
     }
 
-    override fun hentAlleDigisosSaker(sporingsId: String, fnr: String): List<DigisosSak> {
+    override fun hentAlleDigisosSaker(fnr: String): List<DigisosSak> {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
-
+        val sporingsId = genererSporingsId()
         try {
             val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
             val uriComponents = urlWithSporingsId(baseUrl + PATH_ALLE_DIGISOSSAKER)
@@ -173,6 +176,10 @@ class FiksClientImpl(
         headers.set(HEADER_INTEGRASJON_ID, fiksIntegrasjonid)
         headers.set(HEADER_INTEGRASJON_PASSORD, fiksIntegrasjonpassord)
         return headers
+    }
+
+    private fun genererSporingsId(): String {
+        return UUID.randomUUID().toString()
     }
 
     private fun urlWithSporingsId(urlTemplate: String) =

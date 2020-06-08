@@ -35,7 +35,7 @@ class MockController(
     @PostMapping("/{soknadId}", consumes = ["application/json;charset=UTF-8"], produces = ["application/json;charset=UTF-8"])
     fun postJsonDigisosSoker(@PathVariable soknadId: String, @RequestBody digisosApiWrapper: DigisosApiWrapper) {
         log.info("soknadId: $soknadId, jsonDigisosSoker: $digisosApiWrapper")
-        val digisosSak = fiksClientMock.hentDigisosSak(soknadId, "Token")
+        val digisosSak = fiksClientMock.hentDigisosSak(soknadId)
 
         val jsonNode = mapper.convertValue(digisosApiWrapper.sak.soker, JsonNode::class.java)
         val jsonDigisosSoker = sosialhjelpMapper.convertValue(jsonNode, JsonDigisosSoker::class.java)
@@ -44,8 +44,8 @@ class MockController(
 
     @GetMapping("/{soknadId}", produces = ["application/json;charset=UTF-8"])
     fun getInnsynForSoknad(@PathVariable soknadId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<JsonDigisosSoker> {
-        val digisosSak = fiksClientMock.hentDigisosSak(soknadId, token)
-        val jsonDigisosSoker = innsynService.hentJsonDigisosSoker(soknadId, digisosSak.digisosSoker?.metadata, token)
+        val digisosSak = fiksClientMock.hentDigisosSak(soknadId)
+        val jsonDigisosSoker = innsynService.hentJsonDigisosSoker(soknadId, digisosSak.digisosSoker?.metadata)
         return ResponseEntity.ok(jsonDigisosSoker!!)
     }
 

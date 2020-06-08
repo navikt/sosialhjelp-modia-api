@@ -33,7 +33,7 @@ internal class NoekkelinfoServiceTest {
     internal fun setUp() {
         clearAllMocks()
 
-        every { fiksClient.hentDigisosSak(any(), any()) } returns mockDigisosSak
+        every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
         every { mockDigisosSak.sistEndret } returns 123456789
     }
 
@@ -48,10 +48,10 @@ internal class NoekkelinfoServiceTest {
                 NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1)
         )
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
-        val noekkelinfo = service.hentNoekkelInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123")
 
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
@@ -76,10 +76,10 @@ internal class NoekkelinfoServiceTest {
         )
         model.forelopigSvar = ForelopigSvar(tidspunkt)
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
-        val noekkelinfo = service.hentNoekkelInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123")
 
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
@@ -104,10 +104,10 @@ internal class NoekkelinfoServiceTest {
                 NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2)
         )
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
-        val noekkelinfo = service.hentNoekkelInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123")
 
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
@@ -132,10 +132,10 @@ internal class NoekkelinfoServiceTest {
                 NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2)
         )
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
-        val noekkelinfo = service.hentNoekkelInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123")
 
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
@@ -156,10 +156,10 @@ internal class NoekkelinfoServiceTest {
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
-        val noekkelinfo = service.hentNoekkelInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123")
 
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
