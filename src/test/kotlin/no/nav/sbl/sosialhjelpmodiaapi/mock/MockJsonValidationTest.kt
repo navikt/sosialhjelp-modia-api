@@ -21,11 +21,11 @@ internal class DefaultMockResponseTest {
     fun `validerer digisosSoker`() {
         val mockDigisosSak: DigisosSak = mockk()
         every { innsynService.hentJsonDigisosSoker(any(), any()) } returns digisosSoker
-        every { innsynService.hentOriginalSoknad(any(), any()) } returns null
         every { mockDigisosSak.fiksDigisosId } returns "123"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns 1L
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
-        every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
+        every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns "9999"
+        every { norgClient.hentNavEnhet("9999").navn } returns "NAV test"
 
         assertThatCode { eventService.createModel(mockDigisosSak) }.doesNotThrowAnyException()
     }

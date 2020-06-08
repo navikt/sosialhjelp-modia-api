@@ -34,18 +34,20 @@ class EventService(
 
     fun createModel(digisosSak: DigisosSak): InternalDigisosSoker {
         val jsonDigisosSoker: JsonDigisosSoker? = innsynService.hentJsonDigisosSoker(digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata)
-        val jsonSoknad: JsonSoknad? = innsynService.hentOriginalSoknad(digisosSak.fiksDigisosId, digisosSak.originalSoknadNAV?.metadata)
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
+
+        val enhetsnummer: String? = digisosSak.tilleggsinformasjon?.enhetsnummer
 
         val model = InternalDigisosSoker()
 
         if (timestampSendt != null) {
             model.status = SoknadsStatus.SENDT
 
-            if (jsonSoknad != null && jsonSoknad.mottaker != null) {
-                model.soknadsmottaker = Soknadsmottaker(jsonSoknad.mottaker.enhetsnummer, jsonSoknad.mottaker.navEnhetsnavn)
-                model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til ${jsonSoknad.mottaker.navEnhetsnavn}.", unixToLocalDateTime(timestampSendt)))
-                model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, unixToLocalDateTime(timestampSendt), jsonSoknad.mottaker.enhetsnummer, jsonSoknad.mottaker.navEnhetsnavn))
+            if (enhetsnummer != null) {
+                val navEnhetsnavn = norgClient.hentNavEnhet(enhetsnummer).navn
+                model.soknadsmottaker = Soknadsmottaker(enhetsnummer, navEnhetsnavn)
+                model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til $navEnhetsnavn.", unixToLocalDateTime(timestampSendt)))
+                model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, unixToLocalDateTime(timestampSendt), enhetsnummer, navEnhetsnavn))
             }
         }
 

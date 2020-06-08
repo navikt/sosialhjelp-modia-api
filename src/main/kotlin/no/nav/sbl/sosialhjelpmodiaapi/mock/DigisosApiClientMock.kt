@@ -6,6 +6,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.DokumentInfo
 import no.nav.sbl.sosialhjelpmodiaapi.domain.EttersendtInfoNAV
 import no.nav.sbl.sosialhjelpmodiaapi.domain.OriginalSoknadNAV
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Tilleggsinformasjon
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 import no.nav.sbl.sosialhjelpmodiaapi.utils.DigisosApiWrapper
 import org.springframework.context.annotation.Profile
@@ -29,10 +30,18 @@ class DigisosApiClientMock(
             id = UUID.randomUUID().toString()
         }
 
-        fiksClientMock.postDigisosSak(DigisosSak(id, "01234567890", "11415cd1-e26d-499a-8421-751457dfcbd5", "1", System.currentTimeMillis(),
-                OriginalSoknadNAV("110000000", "", "mock-soknad-vedlegg-metadata", DokumentInfo("", "", 0L), Collections.emptyList(),
+        fiksClientMock.postDigisosSak(DigisosSak(
+                fiksDigisosId = id,
+                sokerFnr = "01234567890",
+                fiksOrgId = "11415cd1-e26d-499a-8421-751457dfcbd5",
+                kommunenummer = "1",
+                sistEndret = System.currentTimeMillis(),
+                originalSoknadNAV = OriginalSoknadNAV("110000000", "", "mock-soknad-vedlegg-metadata", DokumentInfo("", "", 0L), Collections.emptyList(),
                         femMinutterForMottattSoknad(digisosApiWrapper)),
-                EttersendtInfoNAV(Collections.emptyList()), DigisosSoker(dokumentlagerId, Collections.emptyList(), System.currentTimeMillis())))
+                ettersendtInfoNAV = EttersendtInfoNAV(Collections.emptyList()),
+                digisosSoker = DigisosSoker(dokumentlagerId, Collections.emptyList(), System.currentTimeMillis()),
+                tilleggsinformasjon = Tilleggsinformasjon("1234")
+        ))
         return id
     }
 

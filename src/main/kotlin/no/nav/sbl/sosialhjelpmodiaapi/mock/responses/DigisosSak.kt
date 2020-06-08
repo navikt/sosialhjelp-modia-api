@@ -6,6 +6,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.DokumentInfo
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ettersendelse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.EttersendtInfoNAV
 import no.nav.sbl.sosialhjelpmodiaapi.domain.OriginalSoknadNAV
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Tilleggsinformasjon
 
 val defaultDigisosSak = DigisosSak(
         fiksDigisosId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -66,5 +67,8 @@ val defaultDigisosSak = DigisosSak(
                         )
                 ),
                 timestampSistOppdatert = 0
+        ),
+        tilleggsinformasjon = Tilleggsinformasjon(
+                enhetsnummer = "1234"
         )
 )

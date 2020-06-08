@@ -8,7 +8,8 @@ data class DigisosSak(
         val sistEndret: Long,
         val originalSoknadNAV: OriginalSoknadNAV?,
         val ettersendtInfoNAV: EttersendtInfoNAV?,
-        val digisosSoker: DigisosSoker?
+        val digisosSoker: DigisosSoker?,
+        val tilleggsinformasjon: Tilleggsinformasjon?
 )
 
 data class OriginalSoknadNAV(
@@ -41,6 +42,10 @@ data class DigisosSoker(
         val metadata: String,
         val dokumenter: List<DokumentInfo>,
         val timestampSistOppdatert: Long
+)
+
+data class Tilleggsinformasjon(
+        val enhetsnummer: String?
 )
 
 data class KommuneInfo(

@@ -4,7 +4,6 @@ import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
-import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -36,22 +35,5 @@ internal class InnsynServiceTest {
         val jsonDigisosSoker = service.hentJsonDigisosSoker("123", null)
 
         assertThat(jsonDigisosSoker).isNull()
-    }
-
-    @Test
-    fun `Should return originalSoknad`() {
-        val mockJsonSoknad: JsonSoknad = mockk()
-        every { fiksClient.hentDokument(any(), any(), JsonSoknad::class.java) } returns mockJsonSoknad
-
-        val jsonSoknad: JsonSoknad? = service.hentOriginalSoknad("123", "abc")
-
-        assertThat(jsonSoknad).isNotNull
-    }
-
-    @Test
-    fun `Should return null if originalSoknadNAV is null`() {
-        val jsonSoknad: JsonSoknad? = service.hentOriginalSoknad("123", null)
-
-        assertThat(jsonSoknad).isNull()
     }
 }

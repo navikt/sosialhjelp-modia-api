@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.kommune
 
+import io.mockk.clearAllMocks
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
@@ -17,22 +18,18 @@ import org.junit.jupiter.api.Test
 internal class KommuneServiceTest {
 
     private val fiksClient: FiksClient = mockk()
-    private val innsynService: InnsynService = mockk()
 
-    private val service = KommuneService(fiksClient, innsynService)
+    private val service = KommuneService(fiksClient)
 
     private val mockDigisosSak: DigisosSak = mockk()
-    private val mockJsonSoknad: JsonSoknad = mockk()
     private val kommuneNr = "1234"
 
     @BeforeEach
     internal fun setUp() {
-        clearMocks(fiksClient, innsynService, mockDigisosSak, mockJsonSoknad)
+        clearAllMocks()
 
         every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
-        every { mockDigisosSak.originalSoknadNAV?.metadata }  returns "some id"
-        every { innsynService.hentOriginalSoknad(any(), any()) } returns mockJsonSoknad
-        every { mockJsonSoknad.mottaker.kommunenummer } returns kommuneNr
+        every { mockDigisosSak.kommunenummer } returns kommuneNr
     }
 
     @Test
@@ -88,8 +85,7 @@ internal class KommuneServiceTest {
 
     @Test
     fun `Ingen originalSoknad - skal kaste feil`() {
-        every { mockDigisosSak.originalSoknadNAV?.metadata }  returns null
-        every { innsynService.hentOriginalSoknad(any(), any()) } returns null
+        every { mockDigisosSak.kommunenummer }  returns ""
 
         assertThatExceptionOfType(RuntimeException::class.java).isThrownBy { service.hentKommuneStatus("123") }
                 .withMessage("KommuneStatus kan ikke hentes uten kommunenummer")
