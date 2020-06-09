@@ -103,6 +103,6 @@ class AuditLogger {
 
     companion object {
         // TODO: burde være private, men er public for å få testet klassen (https://github.com/mockk/mockk/issues/147)
-        val auditlog: Logger = LoggerFactory.getLogger("auditLogger")
+        val auditlog: Logger = LoggerFactory.getLogger("sporingslogg")
     }
 }
