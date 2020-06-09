@@ -44,14 +44,13 @@ class FiksClientImpl(
     override fun hentDigisosSak(digisosId: String, sporingsId: String): DigisosSak {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
-        val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
-
         log.info("Forsøker å hente digisosSak fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId")
-
-        val urlTemplate = "$baseUrl/digisos/api/v1/nav/soknader/{digisosId}/{sporingsId}"
         try {
-            val vars = mapOf("digisosId" to digisosId, "sporingsId" to sporingsId)
-            val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
+            val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
+            val uriComponents = urlWithSporingsId(baseUrl + PATH_DIGISOSSAK)
+            val vars = mapOf("digisosId" to digisosId)
+
+            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
 
             log.info("Hentet DigisosSak $digisosId fra Fiks")
             return objectMapper.readValue(response.body!!, DigisosSak::class.java)
@@ -73,16 +72,15 @@ class FiksClientImpl(
     override fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>, sporingsId: String): Any {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
-        val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
-
-        val urlTemplate = "$baseUrl/digisos/api/v1/nav/soknader/{digisosId}/dokumenter/{dokumentlagerId}"
-        val uriComponents = UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam("sporingsId", "%7BsporingsId%7D").build()
         log.info("Forsøker å hente dokument fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId")
         try {
+            val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
+            val uriComponents = urlWithSporingsId(baseUrl + PATH_DOKUMENT)
             val vars = mapOf(
                     "digisosId" to digisosId,
                     "dokumentlagerId" to dokumentlagerId,
                     "sporingsId" to sporingsId)
+
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
 
             log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
@@ -102,13 +100,13 @@ class FiksClientImpl(
     override fun hentAlleDigisosSaker(sporingsId: String, fnr: String): List<DigisosSak> {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
-        val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
-
-        val urlTemplate = "$baseUrl/digisos/api/nav/v1/soknader/soknader/{sporingsId}"
         try {
+            val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
+            val uriComponents = urlWithSporingsId(baseUrl + PATH_ALLE_DIGISOSSAKER)
             val vars = mapOf("sporingsId" to sporingsId)
             val body = Fnr(fnr)
-            val response = restTemplate.exchange(urlTemplate, HttpMethod.POST, HttpEntity(body, headers), typeRef<List<DigisosSak>>(), vars)
+
+            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.POST, HttpEntity(body, headers), typeRef<List<DigisosSak>>(), vars)
 
             return response.body!!
 
@@ -126,11 +124,11 @@ class FiksClientImpl(
     override fun hentKommuneInfo(kommunenummer: String): KommuneInfo {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
-        val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
-
-        val urlTemplate = "$baseUrl/digisos/api/v1/nav/kommuner/{kommunenummer}"
         try {
+            val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
+            val urlTemplate = baseUrl + PATH_KOMMUNEINFO
             val vars = mapOf("kommunenummer" to kommunenummer)
+
             val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), KommuneInfo::class.java, vars)
 
             return response.body!!
@@ -149,10 +147,11 @@ class FiksClientImpl(
     override fun hentKommuneInfoForAlle(): List<KommuneInfo> {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
-        val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
-
         try {
-            val response = restTemplate.exchange("$baseUrl/digisos/api/v1/nav/kommuner", HttpMethod.GET, HttpEntity<Nothing>(headers), typeRef<List<KommuneInfo>>())
+            val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
+            val urlTemplate = baseUrl + PATH_ALLE_KOMMUNEINFO
+
+            val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), typeRef<List<KommuneInfo>>())
 
             return response.body!!
 
@@ -176,8 +175,17 @@ class FiksClientImpl(
         return headers
     }
 
+    private fun urlWithSporingsId(urlTemplate: String) =
+            UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam("sporingsId", "%7BsporingsId%7D").build()
+
     companion object {
         private val log by logger()
+
+        private const val PATH_DIGISOSSAK = "/digisos/api/v1/nav/soknader/{digisosId}"
+        private const val PATH_ALLE_DIGISOSSAKER = "/digisos/api/nav/v1/soknader/soknader"
+        private const val PATH_DOKUMENT = "/digisos/api/v1/nav/soknader/{digisosId}/dokumenter/{dokumentlagerId}"
+        private const val PATH_KOMMUNEINFO = "/digisos/api/v1/nav/kommuner/{kommunenummer}"
+        private const val PATH_ALLE_KOMMUNEINFO = "/digisos/api/v1/nav/kommuner"
     }
 
     private data class Fnr(
