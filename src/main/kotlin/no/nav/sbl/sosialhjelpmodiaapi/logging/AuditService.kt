@@ -3,6 +3,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.logging
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacResponse
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.getConsumerId
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.getUserIdFromToken
+import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
@@ -15,7 +16,7 @@ class AuditService(
 
     private fun commonAttributes(brukerFnr: String, url: String, httpMethod: HttpMethod): Map<String, Any> {
         return mutableMapOf(
-                CALL_ID to "callId", // hent callId
+                CALL_ID to (MDCUtils.getCallId() ?: ""),
                 CONSUMER_ID to getConsumerId(),
                 NAVIDENT to getUserIdFromToken(),
                 BRUKER_FNR to brukerFnr,

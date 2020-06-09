@@ -11,7 +11,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacResponse
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Advice
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Attribute
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Decision
-import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditLogger.Companion.auditlog
+import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditLogger.Companion.sporingslogg
 import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Log
 import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Severity
 import org.assertj.core.api.Assertions.assertThat
@@ -43,8 +43,8 @@ internal class AuditLoggerTest {
         clearAllMocks()
 
         // FIXME: kan ikke static-mockke LoggerFactory https://github.com/mockk/mockk/issues/147
-        mockkObject(auditlog)
-        every { auditlog.info(capture(cefString)) } just Runs
+        mockkObject(sporingslogg)
+        every { sporingslogg.info(capture(cefString)) } just Runs
     }
 
     @Test
@@ -62,7 +62,7 @@ internal class AuditLoggerTest {
 
     @Test
     internal fun `should warn log abac deny`() {
-        every { auditlog.warn(capture(cefString)) } just Runs
+        every { sporingslogg.warn(capture(cefString)) } just Runs
 
         values[SEVERITY] = Severity.WARN
         values[ABAC_RESPONSE] = createAbacDeny()

@@ -24,9 +24,9 @@ class AuditLogger {
     fun report(values: Map<String, Any>) {
         val cef = createCef(values)
         if (cef.headers.severity == Severity.WARN) {
-            auditlog.warn(cef.toString())
+            sporingslogg.warn(cef.toString())
         } else {
-            auditlog.info(cef.toString())
+            sporingslogg.info(cef.toString())
         }
     }
 
@@ -73,7 +73,7 @@ class AuditLogger {
                             ?.filter { it.attributeId.equals(abacAttributeConstant, true) }
                             .orEmpty()
                 }
-                ?.joinToString(separator = ",") { it.value } // potensielt flere denypolicies eller denycauses?
+                ?.joinToString(separator = ",") { it.value } // potensielt flere denypolicies eller denycauses separeres med komma
                 .orEmpty()
     }
 
@@ -103,6 +103,6 @@ class AuditLogger {
 
     companion object {
         // TODO: burde være private, men er public for å få testet klassen (https://github.com/mockk/mockk/issues/147)
-        val auditlog: Logger = LoggerFactory.getLogger("sporingslogg")
+        val sporingslogg: Logger = LoggerFactory.getLogger("sporingslogg")
     }
 }
