@@ -9,6 +9,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
 import no.nav.sbl.sosialhjelpmodiaapi.feilmeldingUtenFnr
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
 import no.nav.sbl.sosialhjelpmodiaapi.toFiksErrorResponse
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
@@ -34,7 +35,8 @@ import java.util.Collections.singletonList
 class FiksClientImpl(
         clientProperties: ClientProperties,
         private val restTemplate: RestTemplate,
-        private val idPortenService: IdPortenService
+        private val idPortenService: IdPortenService,
+        private val auditService: AuditService
 ) : FiksClient {
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
@@ -44,6 +46,8 @@ class FiksClientImpl(
     override fun hentDigisosSak(digisosId: String, sporingsId: String): DigisosSak {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
+        val fnr = "fnr" // TODO: fnr for bruker det spørres om?
+
         log.info("Forsøker å hente digisosSak fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId")
         try {
             val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
@@ -51,6 +55,8 @@ class FiksClientImpl(
             val vars = mapOf("digisosId" to digisosId)
 
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
+
+            auditService.reportFiks(fnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId", HttpMethod.GET, sporingsId)
 
             log.info("Hentet DigisosSak $digisosId fra Fiks")
             return objectMapper.readValue(response.body!!, DigisosSak::class.java)
@@ -72,6 +78,8 @@ class FiksClientImpl(
     override fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>, sporingsId: String): Any {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
 
+        val fnr = "fnr" // TODO: fnr for bruker det spørres om?
+
         log.info("Forsøker å hente dokument fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId")
         try {
             val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
@@ -82,6 +90,8 @@ class FiksClientImpl(
                     "sporingsId" to sporingsId)
 
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
+
+            auditService.reportFiks(fnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId", HttpMethod.GET, sporingsId)
 
             log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
             return objectMapper.readValue(response.body!!, requestedClass)
@@ -102,11 +112,14 @@ class FiksClientImpl(
 
         try {
             val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
-            val uriComponents = urlWithSporingsId(baseUrl + PATH_ALLE_DIGISOSSAKER)
+            val urlTemplate = baseUrl + PATH_ALLE_DIGISOSSAKER
+            val uriComponents = urlWithSporingsId(urlTemplate)
             val vars = mapOf("sporingsId" to sporingsId)
             val body = Fnr(fnr)
 
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.POST, HttpEntity(body, headers), typeRef<List<DigisosSak>>(), vars)
+
+            auditService.reportFiks(fnr, urlTemplate, HttpMethod.POST, sporingsId)
 
             return response.body!!
 
@@ -129,6 +142,8 @@ class FiksClientImpl(
             val urlTemplate = baseUrl + PATH_KOMMUNEINFO
             val vars = mapOf("kommunenummer" to kommunenummer)
 
+            // TODO: auditService.reportFiks(...) ?
+
             val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), KommuneInfo::class.java, vars)
 
             return response.body!!
@@ -150,6 +165,8 @@ class FiksClientImpl(
         try {
             val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
             val urlTemplate = baseUrl + PATH_ALLE_KOMMUNEINFO
+
+            // TODO: auditService.reportFiks(...) ?
 
             val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), typeRef<List<KommuneInfo>>())
 

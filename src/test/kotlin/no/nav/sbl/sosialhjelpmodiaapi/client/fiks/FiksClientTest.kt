@@ -8,6 +8,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
 import no.nav.sbl.sosialhjelpmodiaapi.client.idporten.IdPortenService
+import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.BeforeEach
@@ -24,8 +25,9 @@ internal class FiksClientTest {
     private val clientProperties: ClientProperties = mockk(relaxed = true)
     private val restTemplate: RestTemplate = mockk()
     private val idPortenService: IdPortenService = mockk()
+    private val auditService: AuditService = mockk()
 
-    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenService)
+    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenService, auditService)
 
     @BeforeEach
     fun init() {
