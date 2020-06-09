@@ -142,8 +142,6 @@ class FiksClientImpl(
             val urlTemplate = baseUrl + PATH_KOMMUNEINFO
             val vars = mapOf("kommunenummer" to kommunenummer)
 
-            // TODO: auditService.reportFiks(...) ?
-
             val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), KommuneInfo::class.java, vars)
 
             return response.body!!
@@ -165,8 +163,6 @@ class FiksClientImpl(
         try {
             val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
             val urlTemplate = baseUrl + PATH_ALLE_KOMMUNEINFO
-
-            // TODO: auditService.reportFiks(...) ?
 
             val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), typeRef<List<KommuneInfo>>())
 
