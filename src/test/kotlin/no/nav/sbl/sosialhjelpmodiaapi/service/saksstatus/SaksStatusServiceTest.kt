@@ -3,9 +3,15 @@ package no.nav.sbl.sosialhjelpmodiaapi.service.saksstatus
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.sosialhjelpmodiaapi.domain.*
-import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Sak
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatus
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatusResponse
+import no.nav.sbl.sosialhjelpmodiaapi.domain.UtfallVedtak
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Vedtak
+import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

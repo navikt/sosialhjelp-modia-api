@@ -1,14 +1,14 @@
 package no.nav.sbl.sosialhjelpmodiaapi.mock
 
 import no.nav.sbl.sosialhjelpmodiaapi.client.digisosapi.DigisosApiClient
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSoker
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DokumentInfo
-import no.nav.sbl.sosialhjelpmodiaapi.domain.EttersendtInfoNAV
-import no.nav.sbl.sosialhjelpmodiaapi.domain.OriginalSoknadNAV
-import no.nav.sbl.sosialhjelpmodiaapi.domain.Tilleggsinformasjon
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 import no.nav.sbl.sosialhjelpmodiaapi.utils.DigisosApiWrapper
+import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.api.fiks.DigisosSoker
+import no.nav.sosialhjelp.api.fiks.DokumentInfo
+import no.nav.sosialhjelp.api.fiks.EttersendtInfoNAV
+import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
+import no.nav.sosialhjelp.api.fiks.Tilleggsinformasjon
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime

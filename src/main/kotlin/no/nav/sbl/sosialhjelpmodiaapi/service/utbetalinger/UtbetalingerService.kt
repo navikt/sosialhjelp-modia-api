@@ -1,12 +1,12 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.utbetalinger
 
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontor
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.springframework.stereotype.Component
 
 
@@ -46,7 +46,8 @@ class UtbetalingerService(
                                 UtbetalingerResponse(
                                         tittel = utbetaling.beskrivelse,
                                         belop = utbetaling.belop.toDouble(),
-                                        utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato ?: utbetaling.forfallsDato,
+                                        utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato
+                                                ?: utbetaling.forfallsDato,
                                         status = utbetaling.status,
                                         fiksDigisosId = digisosSak.fiksDigisosId,
                                         fom = utbetaling.fom,

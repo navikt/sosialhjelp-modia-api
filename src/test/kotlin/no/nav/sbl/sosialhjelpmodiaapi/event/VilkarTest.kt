@@ -4,10 +4,10 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
+import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
-import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

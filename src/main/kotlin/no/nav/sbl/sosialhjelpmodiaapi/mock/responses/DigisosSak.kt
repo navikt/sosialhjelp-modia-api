@@ -1,12 +1,12 @@
 package no.nav.sbl.sosialhjelpmodiaapi.mock.responses
 
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSoker
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DokumentInfo
-import no.nav.sbl.sosialhjelpmodiaapi.domain.Ettersendelse
-import no.nav.sbl.sosialhjelpmodiaapi.domain.EttersendtInfoNAV
-import no.nav.sbl.sosialhjelpmodiaapi.domain.OriginalSoknadNAV
-import no.nav.sbl.sosialhjelpmodiaapi.domain.Tilleggsinformasjon
+import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.api.fiks.DigisosSoker
+import no.nav.sosialhjelp.api.fiks.DokumentInfo
+import no.nav.sosialhjelp.api.fiks.Ettersendelse
+import no.nav.sosialhjelp.api.fiks.EttersendtInfoNAV
+import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
+import no.nav.sosialhjelp.api.fiks.Tilleggsinformasjon
 
 val defaultDigisosSak = DigisosSak(
         fiksDigisosId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",

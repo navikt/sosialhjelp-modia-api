@@ -3,14 +3,14 @@ package no.nav.sbl.sosialhjelpmodiaapi.service.hendelse
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_MOTTATT
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_SENDT
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_UNDER_BEHANDLING
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

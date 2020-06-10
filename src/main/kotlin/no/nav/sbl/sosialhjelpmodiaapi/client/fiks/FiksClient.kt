@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.fiks
 
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
-import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
+import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.api.fiks.KommuneInfo
 
 interface FiksClient {
 
