@@ -1,12 +1,26 @@
 package no.nav.sbl.sosialhjelpmodiaapi.rest
 
-import io.mockk.*
-import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
-import no.nav.sbl.sosialhjelpmodiaapi.domain.*
-import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
+import io.mockk.Called
+import io.mockk.Runs
+import io.mockk.clearAllMocks
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
+import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.domain.OppgaveResponse
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Sak
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatus
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Utbetaling
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Vilkar
+import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.service.oppgave.OppgaveService
+import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.KILDE_INNSYN_API
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -57,7 +71,7 @@ internal class SoknadsoversiktControllerTest {
         every { digisosSak2.originalSoknadNAV?.timestampSendt } returns System.currentTimeMillis()
 
         every { oppgaveService.hentOppgaver(id_1, any()) } returns listOf(oppgaveResponseMock, oppgaveResponseMock) // 2 oppgaver
-        every { oppgaveService.hentOppgaver(id_2, any()) }  returns listOf(oppgaveResponseMock) // 1 oppgave
+        every { oppgaveService.hentOppgaver(id_2, any()) } returns listOf(oppgaveResponseMock) // 1 oppgave
     }
 
     @Test
@@ -85,7 +99,7 @@ internal class SoknadsoversiktControllerTest {
             val first = saker[0]
             assertThat(first.soknadTittel).isEqualTo("Søknad om økonomisk sosialhjelp")
             assertThat(first.kilde).isEqualTo(KILDE_INNSYN_API)
-            assertThat(first.sendt).isNotNull()
+            assertThat(first.sendt).isNotNull
 
             val second = saker[1]
             assertThat(second.soknadTittel).isEqualTo("Søknad om økonomisk sosialhjelp")
@@ -126,8 +140,8 @@ internal class SoknadsoversiktControllerTest {
         assertThat(response1.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(sak1).isNotNull
         assertThat(sak1?.soknadTittel).isEqualTo("")
-        assertThat(sak1?.harNyeOppgaver).isTrue()
-        assertThat(sak1?.harVilkar).isFalse()
+        assertThat(sak1?.harNyeOppgaver).isTrue
+        assertThat(sak1?.harVilkar).isFalse
 
         val response2 = controller.hentSaksDetaljer(id_2, "token", Ident(fnr))
         val sak2 = response2.body
@@ -136,8 +150,8 @@ internal class SoknadsoversiktControllerTest {
         assertThat(sak2).isNotNull
         assertThat(sak2?.soknadTittel).contains("Livsopphold", "Strøm")
         assertThat(sak2?.status).isEqualTo("UNDER BEHANDLING")
-        assertThat(sak2?.harNyeOppgaver).isTrue()
-        assertThat(sak2?.harVilkar).isTrue()
+        assertThat(sak2?.harNyeOppgaver).isTrue
+        assertThat(sak2?.harVilkar).isTrue
     }
 
     @Test
@@ -157,6 +171,6 @@ internal class SoknadsoversiktControllerTest {
 
         verify { oppgaveService wasNot Called }
 
-        assertThat(sak?.harNyeOppgaver).isFalse()
+        assertThat(sak?.harNyeOppgaver).isFalse
     }
 }
