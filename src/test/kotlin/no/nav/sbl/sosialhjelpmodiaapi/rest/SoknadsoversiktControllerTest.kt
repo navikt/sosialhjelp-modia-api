@@ -26,6 +26,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import java.time.LocalDateTime
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 internal class SoknadsoversiktControllerTest {
 
@@ -99,12 +101,12 @@ internal class SoknadsoversiktControllerTest {
             val first = saker[0]
             assertThat(first.soknadTittel).isEqualTo("Søknad om økonomisk sosialhjelp")
             assertThat(first.kilde).isEqualTo(KILDE_INNSYN_API)
-            assertThat(first.sendt).isNotNull
+            assertNotNull(first.sendt)
 
             val second = saker[1]
             assertThat(second.soknadTittel).isEqualTo("Søknad om økonomisk sosialhjelp")
             assertThat(second.kilde).isEqualTo(KILDE_INNSYN_API)
-            assertThat(second.sendt).isNull()
+            assertNull(second.sendt)
         }
     }
 
@@ -140,8 +142,8 @@ internal class SoknadsoversiktControllerTest {
         assertThat(response1.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(sak1).isNotNull
         assertThat(sak1?.soknadTittel).isEqualTo("")
-        assertThat(sak1?.harNyeOppgaver).isTrue
-        assertThat(sak1?.harVilkar).isFalse
+        assertThat(sak1?.harNyeOppgaver).isTrue()
+        assertThat(sak1?.harVilkar).isFalse()
 
         val response2 = controller.hentSaksDetaljer(id_2, "token", Ident(fnr))
         val sak2 = response2.body
@@ -150,8 +152,8 @@ internal class SoknadsoversiktControllerTest {
         assertThat(sak2).isNotNull
         assertThat(sak2?.soknadTittel).contains("Livsopphold", "Strøm")
         assertThat(sak2?.status).isEqualTo("UNDER BEHANDLING")
-        assertThat(sak2?.harNyeOppgaver).isTrue
-        assertThat(sak2?.harVilkar).isTrue
+        assertThat(sak2?.harNyeOppgaver).isTrue()
+        assertThat(sak2?.harVilkar).isTrue()
     }
 
     @Test
@@ -171,6 +173,6 @@ internal class SoknadsoversiktControllerTest {
 
         verify { oppgaveService wasNot Called }
 
-        assertThat(sak?.harNyeOppgaver).isFalse
+        assertThat(sak?.harNyeOppgaver).isFalse()
     }
 }

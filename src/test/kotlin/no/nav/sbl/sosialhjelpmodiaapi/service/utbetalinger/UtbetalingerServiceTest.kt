@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
+import kotlin.test.assertTrue
 
 internal class UtbetalingerServiceTest {
     private val fiksClient: FiksClient = mockk()
@@ -195,7 +196,7 @@ internal class UtbetalingerServiceTest {
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
-        assertThat(response[0].harVilkar).isTrue
+        assertTrue(response[0].harVilkar)
     }
 
     @Disabled("disabled frem til det blir bekreftet om dokumentasjonkrav skal være med i response")
