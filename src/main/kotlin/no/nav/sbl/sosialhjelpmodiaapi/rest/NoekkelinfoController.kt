@@ -26,9 +26,7 @@ class NoekkelinfoController(
     fun hentNoekkelInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadNoekkelinfoResponse> {
         abacService.harTilgang(ident.fnr, token)
 
-        // kan ikke bruke saksbehandlers token til å hente noekkelinfo for søknad?
-
-        val noekkelinfo = noekkelinfoService.hentNoekkelInfo(fiksDigisosId, token)
+        val noekkelinfo = noekkelinfoService.hentNoekkelInfo(fiksDigisosId)
         return ResponseEntity.ok().body(noekkelinfo)
     }
 }

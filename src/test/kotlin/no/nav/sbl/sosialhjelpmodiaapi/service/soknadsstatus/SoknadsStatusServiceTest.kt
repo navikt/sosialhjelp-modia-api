@@ -23,20 +23,18 @@ internal class SoknadsStatusServiceTest {
     private val mockDigisosSak: DigisosSak = mockk()
     private val mockInternalDigisosSoker: InternalDigisosSoker = mockk()
 
-    private val token = "token"
-
     @BeforeEach
     fun init() {
         clearAllMocks()
-        every { fiksClient.hentDigisosSak(any(), any()) } returns mockDigisosSak
+        every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
     }
 
     @Test
     fun `Skal returnere mest nylige SoknadsStatus`() {
-        every { eventService.createModel(any(), any()) } returns mockInternalDigisosSoker
+        every { eventService.createModel(any()) } returns mockInternalDigisosSoker
         every { mockInternalDigisosSoker.status } returns SoknadsStatus.UNDER_BEHANDLING
 
-        val response: SoknadsStatusResponse = service.hentSoknadsStatus("123", token)
+        val response: SoknadsStatusResponse = service.hentSoknadsStatus("123")
 
         assertThat(response).isNotNull
         assertThat(response.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)

@@ -18,15 +18,15 @@ class OppgaveService(
         private val vedleggService: VedleggService
 ) {
 
-    fun hentOppgaver(fiksDigisosId: String, token: String): List<OppgaveResponse> {
-        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)
-        val model = eventService.createModel(digisosSak, token)
+    fun hentOppgaver(fiksDigisosId: String): List<OppgaveResponse> {
+        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
+        val model = eventService.createModel(digisosSak)
 
         if (model.oppgaver.isEmpty()) {
             return emptyList()
         }
 
-        val ettersendteVedlegg = vedleggService.hentEttersendteVedlegg(fiksDigisosId, model, digisosSak.ettersendtInfoNAV, token)
+        val ettersendteVedlegg = vedleggService.hentEttersendteVedlegg(fiksDigisosId, model, digisosSak.ettersendtInfoNAV)
 
         val oppgaveResponseList = model.oppgaver
                 .sortedBy { it.innsendelsesfrist }

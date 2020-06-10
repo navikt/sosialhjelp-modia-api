@@ -26,9 +26,7 @@ class HendelseController(
     fun hentHendelser(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<HendelseResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
-        // kan ikke bruke saksbehandlers token for å hente hendelser?
-
-        val hendelser = hendelseService.hentHendelser(fiksDigisosId, token)
+        val hendelser = hendelseService.hentHendelser(fiksDigisosId)
         return ResponseEntity.ok(hendelser)
     }
 }

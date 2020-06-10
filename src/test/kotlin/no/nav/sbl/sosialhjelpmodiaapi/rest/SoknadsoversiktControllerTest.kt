@@ -72,13 +72,13 @@ internal class SoknadsoversiktControllerTest {
         every { digisosSak2.digisosSoker } returns mockk()
         every { digisosSak2.originalSoknadNAV?.timestampSendt } returns System.currentTimeMillis()
 
-        every { oppgaveService.hentOppgaver(id_1, any()) } returns listOf(oppgaveResponseMock, oppgaveResponseMock) // 2 oppgaver
-        every { oppgaveService.hentOppgaver(id_2, any()) } returns listOf(oppgaveResponseMock) // 1 oppgave
+        every { oppgaveService.hentOppgaver(id_1) } returns listOf(oppgaveResponseMock, oppgaveResponseMock) // 2 oppgaver
+        every { oppgaveService.hentOppgaver(id_2) } returns listOf(oppgaveResponseMock) // 1 oppgave
     }
 
     @Test
     fun `hentAlleSaker - skal mappe fra DigisosSak til SakResponse`() {
-        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(digisosSak1, digisosSak2)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1, digisosSak2)
 
         every { model1.status } returns SoknadsStatus.MOTTATT
         every { model2.status } returns SoknadsStatus.UNDER_BEHANDLING
@@ -112,10 +112,10 @@ internal class SoknadsoversiktControllerTest {
 
     @Test
     fun `hentSaksDetaljer - skal mappe fra DigisosSak til SakResponse for detaljer`() {
-        every { fiksClient.hentDigisosSak(id_1, "token") } returns digisosSak1
-        every { fiksClient.hentDigisosSak(id_2, "token") } returns digisosSak2
-        every { eventService.createSoknadsoversiktModel(any(), digisosSak1) } returns model1
-        every { eventService.createSoknadsoversiktModel(any(), digisosSak2) } returns model2
+        every { fiksClient.hentDigisosSak(id_1) } returns digisosSak1
+        every { fiksClient.hentDigisosSak(id_2) } returns digisosSak2
+        every { eventService.createSoknadsoversiktModel(digisosSak1) } returns model1
+        every { eventService.createSoknadsoversiktModel(digisosSak2) } returns model2
 
         every { model1.status } returns SoknadsStatus.MOTTATT
         every { model2.status } returns SoknadsStatus.UNDER_BEHANDLING
@@ -158,8 +158,8 @@ internal class SoknadsoversiktControllerTest {
 
     @Test
     fun `hentSaksDetaljer - hvis model ikke har noen oppgaver, skal ikke oppgaveService kalles`() {
-        every { fiksClient.hentDigisosSak(id_1, "token") } returns digisosSak1
-        every { eventService.createSoknadsoversiktModel(any(), digisosSak1) } returns model1
+        every { fiksClient.hentDigisosSak(id_1) } returns digisosSak1
+        every { eventService.createSoknadsoversiktModel(digisosSak1) } returns model1
 
         every { model1.status } returns SoknadsStatus.MOTTATT
         every { model1.oppgaver.isEmpty() } returns true

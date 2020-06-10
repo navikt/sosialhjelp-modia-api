@@ -16,8 +16,8 @@ class UtbetalingerService(
         private val eventService: EventService
 ) {
 
-    fun hentUtbetalinger(token: String, fnr: String): List<UtbetalingerResponse> {
-        val digisosSaker = fiksClient.hentAlleDigisosSaker(token, fnr)
+    fun hentUtbetalinger(fnr: String): List<UtbetalingerResponse> {
+        val digisosSaker = fiksClient.hentAlleDigisosSaker(fnr)
 
         if (digisosSaker.isEmpty()) {
             log.info("Fant ingen søknader for bruker")
@@ -25,17 +25,17 @@ class UtbetalingerService(
         }
 
         return digisosSaker
-                .flatMap { digisosSak -> utbetalingerForDigisosSak(digisosSak, token) }
+                .flatMap { digisosSak -> utbetalingerForDigisosSak(digisosSak) }
                 .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
     }
 
-    fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak, token: String): List<UtbetalingerResponse> {
-        return utbetalingerForDigisosSak(digisosSak, token)
+    fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
+        return utbetalingerForDigisosSak(digisosSak)
                 .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
     }
 
-    private fun utbetalingerForDigisosSak(digisosSak: DigisosSak, token: String): List<UtbetalingerResponse> {
-        val model = eventService.createModel(digisosSak, token)
+    private fun utbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
+        val model = eventService.createModel(digisosSak)
         val behandlendeNavKontor = model.navKontorHistorikk.lastOrNull()
 
         return model.saker

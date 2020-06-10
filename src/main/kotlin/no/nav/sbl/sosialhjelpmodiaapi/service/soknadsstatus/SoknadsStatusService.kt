@@ -13,9 +13,9 @@ class SoknadsStatusService(
         private val eventService: EventService
 ) {
 
-    fun hentSoknadsStatus(fiksDigisosId: String, token: String): SoknadsStatusResponse {
-        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)
-        val model = eventService.createModel(digisosSak, token)
+    fun hentSoknadsStatus(fiksDigisosId: String): SoknadsStatusResponse {
+        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
+        val model = eventService.createModel(digisosSak)
         val status = model.status
         if (status == null) {
             log.warn("SoknadsStatus kan ikke være null")

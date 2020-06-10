@@ -28,9 +28,7 @@ class VedleggController(
     fun hentVedlegg(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<VedleggResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
-        // kan ikke bruker saksbehandlers token for å hente vedleggsinfo?
-
-        val internalVedleggList: List<InternalVedlegg> = vedleggService.hentAlleOpplastedeVedlegg(fiksDigisosId, token)
+        val internalVedleggList: List<InternalVedlegg> = vedleggService.hentAlleOpplastedeVedlegg(fiksDigisosId)
         if (internalVedleggList.isEmpty()) {
             return ResponseEntity(HttpStatus.NO_CONTENT)
         }

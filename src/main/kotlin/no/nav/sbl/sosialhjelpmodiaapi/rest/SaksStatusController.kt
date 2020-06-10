@@ -27,9 +27,7 @@ class SaksStatusController(
     fun hentSaksStatuser(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SaksStatusResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
-        // kan ikke bruke saksbehandlers token til å hente saksStatuser?
-
-        val saksStatuser = saksStatusService.hentSaksStatuser(fiksDigisosId, token)
+        val saksStatuser = saksStatusService.hentSaksStatuser(fiksDigisosId)
         if (saksStatuser.isEmpty()) {
             return ResponseEntity(HttpStatus.NO_CONTENT)
         }
