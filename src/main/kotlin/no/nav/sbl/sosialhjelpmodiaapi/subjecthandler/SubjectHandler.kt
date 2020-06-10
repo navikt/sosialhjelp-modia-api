@@ -45,7 +45,7 @@ class StaticSubjectHandlerImpl : SubjectHandler {
     }
 }
 
-@Profile("!mock")
+@Profile("!(mock | mock-alt)")
 @Component
 class IssoSubjectHandlerImpl(
         private val tokenValidationContextHolder: TokenValidationContextHolder
