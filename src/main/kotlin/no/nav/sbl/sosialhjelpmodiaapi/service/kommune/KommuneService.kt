@@ -1,9 +1,9 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.kommune
 
 import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
-import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
-import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
+import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.HAR_KONFIGURASJON_MEN_SKAL_SENDE_VIA_SVARUT
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.IKKE_STOTTET_CASE
@@ -12,23 +12,20 @@ import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.SKAL_SENDE_S
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.SKAL_VISE_MIDLERTIDIG_FEILSIDE_FOR_SOKNAD_OG_ETTERSENDELSER_INNSYN_IKKE_MULIG
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.SKAL_VISE_MIDLERTIDIG_FEILSIDE_FOR_SOKNAD_OG_ETTERSENDELSER_INNSYN_SKAL_VISE_FEILSIDE
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.SKAL_VISE_MIDLERTIDIG_FEILSIDE_FOR_SOKNAD_OG_ETTERSENDELSER_INNSYN_SOM_VANLIG
-import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sosialhjelp.api.fiks.KommuneInfo
 import org.springframework.stereotype.Component
 
 @Component
 class KommuneService(
-        private val fiksClient: FiksClient,
-        private val innsynService: InnsynService
+        private val fiksClient: FiksClient
 ) {
 
-    fun hentKommuneStatus(fiksDigisosId: String, token: String): KommuneStatus {
-        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)
+    fun hentKommuneStatus(fiksDigisosId: String): KommuneStatus {
+        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
 
-        val originalSoknad: JsonSoknad? = innsynService.hentOriginalSoknad(fiksDigisosId, digisosSak.originalSoknadNAV?.metadata, token)
-
-        val kommunenummer: String? = originalSoknad?.mottaker?.kommunenummer
-        if (kommunenummer == null) {
-            log.warn("Forsøkte å hente kommuneStatus, men JsonSoknad.mottaker.kommunenummer finnes ikke")
+        val kommunenummer: String = digisosSak.kommunenummer
+        if (kommunenummer.isEmpty()) {
+            log.warn("Forsøkte å hente kommuneStatus, men DigisosSak.kommunenummer er tom")
             throw RuntimeException("KommuneStatus kan ikke hentes uten kommunenummer")
         }
 

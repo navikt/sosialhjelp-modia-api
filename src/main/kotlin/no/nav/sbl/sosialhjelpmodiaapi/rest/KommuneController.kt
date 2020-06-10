@@ -25,9 +25,7 @@ class KommuneController(
     fun hentKommuneInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<String> {
         abacService.harTilgang(ident.fnr, token)
 
-        // kan ikke bruke saksbehandlers token for å hente digisosSak fra fiks?
-
-        val kommuneStatus = kommuneService.hentKommuneStatus(fiksDigisosId, token)
+        val kommuneStatus = kommuneService.hentKommuneStatus(fiksDigisosId)
         return ResponseEntity.ok(kommuneStatus.toString())
     }
 

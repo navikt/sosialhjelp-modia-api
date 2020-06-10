@@ -27,9 +27,7 @@ class OppgaveController(
     fun hentOppgaver(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<OppgaveResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
-        // kan ikke bruke saksbehandlers token til å hente oppgaver?
-
-        val oppgaver = oppgaveService.hentOppgaver(fiksDigisosId, token)
+        val oppgaver = oppgaveService.hentOppgaver(fiksDigisosId)
         if (oppgaver.isEmpty()) {
             return ResponseEntity(HttpStatus.NO_CONTENT)
         }

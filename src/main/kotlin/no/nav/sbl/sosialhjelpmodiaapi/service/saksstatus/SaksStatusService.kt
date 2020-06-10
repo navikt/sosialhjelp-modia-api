@@ -17,9 +17,9 @@ class SaksStatusService(
         private val eventService: EventService
 ) {
 
-    fun hentSaksStatuser(fiksDigisosId: String, token: String): List<SaksStatusResponse> {
-        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)
-        val model = eventService.createModel(digisosSak, token)
+    fun hentSaksStatuser(fiksDigisosId: String): List<SaksStatusResponse> {
+        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
+        val model = eventService.createModel(digisosSak)
 
         if (model.saker.isEmpty()) {
             log.info("Fant ingen saker for $fiksDigisosId")

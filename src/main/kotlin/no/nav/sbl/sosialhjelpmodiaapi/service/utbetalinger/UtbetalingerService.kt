@@ -1,12 +1,12 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.utbetalinger
 
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontor
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.springframework.stereotype.Component
 
 
@@ -16,8 +16,8 @@ class UtbetalingerService(
         private val eventService: EventService
 ) {
 
-    fun hentUtbetalinger(token: String, fnr: String): List<UtbetalingerResponse> {
-        val digisosSaker = fiksClient.hentAlleDigisosSaker(token, fnr)
+    fun hentUtbetalinger(fnr: String): List<UtbetalingerResponse> {
+        val digisosSaker = fiksClient.hentAlleDigisosSaker(fnr)
 
         if (digisosSaker.isEmpty()) {
             log.info("Fant ingen søknader for bruker")
@@ -25,17 +25,17 @@ class UtbetalingerService(
         }
 
         return digisosSaker
-                .flatMap { digisosSak -> utbetalingerForDigisosSak(digisosSak, token) }
+                .flatMap { digisosSak -> utbetalingerForDigisosSak(digisosSak) }
                 .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
     }
 
-    fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak, token: String): List<UtbetalingerResponse> {
-        return utbetalingerForDigisosSak(digisosSak, token)
+    fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
+        return utbetalingerForDigisosSak(digisosSak)
                 .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
     }
 
-    private fun utbetalingerForDigisosSak(digisosSak: DigisosSak, token: String): List<UtbetalingerResponse> {
-        val model = eventService.createModel(digisosSak, token)
+    private fun utbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
+        val model = eventService.createModel(digisosSak)
         val behandlendeNavKontor = model.navKontorHistorikk.lastOrNull()
 
         return model.saker
@@ -46,7 +46,8 @@ class UtbetalingerService(
                                 UtbetalingerResponse(
                                         tittel = utbetaling.beskrivelse,
                                         belop = utbetaling.belop.toDouble(),
-                                        utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato ?: utbetaling.forfallsDato,
+                                        utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato
+                                                ?: utbetaling.forfallsDato,
                                         status = utbetaling.status,
                                         fiksDigisosId = digisosSak.fiksDigisosId,
                                         fom = utbetaling.fom,

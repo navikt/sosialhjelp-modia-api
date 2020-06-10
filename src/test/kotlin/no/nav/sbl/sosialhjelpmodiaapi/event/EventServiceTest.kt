@@ -4,15 +4,18 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
-import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
-import no.nav.sbl.sosialhjelpmodiaapi.domain.*
+import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
+import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatus
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
+import no.nav.sbl.sosialhjelpmodiaapi.domain.UtfallVedtak
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.FORELOPIG_SVAR
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SAK_FERDIGBEHANDLET
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_UNDER_BEHANDLING
 import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
-import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.service.saksstatus.DEFAULT_TITTEL
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -27,8 +30,6 @@ internal class EventServiceTest {
     private val service = EventService(innsynService, norgClient)
 
     private val mockDigisosSak: DigisosSak = mockk()
-    private val mockJsonSoknad: JsonSoknad = mockk()
-    private val mockNavEnhet: NavEnhet = mockk()
 
     @BeforeEach
     fun init() {
@@ -37,10 +38,8 @@ internal class EventServiceTest {
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
-        every { mockJsonSoknad.mottaker.navEnhetsnavn } returns soknadsmottaker
-        every { mockJsonSoknad.mottaker.enhetsnummer } returns enhetsnr
-        every { innsynService.hentOriginalSoknad(any(), any(), any()) } returns mockJsonSoknad
-        every { norgClient.hentNavEnhet(enhetsnr) } returns mockNavEnhet
+        every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
+        every { norgClient.hentNavEnhet(enhetsnr).navn } returns enhetsnavn
 
         resetHendelser()
     }
@@ -69,10 +68,10 @@ internal class EventServiceTest {
 
     @Test
     fun `ingen innsyn OG ingen soknad`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns null
-        every { innsynService.hentOriginalSoknad(any(), any(), any()) } returns null
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns null
+        every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns null
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.SENDT)
@@ -82,9 +81,9 @@ internal class EventServiceTest {
     @Test
     fun `ingen innsyn `() {
         every { mockDigisosSak.digisosSoker } returns null
-        every { innsynService.hentJsonDigisosSoker(any(), null, any()) } returns null
+        every { innsynService.hentJsonDigisosSoker(any(), null) } returns null
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.historikk).hasSize(1)
@@ -95,7 +94,7 @@ internal class EventServiceTest {
 
         @Test
         fun `saksStatus UTEN vedtakFattet`() {
-            every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+            every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                     JsonDigisosSoker()
                             .withAvsender(avsender)
                             .withVersion("123")
@@ -105,7 +104,7 @@ internal class EventServiceTest {
                                     SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3)
                             ))
 
-            val model = service.createModel(mockDigisosSak, "token")
+            val model = service.createModel(mockDigisosSak)
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -127,7 +126,7 @@ internal class EventServiceTest {
 
         @Test
         fun `saksStatus UTEN tittel eller status`() {
-            every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+            every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                     JsonDigisosSoker()
                             .withAvsender(avsender)
                             .withVersion("123")
@@ -137,7 +136,7 @@ internal class EventServiceTest {
                                     SAK1_UTEN_SAKS_STATUS_ELLER_TITTEL.withHendelsestidspunkt(tidspunkt_3)
                             ))
 
-            val model = service.createModel(mockDigisosSak, "token")
+            val model = service.createModel(mockDigisosSak)
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -159,7 +158,7 @@ internal class EventServiceTest {
 
         @Test
         fun `saksStatus FØR vedtakFattet`() {
-            every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+            every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                     JsonDigisosSoker()
                             .withAvsender(avsender)
                             .withVersion("123")
@@ -170,7 +169,7 @@ internal class EventServiceTest {
                                     SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_4)
                             ))
 
-            val model = service.createModel(mockDigisosSak, "token")
+            val model = service.createModel(mockDigisosSak)
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -195,7 +194,7 @@ internal class EventServiceTest {
 
         @Test
         fun `vedtakFattet UTEN saksStatus`() {
-            every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+            every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                     JsonDigisosSoker()
                             .withAvsender(avsender)
                             .withVersion("123")
@@ -205,7 +204,7 @@ internal class EventServiceTest {
                                     SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3)
                             ))
 
-            val model = service.createModel(mockDigisosSak, "token")
+            val model = service.createModel(mockDigisosSak)
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -230,7 +229,7 @@ internal class EventServiceTest {
 
         @Test
         fun `vedtakFattet FØR saksStatus`() {
-            every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+            every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                     JsonDigisosSoker()
                             .withAvsender(avsender)
                             .withVersion("123")
@@ -241,7 +240,7 @@ internal class EventServiceTest {
                                     SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_4)
                             ))
 
-            val model = service.createModel(mockDigisosSak, "token")
+            val model = service.createModel(mockDigisosSak)
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -267,7 +266,7 @@ internal class EventServiceTest {
 
         @Test
         fun `saksStatus med 2 vedtakFattet`() {
-            every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+            every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                     JsonDigisosSoker()
                             .withAvsender(avsender)
                             .withVersion("123")
@@ -279,7 +278,7 @@ internal class EventServiceTest {
                                     SAK1_VEDTAK_FATTET_AVSLATT.withHendelsestidspunkt(tidspunkt_5)
                             ))
 
-            val model = service.createModel(mockDigisosSak, "token")
+            val model = service.createModel(mockDigisosSak)
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -301,7 +300,7 @@ internal class EventServiceTest {
 
         @Test
         fun `saksStatus uten tittel eller status med vedtakFattet uten utfall`() {
-            every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+            every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                     JsonDigisosSoker()
                             .withAvsender(avsender)
                             .withVersion("123")
@@ -312,7 +311,7 @@ internal class EventServiceTest {
                                     SAK1_VEDTAK_FATTET_UTEN_UTFALL.withHendelsestidspunkt(tidspunkt_4)
                             ))
 
-            val model = service.createModel(mockDigisosSak, "token")
+            val model = service.createModel(mockDigisosSak)
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -337,7 +336,7 @@ internal class EventServiceTest {
 
     @Test
     fun `forelopigSvar skal gi historikk`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -347,7 +346,7 @@ internal class EventServiceTest {
                                 FORELOPIGSVAR.withHendelsestidspunkt(tidspunkt_3)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)

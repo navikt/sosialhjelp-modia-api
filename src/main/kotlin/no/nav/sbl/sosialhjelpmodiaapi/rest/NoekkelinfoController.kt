@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @ProtectedWithClaims(issuer = "veileder")
-@RequestMapping("/api/v1/innsyn/", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
+@RequestMapping("/api/v1/innsyn", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class NoekkelinfoController(
         private val noekkelinfoService: NoekkelinfoService,
         private val abacService: AbacService
@@ -26,9 +26,7 @@ class NoekkelinfoController(
     fun hentNoekkelInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadNoekkelinfoResponse> {
         abacService.harTilgang(ident.fnr, token)
 
-        // kan ikke bruke saksbehandlers token til å hente noekkelinfo for søknad?
-
-        val noekkelinfo = noekkelinfoService.hentNoekkelInfo(fiksDigisosId, token)
+        val noekkelinfo = noekkelinfoService.hentNoekkelInfo(fiksDigisosId)
         return ResponseEntity.ok().body(noekkelinfo)
     }
 }

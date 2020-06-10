@@ -3,14 +3,14 @@ package no.nav.sbl.sosialhjelpmodiaapi.service.hendelse
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_MOTTATT
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_SENDT
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_UNDER_BEHANDLING
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -36,7 +36,7 @@ internal class HendelseServiceTest {
     fun init() {
         clearMocks(eventService, fiksClient)
 
-        every { fiksClient.hentDigisosSak(any(), any()) } returns mockDigisosSak
+        every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
         every { mockDigisosSak.ettersendtInfoNAV } returns mockk()
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_sendt.toInstant(ZoneOffset.UTC).toEpochMilli()
     }
@@ -46,9 +46,9 @@ internal class HendelseServiceTest {
         val model = InternalDigisosSoker()
         model.historikk.add(Hendelse(SOKNAD_SENDT, tittel_sendt, tidspunkt_sendt))
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val hendelser = service.hentHendelser("123", "Token")
+        val hendelser = service.hentHendelser("123")
 
         assertThat(hendelser).hasSize(1)
         assertThat(hendelser[0].beskrivelse).isEqualTo(tittel_sendt)
@@ -63,9 +63,9 @@ internal class HendelseServiceTest {
                 Hendelse(SOKNAD_MOTTATT, tittel_mottatt, tidspunkt_mottatt),
                 Hendelse(SOKNAD_UNDER_BEHANDLING, tittel3, tidspunkt3)))
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val hendelser = service.hentHendelser("123", "Token")
+        val hendelser = service.hentHendelser("123")
 
         assertThat(hendelser).hasSize(3)
     }

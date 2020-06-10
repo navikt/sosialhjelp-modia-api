@@ -22,13 +22,15 @@ import org.springframework.web.client.RestTemplate
 import java.util.*
 
 
-@Profile("!mock")
+@Profile("!(prod-fss|mock)")
 @Component
 class DigisosApiClientImpl(
         clientProperties: ClientProperties,
         private val restTemplate: RestTemplate,
         private val idPortenService: IdPortenService
 ) : DigisosApiClient {
+
+    private val testbrukerNatalie = System.getenv("TESTBRUKER_NATALIE") ?: "11111111111"
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
     private val fiksIntegrasjonIdKommune = clientProperties.fiksIntegrasjonIdKommune
@@ -57,7 +59,7 @@ class DigisosApiClientImpl(
     fun opprettDigisosSak(): String? {
         val httpEntity = HttpEntity("", headers())
         try {
-            val response = restTemplate.exchange("$baseUrl/digisos/api/v1/11415cd1-e26d-499a-8421-751457dfcbd5/ny?sokerFnr=26104500284", HttpMethod.POST, httpEntity, String::class.java)
+            val response = restTemplate.exchange("$baseUrl/digisos/api/v1/11415cd1-e26d-499a-8421-751457dfcbd5/ny?sokerFnr=$testbrukerNatalie", HttpMethod.POST, httpEntity, String::class.java)
             log.info("Opprettet sak hos Fiks. Digisosid: ${response.body}")
             return response.body?.replace("\"", "")
         } catch (e: HttpStatusCodeException) {
