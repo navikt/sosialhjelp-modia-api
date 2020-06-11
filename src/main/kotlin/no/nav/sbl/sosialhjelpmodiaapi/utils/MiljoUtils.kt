@@ -33,8 +33,8 @@ object Miljo {
         return getEnvVariable(NAIS_APP_IMAGE, "version")
     }
 
-    fun getTestbrukerNatalie(default: String): String {
-        return getEnvVariable(TESTBRUKER_NATALIE, default)
+    fun getTestbrukerNatalie(): String {
+        return getEnvVariable(TESTBRUKER_NATALIE, "11111111111")
     }
 
     private fun getEnvVariable(key: String, default: String): String {

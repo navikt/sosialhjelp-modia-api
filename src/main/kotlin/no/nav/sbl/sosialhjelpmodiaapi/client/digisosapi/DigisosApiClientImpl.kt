@@ -31,7 +31,7 @@ class DigisosApiClientImpl(
         private val idPortenService: IdPortenService
 ) : DigisosApiClient {
 
-    private val testbrukerNatalie = getTestbrukerNatalie("11111111111")
+    private val testbrukerNatalie = getTestbrukerNatalie()
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
     private val fiksIntegrasjonIdKommune = clientProperties.fiksIntegrasjonIdKommune
