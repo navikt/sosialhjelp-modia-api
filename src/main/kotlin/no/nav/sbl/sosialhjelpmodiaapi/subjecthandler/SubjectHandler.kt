@@ -14,8 +14,6 @@ interface SubjectHandler {
 }
 
 class StaticSubjectHandlerImpl : SubjectHandler {
-    private val DEFAULT_USER = "26104500284" //Testbruker i idporten.
-    private val DEFAULT_TOKEN = "token"
     private var user = DEFAULT_USER
     private var token = DEFAULT_TOKEN
 
@@ -42,6 +40,11 @@ class StaticSubjectHandlerImpl : SubjectHandler {
     fun reset() {
         this.user = DEFAULT_USER
         this.token = DEFAULT_TOKEN
+    }
+
+    companion object {
+        private const val DEFAULT_USER = "11111111111"
+        private const val DEFAULT_TOKEN = "token"
     }
 }
 

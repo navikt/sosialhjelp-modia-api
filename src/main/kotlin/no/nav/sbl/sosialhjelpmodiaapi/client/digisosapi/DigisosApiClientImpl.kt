@@ -9,6 +9,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.DigisosApiWrapper
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_PASSORD
+import no.nav.sbl.sosialhjelpmodiaapi.utils.Miljo.getTestbrukerNatalie
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
@@ -30,7 +31,7 @@ class DigisosApiClientImpl(
         private val idPortenService: IdPortenService
 ) : DigisosApiClient {
 
-    private val testbrukerNatalie = System.getenv("TESTBRUKER_NATALIE") ?: "11111111111"
+    private val testbrukerNatalie = getTestbrukerNatalie("11111111111")
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
     private val fiksIntegrasjonIdKommune = clientProperties.fiksIntegrasjonIdKommune
