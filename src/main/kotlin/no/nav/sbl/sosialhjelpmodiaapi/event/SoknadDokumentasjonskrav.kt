@@ -5,16 +5,14 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.Oppgave
 import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VEDLEGG_KREVES_STATUS
 import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
-import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 
 fun InternalDigisosSoker.applySoknadKrav(
-        fnr: String,
-        fiksDigisosId: String,
-        originalSoknadNAV: OriginalSoknadNAV,
+        digisosSak: DigisosSak,
         vedleggService: VedleggService,
         timestampSendt: Long
 ) {
-    val vedleggKreves = vedleggService.hentSoknadVedleggMedStatus(fnr, VEDLEGG_KREVES_STATUS, fiksDigisosId, originalSoknadNAV)
+    val vedleggKreves = vedleggService.hentSoknadVedleggMedStatus(digisosSak, VEDLEGG_KREVES_STATUS)
 
     oppgaver = vedleggKreves
             .filterNot { it.type == "annet" && it.tilleggsinfo == "annet" }

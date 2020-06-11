@@ -7,9 +7,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
-import no.nav.sosialhjelp.api.fiks.EttersendtInfoNAV
-import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
@@ -26,19 +25,18 @@ class VedleggService(
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
 
-        val soknadVedlegg = hentSoknadVedleggMedStatus(digisosSak.sokerFnr, LASTET_OPP_STATUS, fiksDigisosId, digisosSak.originalSoknadNAV)
-        val ettersendteVedlegg = hentEttersendteVedlegg(digisosSak.sokerFnr, fiksDigisosId, model, digisosSak.ettersendtInfoNAV)
+        val soknadVedlegg = hentSoknadVedleggMedStatus(digisosSak, LASTET_OPP_STATUS)
+        val ettersendteVedlegg = hentEttersendteVedlegg(digisosSak, model)
 
         val utestaendeOppgaver = hentUtestaendeOppgaverSomManglendeVedlegg(model, ettersendteVedlegg)
 
         return soknadVedlegg.plus(ettersendteVedlegg).plus(utestaendeOppgaver)
     }
 
-    fun hentSoknadVedleggMedStatus(fnr: String, status: String, fiksDigisosId: String, originalSoknadNAV: OriginalSoknadNAV?): List<InternalVedlegg> {
-        if (originalSoknadNAV == null) {
-            return emptyList()
-        }
-        val jsonVedleggSpesifikasjon = hentVedleggSpesifikasjon(fnr, fiksDigisosId, originalSoknadNAV.vedleggMetadata)
+    fun hentSoknadVedleggMedStatus(digisosSak: DigisosSak, status: String): List<InternalVedlegg> {
+        val originalSoknadNAV = digisosSak.originalSoknadNAV ?: return emptyList()
+
+        val jsonVedleggSpesifikasjon = hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, originalSoknadNAV.vedleggMetadata)
 
         if (jsonVedleggSpesifikasjon.vedlegg.isEmpty()) {
             return emptyList()
@@ -57,10 +55,10 @@ class VedleggService(
                 }
     }
 
-    fun hentEttersendteVedlegg(fnr: String, fiksDigisosId: String, model: InternalDigisosSoker, ettersendtInfoNAV: EttersendtInfoNAV?): List<InternalVedlegg> {
-        return ettersendtInfoNAV?.ettersendelser
+    fun hentEttersendteVedlegg(digisosSak: DigisosSak, model: InternalDigisosSoker): List<InternalVedlegg> {
+        return digisosSak.ettersendtInfoNAV?.ettersendelser
                 ?.flatMap { ettersendelse ->
-                    val jsonVedleggSpesifikasjon = hentVedleggSpesifikasjon(fnr, fiksDigisosId, ettersendelse.vedleggMetadata)
+                    val jsonVedleggSpesifikasjon = hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, ettersendelse.vedleggMetadata)
                     jsonVedleggSpesifikasjon.vedlegg
                             .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
                             .map { vedlegg ->
