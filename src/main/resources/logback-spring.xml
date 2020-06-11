@@ -20,14 +20,8 @@
             </encoder>
         </appender>
 
-        <appender name="sporingslogg" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder>
-                <pattern>%msg%n</pattern>
-            </encoder>
-        </appender>
-
-        <logger name="sporingslogg">
-            <appender-ref ref="sporingslogg"/>
+        <logger level="INFO" name="sporingslogg" additivity="false">
+            <appender-ref ref="console"/>
         </logger>
 
         <logger name="no.nav.sbl.sosialhjelpmodiaapi" level="DEBUG"/>

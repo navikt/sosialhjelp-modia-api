@@ -4,11 +4,9 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacResponse
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.getConsumerId
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.getUserIdFromToken
 import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils
-import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 
-@Profile("!(mock | local)")
 @Component
 class AuditService(
         private val auditLogger: AuditLogger

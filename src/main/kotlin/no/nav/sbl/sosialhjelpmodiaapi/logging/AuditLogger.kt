@@ -13,11 +13,9 @@ import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Log
 import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Severity
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 
-@Profile("!(mock | local)")
 @Component
 class AuditLogger {
 
