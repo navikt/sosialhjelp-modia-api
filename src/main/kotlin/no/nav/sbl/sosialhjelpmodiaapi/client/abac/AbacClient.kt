@@ -48,7 +48,6 @@ class AbacClientImpl(
         val xacmlResponse = XacmlMapper.mapRawResponse(responseBody)
         val abacResponse: AbacResponse = xacmlResponse.response[0]
 
-        // auditlogg abac-kall
         auditService.reportAbac(request.fnr, url, HttpMethod.POST, abacResponse)
 
         return abacResponse

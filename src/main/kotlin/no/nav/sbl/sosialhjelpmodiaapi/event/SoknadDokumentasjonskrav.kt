@@ -8,12 +8,13 @@ import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
 
 fun InternalDigisosSoker.applySoknadKrav(
+        fnr: String,
         fiksDigisosId: String,
         originalSoknadNAV: OriginalSoknadNAV,
         vedleggService: VedleggService,
         timestampSendt: Long
 ) {
-    val vedleggKreves = vedleggService.hentSoknadVedleggMedStatus(VEDLEGG_KREVES_STATUS, fiksDigisosId, originalSoknadNAV)
+    val vedleggKreves = vedleggService.hentSoknadVedleggMedStatus(fnr, VEDLEGG_KREVES_STATUS, fiksDigisosId, originalSoknadNAV)
 
     oppgaver = vedleggKreves
             .filterNot { it.type == "annet" && it.tilleggsinfo == "annet" }

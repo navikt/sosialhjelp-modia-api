@@ -45,6 +45,7 @@ internal class OppgaveServiceTest {
     fun init() {
         clearAllMocks()
         every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
+        every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.ettersendtInfoNAV } returns mockEttersendtInfoNAV
     }
 
@@ -66,7 +67,7 @@ internal class OppgaveServiceTest {
         model.oppgaver.add(Oppgave(type, tillegg, frist, tidspunktForKrav, true))
 
         every { eventService.createModel(any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any(), any()) } returns emptyList()
+        every { vedleggService.hentEttersendteVedlegg(any(), any(), any(), any()) } returns emptyList()
 
         val oppgaver = service.hentOppgaver("123")
 
@@ -82,7 +83,7 @@ internal class OppgaveServiceTest {
         model.oppgaver.add(Oppgave(type, null, frist, tidspunktForKrav, true))
 
         every { eventService.createModel(any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any(), any()) } returns emptyList()
+        every { vedleggService.hentEttersendteVedlegg(any(), any(), any(), any()) } returns emptyList()
 
         val oppgaver = service.hentOppgaver("123")
 
@@ -102,7 +103,7 @@ internal class OppgaveServiceTest {
                 Oppgave(type2, tillegg2, frist2, tidspunktForKrav, true)))
 
         every { eventService.createModel(any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any(), any()) } returns emptyList()
+        every { vedleggService.hentEttersendteVedlegg(any(), any(), any(), any()) } returns emptyList()
 
         val oppgaver = service.hentOppgaver("123")
 
@@ -134,7 +135,7 @@ internal class OppgaveServiceTest {
                 Oppgave(type3, tillegg3, frist3, tidspunktForKrav, true)))
 
         every { eventService.createModel(any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any(), any()) } returns listOf(
+        every { vedleggService.hentEttersendteVedlegg(any(), any(), any(), any()) } returns listOf(
                 InternalVedlegg(type, tillegg, frist, 1, tidspunktEtterKrav),
                 InternalVedlegg(type2, null, frist2, 1, tidspunktEtterKrav),
                 InternalVedlegg(type3, tillegg3, frist3, 1, tidspunktFoerKrav),
@@ -176,7 +177,7 @@ internal class OppgaveServiceTest {
                 Oppgave(type, tillegg, frist2, tidspunktForKrav.plusDays(1), true)))
 
         every { eventService.createModel(any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any(), any()) } returns listOf(
+        every { vedleggService.hentEttersendteVedlegg(any(), any(), any(), any()) } returns listOf(
                 InternalVedlegg(type, tillegg, frist, 2, tidspunktEtterKrav))
 
         val oppgaver = service.hentOppgaver("123")

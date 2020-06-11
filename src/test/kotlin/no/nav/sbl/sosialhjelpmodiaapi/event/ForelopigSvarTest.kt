@@ -27,6 +27,7 @@ internal class ForelopigSvarTest {
     fun init() {
         clearAllMocks()
         every { mockDigisosSak.fiksDigisosId } returns "123"
+        every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
@@ -38,7 +39,7 @@ internal class ForelopigSvarTest {
 
     @Test
     fun `ingen forelopigSvar`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -56,7 +57,7 @@ internal class ForelopigSvarTest {
 
     @Test
     fun `forelopigSvar mottatt`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")

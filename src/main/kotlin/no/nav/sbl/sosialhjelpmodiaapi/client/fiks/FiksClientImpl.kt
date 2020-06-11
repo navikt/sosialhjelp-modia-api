@@ -48,8 +48,6 @@ class FiksClientImpl(
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
         val sporingsId = genererSporingsId()
 
-        val fnr = "fnr" // TODO: fnr for bruker det spørres om?
-
         log.info("Forsøker å hente digisosSak fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId")
         try {
             val headers = setIntegrasjonHeaders(BEARER + virksomhetsToken.token)
@@ -58,10 +56,12 @@ class FiksClientImpl(
 
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
 
-            auditService.reportFiks(fnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId", HttpMethod.GET, sporingsId)
-
             log.info("Hentet DigisosSak $digisosId fra Fiks")
-            return objectMapper.readValue(response.body!!, DigisosSak::class.java)
+            val digisosSak = objectMapper.readValue(response.body!!, DigisosSak::class.java)
+
+            auditService.reportFiks(digisosSak.sokerFnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId", HttpMethod.GET, sporingsId)
+
+            return digisosSak
 
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
@@ -77,11 +77,9 @@ class FiksClientImpl(
         }
     }
 
-    override fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
+    override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
         val virksomhetsToken = runBlocking { idPortenService.requestToken() }
         val sporingsId = genererSporingsId()
-
-        val fnr = "fnr" // TODO: fnr for bruker det spørres om?
 
         log.info("Forsøker å hente dokument fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId")
         try {

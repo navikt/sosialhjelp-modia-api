@@ -9,9 +9,9 @@ class InnsynService(
         private val fiksClient: FiksClient
 ) {
 
-    fun hentJsonDigisosSoker(digisosId: String, digisosSokerMetadata: String?): JsonDigisosSoker? {
+    fun hentJsonDigisosSoker(fnr: String, digisosId: String, digisosSokerMetadata: String?): JsonDigisosSoker? {
         return when {
-            digisosSokerMetadata != null -> fiksClient.hentDokument(digisosId, digisosSokerMetadata, JsonDigisosSoker::class.java) as JsonDigisosSoker
+            digisosSokerMetadata != null -> fiksClient.hentDokument(fnr, digisosId, digisosSokerMetadata, JsonDigisosSoker::class.java) as JsonDigisosSoker
             else -> null
         }
     }

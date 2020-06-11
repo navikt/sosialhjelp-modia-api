@@ -11,7 +11,7 @@ interface FiksClient {
 
     fun hentKommuneInfo(kommunenummer: String): KommuneInfo
 
-    fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any
+    fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any
 
     fun hentKommuneInfoForAlle(): List<KommuneInfo>
 }
