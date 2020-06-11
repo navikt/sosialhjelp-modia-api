@@ -12,7 +12,6 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Advice
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Attribute
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Decision
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditLogger.Companion.sporingslogg
-import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Log
 import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Severity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -27,7 +26,7 @@ internal class AuditLoggerTest {
 
     private val values = mutableMapOf<String, Any>(
             TITLE to "title",
-            RESOURCE to "resource",
+            RESOURCE to RESOURCE_ABAC_ACCESS,
             NAVIDENT to "Z999888",
             BRUKER_FNR to "11111122222",
             CALL_ID to "callid",
@@ -35,7 +34,7 @@ internal class AuditLoggerTest {
             URL to "http://test",
             HTTP_METHOD to HttpMethod.GET,
             SEVERITY to Severity.INFO,
-            LOG to Log.ABAC
+            LOG to SPORINGSLOGG
     )
 
     @BeforeEach
@@ -54,7 +53,7 @@ internal class AuditLoggerTest {
         assertThat(cefString.isCaptured).isTrue()
         assertThat(cefString.captured)
                 // headers
-                .contains("CEF:0|sosialhjelp-modia-api|ABAC|1.0|resource|title|INFO|")
+                .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_ABAC_ACCESS|title|INFO|")
                 // extension
                 .contains("suid=Z999888")
                 .contains("duid=11111122222")
@@ -72,7 +71,7 @@ internal class AuditLoggerTest {
         assertThat(cefString.isCaptured).isTrue()
         assertThat(cefString.captured)
                 // headers
-                .contains("CEF:0|sosialhjelp-modia-api|ABAC|1.0|resource|title|WARN|")
+                .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_ABAC_ACCESS|title|WARN|")
                 // extension
                 .contains("suid=Z999888")
                 .contains("duid=11111122222")
@@ -83,15 +82,15 @@ internal class AuditLoggerTest {
 
     @Test
     internal fun `should info log fiks request`() {
-        values[LOG] = Log.AUDIT
         values[FIKS_REQUEST_ID] = "123123"
+        values[RESOURCE] = RESOURCE_FIKS_AUDIT
 
         logger.report(values)
 
         assertThat(cefString.isCaptured).isTrue()
         assertThat(cefString.captured)
                 // headers
-                .contains("CEF:0|sosialhjelp-modia-api|AUDIT|1.0|resource|title|INFO|")
+                .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_FIKS_AUDIT|title|INFO|")
                 // extension
                 .contains("suid=Z999888")
                 .contains("duid=11111122222")

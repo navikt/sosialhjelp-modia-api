@@ -14,7 +14,7 @@ data class CommonEventFormat(
 }
 
 data class Headers(
-        val log: Log,
+        val log: String,
         val resource: String,
         val title: String,
         val severity: Severity
@@ -22,10 +22,6 @@ data class Headers(
     override fun toString(): String {
         return "CEF:0|sosialhjelp-modia-api|$log|1.0|$resource|$title|$severity|"
     }
-}
-
-enum class Log {
-    AUDIT, ABAC
 }
 
 enum class Severity {
@@ -59,7 +55,6 @@ data class Abac(
     }
 }
 
-// todo: mer info?
 data class Fiks(
         val fiksRequestId: String
 ) {

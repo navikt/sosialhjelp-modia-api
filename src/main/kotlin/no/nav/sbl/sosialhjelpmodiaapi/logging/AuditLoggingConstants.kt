@@ -16,5 +16,7 @@ const val FIKS_REQUEST_ID = "fiksRequestId"
 const val SEVERITY = "severity"
 const val LOG = "log"
 
+const val SPORINGSLOGG = "sporingslogg"
+
 const val RESOURCE_ABAC_ACCESS = "abac:access"
 const val RESOURCE_FIKS_AUDIT = "fiks:audit"

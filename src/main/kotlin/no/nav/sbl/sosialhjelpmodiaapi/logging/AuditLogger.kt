@@ -9,7 +9,6 @@ import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.CommonEventFormat
 import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Extension
 import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Fiks
 import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Headers
-import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Log
 import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Severity
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -42,7 +41,7 @@ class AuditLogger {
 
         return CommonEventFormat(
                 headers = Headers(
-                        log = getLog(values, extension),
+                        log = SPORINGSLOGG,
                         resource = values.getOrDefault(RESOURCE, "") as String,
                         title = values.getOrDefault(TITLE, "") as String,
                         severity = getSeverity(values, extension)
@@ -80,14 +79,6 @@ class AuditLogger {
             Fiks(values[FIKS_REQUEST_ID] as String)
         } else {
             null
-        }
-    }
-
-    private fun getLog(values: Map<String, Any>, extension: Extension): Log {
-        return if (extension.abac != null && extension.abac.decision === Decision.Deny) {
-            Log.ABAC
-        } else {
-            (values[LOG] ?: Log.AUDIT) as Log
         }
     }
 
