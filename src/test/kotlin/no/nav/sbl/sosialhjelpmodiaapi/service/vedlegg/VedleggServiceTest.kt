@@ -39,6 +39,7 @@ internal class VedleggServiceTest {
         clearAllMocks()
 
         every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
+        every { mockDigisosSak.fiksDigisosId } returns "id"
         every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.originalSoknadNAV } returns originalSoknad
         every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns ettersendelser
@@ -160,8 +161,10 @@ internal class VedleggServiceTest {
         val model = InternalDigisosSoker()
 
         every { eventService.createModel(any()) } returns model
-        val lastetOppList = service.hentSoknadVedleggMedStatus("fnr", LASTET_OPP_STATUS, id, originalSoknadMedVedleggKrevesOgLastetOpp)
-        val vedleggKrevesList = service.hentSoknadVedleggMedStatus("fnr", VEDLEGG_KREVES_STATUS, id, originalSoknadMedVedleggKrevesOgLastetOpp)
+        every { mockDigisosSak.originalSoknadNAV } returns originalSoknadMedVedleggKrevesOgLastetOpp
+
+        val lastetOppList = service.hentSoknadVedleggMedStatus(mockDigisosSak, LASTET_OPP_STATUS)
+        val vedleggKrevesList = service.hentSoknadVedleggMedStatus(mockDigisosSak, VEDLEGG_KREVES_STATUS)
 
         assertThat(lastetOppList).hasSize(1)
         assertThat(vedleggKrevesList).hasSize(1)
