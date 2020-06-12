@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.health.checks
 
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.HentKommuneInfoClient
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sosialhjelp.selftest.DependencyCheck
 import no.nav.sosialhjelp.selftest.DependencyType
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 @Component
 class FiksCheck(
         clientProperties: ClientProperties,
-        private val fiksClient: FiksClient
+        private val hentKommuneInfoClient: HentKommuneInfoClient
 ) : DependencyCheck(
         DependencyType.REST,
         "Fiks Digisos API",
@@ -20,6 +20,6 @@ class FiksCheck(
         Importance.WARNING
 ) {
     override fun doCheck() {
-        fiksClient.hentKommuneInfoForAlle()
+        hentKommuneInfoClient.hentAlleKommuneInfo()
     }
 }

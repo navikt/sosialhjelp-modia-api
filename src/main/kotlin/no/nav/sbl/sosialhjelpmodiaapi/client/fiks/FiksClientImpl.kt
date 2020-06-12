@@ -1,6 +1,9 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.fiks
 
 import kotlinx.coroutines.runBlocking
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_ALLE_DIGISOSSAKER
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_DIGISOSSAK
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_DOKUMENT
 import no.nav.sbl.sosialhjelpmodiaapi.client.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksNotFoundException
@@ -13,7 +16,6 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.fiksHeaders
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.api.fiks.KommuneInfo
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
@@ -117,73 +119,20 @@ class FiksClientImpl(
         }
     }
 
-    override fun hentKommuneInfo(kommunenummer: String): KommuneInfo {
-        val virksomhetsToken = runBlocking { idPortenService.requestToken() }
-
-        try {
-            val headers = fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)
-            val urlTemplate = baseUrl + PATH_KOMMUNEINFO
-            val vars = mapOf(KOMMUNENUMMER to kommunenummer)
-
-            val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), KommuneInfo::class.java, vars)
-
-            return response.body!!
-
-        } catch (e: HttpStatusCodeException) {
-            val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
-            val message = e.message?.feilmeldingUtenFnr
-            log.warn("Fiks - hentKommuneInfo feilet - $message - $fiksErrorMessage", e)
-            throw FiksException(e.statusCode, e.message, e)
-        } catch (e: Exception) {
-            log.warn("Fiks - hentKommuneInfo feilet", e)
-            throw FiksException(null, e.message, e)
-        }
-    }
-
-    override fun hentKommuneInfoForAlle(): List<KommuneInfo> {
-        val virksomhetsToken = runBlocking { idPortenService.requestToken() }
-
-        try {
-            val headers = fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)
-            val urlTemplate = baseUrl + PATH_ALLE_KOMMUNEINFO
-
-            val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, HttpEntity<Nothing>(headers), typeRef<List<KommuneInfo>>())
-
-            return response.body!!
-
-        } catch (e: HttpStatusCodeException) {
-            val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
-            val message = e.message?.feilmeldingUtenFnr
-            log.warn("Fiks - hentKommuneInfoForAlle feilet - $message - $fiksErrorMessage", e)
-            throw FiksException(e.statusCode, message, e)
-        } catch (e: Exception) {
-            log.warn("Fiks - hentKommuneInfoForAlle feilet", e)
-            throw FiksException(null, e.message?.feilmeldingUtenFnr, e)
-        }
-    }
-
     private fun genererSporingsId(): String {
         return UUID.randomUUID().toString()
     }
 
     private fun urlWithSporingsId(urlTemplate: String) =
-            UriComponentsBuilder.fromHttpUrl(urlTemplate).queryParam(SPORINGSID, "{$SPORINGSID}").build()
+            UriComponentsBuilder.fromUriString(urlTemplate).queryParam(SPORINGSID, "{$SPORINGSID}").build()
 
     companion object {
         private val log by logger()
-
-//        Paths til fiks-api
-        private const val PATH_DIGISOSSAK = "/digisos/api/v1/nav/soknader/{digisosId}"
-        private const val PATH_ALLE_DIGISOSSAKER = "/digisos/api/v1/nav/soknader/soknader"
-        private const val PATH_DOKUMENT = "/digisos/api/v1/nav/soknader/{digisosId}/dokumenter/{dokumentlagerId}"
-        private const val PATH_KOMMUNEINFO = "/digisos/api/v1/nav/kommuner/{kommunenummer}"
-        private const val PATH_ALLE_KOMMUNEINFO = "/digisos/api/v1/nav/kommuner"
 
 //        Query param navn
         private const val SPORINGSID = "sporingsId"
         private const val DIGISOSID = "digisosId"
         private const val DOKUMENTLAGERID = "dokumentlagerId"
-        private const val KOMMUNENUMMER = "kommunenummer"
     }
 
     private data class Fnr(
