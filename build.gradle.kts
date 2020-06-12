@@ -11,7 +11,7 @@ object Versions {
     const val springBoot = "2.3.0.RELEASE"
     const val logback = "1.2.3"
     const val logstash = "6.3"
-    const val sosialhjelpCommon = "1.48109f1"
+    const val sosialhjelpCommon = "1.d832af6-SNAPSHOT" // TODO: bruk ikke-SNAPSHOT
     const val filformat = "1.2020.01.09-15.55-f18d10d7d76a"
     const val micrometerRegistry = "1.5.1"
     const val prometheus = "0.8.1"
@@ -79,6 +79,7 @@ dependencies {
 //    Sosialhjelp-common
     implementation("no.nav.sosialhjelp:sosialhjelp-common-selftest:${Versions.sosialhjelpCommon}")
     implementation("no.nav.sosialhjelp:sosialhjelp-common-api:${Versions.sosialhjelpCommon}")
+    implementation("no.nav.sosialhjelp:sosialhjelp-common-kommuneinfo-client:${Versions.sosialhjelpCommon}")
 
 //    Micrometer/prometheus
     implementation("io.micrometer:micrometer-registry-prometheus:${Versions.micrometerRegistry}")
@@ -121,6 +122,7 @@ val githubUser: String by project
 val githubPassword: String by project
 
 repositories {
+    mavenLocal()
     mavenCentral()
     jcenter()
     maven("https://plugins.gradle.org/m2/")
