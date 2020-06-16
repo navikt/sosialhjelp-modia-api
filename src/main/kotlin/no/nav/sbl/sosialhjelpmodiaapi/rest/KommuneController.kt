@@ -43,7 +43,8 @@ class KommuneController(
                         erInnsendingEttersendelseDeaktivert = !kommuneInfo.kanMottaSoknader,
                         erInnsendingEttersendelseMidlertidigDeaktivert = kommuneInfo.harMidlertidigDeaktivertMottak,
                         tidspunkt = Date(),
-                        harNksTilgang = kommuneInfo.harNksTilgang
+                        harNksTilgang = kommuneInfo.harNksTilgang,
+                        behandlingsansvarlig = kommuneInfo.behandlingsansvarlig
                 ))
     }
 }
