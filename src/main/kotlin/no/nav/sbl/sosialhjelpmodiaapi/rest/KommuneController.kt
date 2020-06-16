@@ -27,7 +27,7 @@ class KommuneController(
     fun hentKommuneStatus(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<String> {
         abacService.harTilgang(ident.fnr, token)
 
-        val kommuneStatus = kommuneService.hentKommuneStatus(fiksDigisosId)
+        val kommuneStatus = kommuneService.getStatus(fiksDigisosId)
         return ResponseEntity.ok(kommuneStatus.toString())
     }
 
@@ -35,7 +35,7 @@ class KommuneController(
     fun hentKommuneInfo(@PathVariable kommunenummer: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<KommuneResponse> {
         abacService.harTilgang(ident.fnr, token)
 
-        val kommuneInfo = kommuneService.hentKommuneInfo(kommunenummer)
+        val kommuneInfo = kommuneService.get(kommunenummer)
         return ResponseEntity.ok(
                 KommuneResponse(
                         erInnsynDeaktivert = !kommuneInfo.kanOppdatereStatus,

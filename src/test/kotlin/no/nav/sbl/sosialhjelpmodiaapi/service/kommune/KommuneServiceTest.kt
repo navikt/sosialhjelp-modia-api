@@ -4,7 +4,7 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.HentKommuneInfo
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.KommuneInfoClient
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.HAR_KONFIGURASJON_MEN_SKAL_SENDE_VIA_SVARUT
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.SKAL_SENDE_SOKNADER_OG_ETTERSENDELSER_VIA_FDA
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.SKAL_VISE_MIDLERTIDIG_FEILSIDE_FOR_SOKNAD_OG_ETTERSENDELSER_INNSYN_IKKE_MULIG
@@ -20,9 +20,9 @@ import org.junit.jupiter.api.Test
 internal class KommuneServiceTest {
 
     private val fiksClient: FiksClient = mockk()
-    private val hentKommuneInfoClient: HentKommuneInfo = mockk()
+    private val kommuneInfoClient: KommuneInfoClient = mockk()
 
-    private val service = KommuneService(fiksClient, hentKommuneInfoClient)
+    private val service = KommuneService(fiksClient, kommuneInfoClient)
 
     private val mockDigisosSak: DigisosSak = mockk()
     private val kommuneNr = "1234"
@@ -37,51 +37,51 @@ internal class KommuneServiceTest {
 
     @Test
     fun `Kommune har konfigurasjon men skal sende via svarut`() {
-        every { hentKommuneInfoClient.hentKommuneInfo(any()) } returns KommuneInfo(kommuneNr, false, false, false, false, null, true, null)
+        every { kommuneInfoClient.get(any()) } returns KommuneInfo(kommuneNr, false, false, false, false, null, true, null)
 
-        val status = service.hentKommuneStatus("123")
+        val status = service.getStatus("123")
 
         assertThat(status).isEqualTo(HAR_KONFIGURASJON_MEN_SKAL_SENDE_VIA_SVARUT)
     }
 
     @Test
     fun `Kommune skal sende soknader og ettersendelser via FIKS API`() {
-        every { hentKommuneInfoClient.hentKommuneInfo(any()) } returns KommuneInfo(kommuneNr, true, false, false, false, null, true, null)
+        every { kommuneInfoClient.get(any()) } returns KommuneInfo(kommuneNr, true, false, false, false, null, true, null)
 
-        val status1 = service.hentKommuneStatus("123")
+        val status1 = service.getStatus("123")
 
         assertThat(status1).isEqualTo(SKAL_SENDE_SOKNADER_OG_ETTERSENDELSER_VIA_FDA)
 
-        every { hentKommuneInfoClient.hentKommuneInfo(any()) } returns KommuneInfo(kommuneNr, true, true, false, false, null, true, null)
+        every { kommuneInfoClient.get(any()) } returns KommuneInfo(kommuneNr, true, true, false, false, null, true, null)
 
-        val status2 = service.hentKommuneStatus("123")
+        val status2 = service.getStatus("123")
 
         assertThat(status2).isEqualTo(SKAL_SENDE_SOKNADER_OG_ETTERSENDELSER_VIA_FDA)
     }
 
     @Test
     fun `Kommune skal vise midlertidig feilside og innsyn som vanlig`() {
-        every { hentKommuneInfoClient.hentKommuneInfo(any()) } returns KommuneInfo(kommuneNr, true, true, true, false, null, true, null)
+        every { kommuneInfoClient.get(any()) } returns KommuneInfo(kommuneNr, true, true, true, false, null, true, null)
 
-        val status = service.hentKommuneStatus("123")
+        val status = service.getStatus("123")
 
         assertThat(status).isEqualTo(SKAL_VISE_MIDLERTIDIG_FEILSIDE_FOR_SOKNAD_OG_ETTERSENDELSER_INNSYN_SOM_VANLIG)
     }
 
     @Test
     fun `Kommune skal vise midlertidig feilside og innsyn er ikke mulig`() {
-        every { hentKommuneInfoClient.hentKommuneInfo(any()) } returns KommuneInfo(kommuneNr, true, false, true, false, null, true, null)
+        every { kommuneInfoClient.get(any()) } returns KommuneInfo(kommuneNr, true, false, true, false, null, true, null)
 
-        val status = service.hentKommuneStatus("123")
+        val status = service.getStatus("123")
 
         assertThat(status).isEqualTo(SKAL_VISE_MIDLERTIDIG_FEILSIDE_FOR_SOKNAD_OG_ETTERSENDELSER_INNSYN_IKKE_MULIG)
     }
 
     @Test
     fun `Kommune skal vise midlertidig feilside og innsyn skal vise feilside`() {
-        every { hentKommuneInfoClient.hentKommuneInfo(any()) } returns KommuneInfo(kommuneNr, true, true, true, true, null, true, null)
+        every { kommuneInfoClient.get(any()) } returns KommuneInfo(kommuneNr, true, true, true, true, null, true, null)
 
-        val status = service.hentKommuneStatus("123")
+        val status = service.getStatus("123")
 
         assertThat(status).isEqualTo(SKAL_VISE_MIDLERTIDIG_FEILSIDE_FOR_SOKNAD_OG_ETTERSENDELSER_INNSYN_SKAL_VISE_FEILSIDE)
     }
@@ -90,7 +90,7 @@ internal class KommuneServiceTest {
     fun `Ingen originalSoknad - skal kaste feil`() {
         every { mockDigisosSak.kommunenummer } returns ""
 
-        assertThatExceptionOfType(RuntimeException::class.java).isThrownBy { service.hentKommuneStatus("123") }
+        assertThatExceptionOfType(RuntimeException::class.java).isThrownBy { service.getStatus("123") }
                 .withMessage("KommuneStatus kan ikke hentes uten kommunenummer")
     }
 }

@@ -18,13 +18,13 @@ import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import kotlin.test.assertNotNull
 
-internal class HentKommuneInfoClientTest {
+internal class KommuneInfoClientTest {
 
     private val clientProperties: ClientProperties = mockk(relaxed = true)
     private val restTemplate: RestTemplate = mockk()
     private val idPortenService: IdPortenService = mockk()
 
-    private val hentKommuneInfoClient = HentKommuneInfoClient(restTemplate, clientProperties, idPortenService)
+    private val client = KommuneInfoClientImpl(restTemplate, clientProperties, idPortenService)
 
     @BeforeEach
     fun init() {
@@ -50,7 +50,7 @@ internal class HentKommuneInfoClientTest {
                     any())
         } returns mockKommuneResponse
 
-        val result = hentKommuneInfoClient.hentKommuneInfo("1234")
+        val result = client.get("1234")
 
         assertNotNull(result)
     }
@@ -74,6 +74,6 @@ internal class HentKommuneInfoClientTest {
                     any())
         } throws HttpClientErrorException(HttpStatus.NOT_FOUND, "not found")
 
-        Assertions.assertThatExceptionOfType(FiksException::class.java).isThrownBy { hentKommuneInfoClient.hentKommuneInfo("1234") }
+        Assertions.assertThatExceptionOfType(FiksException::class.java).isThrownBy { client.get("1234") }
     }
 }

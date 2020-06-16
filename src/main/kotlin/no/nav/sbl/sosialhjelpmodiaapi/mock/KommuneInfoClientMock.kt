@@ -1,19 +1,19 @@
 package no.nav.sbl.sosialhjelpmodiaapi.mock
 
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.HentKommuneInfo
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.KommuneInfoClient
 import no.nav.sosialhjelp.api.fiks.KommuneInfo
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Profile("mock")
 @Component
-class HentKommuneInfoMock : HentKommuneInfo {
+class KommuneInfoClientMock : KommuneInfoClient {
 
-    override fun hentKommuneInfo(kommunenummer: String): KommuneInfo {
+    override fun get(kommunenummer: String): KommuneInfo {
         return KommuneInfo(kommunenummer, true, true, false, false, null, true, null)
     }
 
-    override fun hentAlleKommuneInfo(): List<KommuneInfo> {
+    override fun getAll(): List<KommuneInfo> {
         val returnValue = ArrayList<KommuneInfo>()
         returnValue.add(KommuneInfo("0001", true, true, false, false, null, true, null))
         returnValue.add(KommuneInfo("1123", true, true, false, false, null, true, null))

@@ -13,18 +13,18 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
-interface HentKommuneInfo {
-    fun hentKommuneInfo(kommunenummer: String): KommuneInfo
-    fun hentAlleKommuneInfo(): List<KommuneInfo>
+interface KommuneInfoClient {
+    fun get(kommunenummer: String): KommuneInfo
+    fun getAll(): List<KommuneInfo>
 }
 
 @Profile("!mock")
 @Component
-class HentKommuneInfoClient(
+class KommuneInfoClientImpl(
         restTemplate: RestTemplate,
         private val clientProperties: ClientProperties,
         private val idPortenService: IdPortenService
-) : HentKommuneInfo {
+) : no.nav.sbl.sosialhjelpmodiaapi.client.fiks.KommuneInfoClient {
 
     private val fiksProperties = FiksProperties(
             hentKommuneInfoUrl = clientProperties.fiksDigisosEndpointUrl + FiksPaths.PATH_KOMMUNEINFO,
@@ -33,7 +33,7 @@ class HentKommuneInfoClient(
 
     private val kommuneInfoClient = KommuneInfoClient(restTemplate, fiksProperties)
 
-    override fun hentKommuneInfo(kommunenummer: String): KommuneInfo {
+    override fun get(kommunenummer: String): KommuneInfo {
         try {
             val headers = IntegrationUtils.fiksHeaders(clientProperties, getToken())
             return kommuneInfoClient.hentKommuneInfo(kommunenummer, headers)
@@ -43,7 +43,7 @@ class HentKommuneInfoClient(
         }
     }
 
-    override fun hentAlleKommuneInfo(): List<KommuneInfo> {
+    override fun getAll(): List<KommuneInfo> {
         try {
             val headers = IntegrationUtils.fiksHeaders(clientProperties, getToken())
             return kommuneInfoClient.hentAlleKommuneInfo(headers)

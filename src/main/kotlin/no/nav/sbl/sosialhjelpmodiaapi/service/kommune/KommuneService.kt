@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.kommune
 
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.HentKommuneInfo
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.KommuneInfoClient
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.HAR_KONFIGURASJON_MEN_SKAL_SENDE_VIA_SVARUT
@@ -17,11 +17,10 @@ import org.springframework.stereotype.Component
 @Component
 class KommuneService(
         private val fiksClient: FiksClient,
-        private val hentKommuneInfo: HentKommuneInfo
-
+        private val kommuneInfoClient: KommuneInfoClient
 ) {
 
-    fun hentKommuneStatus(fiksDigisosId: String): KommuneStatus {
+    fun getStatus(fiksDigisosId: String): KommuneStatus {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
 
         val kommunenummer: String = digisosSak.kommunenummer
@@ -32,7 +31,7 @@ class KommuneService(
 
         val kommuneInfo: KommuneInfo
         try {
-            kommuneInfo = hentKommuneInfo.hentKommuneInfo(kommunenummer)
+            kommuneInfo = kommuneInfoClient.get(kommunenummer)
         } catch (e: FiksException) {
             return MANGLER_KONFIGURASJON
         }
@@ -52,12 +51,12 @@ class KommuneService(
         }
     }
 
-    fun hentKommuneInfo(kommunenummer: String): KommuneInfo {
-        return hentKommuneInfo.hentKommuneInfo(kommunenummer)
+    fun get(kommunenummer: String): KommuneInfo {
+        return kommuneInfoClient.get(kommunenummer)
     }
 
-    fun hentAlleKommuneInfo(): List<KommuneInfo> {
-        return hentKommuneInfo.hentAlleKommuneInfo()
+    fun getAll(): List<KommuneInfo> {
+        return kommuneInfoClient.getAll()
     }
 
     companion object {
