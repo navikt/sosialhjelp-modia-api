@@ -35,7 +35,7 @@ class HealthController(
 
     @ResponseBody
     @GetMapping("/selftest")
-    fun nySelftest(): SelftestResult {
+    fun selftest(): SelftestResult {
         return selftestService.getSelftest()
     }
 
