@@ -60,10 +60,10 @@ class FiksClientImpl(
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
             val message = e.message?.feilmeldingUtenFnr
-            log.warn("Fiks - hentDigisosSak feilet for id $digisosId - $message - $fiksErrorMessage", e)
             if (e.statusCode == HttpStatus.NOT_FOUND) {
-                throw FiksNotFoundException(e.statusCode, e.message, e)
+                throw FiksNotFoundException(e.statusCode, e.message, e, digisosId)
             }
+            log.warn("Fiks - hentDigisosSak feilet for id $digisosId - $message - $fiksErrorMessage", e)
             throw FiksException(e.statusCode, e.message, e)
         } catch (e: Exception) {
             log.warn("Fiks - hentDigisosSak feilet", e)

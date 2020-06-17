@@ -11,7 +11,8 @@ class FiksException(
 class FiksNotFoundException(
         status: HttpStatus?,
         override val message: String?,
-        override val cause: Throwable?
+        override val cause: Throwable?,
+        val digisosId: String
 ) : RuntimeException(message, cause)
 
 class NorgException(
