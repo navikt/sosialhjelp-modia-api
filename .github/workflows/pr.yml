@@ -7,7 +7,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/gradle@master
+        uses: snyk/actions/gradle-jdk11@master
+        with:
+          args: --org=teamdigisos
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           ORG_GRADLE_PROJECT_githubUser: x-access-token
