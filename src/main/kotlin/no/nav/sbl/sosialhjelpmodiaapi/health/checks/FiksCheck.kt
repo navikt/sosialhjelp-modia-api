@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.health.checks
 
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.KommuneInfoClient
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
+import no.nav.sosialhjelp.client.kommuneinfo.KommuneInfoClient
 import no.nav.sosialhjelp.selftest.DependencyCheck
 import no.nav.sosialhjelp.selftest.DependencyType
 import no.nav.sosialhjelp.selftest.Importance
