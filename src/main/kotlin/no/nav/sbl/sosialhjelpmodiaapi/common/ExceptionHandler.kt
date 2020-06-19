@@ -27,7 +27,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(FiksNotFoundException::class)
     fun handleFiksNotFoundError(e: FiksNotFoundException): ResponseEntity<FrontendErrorMessage> {
-        log.error("DigisosSak finnes ikke i FIKS ", e)
+        log.error("DigisosSak id: \"${e.digisosId}\" finnes ikke i FIKS: ${e.message}")
         val error = FrontendErrorMessage(FIKS_ERROR, "DigisosSak finnes ikke")
         return ResponseEntity(error, HttpStatus.NOT_FOUND)
     }

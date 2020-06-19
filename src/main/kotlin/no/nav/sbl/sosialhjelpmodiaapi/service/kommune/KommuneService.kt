@@ -1,10 +1,8 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.kommune
 
-import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.logger
-import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.HAR_KONFIGURASJON_MEN_SKAL_SENDE_VIA_SVARUT
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.IKKE_STOTTET_CASE
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.MANGLER_KONFIGURASJON
@@ -13,14 +11,16 @@ import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.SKAL_VISE_MI
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.SKAL_VISE_MIDLERTIDIG_FEILSIDE_FOR_SOKNAD_OG_ETTERSENDELSER_INNSYN_SKAL_VISE_FEILSIDE
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneStatus.SKAL_VISE_MIDLERTIDIG_FEILSIDE_FOR_SOKNAD_OG_ETTERSENDELSER_INNSYN_SOM_VANLIG
 import no.nav.sosialhjelp.api.fiks.KommuneInfo
+import no.nav.sosialhjelp.client.kommuneinfo.KommuneInfoClient
 import org.springframework.stereotype.Component
 
 @Component
 class KommuneService(
-        private val fiksClient: FiksClient
+        private val fiksClient: FiksClient,
+        private val kommuneInfoClient: KommuneInfoClient
 ) {
 
-    fun hentKommuneStatus(fiksDigisosId: String): KommuneStatus {
+    fun getStatus(fiksDigisosId: String): KommuneStatus {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
 
         val kommunenummer: String = digisosSak.kommunenummer
@@ -31,7 +31,7 @@ class KommuneService(
 
         val kommuneInfo: KommuneInfo
         try {
-            kommuneInfo = fiksClient.hentKommuneInfo(kommunenummer)
+            kommuneInfo = kommuneInfoClient.get(kommunenummer)
         } catch (e: FiksException) {
             return MANGLER_KONFIGURASJON
         }
@@ -49,6 +49,14 @@ class KommuneService(
                 return IKKE_STOTTET_CASE
             }
         }
+    }
+
+    fun get(kommunenummer: String): KommuneInfo {
+        return kommuneInfoClient.get(kommunenummer)
+    }
+
+    fun getAll(): List<KommuneInfo> {
+        return kommuneInfoClient.getAll()
     }
 
     companion object {
