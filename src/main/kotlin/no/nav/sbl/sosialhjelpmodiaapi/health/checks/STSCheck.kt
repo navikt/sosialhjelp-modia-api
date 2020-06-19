@@ -1,10 +1,10 @@
 package no.nav.sbl.sosialhjelpmodiaapi.health.checks
 
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
+import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sosialhjelp.selftest.DependencyCheck
 import no.nav.sosialhjelp.selftest.DependencyType
 import no.nav.sosialhjelp.selftest.Importance
-import no.nav.sbl.sosialhjelpmodiaapi.logger
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
@@ -16,12 +16,13 @@ import org.springframework.web.client.RestTemplate
 class STSCheck(
         clientProperties: ClientProperties,
         private val restTemplate: RestTemplate
-) : DependencyCheck(
-        DependencyType.REST,
-        "STS",
-        clientProperties.stsTokenEndpointUrl,
-        Importance.WARNING
-) {
+) : DependencyCheck {
+
+    override val type = DependencyType.REST
+    override val name = "STS"
+    override val address = clientProperties.stsTokenEndpointUrl
+    override val importance = Importance.WARNING
+
     override fun doCheck() {
         try {
             val requestUrl = "$address/.well-known/openid-configuration"
