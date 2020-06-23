@@ -29,7 +29,8 @@ data class VedtakResponse(
 data class HendelseResponse(
         val tittel: String,
         val tidspunkt: String,
-        val beskrivelse: String?
+        val beskrivelse: String?,
+        val filbeskrivelse: String?
 )
 
 data class OppgaveResponse(
