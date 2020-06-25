@@ -11,14 +11,17 @@ client:
   fiks_integrasjonid_kommune: integrasjonidkommune
   fiks_integrasjonpassord: integrasjonpw
   fiks_integrasjonpassord_kommune: integrasjonpwkommune
-  id_porten_token_url: tokenurl
-  id_porten_client_id: clientid
-  id_porten_scope: scope
-  id_porten_config_url: configurl
-  id_porten_default_issuer: dummyIssuer
   norg_endpoint_url: norgurl
   pdl_endpoint_url: pdlurl
   sts_token_endpoint_url: stsurl
+
+no.nav.sosialhjelp.idporten:
+  token_url: tokenurl
+  client_id: clientid
+  scope: scope
+  config_url: configurl
+  truststore_type: truststoretype
+  truststore_filepath: truststorefilepath
 
 management:
   endpoints:

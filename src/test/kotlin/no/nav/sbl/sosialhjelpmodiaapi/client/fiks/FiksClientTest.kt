@@ -5,11 +5,11 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
-import no.nav.sbl.sosialhjelpmodiaapi.client.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_digisossak_response
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_minimal_jsondigisossoker_response
+import no.nav.sosialhjelp.idporten.client.IdPortenClient
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -24,9 +24,9 @@ internal class FiksClientTest {
 
     private val clientProperties: ClientProperties = mockk(relaxed = true)
     private val restTemplate: RestTemplate = mockk()
-    private val idPortenService: IdPortenService = mockk()
+    private val idPortenClient: IdPortenClient = mockk()
 
-    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenService)
+    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenClient)
 
     private val id = "123"
 
@@ -34,7 +34,7 @@ internal class FiksClientTest {
     fun init() {
         clearAllMocks()
 
-        coEvery { idPortenService.requestToken().token } returns "token"
+        coEvery { idPortenClient.requestToken().token } returns "token"
     }
 
     @Test
