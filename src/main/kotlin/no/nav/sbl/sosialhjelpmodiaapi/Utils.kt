@@ -81,3 +81,11 @@ val ErrorMessage.feilmeldingUtenFnr: String?
     get() {
         return this.message?.feilmeldingUtenFnr
     }
+
+fun getenv(key: String, default: String): String {
+    return try {
+        System.getenv(key)
+    } catch (e: Exception) {
+        default
+    }
+}

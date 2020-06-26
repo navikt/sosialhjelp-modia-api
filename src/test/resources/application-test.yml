@@ -14,11 +14,16 @@ client:
   fiks_integrasjonid_kommune: "idkom"
   fiks_integrasjonpassord: "pwd"
   fiks_integrasjonpassord_kommune: "pwdcom"
-  idPortenTokenUrl: "test"
-  idPortenClientId: "test"
-  idPortenScope: "test"
-  idPortenDefaultIssuer: "test"
-  idPortenConfigUrl: "https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration"
+  pdl_endpoint_url: 'http://localhost:56666'
+  sts_token_endpoint_url: 'http://localhost:57777'
+
+no.nav.sosialhjelp.idporten:
+  token_url: tokenurl
+  client_id: clientid
+  scope: scope
+  config_url: configurl
+  truststore_type: truststoretype
+  truststore_filepath: filepath
 
 no.nav.security.jwt:
   issuer.veileder:
