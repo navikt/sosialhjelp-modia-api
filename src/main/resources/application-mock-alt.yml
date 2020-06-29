@@ -20,5 +20,5 @@ no.nav.sosialhjelp.idporten:
   client_id: ${ID_PORTEN_CLIENT_ID:1c3631f4-dbf2-4c12-bdc4-156cbd53c625}
   scope: ${ID_PORTEN_SCOPE:ks:fiks}
   config_url: ${ID_PORTEN_CONFIG_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/.well-known/openid-configuration}
-  truststore_type: ${TRUSTSTORE_TYPE}
-  truststore_filepath: ${TRUSTSTORE_FILEPATH}
+  truststore_type: ${TRUSTSTORE_TYPE:PKCS12}
+  truststore_filepath: ${TRUSTSTORE_FILEPATH:key.p12.b64}
