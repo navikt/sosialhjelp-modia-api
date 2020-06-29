@@ -9,6 +9,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.common.FiksNotFoundException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.feilmeldingUtenFnr
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
 import no.nav.sbl.sosialhjelpmodiaapi.toFiksErrorMessage
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
@@ -32,7 +33,8 @@ import java.util.*
 class FiksClientImpl(
         private val clientProperties: ClientProperties,
         private val restTemplate: RestTemplate,
-        private val idPortenClient: IdPortenClient
+        private val idPortenClient: IdPortenClient,
+        private val auditService: AuditService
 ) : FiksClient {
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
@@ -50,7 +52,11 @@ class FiksClientImpl(
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
 
             log.info("Hentet DigisosSak $digisosId fra Fiks")
-            return objectMapper.readValue(response.body!!, DigisosSak::class.java)
+            val digisosSak = objectMapper.readValue(response.body!!, DigisosSak::class.java)
+
+            auditService.reportFiks(digisosSak.sokerFnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId", HttpMethod.GET, sporingsId)
+
+            return digisosSak
 
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
@@ -66,7 +72,7 @@ class FiksClientImpl(
         }
     }
 
-    override fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
+    override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
         val virksomhetsToken = runBlocking { idPortenClient.requestToken() }
         val sporingsId = genererSporingsId()
 
@@ -80,6 +86,8 @@ class FiksClientImpl(
                     SPORINGSID to sporingsId)
 
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java, vars)
+
+            auditService.reportFiks(fnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId", HttpMethod.GET, sporingsId)
 
             log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
             return objectMapper.readValue(response.body!!, requestedClass)
@@ -100,11 +108,14 @@ class FiksClientImpl(
         val sporingsId = genererSporingsId()
         try {
             val headers = fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)
-            val uriComponents = urlWithSporingsId(baseUrl + PATH_ALLE_DIGISOSSAKER)
+            val urlTemplate = baseUrl + PATH_ALLE_DIGISOSSAKER
+            val uriComponents = urlWithSporingsId(urlTemplate)
             val vars = mapOf(SPORINGSID to sporingsId)
             val body = Fnr(fnr)
 
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.POST, HttpEntity(body, headers), typeRef<List<DigisosSak>>(), vars)
+
+            auditService.reportFiks(fnr, urlTemplate, HttpMethod.POST, sporingsId)
 
             return response.body!!
 

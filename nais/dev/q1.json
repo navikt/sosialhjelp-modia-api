@@ -4,8 +4,6 @@
     "https://sosialhjelp-modia-api-q1.nais.preprod.local/sosialhjelp/modia-api",
     "https://sosialhjelp-modia-api-q1.dev-fss.nais.io/sosialhjelp/modia-api"
   ],
-  "virksomhetssertifikat_vault_path": "/secret/virksomhetssertifikat/preprod/shared",
-  "application_vault_path": "/kv/preprod/fss/sosialhjelp-modia-api/q1",
   "secretKvPaths": {
     "/var/run/secrets/nais.io/virksomhetssertifikat": "/secret/virksomhetssertifikat/preprod/shared",
     "/var/run/secrets/nais.io/vault": "/kv/preprod/fss/sosialhjelp-modia-api/q1",
@@ -23,7 +21,7 @@
     "NORG_ENDPOINT_URL": "https://app-q1.adeo.no/norg2/api/v1",
     "PDL_ENDPOINT_URL": "https://pdl-api.nais.preprod.local/graphql",
     "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.preprod.local/rest/v1/sts",
-    "SPRING_PROFILES_ACTIVE": "dev-sbs,log-kibana"
+    "SPRING_PROFILES_ACTIVE": "dev-sbs,log-kibana,log-audit"
   },
   "minReplicas": "1",
   "maxReplicas": "4",

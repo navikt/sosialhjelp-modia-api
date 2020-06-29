@@ -1,8 +1,10 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.abac
 
+import no.nav.abac.xacml.NavAttributter
 import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -17,17 +19,17 @@ interface AbacClient {
 
 }
 
-@Profile("!(mock | local")
+@Profile("!(mock | local)")
 @Component
 class AbacClientImpl(
         clientProperties: ClientProperties,
-        private val serviceuserBasicAuthRestTemplate: RestTemplate
+        private val serviceuserBasicAuthRestTemplate: RestTemplate,
+        private val auditService: AuditService
 ) : AbacClient {
 
     private val url = clientProperties.abacPdpEndpointUrl
 
     override fun sjekkTilgang(request: Request): AbacResponse {
-        //logg request-info til auditlogger
 
         val postingString = XacmlMapper.mapRequestToEntity(XacmlRequest(request))
         val requestEntity = HttpEntity(postingString, headers())
@@ -44,9 +46,11 @@ class AbacClientImpl(
         }
 
         val xacmlResponse = XacmlMapper.mapRawResponse(responseBody)
+        val abacResponse: AbacResponse = xacmlResponse.response[0]
 
-        //logg response-info til auditlogger
-        return xacmlResponse.response[0]
+        auditService.reportAbac(request.fnr, url, HttpMethod.POST, abacResponse)
+
+        return abacResponse
     }
 
     private fun headers(): HttpHeaders {
@@ -55,10 +59,14 @@ class AbacClientImpl(
         return headers
     }
 
+    private val Request.fnr: String
+        get() {
+            return resource?.attributes?.first { it.attributeId == NavAttributter.RESOURCE_FELLES_PERSON_FNR }?.value!!
+        }
+
     companion object {
         private val log by logger()
 
         private const val MEDIA_TYPE = "application/xacml+json"
     }
-
 }

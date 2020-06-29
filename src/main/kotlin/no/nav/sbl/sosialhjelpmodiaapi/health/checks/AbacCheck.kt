@@ -5,9 +5,11 @@ import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sosialhjelp.selftest.DependencyCheck
 import no.nav.sosialhjelp.selftest.DependencyType
 import no.nav.sosialhjelp.selftest.Importance
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 
+@Profile("!(mock | mock-alt)")
 @Component
 class AbacCheck(
         private val abacService: AbacService,

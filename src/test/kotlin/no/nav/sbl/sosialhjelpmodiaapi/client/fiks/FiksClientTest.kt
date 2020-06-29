@@ -1,12 +1,15 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.fiks
 
+import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
+import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_digisossak_response
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_minimal_jsondigisossoker_response
 import no.nav.sosialhjelp.idporten.client.IdPortenClient
@@ -25,8 +28,9 @@ internal class FiksClientTest {
     private val clientProperties: ClientProperties = mockk(relaxed = true)
     private val restTemplate: RestTemplate = mockk()
     private val idPortenClient: IdPortenClient = mockk()
+    private val auditService: AuditService = mockk()
 
-    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenClient)
+    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenClient, auditService)
 
     private val id = "123"
 
@@ -35,6 +39,7 @@ internal class FiksClientTest {
         clearAllMocks()
 
         coEvery { idPortenClient.requestToken().token } returns "token"
+        every { auditService.reportFiks(any(), any(), any(), any()) } just Runs
     }
 
     @Test
@@ -83,7 +88,7 @@ internal class FiksClientTest {
                     any())
         } returns mockResponse
 
-        val result = fiksClient.hentDokument(id, "dokumentlagerId", JsonDigisosSoker::class.java)
+        val result = fiksClient.hentDokument("fnr", id, "dokumentlagerId", JsonDigisosSoker::class.java)
 
         assertNotNull(result)
     }

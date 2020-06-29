@@ -33,7 +33,7 @@ class FiksClientMock : FiksClient {
         })
     }
 
-    override fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
+    override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
         return when (requestedClass) {
             JsonDigisosSoker::class.java -> dokumentMap.getOrElse(dokumentlagerId, {
                 val default = digisosSoker
