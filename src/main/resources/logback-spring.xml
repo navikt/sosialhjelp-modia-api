@@ -11,6 +11,8 @@
         <root level="INFO">
             <appender-ref ref="stdout_json"/>
         </root>
+
+        <logger level="OFF" name="sporingslogg"/>
     </springProfile>
 
     <springProfile name="log-console">
