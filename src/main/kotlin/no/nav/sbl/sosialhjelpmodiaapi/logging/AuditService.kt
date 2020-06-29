@@ -28,7 +28,7 @@ class AuditService(
                 .plus(
                         mapOf(
                                 TITLE to TITLE_ABAC,
-                                RESOURCE to RESOURCE_ABAC_ACCESS,
+                                RESOURCE to RESOURCE_AUDIT_ACCESS,
                                 ABAC_RESPONSE to abacResponse
                         )
                 )
@@ -40,7 +40,7 @@ class AuditService(
                 .plus(
                         mapOf(
                                 TITLE to TITLE_FIKS,
-                                RESOURCE to RESOURCE_FIKS_AUDIT,
+                                RESOURCE to RESOURCE_AUDIT_ACCESS,
                                 FIKS_REQUEST_ID to fiksRequestId
                         )
                 )

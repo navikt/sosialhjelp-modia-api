@@ -26,7 +26,7 @@ internal class AuditLoggerTest {
 
     private val values = mutableMapOf<String, Any>(
             TITLE to "title",
-            RESOURCE to RESOURCE_ABAC_ACCESS,
+            RESOURCE to RESOURCE_AUDIT_ACCESS,
             NAVIDENT to "Z999888",
             BRUKER_FNR to "11111122222",
             CALL_ID to "callid",
@@ -53,7 +53,7 @@ internal class AuditLoggerTest {
         assertThat(cefString.isCaptured).isTrue()
         assertThat(cefString.captured)
                 // headers
-                .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_ABAC_ACCESS|title|INFO|")
+                .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|INFO|")
                 // extension
                 .contains("suid=Z999888")
                 .contains("duid=11111122222")
@@ -71,7 +71,7 @@ internal class AuditLoggerTest {
         assertThat(cefString.isCaptured).isTrue()
         assertThat(cefString.captured)
                 // headers
-                .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_ABAC_ACCESS|title|WARN|")
+                .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|WARN|")
                 // extension
                 .contains("suid=Z999888")
                 .contains("duid=11111122222")
@@ -83,14 +83,13 @@ internal class AuditLoggerTest {
     @Test
     internal fun `should info log fiks request`() {
         values[FIKS_REQUEST_ID] = "123123"
-        values[RESOURCE] = RESOURCE_FIKS_AUDIT
 
         logger.report(values)
 
         assertThat(cefString.isCaptured).isTrue()
         assertThat(cefString.captured)
                 // headers
-                .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_FIKS_AUDIT|title|INFO|")
+                .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|INFO|")
                 // extension
                 .contains("suid=Z999888")
                 .contains("duid=11111122222")

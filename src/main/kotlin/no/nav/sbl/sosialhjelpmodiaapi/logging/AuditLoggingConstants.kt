@@ -21,5 +21,4 @@ const val SPORINGSLOGG = "sporingslogg"
 const val TITLE_ABAC = "Abac"
 const val TITLE_FIKS = "Fiks"
 
-const val RESOURCE_ABAC_ACCESS = "abac:access"
-const val RESOURCE_FIKS_AUDIT = "audit:access"
+const val RESOURCE_AUDIT_ACCESS = "audit:access"
