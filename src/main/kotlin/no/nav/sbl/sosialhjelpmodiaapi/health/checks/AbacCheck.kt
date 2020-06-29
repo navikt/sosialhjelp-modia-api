@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 
-@Profile("!mock")
+@Profile("!(mock | mock-alt)")
 @Component
 class AbacCheck(
         private val abacService: AbacService,
