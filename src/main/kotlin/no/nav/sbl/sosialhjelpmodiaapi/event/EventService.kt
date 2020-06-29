@@ -12,8 +12,8 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonTildeltNavKontor
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonUtbetaling
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtakFattet
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVilkar
-import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
+import no.nav.sbl.sosialhjelpmodiaapi.common.VIS_SOKNADEN
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontorInformasjon
@@ -46,7 +46,7 @@ class EventService(
             if (enhetsnummer != null) {
                 val navEnhetsnavn = norgClient.hentNavEnhet(enhetsnummer).navn
                 model.soknadsmottaker = Soknadsmottaker(enhetsnummer, navEnhetsnavn)
-                model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til $navEnhetsnavn.", unixToLocalDateTime(timestampSendt)))
+                model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til $navEnhetsnavn.", unixToLocalDateTime(timestampSendt), VIS_SOKNADEN))
                 model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, unixToLocalDateTime(timestampSendt), enhetsnummer, navEnhetsnavn))
             }
         }

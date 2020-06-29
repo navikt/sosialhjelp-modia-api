@@ -5,11 +5,11 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
-import no.nav.sbl.sosialhjelpmodiaapi.client.idporten.AccessToken
-import no.nav.sbl.sosialhjelpmodiaapi.client.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_komplett_jsondigisossoker_response
 import no.nav.sbl.sosialhjelpmodiaapi.utils.DigisosApiWrapper
 import no.nav.sbl.sosialhjelpmodiaapi.utils.SakWrapper
+import no.nav.sosialhjelp.idporten.client.AccessToken
+import no.nav.sosialhjelp.idporten.client.IdPortenClient
 import org.junit.jupiter.api.Test
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestTemplate
@@ -21,14 +21,14 @@ internal class DigisosApiClientTest {
     @Test
     fun `Post digisos sak til mock`() {
         val restTemplate: RestTemplate = mockk()
-        val idPortenService: IdPortenService = mockk()
+        val idPortenClient: IdPortenClient = mockk()
 
-        val digisosApiClient = DigisosApiClientImpl(clientProperties, restTemplate, idPortenService)
+        val digisosApiClient = DigisosApiClientImpl(clientProperties, restTemplate, idPortenClient)
 
         val mockResponse: ResponseEntity<String> = mockk()
         every { mockResponse.statusCode.is2xxSuccessful } returns true
         every { mockResponse.body } returns ok_komplett_jsondigisossoker_response
-        coEvery { idPortenService.requestToken() } returns (AccessToken("Token"))
+        coEvery { idPortenClient.requestToken() } returns AccessToken("Token")
         every {
             restTemplate.exchange(
                     any<String>(),

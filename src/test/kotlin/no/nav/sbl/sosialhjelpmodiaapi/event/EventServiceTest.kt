@@ -109,7 +109,7 @@ internal class EventServiceTest {
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
             assertThat(model.saker).hasSize(1)
-            assertThat(model.historikk).hasSize(3)
+            assertThat(model.historikk).hasSize(4)
 
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
@@ -118,7 +118,7 @@ internal class EventServiceTest {
             assertThat(sak.vedtak).isEmpty()
             assertThat(sak.utbetalinger).isEmpty()
 
-            val hendelse = model.historikk.last()
+            val hendelse = model.historikk[model.historikk.size-2] //Second last
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
             assertThat(hendelse.tittel).isEqualTo(SOKNAD_UNDER_BEHANDLING)
             assertThat(hendelse.beskrivelse).isNull()
@@ -141,7 +141,7 @@ internal class EventServiceTest {
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
             assertThat(model.saker).hasSize(1)
-            assertThat(model.historikk).hasSize(3)
+            assertThat(model.historikk).hasSize(4)
 
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
@@ -150,7 +150,7 @@ internal class EventServiceTest {
             assertThat(sak.vedtak).isEmpty()
             assertThat(sak.utbetalinger).isEmpty()
 
-            val hendelse = model.historikk.last()
+            val hendelse = model.historikk[model.historikk.size-2] //Second last
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
             assertThat(hendelse.tittel).isEqualTo(SOKNAD_UNDER_BEHANDLING)
             assertThat(hendelse.beskrivelse).isNull()
@@ -174,7 +174,7 @@ internal class EventServiceTest {
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
             assertThat(model.saker).hasSize(1)
-            assertThat(model.historikk).hasSize(4)
+            assertThat(model.historikk).hasSize(5)
 
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
@@ -245,7 +245,7 @@ internal class EventServiceTest {
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
             assertThat(model.saker).hasSize(1)
-            assertThat(model.historikk).hasSize(4)
+            assertThat(model.historikk).hasSize(5)
 
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
@@ -258,7 +258,7 @@ internal class EventServiceTest {
             val vedtak = sak.vedtak.last()
             assertThat(vedtak.utfall).isEqualTo(UtfallVedtak.INNVILGET)
 
-            val hendelse = model.historikk.last()
+            val hendelse = model.historikk[model.historikk.size-2] //Second last
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_3.toLocalDateTime())
             assertThat(hendelse.tittel).isEqualTo(SAK_FERDIGBEHANDLET)
             assertThat(hendelse.beskrivelse).contains("$DEFAULT_TITTEL er ferdig behandlet")
@@ -283,7 +283,7 @@ internal class EventServiceTest {
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
             assertThat(model.saker).hasSize(1)
-            assertThat(model.historikk).hasSize(5)
+            assertThat(model.historikk).hasSize(6)
 
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
@@ -316,7 +316,7 @@ internal class EventServiceTest {
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
             assertThat(model.saker).hasSize(1)
-            assertThat(model.historikk).hasSize(4)
+            assertThat(model.historikk).hasSize(5)
 
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
