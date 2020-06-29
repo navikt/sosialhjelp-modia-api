@@ -21,6 +21,8 @@ object Versions {
     const val swagger = "2.9.2"
     const val abacAttributeConstants = "3.3.13"
     const val nettyCodec = "4.1.50.Final"
+    const val logbackSyslog4j = "1.0.0"
+    const val syslog4j = "0.9.30"
 
     // Test only
     const val junitJupiter = "5.6.0"
@@ -57,7 +59,7 @@ configurations {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.hamcrest", module = "hamcrest-library")
         exclude(group = "org.hamcrest", module = "hamcrest-core")
-        exclude(group = "org.mockito", module = "mockito-core}")
+        exclude(group = "org.mockito", module = "mockito-core")
     }
 }
 
@@ -91,11 +93,16 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:${Versions.logback}")
     implementation("net.logstash.logback:logstash-logback-encoder:${Versions.logstash}")
 
+//    Auditlogger syslog
+    implementation("com.papertrailapp:logback-syslog4j:${Versions.logbackSyslog4j}")
+    implementation("org.syslog4j:syslog4j:${Versions.syslog4j}")
+
 //    Filformat
     implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:${Versions.filformat}")
 
 //    Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jackson}")
+    implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}")
 
 //    Token-validation
     implementation("no.nav.security:token-validation-spring:${Versions.tokenValidation}")
@@ -104,7 +111,7 @@ dependencies {
     implementation("io.springfox:springfox-swagger2:${Versions.swagger}")
     implementation("io.springfox:springfox-swagger-ui:${Versions.swagger}")
 
-//    Abac
+//    Abac-attributter
     implementation("no.nav.abac.policies:abac-attribute-constants:${Versions.abacAttributeConstants}")
 
 //    Spesifikke versjoner oppgradert etter ønske fra snyk

@@ -5,7 +5,6 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
-import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
@@ -26,6 +25,7 @@ internal class UtbetalingTest {
     fun init() {
         clearAllMocks()
         every { mockDigisosSak.fiksDigisosId } returns "123"
+        every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
@@ -37,7 +37,7 @@ internal class UtbetalingTest {
 
     @Test
     fun `utbetaling ETTER vedtakFattet og saksStatus`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -78,7 +78,7 @@ internal class UtbetalingTest {
 
     @Test
     fun `utbetaling UTEN vedtakFattet`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -98,7 +98,7 @@ internal class UtbetalingTest {
 
     @Test
     fun `utbetaling kontonummer settes kun hvis annenMottaker er false`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")

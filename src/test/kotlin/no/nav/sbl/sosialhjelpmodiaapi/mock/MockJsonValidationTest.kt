@@ -20,8 +20,9 @@ internal class DefaultMockResponseTest {
     @Test
     fun `validerer digisosSoker`() {
         val mockDigisosSak: DigisosSak = mockk()
-        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns digisosSoker
+        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns digisosSoker
         every { mockDigisosSak.fiksDigisosId } returns "123"
+        every { mockDigisosSak.sokerFnr } returns "11111111111"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns 1L
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns "9999"

@@ -31,6 +31,7 @@ internal class SoknadsStatusTest {
     fun init() {
         clearAllMocks()
         every { mockDigisosSak.fiksDigisosId } returns "123"
+        every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
@@ -42,7 +43,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus SENDT`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns null
+        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns null
 
         val model = service.createModel(mockDigisosSak)
 
@@ -58,7 +59,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus MOTTATT`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -81,7 +82,7 @@ internal class SoknadsStatusTest {
     @Test
     fun `soknadsStatus MOTTATT papirsoknad`() {
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns null
-        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -103,7 +104,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus UNDER_BEHANDLING`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
@@ -127,7 +128,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus FERDIGBEHANDLET`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any()) } returns
+        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")

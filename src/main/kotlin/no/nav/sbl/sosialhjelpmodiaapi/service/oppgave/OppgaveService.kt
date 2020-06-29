@@ -26,7 +26,7 @@ class OppgaveService(
             return emptyList()
         }
 
-        val ettersendteVedlegg = vedleggService.hentEttersendteVedlegg(fiksDigisosId, model, digisosSak.ettersendtInfoNAV)
+        val ettersendteVedlegg = vedleggService.hentEttersendteVedlegg(digisosSak, model)
 
         val oppgaveResponseList = model.oppgaver
                 .sortedBy { it.innsendelsesfrist }
