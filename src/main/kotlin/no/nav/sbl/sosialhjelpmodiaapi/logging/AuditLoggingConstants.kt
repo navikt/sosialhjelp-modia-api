@@ -18,5 +18,8 @@ const val LOG = "log"
 
 const val SPORINGSLOGG = "sporingslogg"
 
+const val TITLE_ABAC = "Abac"
+const val TITLE_FIKS = "Fiks"
+
 const val RESOURCE_ABAC_ACCESS = "abac:access"
-const val RESOURCE_FIKS_AUDIT = "fiks:audit"
+const val RESOURCE_FIKS_AUDIT = "audit:access"

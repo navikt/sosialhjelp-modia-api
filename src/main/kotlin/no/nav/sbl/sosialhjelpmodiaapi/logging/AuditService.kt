@@ -27,7 +27,7 @@ class AuditService(
         val attributes: Map<String, Any> = commonAttributes(brukerFnr, url, httpMethod)
                 .plus(
                         mapOf(
-                                TITLE to "Abac",
+                                TITLE to TITLE_ABAC,
                                 RESOURCE to RESOURCE_ABAC_ACCESS,
                                 ABAC_RESPONSE to abacResponse
                         )
@@ -39,7 +39,7 @@ class AuditService(
         val attributes: Map<String, Any> = commonAttributes(brukerFnr, url, httpMethod)
                 .plus(
                         mapOf(
-                                TITLE to "Fiks audit",
+                                TITLE to TITLE_FIKS,
                                 RESOURCE to RESOURCE_FIKS_AUDIT,
                                 FIKS_REQUEST_ID to fiksRequestId
                         )
