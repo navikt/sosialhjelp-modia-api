@@ -17,9 +17,9 @@ class HendelseService(
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
 
-        val responseList = model.historikk.map { HendelseResponse(it.tittel, it.tidspunkt.toString(), it.beskrivelse) }
+        val responseList = model.historikk.map { HendelseResponse(it.tittel, it.tidspunkt.toString(), it.beskrivelse, it.filbeskrivelse) }
         log.info("Hentet historikk for fiksDigisosId=$fiksDigisosId")
-        return responseList
+        return responseList.sortedByDescending { it.tidspunkt }
     }
 
     companion object {

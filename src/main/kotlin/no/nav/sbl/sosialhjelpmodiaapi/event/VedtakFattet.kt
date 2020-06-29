@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtakFattet
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtaksfil
+import no.nav.sbl.sosialhjelpmodiaapi.common.VIS_BREVET
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Sak
@@ -37,7 +38,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
 
     val beskrivelse = beskrivelse(sakForReferanse, hendelse.vedtaksfil)
 
-    historikk.add(Hendelse(SAK_FERDIGBEHANDLET, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
+    historikk.add(Hendelse(SAK_FERDIGBEHANDLET, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime(), VIS_BREVET))
 }
 
 private fun beskrivelse(sak: Sak, vedtaksfil: JsonVedtaksfil?): String {

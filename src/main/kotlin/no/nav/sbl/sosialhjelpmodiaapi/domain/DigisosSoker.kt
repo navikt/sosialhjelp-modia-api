@@ -84,7 +84,8 @@ data class Dokumentasjonkrav(
 data class Hendelse(
         val tittel: String,
         val beskrivelse: String?,
-        val tidspunkt: LocalDateTime
+        val tidspunkt: LocalDateTime,
+        val filbeskrivelse: String? = null
 )
 
 data class ForelopigSvar(
