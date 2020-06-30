@@ -4,6 +4,7 @@ import no.nav.security.token.support.core.configuration.ProxyAwareResourceRetrie
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Profile
 
 @Profile("!(mock | mock-alt")
@@ -13,6 +14,7 @@ class JwtTokenValidationConfig{
 
     // override default fra token-support
     // https://github.com/navikt/token-support/blob/master/token-validation-spring/src/main/java/no/nav/security/token/support/spring/EnableJwtTokenValidationConfiguration.java#L69
+    @Primary
     @Bean
     fun proxyAwareResourceRetriever(): ProxyAwareResourceRetriever {
         return ProxyAwareResourceRetriever()
