@@ -14,7 +14,7 @@ class JwtTokenValidationConfig{
     // override default fra token-support
     // https://github.com/navikt/token-support/blob/master/token-validation-spring/src/main/java/no/nav/security/token/support/spring/EnableJwtTokenValidationConfiguration.java#L69
     @Bean
-    fun oidcResourceRetriever(): ProxyAwareResourceRetriever {
+    fun proxyAwareResourceRetriever(): ProxyAwareResourceRetriever {
         return ProxyAwareResourceRetriever()
     }
 }
