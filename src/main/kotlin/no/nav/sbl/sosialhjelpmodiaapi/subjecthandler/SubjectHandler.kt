@@ -73,7 +73,7 @@ class IssoSubjectHandlerImpl(
     }
 
     override fun getConsumerId(): String {
-        return System.getProperty("consumerid")
+        return System.getProperty("consumerid") ?: "" // Todo - kan consumerId være null?
     }
 
     companion object {
