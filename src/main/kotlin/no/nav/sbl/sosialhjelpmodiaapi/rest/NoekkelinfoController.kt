@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @ProtectedWithClaims(issuer = "veileder")
-@RequestMapping("/api/v1/innsyn", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
+@RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class NoekkelinfoController(
         private val noekkelinfoService: NoekkelinfoService,
         private val abacService: AbacService
