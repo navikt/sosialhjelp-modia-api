@@ -23,7 +23,7 @@
     "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.preprod.local/rest/v1/sts",
     "SPRING_PROFILES_ACTIVE": "dev-sbs,log-kibana,log-audit"
   },
-  "minReplicas": "1",
+  "minReplicas": "2",
   "maxReplicas": "4",
   "prometheusEnabled": true,
   "webProxyEnabled": true,
