@@ -42,7 +42,7 @@ class VedleggService(
             return emptyList()
         }
 
-        return jsonVedleggSpesifikasjon.vedlegg
+        val alleVedlegg = jsonVedleggSpesifikasjon.vedlegg
                 .filter { vedlegg -> vedlegg.status == status }
                 .map { vedlegg ->
                     InternalVedlegg(
@@ -53,10 +53,11 @@ class VedleggService(
                             datoLagtTil = unixToLocalDateTime(originalSoknadNAV.timestampSendt)
                     )
                 }
+        return kombinerAlleLikeVedlgg(alleVedlegg)
     }
 
     fun hentEttersendteVedlegg(digisosSak: DigisosSak, model: InternalDigisosSoker): List<InternalVedlegg> {
-        return digisosSak.ettersendtInfoNAV?.ettersendelser
+        val alleVedlegg = digisosSak.ettersendtInfoNAV?.ettersendelser
                 ?.flatMap { ettersendelse ->
                     val jsonVedleggSpesifikasjon = hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, ettersendelse.vedleggMetadata)
                     jsonVedleggSpesifikasjon.vedlegg
@@ -71,10 +72,11 @@ class VedleggService(
                                 )
                             }
                 } ?: emptyList()
+        return kombinerAlleLikeVedlgg(alleVedlegg)
     }
 
     private fun hentUtestaendeOppgaverSomManglendeVedlegg(model: InternalDigisosSoker, ettersendteVedlegg: List<InternalVedlegg>): List<InternalVedlegg> {
-        return model.oppgaver
+        val alleVedlegg = model.oppgaver
                 .filterNot { oppgave ->
                     ettersendteVedlegg
                             .any { it.type == oppgave.tittel && it.tilleggsinfo == oppgave.tilleggsinfo && it.innsendelsesfrist == oppgave.innsendelsesfrist }
@@ -88,6 +90,7 @@ class VedleggService(
                             datoLagtTil = null
                     )
                 }
+        return kombinerAlleLikeVedlgg(alleVedlegg)
     }
 
     private fun hentVedleggSpesifikasjon(fnr: String, fiksDigisosId: String, dokumentlagerId: String): JsonVedleggSpesifikasjon {
@@ -109,11 +112,34 @@ class VedleggService(
                 ?.innsendelsesfrist
     }
 
+    private fun kombinerAlleLikeVedlgg(alleVedlegg: List<InternalVedlegg>): List<InternalVedlegg> {
+        var kombinertListe = ArrayList<InternalVedlegg>()
+        alleVedlegg.forEach {
+            val funnet = kombinertListe.filter { kombinert ->
+                (areDatesEqual(it.datoLagtTil, kombinert.datoLagtTil) &&
+                        kombinert.type == it.type &&
+                        kombinert.tilleggsinfo == it.tilleggsinfo &&
+                        areDatesEqual(it.innsendelsesfrist, kombinert.innsendelsesfrist))
+            }.firstOrNull()
+            if (funnet != null) {
+                funnet.antallFiler += it.antallFiler
+            } else {
+                kombinertListe.add(it)
+            }
+        }
+        return kombinertListe
+    }
+
+    private fun areDatesEqual(firstDate: LocalDateTime?, secondDate: LocalDateTime?): Boolean {
+        return (firstDate == null && secondDate == null) ||
+                firstDate?.isEqual(secondDate) ?: false
+    }
+
     data class InternalVedlegg(
             val type: String,
             val tilleggsinfo: String?,
             val innsendelsesfrist: LocalDateTime?,
-            val antallFiler: Int,
+            var antallFiler: Int,
             val datoLagtTil: LocalDateTime?
     )
 }
