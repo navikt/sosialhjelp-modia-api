@@ -112,18 +112,18 @@ internal class VedleggServiceTest {
 
         val list = service.hentAlleOpplastedeVedlegg(id)
 
-        assertThat(list).hasSize(4)
+        assertThat(list).hasSize(3)
         assertThat(list[0].type).isEqualTo(dokumenttype_3)
         assertThat(list[0].innsendelsesfrist).isNull()
+        assertThat(list[0].antallFiler).isEqualTo(1)
 
         assertThat(list[1].type).isEqualTo(dokumenttype_4)
         assertThat(list[1].innsendelsesfrist).isNull()
+        assertThat(list[1].antallFiler).isEqualTo(1)
 
         assertThat(list[2].type).isEqualTo(dokumenttype_3)
         assertThat(list[2].innsendelsesfrist).isNull()
-
-        assertThat(list[3].type).isEqualTo(dokumenttype_3)
-        assertThat(list[3].innsendelsesfrist).isNull()
+        assertThat(list[2].antallFiler).isEqualTo(4)
     }
 
     @Test
@@ -134,26 +134,28 @@ internal class VedleggServiceTest {
 
         val list = service.hentAlleOpplastedeVedlegg(id)
 
-        assertThat(list).hasSize(6)
+        assertThat(list).hasSize(5)
 
         // nano-presisjon lacking
         assertThat(list[0].type).isEqualTo(dokumenttype)
         assertThat(list[0].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
+        assertThat(list[0].antallFiler).isEqualTo(1)
 
         assertThat(list[1].type).isEqualTo(dokumenttype_2)
         assertThat(list[1].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
+        assertThat(list[1].antallFiler).isEqualTo(1)
 
         assertThat(list[2].type).isEqualTo(dokumenttype_3)
         assertThat(list[2].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_1, zoneIdOslo))
+        assertThat(list[2].antallFiler).isEqualTo(1)
 
         assertThat(list[3].type).isEqualTo(dokumenttype_4)
         assertThat(list[3].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_1, zoneIdOslo))
+        assertThat(list[3].antallFiler).isEqualTo(1)
 
         assertThat(list[4].type).isEqualTo(dokumenttype_3)
         assertThat(list[4].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_2, zoneIdOslo))
-
-        assertThat(list[5].type).isEqualTo(dokumenttype_3)
-        assertThat(list[5].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_2, zoneIdOslo))
+        assertThat(list[4].antallFiler).isEqualTo(4)
     }
 
     @Test
@@ -231,25 +233,27 @@ internal class VedleggServiceTest {
 
         val list = service.hentAlleOpplastedeVedlegg(id)
 
-        assertThat(list).hasSize(6)
+        assertThat(list).hasSize(5)
 
         assertThat(list[0].type).isEqualTo(dokumenttype)
         assertThat(list[0].innsendelsesfrist).isNull()
+        assertThat(list[0].antallFiler).isEqualTo(1)
 
         assertThat(list[1].type).isEqualTo(dokumenttype_2)
         assertThat(list[1].innsendelsesfrist).isNull()
+        assertThat(list[1].antallFiler).isEqualTo(1)
 
         assertThat(list[2].type).isEqualTo(dokumenttype_3)
         assertThat(list[2].innsendelsesfrist).isEqualTo(frist)
+        assertThat(list[2].antallFiler).isEqualTo(1)
 
         assertThat(list[3].type).isEqualTo(dokumenttype_4)
         assertThat(list[3].innsendelsesfrist).isEqualTo(frist2)
+        assertThat(list[3].antallFiler).isEqualTo(1)
 
         assertThat(list[4].type).isEqualTo(dokumenttype_3)
         assertThat(list[4].innsendelsesfrist).isEqualTo(frist)
-
-        assertThat(list[5].type).isEqualTo(dokumenttype_3)
-        assertThat(list[5].innsendelsesfrist).isEqualTo(frist)
+        assertThat(list[4].antallFiler).isEqualTo(4)
     }
 
     @Test
