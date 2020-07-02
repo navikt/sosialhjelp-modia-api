@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @ProtectedWithClaims(issuer = "veileder")
 @RestController
-@RequestMapping("/api/v1/innsyn", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
+@RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class SaksStatusController(
         private val saksStatusService: SaksStatusService,
         private val abacService: AbacService
