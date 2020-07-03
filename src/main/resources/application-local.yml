@@ -22,3 +22,5 @@ no.nav.sosialhjelp.idporten:
   config_url: ${ID_PORTEN_CONFIG_URL:https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration}
   truststore_type: ${TRUSTSTORE_TYPE}
   truststore_filepath: ${TRUSTSTORE_FILEPATH}
+
+loginurl: ${LOGINURL:http://localhost:8383/sosialhjelp/modia-api/local/cookie}

@@ -28,3 +28,5 @@ management:
     web:
       exposure:
         exclude: '*'
+
+loginurl: ${LOGINURL:http://localhost:8383/sosialhjelp/modia-api/local/cookie}

@@ -22,3 +22,5 @@ no.nav.sosialhjelp.idporten:
   config_url: ${ID_PORTEN_CONFIG_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/.well-known/openid-configuration}
   truststore_type: ${TRUSTSTORE_TYPE:PKCS12}
   truststore_filepath: ${TRUSTSTORE_FILEPATH:key.p12.b64}
+
+loginurl: ${LOGINURL:http://localhost:8383/sosialhjelp/modia-api/local/cookie}
