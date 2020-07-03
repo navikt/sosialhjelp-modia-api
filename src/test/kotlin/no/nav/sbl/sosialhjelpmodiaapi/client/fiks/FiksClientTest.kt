@@ -10,8 +10,10 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
-import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_digisossak_response
-import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_minimal_jsondigisossoker_response
+import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_digisossak_response_string
+import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_minimal_jsondigisossoker_response_string
+import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.idporten.client.IdPortenClient
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -44,14 +46,15 @@ internal class FiksClientTest {
 
     @Test
     fun `GET eksakt 1 DigisosSak`() {
-        val mockResponse: ResponseEntity<String> = mockk()
+        val mockResponse: ResponseEntity<DigisosSak> = mockk()
+        val ok_digisossak_response = objectMapper.readValue(ok_digisossak_response_string, DigisosSak::class.java)
         every { mockResponse.body } returns ok_digisossak_response
         every {
             restTemplate.exchange(
                     any(),
                     any(),
                     any(),
-                    String::class.java,
+                    DigisosSak::class.java,
                     any())
         } returns mockResponse
 
@@ -77,14 +80,15 @@ internal class FiksClientTest {
 
     @Test
     fun `GET dokument`() {
-        val mockResponse: ResponseEntity<String> = mockk()
+        val mockResponse: ResponseEntity<JsonDigisosSoker> = mockk()
+        val ok_minimal_jsondigisossoker_response = objectMapper.readValue(ok_minimal_jsondigisossoker_response_string, JsonDigisosSoker::class.java)
         every { mockResponse.body } returns ok_minimal_jsondigisossoker_response
         every {
             restTemplate.exchange(
                     any(),
                     any(),
                     any(),
-                    String::class.java,
+                    JsonDigisosSoker::class.java,
                     any())
         } returns mockResponse
 
