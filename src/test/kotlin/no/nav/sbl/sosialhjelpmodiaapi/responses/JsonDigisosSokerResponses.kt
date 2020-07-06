@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.responses
 
-val ok_minimal_jsondigisossoker_response = """
+val ok_minimal_jsondigisossoker_response_string = """
 {
 	"version": "1.0.0",
 	"avsender": {

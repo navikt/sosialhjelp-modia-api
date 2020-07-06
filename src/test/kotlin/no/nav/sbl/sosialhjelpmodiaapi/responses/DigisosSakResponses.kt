@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.responses
 
-val ok_digisossak_response = """
+val ok_digisossak_response_string = """
 {
   "fiksDigisosId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "sokerFnr": "string",
