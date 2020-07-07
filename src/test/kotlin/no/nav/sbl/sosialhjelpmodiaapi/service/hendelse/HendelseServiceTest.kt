@@ -10,6 +10,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_MOTTATT
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_SENDT
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_UNDER_BEHANDLING
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -20,7 +21,8 @@ import java.time.ZoneOffset
 internal class HendelseServiceTest {
     private val fiksClient: FiksClient = mockk()
     private val eventService: EventService = mockk()
-    private val service = HendelseService(fiksClient, eventService)
+    private val vedleggsService: VedleggService = mockk()
+    private val service = HendelseService(fiksClient, eventService, vedleggsService)
 
     private val mockDigisosSak: DigisosSak = mockk()
 
@@ -37,6 +39,7 @@ internal class HendelseServiceTest {
         clearMocks(eventService, fiksClient)
 
         every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
+        every { vedleggsService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
         every { mockDigisosSak.ettersendtInfoNAV } returns mockk()
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_sendt.toInstant(ZoneOffset.UTC).toEpochMilli()
     }
