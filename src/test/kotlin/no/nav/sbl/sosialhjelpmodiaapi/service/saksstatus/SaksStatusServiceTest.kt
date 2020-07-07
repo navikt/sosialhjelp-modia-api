@@ -69,7 +69,6 @@ internal class SaksStatusServiceTest {
         assertThat(response[0].datoOpprettet).isEqualTo(now)
         assertThat(response[0].datoAvsluttet).isNull()
         assertThat(response[0].vedtak).isEmpty()
-        assertThat(response[0].utfall).isNull()
     }
 
     @Test
@@ -100,7 +99,6 @@ internal class SaksStatusServiceTest {
         assertThat(response[0].vedtak).hasSize(1)
         assertThat(response[0].vedtak!![0].vedtakDato).isEqualTo(now)
         assertThat(response[0].vedtak!![0].utfall).isEqualTo(UtfallVedtak.INNVILGET)
-        assertThat(response[0].utfall).isEqualTo(UtfallVedtak.INNVILGET)
     }
 
     @Test
@@ -131,7 +129,6 @@ internal class SaksStatusServiceTest {
         assertThat(response[0].vedtak).hasSize(1)
         assertThat(response[0].vedtak!![0].vedtakDato).isEqualTo(now)
         assertThat(response[0].vedtak!![0].utfall).isEqualTo(UtfallVedtak.DELVIS_INNVILGET)
-        assertThat(response[0].utfall).isEqualTo(UtfallVedtak.DELVIS_INNVILGET)
     }
 
     @Test
@@ -177,12 +174,10 @@ internal class SaksStatusServiceTest {
         assertThat(response[0].vedtak!![0].utfall).isEqualTo(UtfallVedtak.INNVILGET)
         assertThat(response[0].vedtak!![1].vedtakDato).isEqualTo(now.plusDays(2))
         assertThat(response[0].vedtak!![1].utfall).isEqualTo(UtfallVedtak.DELVIS_INNVILGET)
-        assertThat(response[0].utfall).isEqualTo(UtfallVedtak.DELVIS_INNVILGET)
 
         assertThat(response[1].tittel).isEqualTo(DEFAULT_TITTEL)
         assertThat(response[1].datoOpprettet).isEqualTo(now)
         assertThat(response[1].datoAvsluttet).isNull()
         assertThat(response[1].vedtak).isEmpty()
-        assertThat(response[1].utfall).isNull()
     }
 }

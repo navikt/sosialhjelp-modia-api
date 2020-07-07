@@ -157,7 +157,7 @@ internal class EventServiceTest {
         }
 
         @Test
-        fun `saksStatus FØR vedtakFattet`() {
+        fun `saksStatus FOER vedtakFattet`() {
             every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                     JsonDigisosSoker()
                             .withAvsender(avsender)
@@ -228,7 +228,7 @@ internal class EventServiceTest {
         }
 
         @Test
-        fun `vedtakFattet FØR saksStatus`() {
+        fun `vedtakFattet FOER saksStatus`() {
             every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                     JsonDigisosSoker()
                             .withAvsender(avsender)
@@ -245,7 +245,7 @@ internal class EventServiceTest {
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
             assertThat(model.saker).hasSize(1)
-            assertThat(model.historikk).hasSize(5)
+            assertThat(model.historikk).hasSize(4)
 
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
@@ -258,7 +258,7 @@ internal class EventServiceTest {
             val vedtak = sak.vedtak.last()
             assertThat(vedtak.utfall).isEqualTo(UtfallVedtak.INNVILGET)
 
-            val hendelse = model.historikk[model.historikk.size-2] //Second last
+            val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_3.toLocalDateTime())
             assertThat(hendelse.tittel).isEqualTo(SAK_FERDIGBEHANDLET)
             assertThat(hendelse.beskrivelse).contains("$DEFAULT_TITTEL er ferdig behandlet")
