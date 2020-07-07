@@ -16,8 +16,7 @@ data class SaksStatusResponse(
         @JsonFormat(pattern = "yyyy-MM-dd")
         val datoOpprettet: LocalDate,
         @JsonFormat(pattern = "yyyy-MM-dd")
-        val datoAvsluttet: LocalDate?,
-        val utfall: UtfallVedtak?
+        val datoAvsluttet: LocalDate?
 )
 
 data class VedtakResponse(
