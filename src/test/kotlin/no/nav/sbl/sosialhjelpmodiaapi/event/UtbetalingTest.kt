@@ -4,13 +4,11 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
-import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
-import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
+import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
-import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,22 +20,17 @@ internal class UtbetalingTest {
     private val service = EventService(innsynService, norgClient)
 
     private val mockDigisosSak: DigisosSak = mockk()
-    private val mockJsonSoknad: JsonSoknad = mockk()
-    private val mockNavEnhet: NavEnhet = mockk()
 
     @BeforeEach
     fun init() {
         clearAllMocks()
         every { mockDigisosSak.fiksDigisosId } returns "123"
+        every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
-        every { mockDigisosSak.originalSoknadNAV?.soknadDokument?.dokumentlagerDokumentId } returns null
-        every { mockJsonSoknad.mottaker.navEnhetsnavn } returns soknadsmottaker
-        every { mockJsonSoknad.mottaker.enhetsnummer } returns enhetsnr
-        every { mockDigisosSak.ettersendtInfoNAV } returns null
-        every { innsynService.hentOriginalSoknad(any(), any(), any()) } returns mockJsonSoknad
-        every { norgClient.hentNavEnhet(enhetsnr) } returns mockNavEnhet
+        every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
+        every { norgClient.hentNavEnhet(enhetsnr).navn } returns enhetsnavn
 
         resetHendelser()
     }
@@ -57,12 +50,12 @@ internal class UtbetalingTest {
                                 UTBETALING.withHendelsestidspunkt(tidspunkt_6)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.FERDIGBEHANDLET)
         assertThat(model.saker).hasSize(1)
-        assertThat(model.historikk).hasSize(5)
+        assertThat(model.historikk).hasSize(6)
 
         assertThat(model.saker[0].tittel).isEqualTo(tittel_1) // tittel for sak fra saksstatus-hendelse
 
@@ -95,7 +88,7 @@ internal class UtbetalingTest {
                                 UTBETALING.withHendelsestidspunkt(tidspunkt_3)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -115,7 +108,7 @@ internal class UtbetalingTest {
                                 UTBETALING_ANNEN_MOTTAKER.withHendelsestidspunkt(tidspunkt_3)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)

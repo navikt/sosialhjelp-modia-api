@@ -64,7 +64,8 @@ data class Utbetaling(
         var kontonummer: String?,
         var utbetalingsmetode: String?,
         var vilkar: MutableList<Vilkar>,
-        var dokumentasjonkrav: MutableList<Dokumentasjonkrav>
+        var dokumentasjonkrav: MutableList<Dokumentasjonkrav>,
+        var datoHendelse: LocalDateTime
 )
 
 data class Vilkar(
@@ -84,7 +85,8 @@ data class Dokumentasjonkrav(
 data class Hendelse(
         val tittel: String,
         val beskrivelse: String?,
-        val tidspunkt: LocalDateTime
+        val tidspunkt: LocalDateTime,
+        val filbeskrivelse: String? = null
 )
 
 data class ForelopigSvar(

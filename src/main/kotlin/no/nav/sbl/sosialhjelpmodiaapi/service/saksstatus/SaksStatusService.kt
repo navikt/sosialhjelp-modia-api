@@ -17,9 +17,9 @@ class SaksStatusService(
         private val eventService: EventService
 ) {
 
-    fun hentSaksStatuser(fiksDigisosId: String, token: String): List<SaksStatusResponse> {
-        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)
-        val model = eventService.createModel(digisosSak, token)
+    fun hentSaksStatuser(fiksDigisosId: String): List<SaksStatusResponse> {
+        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
+        val model = eventService.createModel(digisosSak)
 
         if (model.saker.isEmpty()) {
             log.info("Fant ingen saker for $fiksDigisosId")
@@ -39,8 +39,7 @@ class SaksStatusService(
                                 )
                             },
                             datoOpprettet = sak.datoOpprettet,
-                            datoAvsluttet = sak.vedtak.maxBy { it.datoFattet }?.datoFattet,
-                            utfall = sak.vedtak.maxBy { it.datoFattet }?.utfall
+                            datoAvsluttet = sak.vedtak.maxBy { it.datoFattet }?.datoFattet
                     )
                 }
         log.info("Hentet ${responseList.size} sak(er) for $fiksDigisosId")

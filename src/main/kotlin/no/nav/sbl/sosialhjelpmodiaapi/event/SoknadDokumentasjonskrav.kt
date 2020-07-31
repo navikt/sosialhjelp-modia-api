@@ -2,19 +2,17 @@ package no.nav.sbl.sosialhjelpmodiaapi.event
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Oppgave
-import no.nav.sbl.sosialhjelpmodiaapi.domain.OriginalSoknadNAV
-import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VEDLEGG_KREVES_STATUS
 import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
+import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 
 fun InternalDigisosSoker.applySoknadKrav(
-        fiksDigisosId: String,
-        originalSoknadNAV: OriginalSoknadNAV,
+        digisosSak: DigisosSak,
         vedleggService: VedleggService,
-        timestampSendt: Long,
-        token: String
+        timestampSendt: Long
 ) {
-    val vedleggKreves = vedleggService.hentSoknadVedleggMedStatus(VEDLEGG_KREVES_STATUS, fiksDigisosId, originalSoknadNAV, token)
+    val vedleggKreves = vedleggService.hentSoknadVedleggMedStatus(digisosSak, VEDLEGG_KREVES_STATUS)
 
     oppgaver = vedleggKreves
             .filterNot { it.type == "annet" && it.tilleggsinfo == "annet" }

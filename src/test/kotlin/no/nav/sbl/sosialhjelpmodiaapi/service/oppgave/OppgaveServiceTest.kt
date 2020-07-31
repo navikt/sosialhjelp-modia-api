@@ -3,14 +3,14 @@ package no.nav.sbl.sosialhjelpmodiaapi.service.oppgave
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
-import no.nav.sbl.sosialhjelpmodiaapi.domain.EttersendtInfoNAV
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Oppgave
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
 import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService.InternalVedlegg
+import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.api.fiks.EttersendtInfoNAV
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -41,12 +41,11 @@ internal class OppgaveServiceTest {
     private val frist3 = LocalDateTime.now().plusDays(2)
     private val frist4 = LocalDateTime.now().plusDays(3)
 
-    private val token = "token"
-
     @BeforeEach
     fun init() {
         clearAllMocks()
-        every { fiksClient.hentDigisosSak(any(), any()) } returns mockDigisosSak
+        every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
+        every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.ettersendtInfoNAV } returns mockEttersendtInfoNAV
     }
 
@@ -54,9 +53,9 @@ internal class OppgaveServiceTest {
     fun `Should return emptylist`() {
         val model = InternalDigisosSoker()
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val oppgaver = service.hentOppgaver("123", token)
+        val oppgaver = service.hentOppgaver("123")
 
         assertThat(oppgaver).isNotNull
         assertThat(oppgaver).isEmpty()
@@ -67,10 +66,10 @@ internal class OppgaveServiceTest {
         val model = InternalDigisosSoker()
         model.oppgaver.add(Oppgave(type, tillegg, frist, tidspunktForKrav, true))
 
-        every { eventService.createModel(any(), any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any(), any(), any()) } returns emptyList()
+        every { eventService.createModel(any()) } returns model
+        every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
 
-        val oppgaver = service.hentOppgaver("123", token)
+        val oppgaver = service.hentOppgaver("123")
 
         assertThat(oppgaver).isNotNull
         assertThat(oppgaver[0].dokumenttype).isEqualTo(type)
@@ -83,10 +82,10 @@ internal class OppgaveServiceTest {
         val model = InternalDigisosSoker()
         model.oppgaver.add(Oppgave(type, null, frist, tidspunktForKrav, true))
 
-        every { eventService.createModel(any(), any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any(), any(), any()) } returns emptyList()
+        every { eventService.createModel(any()) } returns model
+        every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
 
-        val oppgaver = service.hentOppgaver("123", token)
+        val oppgaver = service.hentOppgaver("123")
 
         assertThat(oppgaver).isNotNull
         assertThat(oppgaver[0].dokumenttype).isEqualTo(type)
@@ -103,10 +102,10 @@ internal class OppgaveServiceTest {
                 Oppgave(type4, tillegg4, frist4, tidspunktForKrav, true),
                 Oppgave(type2, tillegg2, frist2, tidspunktForKrav, true)))
 
-        every { eventService.createModel(any(), any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any(), any(), any()) } returns emptyList()
+        every { eventService.createModel(any()) } returns model
+        every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
 
-        val oppgaver = service.hentOppgaver("123", token)
+        val oppgaver = service.hentOppgaver("123")
 
         assertThat(oppgaver).isNotNull
         assertThat(oppgaver.size == 4)
@@ -135,14 +134,14 @@ internal class OppgaveServiceTest {
                 Oppgave(type2, null, frist2, tidspunktForKrav, true),
                 Oppgave(type3, tillegg3, frist3, tidspunktForKrav, true)))
 
-        every { eventService.createModel(any(), any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any(), any(), any()) } returns listOf(
+        every { eventService.createModel(any()) } returns model
+        every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns listOf(
                 InternalVedlegg(type, tillegg, frist, 1, tidspunktEtterKrav),
                 InternalVedlegg(type2, null, frist2, 1, tidspunktEtterKrav),
                 InternalVedlegg(type3, tillegg3, frist3, 1, tidspunktFoerKrav),
                 InternalVedlegg(type3, null, frist3, 1, tidspunktEtterKrav))
 
-        val oppgaver = service.hentOppgaver("123", token)
+        val oppgaver = service.hentOppgaver("123")
 
         assertThat(oppgaver).isNotNull
         assertThat(oppgaver).hasSize(3)
@@ -177,11 +176,11 @@ internal class OppgaveServiceTest {
                 Oppgave(type, tillegg, frist, tidspunktForKrav, true),
                 Oppgave(type, tillegg, frist2, tidspunktForKrav.plusDays(1), true)))
 
-        every { eventService.createModel(any(), any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any(), any(), any()) } returns listOf(
+        every { eventService.createModel(any()) } returns model
+        every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns listOf(
                 InternalVedlegg(type, tillegg, frist, 2, tidspunktEtterKrav))
 
-        val oppgaver = service.hentOppgaver("123", token)
+        val oppgaver = service.hentOppgaver("123")
 
         assertThat(oppgaver).isNotNull
         assertThat(oppgaver).hasSize(2)

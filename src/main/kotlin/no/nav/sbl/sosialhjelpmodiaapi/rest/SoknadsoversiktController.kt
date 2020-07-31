@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @ProtectedWithClaims(issuer = "veileder")
 @RestController
-@RequestMapping("/api/v1/innsyn", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
+@RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class SoknadsoversiktController(
         private val fiksClient: FiksClient,
         private val eventService: EventService,
@@ -39,10 +39,8 @@ class SoknadsoversiktController(
     fun hentAlleSaker(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SaksListeResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
-        // kan ikke bruke saksbehandlers token til å hente alle DigisosSaker for søker?
-
         val saker = try {
-            fiksClient.hentAlleDigisosSaker(token, ident.fnr)
+            fiksClient.hentAlleDigisosSaker(ident.fnr)
         } catch (e: FiksException) {
             return ResponseEntity.status(503).build()
         }
@@ -66,14 +64,13 @@ class SoknadsoversiktController(
     fun hentSaksDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SaksDetaljerResponse> {
         abacService.harTilgang(ident.fnr, token)
 
-        // kan ikke bruke saksbehandlers token til å hente saksDetaljer for søknad?
-        val sak = fiksClient.hentDigisosSak(fiksDigisosId, token)
-        val model = eventService.createSoknadsoversiktModel(token, sak)
+        val sak = fiksClient.hentDigisosSak(fiksDigisosId)
+        val model = eventService.createSoknadsoversiktModel(sak)
         val saksDetaljerResponse = SaksDetaljerResponse(
                 fiksDigisosId = sak.fiksDigisosId,
                 soknadTittel = hentNavn(model),
                 status = model.status?.let { mapStatus(it) } ?: "",
-                harNyeOppgaver = harNyeOppgaver(model, sak.fiksDigisosId, token),
+                harNyeOppgaver = harNyeOppgaver(model, sak.fiksDigisosId),
                 harVilkar = harVilkar(model)
         )
         return ResponseEntity.ok().body(saksDetaljerResponse)
@@ -93,10 +90,10 @@ class SoknadsoversiktController(
         }
     }
 
-    private fun harNyeOppgaver(model: InternalDigisosSoker, fiksDigisosId: String, token: String): Boolean {
+    private fun harNyeOppgaver(model: InternalDigisosSoker, fiksDigisosId: String): Boolean {
         return when {
             model.oppgaver.isEmpty() -> false
-            else -> oppgaveService.hentOppgaver(fiksDigisosId, token).isNotEmpty()
+            else -> oppgaveService.hentOppgaver(fiksDigisosId).isNotEmpty()
         }
     }
 

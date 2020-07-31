@@ -3,13 +3,14 @@ package no.nav.sbl.sosialhjelpmodiaapi.client.digisosapi
 import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
-import no.nav.sbl.sosialhjelpmodiaapi.client.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.DigisosApiWrapper
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_PASSORD
+import no.nav.sbl.sosialhjelpmodiaapi.utils.Miljo.getTestbrukerNatalie
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
+import no.nav.sosialhjelp.idporten.client.IdPortenClient
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -22,13 +23,15 @@ import org.springframework.web.client.RestTemplate
 import java.util.*
 
 
-@Profile("!mock")
+@Profile("!(prod-fss|mock)")
 @Component
 class DigisosApiClientImpl(
         clientProperties: ClientProperties,
         private val restTemplate: RestTemplate,
-        private val idPortenService: IdPortenService
+        private val idPortenClient: IdPortenClient
 ) : DigisosApiClient {
+
+    private val testbrukerNatalie = getTestbrukerNatalie()
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
     private val fiksIntegrasjonIdKommune = clientProperties.fiksIntegrasjonIdKommune
@@ -57,7 +60,7 @@ class DigisosApiClientImpl(
     fun opprettDigisosSak(): String? {
         val httpEntity = HttpEntity("", headers())
         try {
-            val response = restTemplate.exchange("$baseUrl/digisos/api/v1/11415cd1-e26d-499a-8421-751457dfcbd5/ny?sokerFnr=26104500284", HttpMethod.POST, httpEntity, String::class.java)
+            val response = restTemplate.exchange("$baseUrl/digisos/api/v1/11415cd1-e26d-499a-8421-751457dfcbd5/ny?sokerFnr=$testbrukerNatalie", HttpMethod.POST, httpEntity, String::class.java)
             log.info("Opprettet sak hos Fiks. Digisosid: ${response.body}")
             return response.body?.replace("\"", "")
         } catch (e: HttpStatusCodeException) {
@@ -71,7 +74,7 @@ class DigisosApiClientImpl(
 
     private fun headers(): HttpHeaders {
         val headers = HttpHeaders()
-        val accessToken = runBlocking { idPortenService.requestToken() }
+        val accessToken = runBlocking { idPortenClient.requestToken() }
         headers.accept = Collections.singletonList(MediaType.ALL)
         headers.set(HEADER_INTEGRASJON_ID, fiksIntegrasjonIdKommune)
         headers.set(HEADER_INTEGRASJON_PASSORD, fiksIntegrasjonPassordKommune)

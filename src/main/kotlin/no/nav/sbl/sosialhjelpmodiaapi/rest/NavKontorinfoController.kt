@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @ProtectedWithClaims(issuer = "veileder")
 @RestController
-@RequestMapping("/api/v1/innsyn")
+@RequestMapping("/api")
 class NavKontorinfoController(
         private val norgClient: NorgClient
 ) {

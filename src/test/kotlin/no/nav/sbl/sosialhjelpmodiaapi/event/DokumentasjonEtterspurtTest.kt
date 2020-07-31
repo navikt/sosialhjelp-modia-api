@@ -4,14 +4,12 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
-import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
-import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
+import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.DOKUMENTASJONSKRAV
 import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
-import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
@@ -25,8 +23,6 @@ internal class DokumentasjonEtterspurtTest {
     private val service = EventService(innsynService, norgClient)
 
     private val mockDigisosSak: DigisosSak = mockk()
-    private val mockJsonSoknad: JsonSoknad = mockk()
-    private val mockNavEnhet: NavEnhet = mockk()
 
     private val vedleggKrevesDokumenttype = "faktura"
     private val vedleggKrevesTilleggsinfo = "strom"
@@ -35,13 +31,12 @@ internal class DokumentasjonEtterspurtTest {
     fun init() {
         clearAllMocks()
         every { mockDigisosSak.fiksDigisosId } returns "123"
+        every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
-        every { mockJsonSoknad.mottaker.navEnhetsnavn } returns soknadsmottaker
-        every { mockJsonSoknad.mottaker.enhetsnummer } returns enhetsnr
-        every { innsynService.hentOriginalSoknad(any(), any(), any()) } returns mockJsonSoknad
-        every { norgClient.hentNavEnhet(enhetsnr) } returns mockNavEnhet
+        every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
+        every { norgClient.hentNavEnhet(enhetsnr).navn } returns enhetsnavn
 
         resetHendelser()
     }
@@ -58,7 +53,7 @@ internal class DokumentasjonEtterspurtTest {
                                 DOKUMENTASJONETTERSPURT.withHendelsestidspunkt(tidspunkt_3)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -89,7 +84,7 @@ internal class DokumentasjonEtterspurtTest {
                                 DOKUMENTASJONETTERSPURT_UTEN_FORVALTNINGSBREV.withHendelsestidspunkt(tidspunkt_3)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -116,7 +111,7 @@ internal class DokumentasjonEtterspurtTest {
                                 DOKUMENTASJONETTERSPURT_TOM_DOKUMENT_LISTE.withHendelsestidspunkt(tidspunkt_3)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -137,7 +132,7 @@ internal class DokumentasjonEtterspurtTest {
                                 SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2)
                         ))
 
-        val model = service.createModel(mockDigisosSak, "token")
+        val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)

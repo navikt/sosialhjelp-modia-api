@@ -16,7 +16,7 @@ const val dokumentlagerId_2 = "2"
 const val svarUtId = "42"
 const val svarUtNr = 42
 
-const val soknadsmottaker = "The Office"
+const val enhetsnavn = "The Office"
 const val enhetsnr = "2317"
 
 const val navKontor = "1337"

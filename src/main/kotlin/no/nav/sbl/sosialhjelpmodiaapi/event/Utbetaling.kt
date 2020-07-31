@@ -5,6 +5,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Utbetaling
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDate
+import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 import java.math.BigDecimal
 
 fun InternalDigisosSoker.apply(hendelse: JsonUtbetaling) {
@@ -22,7 +23,8 @@ fun InternalDigisosSoker.apply(hendelse: JsonUtbetaling) {
             kontonummer = if (erForEnAnnenMotaker(hendelse)) null else hendelse.kontonummer,
             utbetalingsmetode = hendelse.utbetalingsmetode,
             vilkar = mutableListOf(),
-            dokumentasjonkrav = mutableListOf()
+            dokumentasjonkrav = mutableListOf(),
+            datoHendelse = hendelse.hendelsestidspunkt.toLocalDateTime()
     )
 
     val sakForReferanse = saker.firstOrNull { it.referanse == hendelse.saksreferanse }

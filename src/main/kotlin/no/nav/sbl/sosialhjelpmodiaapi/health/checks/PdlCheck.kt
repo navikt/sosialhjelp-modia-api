@@ -2,10 +2,10 @@ package no.nav.sbl.sosialhjelpmodiaapi.health.checks
 
 import no.nav.sbl.sosialhjelpmodiaapi.client.pdl.PdlClient
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
+import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sosialhjelp.selftest.DependencyCheck
 import no.nav.sosialhjelp.selftest.DependencyType
 import no.nav.sosialhjelp.selftest.Importance
-import no.nav.sbl.sosialhjelpmodiaapi.logger
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientException
@@ -15,12 +15,13 @@ import org.springframework.web.client.RestClientException
 class PdlCheck(
         clientProperties: ClientProperties,
         private val pdlClient: PdlClient
-) : DependencyCheck(
-        DependencyType.REST,
-        "PDL",
-        clientProperties.pdlEndpointUrl,
-        Importance.WARNING
-) {
+) : DependencyCheck {
+
+    override val type = DependencyType.REST
+    override val name = "PDL"
+    override val address = clientProperties.pdlEndpointUrl
+    override val importance = Importance.WARNING
+
     override fun doCheck() {
         try {
             pdlClient.ping()

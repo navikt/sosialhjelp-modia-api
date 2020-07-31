@@ -16,8 +16,7 @@ data class SaksStatusResponse(
         @JsonFormat(pattern = "yyyy-MM-dd")
         val datoOpprettet: LocalDate,
         @JsonFormat(pattern = "yyyy-MM-dd")
-        val datoAvsluttet: LocalDate?,
-        val utfall: UtfallVedtak?
+        val datoAvsluttet: LocalDate?
 )
 
 data class VedtakResponse(
@@ -29,7 +28,8 @@ data class VedtakResponse(
 data class HendelseResponse(
         val tittel: String,
         val tidspunkt: String,
-        val beskrivelse: String?
+        val beskrivelse: String?,
+        val filbeskrivelse: String?
 )
 
 data class OppgaveResponse(
@@ -125,4 +125,15 @@ data class PersoninfoResponse(
 
 data class Ident(
         val fnr: String
+)
+
+data class KommuneResponse(
+        val erInnsynDeaktivert: Boolean,
+        val erInnsynMidlertidigDeaktivert: Boolean,
+        val erInnsendingEttersendelseDeaktivert: Boolean,
+        val erInnsendingEttersendelseMidlertidigDeaktivert: Boolean,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val tidspunkt: Date,
+        val harNksTilgang: Boolean,
+        val behandlingsansvarlig: String?
 )

@@ -1,10 +1,10 @@
 package no.nav.sbl.sosialhjelpmodiaapi
 
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksErrorResponse
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.service.saksstatus.DEFAULT_TITTEL
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
+import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.api.fiks.ErrorMessage
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.ParameterizedTypeReference
@@ -64,9 +64,9 @@ fun hentSoknadTittel(digisosSak: DigisosSak, model: InternalDigisosSoker): Strin
     }
 }
 
-fun <T : HttpStatusCodeException> T.toFiksErrorResponse(): FiksErrorResponse? {
+fun <T : HttpStatusCodeException> T.toFiksErrorMessage(): ErrorMessage? {
     return try {
-        objectMapper.readValue(this.responseBodyAsByteArray, FiksErrorResponse::class.java)
+        objectMapper.readValue(this.responseBodyAsByteArray, ErrorMessage::class.java)
     } catch (e: IOException) {
         null
     }
@@ -77,7 +77,15 @@ val String.feilmeldingUtenFnr: String?
         return this.replace(Regex("""\b[0-9]{11}\b"""), "[FNR]")
     }
 
-val FiksErrorResponse.feilmeldingUtenFnr: String?
+val ErrorMessage.feilmeldingUtenFnr: String?
     get() {
         return this.message?.feilmeldingUtenFnr
     }
+
+fun getenv(key: String, default: String): String {
+    return try {
+        System.getenv(key)
+    } catch (e: Exception) {
+        default
+    }
+}

@@ -3,7 +3,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.service.utbetalinger
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Dokumentasjonkrav
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontorInformasjon
@@ -15,7 +15,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Vilkar
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
+import kotlin.test.assertTrue
 
 internal class UtbetalingerServiceTest {
     private val fiksClient: FiksClient = mockk()
@@ -32,7 +33,6 @@ internal class UtbetalingerServiceTest {
 
     private val mockDigisosSak: DigisosSak = mockk()
 
-    private val token = "token"
     private val fnr = "fnr"
 
     private val digisosId = "some id"
@@ -53,10 +53,10 @@ internal class UtbetalingerServiceTest {
     @Test
     fun `hentUtbetalinger skal returnere emptyList hvis soker ikke har noen digisosSaker`() {
         val model = InternalDigisosSoker()
-        every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns emptyList()
+        every { eventService.createModel(any()) } returns model
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns emptyList()
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(fnr)
 
         assertThat(response).isEmpty()
     }
@@ -83,15 +83,17 @@ internal class UtbetalingerServiceTest {
                                 kontonummer = "kontonr",
                                 utbetalingsmetode = "utbetalingsmetode",
                                 vilkar = mutableListOf(),
-                                dokumentasjonkrav = mutableListOf())),
+                                dokumentasjonkrav = mutableListOf(),
+                                datoHendelse = LocalDateTime.now()
+                        )),
                 datoOpprettet = LocalDate.now()
         ))
         model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
-        every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(mockDigisosSak)
+        every { eventService.createModel(any()) } returns model
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(fnr)
 
         assertThat(response).isNotEmpty
         assertThat(response).hasSize(1)
@@ -117,16 +119,16 @@ internal class UtbetalingerServiceTest {
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
-                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf()),
-                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 8, 12), null, null, null, null, null, mutableListOf(), mutableListOf())
+                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 8, 12), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
                 ),
                 datoOpprettet = LocalDate.now()
         ))
 
-        every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(mockDigisosSak)
+        every { eventService.createModel(any()) } returns model
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(fnr)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(2)
@@ -149,16 +151,16 @@ internal class UtbetalingerServiceTest {
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
-                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf()),
-                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 9, 12), null, null, null, null, null, mutableListOf(), mutableListOf())
+                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 9, 12), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
                 ),
                 datoOpprettet = LocalDate.now()
         ))
 
-        every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(mockDigisosSak)
+        every { eventService.createModel(any()) } returns model
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(fnr)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(2)
@@ -178,7 +180,7 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         val vilkar = Vilkar("vilkar1", "Skal hoppe", false, LocalDateTime.now(), LocalDateTime.now())
         val utbetaling1 = Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
-                null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(vilkar), mutableListOf())
+                null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(vilkar), mutableListOf(), LocalDateTime.now())
         model.saker.add(Sak(
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING,
@@ -188,14 +190,14 @@ internal class UtbetalingerServiceTest {
                 datoOpprettet = LocalDate.now()
         ))
 
-        every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(mockDigisosSak)
+        every { eventService.createModel(any()) } returns model
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(fnr)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
-        assertThat(response[0].harVilkar).isTrue()
+        assertTrue(response[0].harVilkar)
     }
 
     @Disabled("disabled frem til det blir bekreftet om dokumentasjonkrav skal være med i response")
@@ -204,7 +206,7 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         val dokumentasjonkrav = Dokumentasjonkrav("dokumentasjonskrav", "Skal hoppe", false)
         val utbetaling1 = Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
-                null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf(dokumentasjonkrav))
+                null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf(dokumentasjonkrav), LocalDateTime.now())
         model.saker.add(Sak(
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING,
@@ -214,10 +216,10 @@ internal class UtbetalingerServiceTest {
                 datoOpprettet = LocalDate.now()
         ))
 
-        every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(mockDigisosSak)
+        every { eventService.createModel(any()) } returns model
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(fnr)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
@@ -233,7 +235,7 @@ internal class UtbetalingerServiceTest {
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
                         Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null,
-                                LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf())),
+                                LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())),
                 datoOpprettet = LocalDate.now()
         ))
 
@@ -245,7 +247,7 @@ internal class UtbetalingerServiceTest {
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
                         Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.ONE, "Barnehage og SFO", null,
-                                LocalDate.of(2019, 9, 12), null, null, null, null, null, mutableListOf(), mutableListOf())),
+                                LocalDate.of(2019, 9, 12), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())),
                 datoOpprettet = LocalDate.now()
         ))
 
@@ -255,11 +257,11 @@ internal class UtbetalingerServiceTest {
 
         every { mockDigisosSak.fiksDigisosId } returns id1
         every { mockDigisosSak2.fiksDigisosId } returns id2
-        every { eventService.createModel(mockDigisosSak, any()) } returns model
-        every { eventService.createModel(mockDigisosSak2, any()) } returns model2
-        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(mockDigisosSak, mockDigisosSak2)
+        every { eventService.createModel(mockDigisosSak) } returns model
+        every { eventService.createModel(mockDigisosSak2) } returns model2
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak, mockDigisosSak2)
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(fnr)
 
         assertThat(response).isNotEmpty
         assertThat(response).hasSize(2)
@@ -297,14 +299,16 @@ internal class UtbetalingerServiceTest {
                                 kontonummer = "kontonr",
                                 utbetalingsmetode = "utbetalingsmetode",
                                 vilkar = mutableListOf(),
-                                dokumentasjonkrav = mutableListOf())),
+                                dokumentasjonkrav = mutableListOf(),
+                                datoHendelse = LocalDateTime.now()
+                        )),
                 datoOpprettet = LocalDate.now()
         ))
 
-        every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentDigisosSak(any(), any()) } returns mockDigisosSak
+        every { eventService.createModel(any()) } returns model
+        every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalingerForDigisosSak(mockDigisosSak, token)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalingerForDigisosSak(mockDigisosSak)
 
         assertThat(response).isNotEmpty
         assertThat(response).hasSize(1)
@@ -328,18 +332,18 @@ internal class UtbetalingerServiceTest {
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
-                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 1), null, null, null, null, null, mutableListOf(), mutableListOf()),
-                        Utbetaling("Sak2", UtbetalingsStatus.PLANLAGT_UTBETALING, BigDecimal.TEN, "Tannlege", LocalDate.of(2019, 9, 1), null, null, null, null, null, null, mutableListOf(), mutableListOf()),
-                        Utbetaling("Sak3", UtbetalingsStatus.STOPPET, BigDecimal.TEN, "Depositum", null, LocalDate.of(2019, 10, 1), null, null, null, null, null, mutableListOf(), mutableListOf()),
-                        Utbetaling("Sak4", UtbetalingsStatus.ANNULLERT, BigDecimal.TEN, "Kinopenger", null, LocalDate.of(2019, 11, 1), null, null, null, null, null, mutableListOf(), mutableListOf())
+                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 1), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak2", UtbetalingsStatus.PLANLAGT_UTBETALING, BigDecimal.TEN, "Tannlege", LocalDate.of(2019, 9, 1), null, null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak3", UtbetalingsStatus.STOPPET, BigDecimal.TEN, "Depositum", null, LocalDate.of(2019, 10, 1), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak4", UtbetalingsStatus.ANNULLERT, BigDecimal.TEN, "Kinopenger", null, LocalDate.of(2019, 11, 1), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
                 ),
                 datoOpprettet = LocalDate.now()
         ))
 
-        every { eventService.createModel(any(), any()) } returns model
-        every { fiksClient.hentAlleDigisosSaker(any(), any()) } returns listOf(mockDigisosSak)
+        every { eventService.createModel(any()) } returns model
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(token, fnr)
+        val response: List<UtbetalingerResponse> = service.hentUtbetalinger(fnr)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(3)

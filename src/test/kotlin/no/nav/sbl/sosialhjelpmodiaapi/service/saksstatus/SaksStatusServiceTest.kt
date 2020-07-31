@@ -3,9 +3,15 @@ package no.nav.sbl.sosialhjelpmodiaapi.service.saksstatus
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.sosialhjelpmodiaapi.domain.*
-import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Sak
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatus
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatusResponse
+import no.nav.sbl.sosialhjelpmodiaapi.domain.UtfallVedtak
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Vedtak
+import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,8 +25,6 @@ internal class SaksStatusServiceTest {
 
     private val mockDigisosSak: DigisosSak = mockk()
 
-    private val token = "token"
-
     private val tittel = "tittel"
     private val referanse = "referanse"
 
@@ -28,15 +32,15 @@ internal class SaksStatusServiceTest {
     fun init() {
         clearMocks(fiksClient, eventService)
 
-        every { fiksClient.hentDigisosSak(any(), any()) } returns mockDigisosSak
+        every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
     }
 
     @Test
     fun `Skal returnere emptyList hvis model_saker er null`() {
         val model = InternalDigisosSoker()
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123", token)
+        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123")
 
         assertThat(response).isEmpty()
     }
@@ -54,9 +58,9 @@ internal class SaksStatusServiceTest {
                 datoOpprettet = now
         ))
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123", token)
+        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123")
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
@@ -65,7 +69,6 @@ internal class SaksStatusServiceTest {
         assertThat(response[0].datoOpprettet).isEqualTo(now)
         assertThat(response[0].datoAvsluttet).isNull()
         assertThat(response[0].vedtak).isEmpty()
-        assertThat(response[0].utfall).isNull()
     }
 
     @Test
@@ -83,9 +86,9 @@ internal class SaksStatusServiceTest {
                 datoOpprettet = now
         ))
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123", token)
+        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123")
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
@@ -96,7 +99,6 @@ internal class SaksStatusServiceTest {
         assertThat(response[0].vedtak).hasSize(1)
         assertThat(response[0].vedtak!![0].vedtakDato).isEqualTo(now)
         assertThat(response[0].vedtak!![0].utfall).isEqualTo(UtfallVedtak.INNVILGET)
-        assertThat(response[0].utfall).isEqualTo(UtfallVedtak.INNVILGET)
     }
 
     @Test
@@ -114,9 +116,9 @@ internal class SaksStatusServiceTest {
                 datoOpprettet = now
         ))
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123", token)
+        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123")
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
@@ -127,7 +129,6 @@ internal class SaksStatusServiceTest {
         assertThat(response[0].vedtak).hasSize(1)
         assertThat(response[0].vedtak!![0].vedtakDato).isEqualTo(now)
         assertThat(response[0].vedtak!![0].utfall).isEqualTo(UtfallVedtak.DELVIS_INNVILGET)
-        assertThat(response[0].utfall).isEqualTo(UtfallVedtak.DELVIS_INNVILGET)
     }
 
     @Test
@@ -158,9 +159,9 @@ internal class SaksStatusServiceTest {
                 )
         ))
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
-        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123", token)
+        val response: List<SaksStatusResponse> = service.hentSaksStatuser("123")
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(2)
@@ -173,12 +174,10 @@ internal class SaksStatusServiceTest {
         assertThat(response[0].vedtak!![0].utfall).isEqualTo(UtfallVedtak.INNVILGET)
         assertThat(response[0].vedtak!![1].vedtakDato).isEqualTo(now.plusDays(2))
         assertThat(response[0].vedtak!![1].utfall).isEqualTo(UtfallVedtak.DELVIS_INNVILGET)
-        assertThat(response[0].utfall).isEqualTo(UtfallVedtak.DELVIS_INNVILGET)
 
         assertThat(response[1].tittel).isEqualTo(DEFAULT_TITTEL)
         assertThat(response[1].datoOpprettet).isEqualTo(now)
         assertThat(response[1].datoAvsluttet).isNull()
         assertThat(response[1].vedtak).isEmpty()
-        assertThat(response[1].utfall).isNull()
     }
 }

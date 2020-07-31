@@ -11,6 +11,8 @@
         <root level="INFO">
             <appender-ref ref="stdout_json"/>
         </root>
+
+        <logger level="OFF" name="sporingslogg"/>
     </springProfile>
 
     <springProfile name="log-console">
@@ -19,6 +21,10 @@
                 <pattern>%green(%d{HH:mm:ss}) %cyan([%-5.5t]) %boldCyan(%0.-5p) %yellow(%-60.60logger{60}) %cyan(:) %m%n</pattern>
             </encoder>
         </appender>
+
+        <logger level="INFO" name="sporingslogg" additivity="false">
+            <appender-ref ref="console"/>
+        </logger>
 
         <logger name="no.nav.sbl.sosialhjelpmodiaapi" level="DEBUG"/>
 
@@ -29,6 +35,25 @@
         <root level="INFO">
             <appender-ref ref="console"/>
         </root>
+    </springProfile>
+
+    <springProfile name="log-audit">
+        <appender name="sporingslogg" class="com.papertrailapp.logback.Syslog4jAppender">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%msg%n</pattern>
+            </layout>
+            <syslogConfig class="org.productivity.java.syslog4j.impl.net.tcp.TCPNetSyslogConfig">
+                <host>audit.nais</host>
+                <port>6514</port>
+                <ident>sosialhjelp-modia-api</ident>
+                <maxMessageLength>128000</maxMessageLength>
+            </syslogConfig>
+        </appender>
+
+        <logger level="INFO" name="sporingslogg" additivity="false">
+            <appender-ref ref="sporingslogg" />
+        </logger>
+
     </springProfile>
 
 </configuration>

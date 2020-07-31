@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @ProtectedWithClaims(issuer = "veileder")
 @RestController
-@RequestMapping("/api/v1/innsyn", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
+@RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class HendelseController(
         private val hendelseService: HendelseService,
         private val abacService: AbacService
@@ -26,9 +26,7 @@ class HendelseController(
     fun hentHendelser(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<HendelseResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
-        // kan ikke bruke saksbehandlers token for å hente hendelser?
-
-        val hendelser = hendelseService.hentHendelser(fiksDigisosId, token)
+        val hendelser = hendelseService.hentHendelser(fiksDigisosId)
         return ResponseEntity.ok(hendelser)
     }
 }

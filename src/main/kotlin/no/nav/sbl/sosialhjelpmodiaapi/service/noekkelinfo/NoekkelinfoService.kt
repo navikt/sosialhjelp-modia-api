@@ -17,9 +17,9 @@ class NoekkelinfoService(
         private val eventService: EventService
 ) {
 
-    fun hentNoekkelInfo(fiksDigisosId: String, sporingsId: String): SoknadNoekkelinfoResponse {
-        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, sporingsId)
-        val model = eventService.createModel(digisosSak, sporingsId)
+    fun hentNoekkelInfo(fiksDigisosId: String): SoknadNoekkelinfoResponse {
+        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
+        val model = eventService.createModel(digisosSak)
 
         val behandlendeNavKontor: NavKontorInformasjon? = model.navKontorHistorikk.lastOrNull()
 

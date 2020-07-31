@@ -21,7 +21,7 @@ class SwaggerConfig : WebMvcConfigurer {
         return Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.regex(".*/api/v1/.*"))
+                .paths(PathSelectors.regex(".*/api/.*"))
                 .build()
     }
 

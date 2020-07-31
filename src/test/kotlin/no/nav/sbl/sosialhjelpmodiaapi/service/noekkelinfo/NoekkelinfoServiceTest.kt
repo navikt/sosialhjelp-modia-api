@@ -4,12 +4,17 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.sosialhjelpmodiaapi.SOKNAD_DEFAULT_TITTEL
-import no.nav.sbl.sosialhjelpmodiaapi.domain.*
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.domain.ForelopigSvar
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
+import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontorInformasjon
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SendingType
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus.MOTTATT
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_SENDT
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -33,7 +38,7 @@ internal class NoekkelinfoServiceTest {
     internal fun setUp() {
         clearAllMocks()
 
-        every { fiksClient.hentDigisosSak(any(), any()) } returns mockDigisosSak
+        every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
         every { mockDigisosSak.sistEndret } returns 123456789
     }
 
@@ -48,10 +53,10 @@ internal class NoekkelinfoServiceTest {
                 NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1)
         )
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
-        val noekkelinfo = service.hentNoekkelInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123")
 
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
@@ -76,10 +81,10 @@ internal class NoekkelinfoServiceTest {
         )
         model.forelopigSvar = ForelopigSvar(tidspunkt)
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
-        val noekkelinfo = service.hentNoekkelInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123")
 
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
@@ -104,10 +109,10 @@ internal class NoekkelinfoServiceTest {
                 NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2)
         )
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
-        val noekkelinfo = service.hentNoekkelInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123")
 
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
@@ -132,10 +137,10 @@ internal class NoekkelinfoServiceTest {
                 NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2)
         )
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
-        val noekkelinfo = service.hentNoekkelInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123")
 
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
@@ -156,10 +161,10 @@ internal class NoekkelinfoServiceTest {
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
 
-        every { eventService.createModel(any(), any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
-        val noekkelinfo = service.hentNoekkelInfo("123", "token")
+        val noekkelinfo = service.hentNoekkelInfo("123")
 
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)

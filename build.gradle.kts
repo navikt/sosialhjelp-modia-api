@@ -11,16 +11,18 @@ object Versions {
     const val springBoot = "2.3.2.RELEASE"
     const val logback = "1.2.3"
     const val logstash = "6.3"
-    const val sosialhjelpCommon = "1.614f573"
-    const val filformat = "1.2020.01.09-15.55-f18d10d7d76a"
+    const val sosialhjelpCommon = "1.a615c63"
+    const val filformat = "1.2020.06.25-09.12-23b98d57ab78"
     const val micrometerRegistry = "1.5.1"
     const val prometheus = "0.8.1"
-    const val tokenValidation = "1.1.5"
+    const val tokenValidation = "1.2.0"
     const val jackson = "2.11.0"
     const val guava = "28.2-jre"
     const val swagger = "2.9.2"
     const val abacAttributeConstants = "3.3.13"
     const val nettyCodec = "4.1.50.Final"
+    const val logbackSyslog4j = "1.0.0"
+    const val syslog4j = "0.9.30"
 
     // Test only
     const val junitJupiter = "5.6.0"
@@ -57,7 +59,7 @@ configurations {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.hamcrest", module = "hamcrest-library")
         exclude(group = "org.hamcrest", module = "hamcrest-core")
-        exclude(group = "org.mockito", module = "mockito-core}")
+        exclude(group = "org.mockito", module = "mockito-core")
     }
 }
 
@@ -71,13 +73,15 @@ dependencies {
 //    Spring
     implementation("org.springframework.boot:spring-boot-starter-web:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-jetty:${Versions.springBoot}")
-    implementation("org.springframework.boot:spring-boot-starter-security:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-actuator:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-logging:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.springBoot}")
 
 //    Sosialhjelp-common
     implementation("no.nav.sosialhjelp:sosialhjelp-common-selftest:${Versions.sosialhjelpCommon}")
+    implementation("no.nav.sosialhjelp:sosialhjelp-common-api:${Versions.sosialhjelpCommon}")
+    implementation("no.nav.sosialhjelp:sosialhjelp-common-kommuneinfo-client:${Versions.sosialhjelpCommon}")
+    implementation("no.nav.sosialhjelp:sosialhjelp-common-idporten-client:${Versions.sosialhjelpCommon}")
 
 //    Micrometer/prometheus
     implementation("io.micrometer:micrometer-registry-prometheus:${Versions.micrometerRegistry}")
@@ -88,11 +92,16 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:${Versions.logback}")
     implementation("net.logstash.logback:logstash-logback-encoder:${Versions.logstash}")
 
+//    Auditlogger syslog
+    implementation("com.papertrailapp:logback-syslog4j:${Versions.logbackSyslog4j}")
+    implementation("org.syslog4j:syslog4j:${Versions.syslog4j}")
+
 //    Filformat
     implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:${Versions.filformat}")
 
 //    Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jackson}")
+    implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}")
 
 //    Token-validation
     implementation("no.nav.security:token-validation-spring:${Versions.tokenValidation}")
@@ -101,7 +110,7 @@ dependencies {
     implementation("io.springfox:springfox-swagger2:${Versions.swagger}")
     implementation("io.springfox:springfox-swagger-ui:${Versions.swagger}")
 
-//    Abac
+//    Abac-attributter
     implementation("no.nav.abac.policies:abac-attribute-constants:${Versions.abacAttributeConstants}")
 
 //    Spesifikke versjoner oppgradert etter ønske fra snyk

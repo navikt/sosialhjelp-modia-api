@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @ProtectedWithClaims(issuer = "veileder")
 @RestController
-@RequestMapping("/api/v1/innsyn", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
+@RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class UtbetalingerController(
         private val utbetalingerService: UtbetalingerService,
         private val fiksClient: FiksClient,
@@ -29,19 +29,15 @@ class UtbetalingerController(
     fun hentUtbetalinger(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<UtbetalingerResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
-        // kan ikke bruker saksbehandlers token for å hente utbetalinger?
-
-        return ResponseEntity.ok().body(utbetalingerService.hentUtbetalinger(token, ident.fnr))
+        return ResponseEntity.ok().body(utbetalingerService.hentUtbetalinger(ident.fnr))
     }
 
     @PostMapping("/{fiksDigisosId}/utbetalinger")
     fun hentUtbetalingerForDigisosSak(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<UtbetalingerResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
-        // kan ikke bruker saksbehandlers token for å hente utbetalinger?
-
-        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId, token)
-        return ResponseEntity.ok().body(utbetalingerService.hentUtbetalingerForDigisosSak(digisosSak, token))
+        val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
+        return ResponseEntity.ok().body(utbetalingerService.hentUtbetalingerForDigisosSak(digisosSak))
     }
 
 }

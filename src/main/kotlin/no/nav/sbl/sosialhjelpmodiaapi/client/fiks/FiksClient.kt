@@ -1,17 +1,13 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.fiks
 
-import no.nav.sbl.sosialhjelpmodiaapi.domain.DigisosSak
-import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneInfo
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 
 interface FiksClient {
 
-    fun hentDigisosSak(digisosId: String, sporingsId: String): DigisosSak
+    fun hentDigisosSak(digisosId: String): DigisosSak
 
-    fun hentAlleDigisosSaker(sporingsId: String, fnr: String): List<DigisosSak>
+    fun hentAlleDigisosSaker(fnr: String): List<DigisosSak>
 
-    fun hentKommuneInfo(kommunenummer: String): KommuneInfo
+    fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any
 
-    fun hentDokument(digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>, sporingsId: String): Any
-
-    fun hentKommuneInfoForAlle(): List<KommuneInfo>
 }

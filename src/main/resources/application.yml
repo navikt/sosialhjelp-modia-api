@@ -1,3 +1,5 @@
+consumerid: srvsosialhjelp-mod
+
 spring:
   main:
     banner-mode: 'off'
@@ -25,18 +27,24 @@ client:
   fiks_integrasjonid_kommune: ${INTEGRASJONSID_FIKS_KOMMUNE}
   fiks_integrasjonpassord: ${INTEGRASJONPASSORD_FIKS}
   fiks_integrasjonpassord_kommune: ${INTEGRASJONPASSORD_FIKS_KOMMUNE}
-  id_porten_token_url: ${ID_PORTEN_TOKEN_URL}
-  id_porten_client_id: ${ID_PORTEN_CLIENT_ID}
-  id_porten_scope: ${ID_PORTEN_SCOPE}
-  id_porten_config_url: ${ID_PORTEN_CONFIG_URL}
-  id_porten_default_issuer: ${ID_PORTEN_DEFAULT_ISSUER}
   norg_endpoint_url: ${NORG_ENDPOINT_URL}
   pdl_endpoint_url: ${PDL_ENDPOINT_URL}
   sts_token_endpoint_url: ${STS_TOKEN_ENDPOINT_URL}
 
+no.nav.sosialhjelp.idporten:
+  token_url: ${ID_PORTEN_TOKEN_URL}
+  client_id: ${ID_PORTEN_CLIENT_ID}
+  scope: ${ID_PORTEN_SCOPE}
+  config_url: ${ID_PORTEN_CONFIG_URL}
+  truststore_type: ${TRUSTSTORE_TYPE}
+  truststore_filepath: ${TRUSTSTORE_FILEPATH}
+
 #Token-validering
 no.nav.security.jwt:
   issuer.veileder:
+    proxyurl:
     discoveryurl: ${NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_DISCOVERYURL}
     accepted_audience: ${NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE}
     cookie_name: ID_token
+
+loginurl: ${LOGINURL:http://localhost:8383/sosialhjelp/modia-api/local/cookie} # TODO: må fikses når vi finner ut url i miljø.
