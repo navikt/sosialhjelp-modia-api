@@ -17,7 +17,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonEtterspurt) {
             .toMutableList()
 
     if (hendelse.dokumenter.isNotEmpty() && hendelse.forvaltningsbrev != null) {
-        val beskrivelse = "Veileder ber søker sende dokumentasjon. Med forvaltningsbrev."
+        val beskrivelse = "Du må sende dokumentasjon."
         historikk.add(Hendelse(DOKUMENTASJONSKRAV, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime(), VIS_BREVET))
     }
 
