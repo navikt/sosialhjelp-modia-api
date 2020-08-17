@@ -13,6 +13,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.SendingType
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus.MOTTATT
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_SENDT
+import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommunenavnService
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
@@ -24,12 +25,15 @@ internal class NoekkelinfoServiceTest {
 
     private val fiksClient: FiksClient = mockk()
     private val eventService: EventService = mockk()
-    private val service = NoekkelinfoService(fiksClient, eventService)
+    private val kommunenavnService: KommunenavnService = mockk()
+    private val service = NoekkelinfoService(fiksClient, eventService, kommunenavnService)
 
     private val mockDigisosSak: DigisosSak = mockk()
 
     private val enhetNavn1 = "NAV TestKontor"
     private val enhetsnr1 = "1234"
+    private val kommunenr = "2468"
+    private val kommunenavn = "Oslo"
 
     private val enhetNavn2 = "NAV sekundært TestKontor"
     private val enhetsnr2 = "5678"
@@ -40,6 +44,8 @@ internal class NoekkelinfoServiceTest {
 
         every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
         every { mockDigisosSak.sistEndret } returns 123456789
+        every { mockDigisosSak.kommunenummer } returns kommunenr
+        every { kommunenavnService.hentKommunenavnFor(any()) } returns kommunenavn
     }
 
     @Test
@@ -65,6 +71,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor?.enhetsNavn).isEqualTo(enhetNavn1)
         assertThat(noekkelinfo.navKontor?.enhetsNr).isEqualTo(enhetsnr1)
+        assertThat(noekkelinfo.kommunenavn).isEqualTo(kommunenavn)
         assertThat(noekkelinfo.videresendtHistorikk).isNull()
         assertThat(noekkelinfo.tidspunktForelopigSvar).isNull()
     }
@@ -93,6 +100,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor?.enhetsNavn).isEqualTo(enhetNavn1)
         assertThat(noekkelinfo.navKontor?.enhetsNr).isEqualTo(enhetsnr1)
+        assertThat(noekkelinfo.kommunenavn).isEqualTo(kommunenavn)
         assertThat(noekkelinfo.videresendtHistorikk).isNull()
         assertThat(noekkelinfo.tidspunktForelopigSvar).isEqualTo(tidspunkt)
     }
@@ -121,6 +129,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor?.enhetsNavn).isEqualTo(enhetNavn2)
         assertThat(noekkelinfo.navKontor?.enhetsNr).isEqualTo(enhetsnr2)
+        assertThat(noekkelinfo.kommunenavn).isEqualTo(kommunenavn)
         assertThat(noekkelinfo.videresendtHistorikk).hasSize(2)
         assertThat(noekkelinfo.tidspunktForelopigSvar).isNull()
     }
@@ -149,6 +158,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor?.enhetsNavn).isEqualTo(enhetNavn2)
         assertThat(noekkelinfo.navKontor?.enhetsNr).isEqualTo(enhetsnr2)
+        assertThat(noekkelinfo.kommunenavn).isEqualTo(kommunenavn)
         assertThat(noekkelinfo.videresendtHistorikk).hasSize(2)
         assertThat(noekkelinfo.tidspunktForelopigSvar).isNull()
     }
@@ -172,6 +182,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.saksId).isNull() //fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor).isNull()
+        assertThat(noekkelinfo.kommunenavn).isEqualTo(kommunenavn)
         assertThat(noekkelinfo.videresendtHistorikk).isNull()
         assertThat(noekkelinfo.tidspunktForelopigSvar).isNull()
     }

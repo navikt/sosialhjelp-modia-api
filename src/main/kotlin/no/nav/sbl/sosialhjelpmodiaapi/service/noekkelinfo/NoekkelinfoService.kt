@@ -8,18 +8,21 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.VideresendtInfo
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.hentSoknadTittel
+import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommunenavnService
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import org.springframework.stereotype.Component
 
 @Component
 class NoekkelinfoService(
         private val fiksClient: FiksClient,
-        private val eventService: EventService
+        private val eventService: EventService,
+        private val kommunenavnService: KommunenavnService
 ) {
 
     fun hentNoekkelInfo(fiksDigisosId: String): SoknadNoekkelinfoResponse {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
+        val kommunenavn = kommunenavnService.hentKommunenavnFor(digisosSak.kommunenummer)
 
         val behandlendeNavKontor: NavKontorInformasjon? = model.navKontorHistorikk.lastOrNull()
 
@@ -30,6 +33,7 @@ class NoekkelinfoService(
                 saksId = null, // TODO: saksreferanse eller behandlingsid?
                 sendtEllerMottattTidspunkt = model.historikk[0].tidspunkt.toLocalDate(), // Første hendelse i historikk er alltid SENDT eller MOTTATT (hvis papirsøknad)
                 navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }, // null hvis papirsøknad og ikke enda mottatt
+                kommunenavn = kommunenavn,
                 videresendtHistorikk = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
                 tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt
         )
