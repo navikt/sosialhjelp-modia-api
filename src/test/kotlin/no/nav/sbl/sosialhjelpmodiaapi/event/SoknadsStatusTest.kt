@@ -76,7 +76,7 @@ internal class SoknadsStatusTest {
         val hendelse = model.historikk.last()
         assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_1.toLocalDateTime())
         assertThat(hendelse.tittel).isEqualTo(SOKNAD_MOTTATT)
-        assertThat(hendelse.beskrivelse).contains("Søknaden med vedlegg er mottatt hos ")
+        assertThat(hendelse.beskrivelse).contains("Søknaden med vedlegg er mottatt ved ")
     }
 
     @Test
