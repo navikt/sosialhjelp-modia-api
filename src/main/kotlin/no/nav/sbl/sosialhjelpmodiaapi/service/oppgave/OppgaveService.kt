@@ -39,6 +39,7 @@ class OppgaveService(
                             antallVedlegg = hentAntallOpplastedeVedlegg(it, ettersendteVedlegg),
                             erFraInnsyn = it.erFraInnsyn)
                 }
+                .filter { it.antallVedlegg > 0 }
         log.info("Hentet ${oppgaveResponseList.size} oppgaver for fiksDigisosId=$fiksDigisosId")
         return oppgaveResponseList
     }
