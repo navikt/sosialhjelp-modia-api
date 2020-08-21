@@ -12,6 +12,7 @@ object Titler {
 
     const val VEDLEGG_MOTTATT = "Vedlegg mottatt"
     const val DOKUMENTASJONSKRAV = "Dokumentasjonskrav"
+    const val VILLKAR = "Vilkår"
 
     const val FORELOPIG_SVAR = "Du har fått et brev om saksbehandlingstiden for søknaden din"
 

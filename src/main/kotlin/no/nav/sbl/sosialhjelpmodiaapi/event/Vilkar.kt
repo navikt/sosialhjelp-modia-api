@@ -1,54 +1,57 @@
 package no.nav.sbl.sosialhjelpmodiaapi.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVilkar
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
-import no.nav.sbl.sosialhjelpmodiaapi.domain.Utbetaling
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Sak
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Vilkar
-import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonVilkar) {
 
-    val log by logger()
+    val tidligereVilkar = vilkar.filter { it.referanse == hendelse.vilkarreferanse }.firstOrNull()
+    if (tidligereVilkar != null) {
+        fjernVilkarFraAlleUtbetalinger(tidligereVilkar, saker)
+        tidligereVilkar.beskrivelse = hendelse.beskrivelse
+        tidligereVilkar.oppfyllt = hendelse.status == JsonVilkar.Status.OPPFYLT
+        tidligereVilkar.datoSistEndret = hendelse.hendelsestidspunkt.toLocalDateTime()
+        oppdaterUtbetalingerMedVilkar(hendelse, tidligereVilkar, saker)
+    } else {
+        val vilkar = Vilkar(
+                referanse = hendelse.vilkarreferanse,
+                beskrivelse = hendelse.beskrivelse,
+                oppfyllt = hendelse.status == JsonVilkar.Status.OPPFYLT,
+                datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
+                datoSistEndret = hendelse.hendelsestidspunkt.toLocalDateTime()
+        )
+        this.vilkar.add(vilkar)
+        oppdaterUtbetalingerMedVilkar(hendelse, vilkar, saker)
+    }
 
-    val utbetalinger = mutableListOf<Utbetaling>()
+//    historikk.add(Hendelse(
+//            Titler.VILLKAR,
+//            "Vilkår har blitt oppdatert",
+//            hendelse.hendelsestidspunkt.toLocalDateTime(),
+//            null)
+//    )
+}
+
+fun oppdaterUtbetalingerMedVilkar(hendelse: JsonVilkar, vilkar: Vilkar, saker: List<Sak>) {
     for (utbetalingsreferanse in hendelse.utbetalingsreferanse) {
         for (sak in saker) {
             for (utbetaling in sak.utbetalinger) {
                 if (utbetaling.referanse == utbetalingsreferanse) {
-                    utbetalinger.add(utbetaling)
+                    utbetaling.vilkar.add(vilkar)
                 }
             }
         }
     }
-
-    if (utbetalinger.isEmpty()) {
-        log.warn("Fant ingen utbetalinger å knytte vilkår til. Utbetalingsreferanser: ${hendelse.utbetalingsreferanse}")
-        return
-    }
-
-    val vilkar = Vilkar(
-            referanse = hendelse.vilkarreferanse,
-            beskrivelse = hendelse.beskrivelse,
-            oppfyllt = hendelse.status == JsonVilkar.Status.OPPFYLT,
-            datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
-            datoSistEndret = hendelse.hendelsestidspunkt.toLocalDateTime()
-    )
-
-    utbetalinger.forEach { it.vilkar.oppdaterEllerLeggTilVilkar(hendelse, vilkar) }
 }
 
-private fun MutableList<Vilkar>.oppdaterEllerLeggTilVilkar(hendelse: JsonVilkar, vilkar: Vilkar) {
-    if (any { it.referanse == hendelse.vilkarreferanse }) {
-        filter { it.referanse == hendelse.vilkarreferanse }
-                .forEach { it.oppdaterFelter(hendelse) }
-    } else {
-        this.add(vilkar)
+fun fjernVilkarFraAlleUtbetalinger(vilkar: Vilkar, saker: List<Sak>) {
+    for (sak in saker) {
+        for (utbetaling in sak.utbetalinger) {
+            utbetaling.vilkar.removeIf { it.referanse == vilkar.referanse }
+        }
     }
-}
-
-private fun Vilkar.oppdaterFelter(hendelse: JsonVilkar) {
-    datoSistEndret = hendelse.hendelsestidspunkt.toLocalDateTime()
-    beskrivelse = hendelse.beskrivelse
-    oppfyllt = hendelse.status == JsonVilkar.Status.OPPFYLT
 }
