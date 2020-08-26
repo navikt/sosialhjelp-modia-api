@@ -30,6 +30,7 @@ spec:
     outbound:
       external:
         - host: "oidc-ver2.difi.no"
+        - host: "register.geonorge.no"
       rules:
         - application: sosialhjelp-mock-alt-api
   filesFrom:
