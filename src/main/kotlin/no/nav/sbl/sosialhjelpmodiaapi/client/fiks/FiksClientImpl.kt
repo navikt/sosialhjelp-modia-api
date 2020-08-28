@@ -57,7 +57,7 @@ class FiksClientImpl(
             val digisosSak = response.body!!
 
             auditService.reportFiks(digisosSak.sokerFnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId", HttpMethod.GET, sporingsId)
-            log.info("Debug timing: hentDigisosSak Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis}")
+            log.info("Debug timing: hentDigisosSak Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis} | ${start.millis}")
 
             return digisosSak
 
@@ -93,7 +93,7 @@ class FiksClientImpl(
             val middle = DateTime.now()
 
             auditService.reportFiks(fnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId", HttpMethod.GET, sporingsId)
-            log.info("Debug timing: hentDokument Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis}")
+            log.info("Debug timing: hentDokument Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis} | ${start.millis}")
 
             log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
             return response.body!!
@@ -124,7 +124,7 @@ class FiksClientImpl(
             val middle = DateTime.now()
 
             auditService.reportFiks(fnr, urlTemplate, HttpMethod.POST, sporingsId)
-            log.info("Debug timing: hentAlleDigisosSaker Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis}")
+            log.info("Debug timing: hentAlleDigisosSaker Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis} | ${start.millis}")
 
             return response.body!!
 
