@@ -16,6 +16,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.fiksHeaders
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.idporten.client.IdPortenClient
+import org.joda.time.DateTime
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
@@ -48,12 +49,15 @@ class FiksClientImpl(
             val uriComponents = urlWithSporingsId(baseUrl + PATH_DIGISOSSAK)
             val vars = mapOf(DIGISOSID to digisosId, SPORINGSID to sporingsId)
 
+            val start = DateTime.now()
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), DigisosSak::class.java, vars)
+            val middle = DateTime.now()
 
             log.info("Hentet DigisosSak $digisosId fra Fiks")
             val digisosSak = response.body!!
 
             auditService.reportFiks(digisosSak.sokerFnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId", HttpMethod.GET, sporingsId)
+            log.info("Debug timing: hentDigisosSak Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis}")
 
             return digisosSak
 
@@ -84,9 +88,12 @@ class FiksClientImpl(
                     DOKUMENTLAGERID to dokumentlagerId,
                     SPORINGSID to sporingsId)
 
+            val start = DateTime.now()
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), requestedClass, vars)
+            val middle = DateTime.now()
 
             auditService.reportFiks(fnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId", HttpMethod.GET, sporingsId)
+            log.info("Debug timing: hentDokument Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis}")
 
             log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
             return response.body!!
@@ -112,9 +119,12 @@ class FiksClientImpl(
             val vars = mapOf(SPORINGSID to sporingsId)
             val body = Fnr(fnr)
 
+            val start = DateTime.now()
             val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.POST, HttpEntity(body, headers), typeRef<List<DigisosSak>>(), vars)
+            val middle = DateTime.now()
 
             auditService.reportFiks(fnr, urlTemplate, HttpMethod.POST, sporingsId)
+            log.info("Debug timing: hentAlleDigisosSaker Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis}")
 
             return response.body!!
 
