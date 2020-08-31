@@ -82,6 +82,29 @@ internal class VedleggControllerTest {
     }
 
     @Test
+    fun `skal filtrere bort vedlegg med antall filer som er 0`() {
+        val frist = LocalDateTime.now().plusDays(7)
+        val datoLagtTil = LocalDateTime.now()
+
+        every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns listOf(
+                InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
+                InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
+                InternalVedlegg(dokumenttype, null, frist, 0, datoLagtTil),
+                InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
+                InternalVedlegg(dokumenttype, null, frist, 0, datoLagtTil)
+        )
+
+        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
+
+        val body = vedleggResponses.body
+
+        assertThat(body).isNotNull
+        if (body != null && body.isNotEmpty()) {
+            assertThat(body).hasSize(3)
+        }
+    }
+
+    @Test
     fun `skal sortere pa innsendelsesfrist forst og deretter datoLagtTil`() {
         val frist = LocalDateTime.now().plusDays(7)
         val frist_2 = LocalDateTime.now().plusDays(6)

@@ -43,6 +43,7 @@ class VedleggController(
                             antallVedlegg = vedlegg.antallFiler
                     )
                 }
+                .filter { it.antallVedlegg > 0 }
                 .sortedWith(compareByDescending<VedleggResponse> { it.innsendelsesfrist }.thenByDescending { it.datoLagtTil })
         return ResponseEntity.ok(vedleggResponses)
     }

@@ -127,7 +127,7 @@ internal class OppgaveServiceTest {
     }
 
     @Test
-    fun `skal vise info om dokumenter bruker har lastet opp tilknyttet en oppgave`() {
+    fun `skal vise info om oppgaver hvor bruker ikke har lastet opp tilknyttet en oppgave`() {
         val model = InternalDigisosSoker()
         model.oppgaver.addAll(listOf(
                 Oppgave(type, tillegg, frist, tidspunktForKrav, true),
@@ -138,31 +138,20 @@ internal class OppgaveServiceTest {
         every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns listOf(
                 InternalVedlegg(type, tillegg, frist, 1, tidspunktEtterKrav),
                 InternalVedlegg(type2, null, frist2, 1, tidspunktEtterKrav),
-                InternalVedlegg(type3, tillegg3, frist3, 1, tidspunktFoerKrav),
-                InternalVedlegg(type3, null, frist3, 1, tidspunktEtterKrav))
+                InternalVedlegg(type3, tillegg3, frist3, 1, tidspunktFoerKrav), //Filtreres bort pga. tidspunkt
+                InternalVedlegg(type3, null, frist3, 1, tidspunktEtterKrav)) //Filtreres bort pga tillegsinfo
+        // Så type3 er den eneste oppgaven uten vedlegg
 
         val oppgaver = service.hentOppgaver("123")
 
         assertThat(oppgaver).isNotNull
-        assertThat(oppgaver).hasSize(3)
+        assertThat(oppgaver).hasSize(1)
 
-        assertThat(oppgaver[0].dokumenttype).isEqualTo(type)
-        assertThat(oppgaver[0].tilleggsinformasjon).isEqualTo(tillegg)
-        assertThat(oppgaver[0].innsendelsesfrist).isEqualTo(frist.toLocalDate())
-        assertThat(oppgaver[0].antallVedlegg).isEqualTo(1)
-        assertThat(oppgaver[0].vedleggDatoLagtTil).isEqualTo(tidspunktEtterKrav.toLocalDate())
-
-        assertThat(oppgaver[1].dokumenttype).isEqualTo(type2)
-        assertThat(oppgaver[1].tilleggsinformasjon).isNull()
-        assertThat(oppgaver[1].innsendelsesfrist).isEqualTo(frist2.toLocalDate())
-        assertThat(oppgaver[1].antallVedlegg).isEqualTo(1)
-        assertThat(oppgaver[1].vedleggDatoLagtTil).isEqualTo(tidspunktEtterKrav.toLocalDate())
-
-        assertThat(oppgaver[2].dokumenttype).isEqualTo(type3)
-        assertThat(oppgaver[2].tilleggsinformasjon).isEqualTo(tillegg3)
-        assertThat(oppgaver[2].innsendelsesfrist).isEqualTo(frist3.toLocalDate())
-        assertThat(oppgaver[2].antallVedlegg).isEqualTo(0)
-        assertThat(oppgaver[2].vedleggDatoLagtTil).isNull()
+        assertThat(oppgaver[0].dokumenttype).isEqualTo(type3)
+        assertThat(oppgaver[0].tilleggsinformasjon).isEqualTo(tillegg3)
+        assertThat(oppgaver[0].innsendelsesfrist).isEqualTo(frist3.toLocalDate())
+        assertThat(oppgaver[0].antallVedlegg).isEqualTo(0)
+        assertThat(oppgaver[0].vedleggDatoLagtTil).isNull()
     }
 
     // FIXME:
@@ -183,6 +172,6 @@ internal class OppgaveServiceTest {
         val oppgaver = service.hentOppgaver("123")
 
         assertThat(oppgaver).isNotNull
-        assertThat(oppgaver).hasSize(2)
+        assertThat(oppgaver).hasSize(0) //Begge blir registrert med vedlegg og dermed filtrert bort.
     }
 }
