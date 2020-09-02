@@ -8,7 +8,7 @@ group = "no.nav.sbl"
 object Versions {
     const val kotlin = "1.3.72"
     const val coroutines = "1.3.7"
-    const val springBoot = "2.3.2.RELEASE"
+    const val springBoot = "2.3.3.RELEASE"
     const val logback = "1.2.3"
     const val logstash = "6.3"
     const val sosialhjelpCommon = "1.a615c63"
@@ -23,6 +23,7 @@ object Versions {
     const val nettyCodec = "4.1.50.Final"
     const val logbackSyslog4j = "1.0.0"
     const val syslog4j = "0.9.30"
+    const val jerseyMediaJaxb = "2.31"
 
     // Test only
     const val junitJupiter = "5.6.0"
@@ -116,6 +117,7 @@ dependencies {
 //    Spesifikke versjoner oppgradert etter ønske fra snyk
     implementation("com.google.guava:guava:${Versions.guava}")
     implementation("io.netty:netty-codec-http2:${Versions.nettyCodec}")
+    implementation("org.glassfish.jersey.media:jersey-media-jaxb:${Versions.jerseyMediaJaxb}")
 
 //    Test
     testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
