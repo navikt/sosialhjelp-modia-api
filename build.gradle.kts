@@ -23,6 +23,7 @@ object Versions {
     const val nettyCodec = "4.1.50.Final"
     const val logbackSyslog4j = "1.0.0"
     const val syslog4j = "0.9.30"
+    const val jerseyMediaJaxb = "2.31"
 
     // Test only
     const val junitJupiter = "5.6.0"
@@ -116,6 +117,7 @@ dependencies {
 //    Spesifikke versjoner oppgradert etter ønske fra snyk
     implementation("com.google.guava:guava:${Versions.guava}")
     implementation("io.netty:netty-codec-http2:${Versions.nettyCodec}")
+    implementation("org.glassfish.jersey.media:jersey-media-jaxb:${Versions.jerseyMediaJaxb}")
 
 //    Test
     testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
