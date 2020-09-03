@@ -5,6 +5,15 @@ spring:
     banner-mode: 'off'
   application:
     name: "sosialhjelp-modia-api"
+  redis:
+    host: ${REDIS_HOST}
+    port: 6379
+    password: ${REDIS_PASSWORD}
+
+modia:
+  cache:
+    redis_mocked: false
+    time_to_live_seconds: ${CACHE_TIME_TO_LIVE_SECONDS}
 
 server:
   port: 8383

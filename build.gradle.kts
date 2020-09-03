@@ -24,6 +24,8 @@ object Versions {
     const val logbackSyslog4j = "1.0.0"
     const val syslog4j = "0.9.30"
     const val jerseyMediaJaxb = "2.31"
+    const val redisMock = "0.1.16"
+    const val lettuce = "5.3.1.RELEASE"
 
     // Test only
     const val junitJupiter = "5.6.0"
@@ -77,6 +79,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-logging:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.springBoot}")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis:${Versions.springBoot}")
 
 //    Sosialhjelp-common
     implementation("no.nav.sosialhjelp:sosialhjelp-common-selftest:${Versions.sosialhjelpCommon}")
@@ -113,6 +116,10 @@ dependencies {
 
 //    Abac-attributter
     implementation("no.nav.abac.policies:abac-attribute-constants:${Versions.abacAttributeConstants}")
+
+//    Redis
+    implementation("io.lettuce:lettuce-core:${Versions.lettuce}")
+    implementation("com.github.fppt:jedis-mock:${Versions.redisMock}")
 
 //    Spesifikke versjoner oppgradert etter ønske fra snyk
     implementation("com.google.guava:guava:${Versions.guava}")
