@@ -10,10 +10,13 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.feilmeldingUtenFnr
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
+import no.nav.sbl.sosialhjelpmodiaapi.redis.RedisService
+import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.getUserIdFromToken
 import no.nav.sbl.sosialhjelpmodiaapi.toFiksErrorMessage
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.fiksHeaders
+import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.idporten.client.IdPortenClient
 import org.springframework.context.annotation.Profile
@@ -33,12 +36,29 @@ class FiksClientImpl(
         private val clientProperties: ClientProperties,
         private val restTemplate: RestTemplate,
         private val idPortenClient: IdPortenClient,
-        private val auditService: AuditService
+        private val auditService: AuditService,
+        private val redisService: RedisService
 ) : FiksClient {
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
 
     override fun hentDigisosSak(digisosId: String): DigisosSak {
+        log.debug("Forsøker å hente digisosSak fra cache")
+
+        // cache key = "<NavIdent>_<digisosId>"
+        val key = "${getUserIdFromToken()}_$digisosId"
+
+        val cachedDigisosSak: DigisosSak? = redisService.get(key, DigisosSak::class.java) as DigisosSak?
+        if (cachedDigisosSak != null) {
+            return cachedDigisosSak
+        }
+
+        val digisosSak = hentDigisosSakFraFiks(digisosId)
+        redisService.put(key, objectMapper.writeValueAsString(digisosSak))
+        return digisosSak
+    }
+
+    private fun hentDigisosSakFraFiks(digisosId: String): DigisosSak {
         val virksomhetsToken = runBlocking { idPortenClient.requestToken() }
         val sporingsId = genererSporingsId()
 
@@ -139,7 +159,7 @@ class FiksClientImpl(
     companion object {
         private val log by logger()
 
-//        Query param navn
+        //        Query param navn
         private const val SPORINGSID = "sporingsId"
         private const val DIGISOSID = "digisosId"
         private const val DOKUMENTLAGERID = "dokumentlagerId"
