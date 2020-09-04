@@ -29,19 +29,19 @@ class NorgCheck(
     override val importance = Importance.WARNING
 
     override fun doCheck() {
-        try {
-            val headers = HttpHeaders()
-            headers.set(HEADER_CALL_ID, getCallId())
-
-            // samme kall som selftest i soknad-api
-            restTemplate.exchange("$address/kodeverk/EnhetstyperNorg", HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java)
-        } catch (e: HttpStatusCodeException) {
-            log.warn("Selftest - Norg2 - noe feilet - ${e.statusCode} ${e.statusText}", e)
-            throw NorgException(e.statusCode, e.message, e)
-        } catch (e: Exception) {
-            log.warn("Selftest - Norg2 - noe feilet", e)
-            throw NorgException(null, e.message, e)
-        }
+//        try {
+//            val headers = HttpHeaders()
+//            headers.set(HEADER_CALL_ID, getCallId())
+//
+//            // samme kall som selftest i soknad-api
+//            restTemplate.exchange("$address/kodeverk/EnhetstyperNorg", HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java)
+//        } catch (e: HttpStatusCodeException) {
+//            log.warn("Selftest - Norg2 - noe feilet - ${e.statusCode} ${e.statusText}", e)
+//            throw NorgException(e.statusCode, e.message, e)
+//        } catch (e: Exception) {
+//            log.warn("Selftest - Norg2 - noe feilet", e)
+//            throw NorgException(null, e.message, e)
+//        }
     }
 
     companion object {

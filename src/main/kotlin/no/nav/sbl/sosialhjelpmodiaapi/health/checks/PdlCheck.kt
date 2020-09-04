@@ -23,12 +23,12 @@ class PdlCheck(
     override val importance = Importance.WARNING
 
     override fun doCheck() {
-        try {
-            pdlClient.ping()
-        } catch (e: RestClientException) {
-            log.warn("Selftest - PDL - noe feilet", e)
-            throw e
-        }
+//        try {
+//            pdlClient.ping()
+//        } catch (e: RestClientException) {
+//            log.warn("Selftest - PDL - noe feilet", e)
+//            throw e
+//        }
     }
 
     companion object {
