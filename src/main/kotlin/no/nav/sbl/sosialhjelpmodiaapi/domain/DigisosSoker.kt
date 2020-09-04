@@ -61,6 +61,7 @@ data class Utbetaling(
         var fom: LocalDate?,
         var tom: LocalDate?,
         var mottaker: String?,
+        var annenMottaker: Boolean,
         var kontonummer: String?,
         var utbetalingsmetode: String?,
         var vilkar: MutableList<Vilkar>,
