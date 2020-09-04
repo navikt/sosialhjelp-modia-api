@@ -3,12 +3,12 @@ package no.nav.sbl.sosialhjelpmodiaapi.responses
 val ok_digisossak_response_string = """
 {
   "fiksDigisosId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "sokerFnr": "string",
+  "sokerFnr": "11111111111",
   "fiksOrgId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "kommunenummer": "string",
+  "kommunenummer": "1111",
   "sistEndret": 0,
   "originalSoknadNAV": {
-    "navEksternRefId": "string",
+    "navEksternRefId": "11000001",
     "metadata": "3fa85f64-5717-4562-b3fc-2c963f66afa0",
     "vedleggMetadata": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "soknadDokument": {
@@ -28,7 +28,7 @@ val ok_digisossak_response_string = """
   "ettersendtInfoNAV": {
     "ettersendelser": [
       {
-        "navEksternRefId": "string",
+        "navEksternRefId": "navEksternRefIdEttersendelse0001",
         "vedleggMetadata": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         "vedlegg": [
           {

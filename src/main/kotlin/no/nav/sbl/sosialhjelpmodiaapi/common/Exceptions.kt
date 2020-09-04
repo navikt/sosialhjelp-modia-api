@@ -30,3 +30,7 @@ class PdlException(
         status: HttpStatus?,
         override val message: String?
 ) : RuntimeException(message)
+
+class DigisosSakTilhorerAnnenBrukerException(
+        override val message: String?
+) : RuntimeException(message)
