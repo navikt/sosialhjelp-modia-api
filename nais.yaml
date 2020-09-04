@@ -51,11 +51,11 @@ spec:
 {{/each}}
   resources:
     limits:
-      cpu: 500m
-      memory: 512Mi
+      cpu: 1000m
+      memory: 2Gi
     requests:
-      cpu: 200m
-      memory: 512Mi
+      cpu: 500m
+      memory: 1Gi
   env:
 {{#each env}}
     - name: {{@key}}
