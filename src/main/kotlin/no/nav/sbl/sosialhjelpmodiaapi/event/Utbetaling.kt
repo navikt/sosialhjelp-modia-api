@@ -20,7 +20,8 @@ fun InternalDigisosSoker.apply(hendelse: JsonUtbetaling) {
             fom = if (hendelse.fom == null) null else hendelse.fom.toLocalDate(),
             tom = if (hendelse.tom == null) null else hendelse.tom.toLocalDate(),
             mottaker = hendelse.mottaker,
-            kontonummer = if (erForEnAnnenMotaker(hendelse)) null else hendelse.kontonummer,
+            annenMottaker = isAnnenMottaker(hendelse),
+            kontonummer = if (isAnnenMottaker(hendelse)) null else hendelse.kontonummer,
             utbetalingsmetode = hendelse.utbetalingsmetode,
             vilkar = mutableListOf(),
             dokumentasjonkrav = mutableListOf(),
@@ -37,5 +38,5 @@ fun InternalDigisosSoker.apply(hendelse: JsonUtbetaling) {
 
 }
 
-private fun erForEnAnnenMotaker(hendelse: JsonUtbetaling) =
+private fun isAnnenMottaker(hendelse: JsonUtbetaling) =
         hendelse.annenMottaker == null || hendelse.annenMottaker

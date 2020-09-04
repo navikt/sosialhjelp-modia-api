@@ -53,6 +53,7 @@ class UtbetalingerService(
                                         fom = utbetaling.fom,
                                         tom = utbetaling.tom,
                                         mottaker = utbetaling.mottaker,
+                                        annenMottaker = utbetaling.annenMottaker,
                                         kontonummer = utbetaling.kontonummer,
                                         utbetalingsmetode = utbetaling.utbetalingsmetode,
                                         harVilkar = !utbetaling.vilkar.isNullOrEmpty(),
