@@ -55,6 +55,7 @@ data class UtbetalingerResponse(
         @JsonFormat(pattern = "yyyy-MM-dd")
         val tom: LocalDate?,
         val mottaker: String?,
+        val annenMottaker: Boolean,
         val kontonummer: String?,
         val utbetalingsmetode: String?,
         val harVilkar: Boolean,
