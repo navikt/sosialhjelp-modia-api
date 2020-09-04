@@ -1,5 +1,3 @@
-consumerid: srvsosialhjelp-mod
-
 spring:
   main:
     banner-mode: 'off'
