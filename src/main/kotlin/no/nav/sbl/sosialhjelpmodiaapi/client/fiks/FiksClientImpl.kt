@@ -48,15 +48,15 @@ class FiksClientImpl(
         // cache key = "<NavIdent>_<digisosId>"
         val key = "${getUserIdFromToken()}_$digisosId"
 
-        val cachedDigisosSak: DigisosSak? = redisService.get(key, DigisosSak::class.java) as DigisosSak?
-        if (cachedDigisosSak != null) {
-            return cachedDigisosSak
-        }
+        hentDigisosSakFraCache(key)
+                ?.let { return it }
 
         val digisosSak = hentDigisosSakFraFiks(digisosId)
         redisService.put(key, objectMapper.writeValueAsString(digisosSak))
         return digisosSak
     }
+
+    private fun hentDigisosSakFraCache(key: String) = redisService.get(key, DigisosSak::class.java) as DigisosSak?
 
     private fun hentDigisosSakFraFiks(digisosId: String): DigisosSak {
         val virksomhetsToken = runBlocking { idPortenClient.requestToken() }
