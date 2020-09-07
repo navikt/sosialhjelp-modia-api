@@ -16,7 +16,7 @@ class RestConfig {
     @Bean
     fun restTemplate(builder: RestTemplateBuilder): RestTemplate {
         return builder
-                .messageConverters(MappingJackson2HttpMessageConverter(objectMapper))
+                .additionalMessageConverters(MappingJackson2HttpMessageConverter(objectMapper))
                 .build()
     }
 
