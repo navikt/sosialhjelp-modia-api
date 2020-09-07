@@ -33,7 +33,7 @@ githubUser=x-access-token
 githubPassword=<token>
 ```
 
-Hvor `<token>` er et personal access token med scope `read:packages`.
+Hvor `<token>` er et personal access token med scope `read:packages`. Husk å enable SSO for tokenet.
 
 Alternativt kan variablene kan også konfigureres som miljøvariabler, eller brukes i kommandolinjen:
 
