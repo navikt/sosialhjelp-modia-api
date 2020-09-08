@@ -57,7 +57,7 @@ class OppgaveService(
         return vedleggListe
                 .filter { it.type == oppgave.tittel && it.tilleggsinfo == oppgave.tilleggsinfo }
                 .filter { it.datoLagtTil != null && it.datoLagtTil.isAfter(oppgave.tidspunktForKrav) }
-                .maxBy { it.datoLagtTil!! }
+                .maxByOrNull { it.datoLagtTil!! }
                 ?.datoLagtTil?.toLocalDate()
     }
 
