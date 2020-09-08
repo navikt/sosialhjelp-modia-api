@@ -76,39 +76,39 @@ internal class SoknadsoversiktControllerTest {
         every { oppgaveService.hentOppgaver(id_2) } returns listOf(oppgaveResponseMock) // 1 oppgave
     }
 
-    @Test
-    fun `hentAlleSaker - skal mappe fra DigisosSak til SakResponse`() {
-        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1, digisosSak2)
-
-        every { model1.status } returns SoknadsStatus.MOTTATT
-        every { model2.status } returns SoknadsStatus.UNDER_BEHANDLING
-
-        every { model1.oppgaver.isEmpty() } returns false
-        every { model2.oppgaver.isEmpty() } returns false
-
-        every { sak1.tittel } returns "Livsopphold"
-        every { sak2.tittel } returns "Strøm"
-
-        every { model2.saker } returns mutableListOf(sak1, sak2)
-
-        val response = controller.hentAlleSaker("token", Ident(fnr))
-
-        val saker = response.body
-        assertThat(saker).isNotNull
-        assertThat(saker).hasSize(2)
-
-        if (saker != null && saker.size == 2) {
-            val first = saker[0]
-            assertThat(first.soknadTittel).isEqualTo("Søknad om økonomisk sosialhjelp")
-            assertThat(first.kilde).isEqualTo(KILDE_INNSYN_API)
-            assertNotNull(first.sendt)
-
-            val second = saker[1]
-            assertThat(second.soknadTittel).isEqualTo("Søknad om økonomisk sosialhjelp")
-            assertThat(second.kilde).isEqualTo(KILDE_INNSYN_API)
-            assertNull(second.sendt)
-        }
-    }
+//    @Test
+//    fun `hentAlleSaker - skal mappe fra DigisosSak til SakResponse`() {
+//        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1, digisosSak2)
+//
+//        every { model1.status } returns SoknadsStatus.MOTTATT
+//        every { model2.status } returns SoknadsStatus.UNDER_BEHANDLING
+//
+//        every { model1.oppgaver.isEmpty() } returns false
+//        every { model2.oppgaver.isEmpty() } returns false
+//
+//        every { sak1.tittel } returns "Livsopphold"
+//        every { sak2.tittel } returns "Strøm"
+//
+//        every { model2.saker } returns mutableListOf(sak1, sak2)
+//
+//        val response = controller.hentAlleSaker("token", Ident(fnr))
+//
+//        val saker = response.body
+//        assertThat(saker).isNotNull
+//        assertThat(saker).hasSize(2)
+//
+//        if (saker != null && saker.size == 2) {
+//            val first = saker[0]
+//            assertThat(first.soknadTittel).isEqualTo("Søknad om økonomisk sosialhjelp")
+//            assertThat(first.kilde).isEqualTo(KILDE_INNSYN_API)
+//            assertNotNull(first.sendt)
+//
+//            val second = saker[1]
+//            assertThat(second.soknadTittel).isEqualTo("Søknad om økonomisk sosialhjelp")
+//            assertThat(second.kilde).isEqualTo(KILDE_INNSYN_API)
+//            assertNull(second.sendt)
+//        }
+//    }
 
     @Test
     fun `hentSaksDetaljer - skal mappe fra DigisosSak til SakResponse for detaljer`() {
