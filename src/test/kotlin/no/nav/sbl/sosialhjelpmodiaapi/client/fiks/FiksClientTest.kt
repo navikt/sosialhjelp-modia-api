@@ -141,6 +141,32 @@ internal class FiksClientTest {
     }
 
     @Test
+    fun `GET digisosSak fra annen saksbehandler`() {
+        val mockResponse: ResponseEntity<DigisosSak> = mockk()
+        val digisosSak = objectMapper.readValue(ok_digisossak_response_string, DigisosSak::class.java)
+        every { mockResponse.body } returns digisosSak
+        every {
+            restTemplate.exchange(
+                    any(),
+                    any(),
+                    any(),
+                    DigisosSak::class.java,
+                    any())
+        } returns mockResponse
+
+//        annen veileder har hentet digisosSak tidligere (og finnes i cache)
+        val annenSaksbehandler = "other"
+        every { redisService.get("${annenSaksbehandler}_$id", DigisosSak::class.java) } returns digisosSak
+
+        val result = fiksClient.hentDigisosSak(id)
+
+        assertThat(result).isNotNull
+        verify(exactly = 1) { redisService.get(any(), any()) }
+        verify(exactly = 1) { restTemplate.exchange(any(), any(), any(), DigisosSak::class.java, any()) }
+        verify(exactly = 1) { redisService.put(any(), any()) }
+    }
+
+    @Test
     fun `GET dokument`() {
         val mockResponse: ResponseEntity<JsonDigisosSoker> = mockk()
         val jsonDigisosSoker = objectMapper.readValue(ok_minimal_jsondigisossoker_response_string, JsonDigisosSoker::class.java)
