@@ -92,6 +92,22 @@ class FiksClientImpl(
     }
 
     override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
+        log.debug("Forsøker å hente dokument fra cache")
+
+        // cache key = "<NavIdent>_<dokumentlagerId>"
+        val key = "${getUserIdFromToken()}_$dokumentlagerId"
+
+        hentDokumentFraCache(key, requestedClass)
+                ?.let { return it }
+
+        val dokument = hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
+        redisService.put(key, objectMapper.writeValueAsString(dokument))
+        return dokument
+    }
+
+    private fun hentDokumentFraCache(key: String, requestedClass: Class<out Any>) = redisService.get(key, requestedClass)
+
+    private fun hentDokumentFraFiks(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
         val virksomhetsToken = runBlocking { idPortenClient.requestToken() }
         val sporingsId = genererSporingsId()
 

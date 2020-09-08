@@ -158,4 +158,16 @@ internal class FiksClientTest {
 
         assertNotNull(result)
     }
+
+    @Test
+    fun `GET dokument fra cache`() {
+        val jsonDigisosSoker: JsonDigisosSoker = objectMapper.readValue(ok_minimal_jsondigisossoker_response_string)
+        every { redisService.get(any(), JsonDigisosSoker::class.java) } returns jsonDigisosSoker
+
+        val result = fiksClient.hentDokument("fnr", id, "dokumentlagerId", JsonDigisosSoker::class.java)
+
+        assertNotNull(result)
+        verify(exactly = 0) { restTemplate.exchange(any(), any(), any(), JsonDigisosSoker::class.java, any()) }
+        verify(exactly = 0) { redisService.put(any(), any()) }
+    }
 }
