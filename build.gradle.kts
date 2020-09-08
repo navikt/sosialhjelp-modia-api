@@ -6,8 +6,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav.sbl"
 
 object Versions {
-    const val kotlin = "1.3.72"
-    const val coroutines = "1.3.7"
+    const val kotlin = "1.4.0"
+    const val coroutines = "1.3.9"
     const val springBoot = "2.3.3.RELEASE"
     const val logback = "1.2.3"
     const val logstash = "6.3"
@@ -29,16 +29,16 @@ object Versions {
 
     // Test only
     const val junitJupiter = "5.6.0"
-    const val mockk = "1.9.3"
+    const val mockk = "1.10.0"
 }
 
 val mainClass = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
 
 plugins {
     application
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.4.0"
 //    id("org.jmailen.kotlinter") version "2.3.1" // TODO - burde tas i bruk
-    id("org.jetbrains.kotlin.plugin.spring") version "1.3.72"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.4.0"
     id("com.github.johnrengelman.shadow") version "5.2.0"
     id("com.github.ben-manes.versions") version "0.28.0"
 }
