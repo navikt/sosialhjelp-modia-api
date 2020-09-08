@@ -23,14 +23,6 @@ class KommuneController(
         private val abacService: AbacService
 ) {
 
-    @PostMapping("/{fiksDigisosId}/kommune")
-    fun hentKommuneStatus(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<String> {
-        abacService.harTilgang(ident.fnr, token)
-
-        val kommuneStatus = kommuneService.getStatus(fiksDigisosId)
-        return ResponseEntity.ok(kommuneStatus.toString())
-    }
-
     @PostMapping("/kommuner/{kommunenummer}")
     fun hentKommuneInfo(@PathVariable kommunenummer: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<KommuneResponse> {
         abacService.harTilgang(ident.fnr, token)
