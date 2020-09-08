@@ -18,6 +18,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
+import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -36,8 +37,10 @@ class SoknadsoversiktController(
 ) {
 
     @PostMapping("/saker")
-    fun hentAlleSaker(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SaksListeResponse>> {
-        abacService.harTilgang(ident.fnr, token)
+    fun hentAlleSaker(@RequestHeader headers: MultiValueMap<String, String>, @RequestBody ident: Ident): ResponseEntity<List<SaksListeResponse>> {
+        log.info("Alle headere til hentAlleSaker: $headers")
+        val token = headers.getFirst(HttpHeaders.AUTHORIZATION)
+        abacService.harTilgang(ident.fnr, token!!)
 
         val saker = try {
             fiksClient.hentAlleDigisosSaker(ident.fnr)
