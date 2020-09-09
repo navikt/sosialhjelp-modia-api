@@ -4,7 +4,7 @@ metadata:
   labels:
     team: teamdigisos
   name: sosialhjelp-modia-api-redis
-  namespace: default
+  namespace: teamdigisos
 spec:
   image: navikt/secure-redis:5.0.3-alpine-2
   port: 6379

@@ -1,9 +1,9 @@
-name: Deploy q1
+name: Deploy dev-fss
 on: workflow_dispatch
 
 jobs:
   deploy:
-    name: Deploy to q1
+    name: Deploy to dev-fss
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -14,13 +14,13 @@ jobs:
           PROJECT_NAME=$(echo ${{ github.repository }} | cut -d/ -f2)
           echo ::set-env name=IMAGE::$(echo "docker.pkg.github.com/${{ github.repository }}/$PROJECT_NAME":${{ steps.get-latest-tag.outputs.tag }})
 
-      - name: Deploy til q1
+      - name: Deploy til teamdigisos namespace i dev-fss
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: nais.yaml
           CLUSTER: dev-fss
-          VARS: nais/dev/q1.json
+          VARS: nais/dev/dev-fss.json
           REF: ${{ steps.get-latest-tag.outputs.tag }}
           PRINT_PAYLOAD: true
           IMAGE: ${{ env.IMAGE }}
