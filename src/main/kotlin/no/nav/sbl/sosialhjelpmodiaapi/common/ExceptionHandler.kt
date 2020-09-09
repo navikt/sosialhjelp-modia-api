@@ -104,7 +104,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         private const val FIKS_ERROR = "fiks_error"
         private const val NORG_ERROR = "norg_error"
         private const val PDL_ERROR = "pdl_error"
-        private const val ABAC_ERROR = "abac_tilgang"
+        private const val ABAC_ERROR = "abac_error"
     }
 
     open class FrontendErrorMessage(
