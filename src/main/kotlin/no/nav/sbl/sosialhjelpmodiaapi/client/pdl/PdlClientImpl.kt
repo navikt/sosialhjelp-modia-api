@@ -43,15 +43,14 @@ class PdlClientImpl(
                 pdlPersonResponse.errors
                         .forEach { log.error("PDL - noe feilet. Message=${it.message}, path=${it.path}, code=${it.extensions.code}, classification=${it.extensions.classification}") }
                 val firstError = pdlPersonResponse.errors[0]
-                throw PdlException(
-                        firstError.extensions.code?.toUpperCase()?.let { HttpStatus.valueOf(it) },
-                        "Message: ${firstError.message}, Classification: ${firstError.extensions.classification}"
+                val statusCode = firstError.extensions.code?.toUpperCase()?.let { HttpStatus.valueOf(it) }
+                throw PdlException("StatusCode: $statusCode, Message: ${firstError.message}, Classification: ${firstError.extensions.classification}"
                 )
             }
             return pdlPersonResponse.data
         } catch (e: RestClientResponseException) {
             log.error("PDL - ${e.rawStatusCode} ${e.statusText} feil ved henting av navn, requesturl: $baseurl", e)
-            throw PdlException(HttpStatus.valueOf(e.rawStatusCode), e.message)
+            throw PdlException(e.message)
         }
     }
 
