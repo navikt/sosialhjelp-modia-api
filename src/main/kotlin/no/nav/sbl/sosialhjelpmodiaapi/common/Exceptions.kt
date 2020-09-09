@@ -21,10 +21,14 @@ class NorgException(
         override val cause: Throwable?
 ) : RuntimeException(message, cause)
 
-class TilgangskontrollException(
+class AbacException(
         override val message: String?,
         override val cause: Throwable? = null
-): RuntimeException(message, cause)
+) : RuntimeException(message, cause)
+
+class ManglendeTilgangException(
+        override val message: String?
+) : RuntimeException(message)
 
 class PdlException(
         status: HttpStatus?,
