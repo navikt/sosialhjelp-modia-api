@@ -10,7 +10,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacClient
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacResponse
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Decision
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Request
-import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
+import no.nav.sbl.sosialhjelpmodiaapi.common.ManglendeTilgangException
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatCode
@@ -45,29 +45,29 @@ internal class AbacServiceTest {
     }
 
     @Test
-    internal fun `harTilgang - abacClient gir Deny - kaster TilgangskontrollException`() {
+    internal fun `harTilgang - abacClient gir Deny - kaster ManglendeTilgangException`() {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Deny, null)
 
         assertThatThrownBy { service.harTilgang(fnr, "token") }
-                .isInstanceOf(TilgangskontrollException::class.java)
+                .isInstanceOf(ManglendeTilgangException::class.java)
                 .hasMessageContaining("${Decision.Deny}")
     }
 
     @Test
-    internal fun `harTilgang - abacClient gir NotApplicable - kaster TilgangskontrollException`() {
+    internal fun `harTilgang - abacClient gir NotApplicable - kaster ManglendeTilgangException`() {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.NotApplicable, null)
 
         assertThatThrownBy { service.harTilgang(fnr, "token") }
-                .isInstanceOf(TilgangskontrollException::class.java)
+                .isInstanceOf(ManglendeTilgangException::class.java)
                 .hasMessageContaining("${Decision.NotApplicable}")
     }
 
     @Test
-    internal fun `harTilgang - abacClient gir Indeterminate - kaster TilgangskontrollException`() {
+    internal fun `harTilgang - abacClient gir Indeterminate - kaster ManglendeTilgangException`() {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Indeterminate, null)
 
         assertThatThrownBy { service.harTilgang(fnr, "token") }
-                .isInstanceOf(TilgangskontrollException::class.java)
+                .isInstanceOf(ManglendeTilgangException::class.java)
                 .hasMessageContaining("${Decision.Indeterminate}")
     }
 

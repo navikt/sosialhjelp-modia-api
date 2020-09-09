@@ -37,10 +37,10 @@ class NorgCheck(
             restTemplate.exchange("$address/kodeverk/EnhetstyperNorg", HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java)
         } catch (e: HttpStatusCodeException) {
             log.warn("Selftest - Norg2 - noe feilet - ${e.statusCode} ${e.statusText}", e)
-            throw NorgException(e.statusCode, e.message, e)
+            throw NorgException(e.message, e)
         } catch (e: Exception) {
             log.warn("Selftest - Norg2 - noe feilet", e)
-            throw NorgException(null, e.message, e)
+            throw NorgException(e.message, e)
         }
     }
 

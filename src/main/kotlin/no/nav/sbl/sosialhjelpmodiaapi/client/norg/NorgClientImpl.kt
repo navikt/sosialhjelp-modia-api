@@ -38,10 +38,10 @@ class NorgClientImpl(
 
         } catch (e: HttpStatusCodeException) {
             log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
-            throw NorgException(e.statusCode, e.message, e)
+            throw NorgException(e.message, e)
         } catch (e: Exception) {
             log.warn("Norg2 - Noe feilet", e)
-            throw NorgException(null, e.message, e)
+            throw NorgException(e.message, e)
         }
     }
 

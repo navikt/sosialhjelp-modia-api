@@ -11,7 +11,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Attribute
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Attributes
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Decision
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Request
-import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
+import no.nav.sbl.sosialhjelpmodiaapi.common.ManglendeTilgangException
+import no.nav.sbl.sosialhjelpmodiaapi.common.AbacException
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import org.springframework.stereotype.Component
@@ -37,7 +38,7 @@ class AbacService(
         val abacResponse = abacClient.sjekkTilgang(request)
         if (abacResponse.decision != Decision.Permit) {
             log.warn("AbacResponse med decision=${abacResponse.decision}.")
-            throw TilgangskontrollException("AbacResponse med decision=${abacResponse.decision}.")
+            throw ManglendeTilgangException("AbacResponse med decision=${abacResponse.decision}.")
         }
     }
 
@@ -53,7 +54,7 @@ class AbacService(
 
         val abacResponse = abacClient.sjekkTilgang(request)
         if (abacResponse.decision != Decision.Permit) {
-            throw TilgangskontrollException("Abac - ping, decision er ikke Permit, men ${abacResponse.decision}.")
+            throw AbacException("Abac - ping, decision er ikke Permit, men ${abacResponse.decision}.")
         }
     }
 
