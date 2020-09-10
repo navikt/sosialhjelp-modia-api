@@ -37,7 +37,7 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: nais.yaml
           CLUSTER: prod-fss
-          VARS: nais/dev/${{ github.event.client_payload.MILJO }}.json
+          VARS: nais/prod/prod-fss.json
           REF: ${{ github.event.client_payload.TAG }}
           PRINT_PAYLOAD: true
           IMAGE: ${{ env.IMAGE }}
