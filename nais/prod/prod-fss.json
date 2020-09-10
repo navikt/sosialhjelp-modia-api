@@ -1,12 +1,11 @@
 {
-  "namespace": "default",
+  "namespace": "teamdigisos",
   "ingress": [
-    "https://sosialhjelp-modia-api.nais.adeo.no/sosialhjelp/modia-api",
-    "https://sosialhjelp-modia-api.prod-fss.nais.io/sosialhjelp/modia-api"
+    "https://sosialhjelp-modia-api.adeo.no/sosialhjelp/modia-api"
   ],
   "secretKvPaths": {
     "/var/run/secrets/nais.io/virksomhetssertifikat": "/secret/virksomhetssertifikat/prod/maskinporten",
-    "/var/run/secrets/nais.io/vault": "/kv/prod/fss/sosialhjelp-modia-api/default",
+    "/var/run/secrets/nais.io/vault": "/kv/prod/fss/sosialhjelp-modia-api/teamdigisos",
     "/serviceuser/srvsosialhjelp-mod": "/serviceuser/data/prod/srvsosialhjelp-mod"
   },
   "env": {
@@ -21,7 +20,7 @@
     "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.adeo.no/rest/v1/sts",
     "SPRING_PROFILES_ACTIVE": "prod-fss,log-kibana,log-audit",
     "CACHE_TIME_TO_LIVE_SECONDS": "180",
-    "REDIS_HOST": "sosialhjelp-modia-api-redis.default.svc.nais.local"
+    "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local"
   },
   "minReplicas": "2",
   "maxReplicas": "4",

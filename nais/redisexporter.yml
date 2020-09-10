@@ -2,7 +2,7 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: sosialhjelp-modia-api-redisexporter
-  namespace: default
+  namespace: teamdigisos
   labels:
     team: teamdigisos
 spec:
@@ -24,4 +24,4 @@ spec:
     enabled: true
   env:
     - name: REDIS_ADDR
-      value: sosialhjelp-modia-api-redis.default.svc.nais.local:6379
+      value: sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local:6379
