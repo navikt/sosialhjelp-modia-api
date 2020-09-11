@@ -88,13 +88,11 @@ class AbacService(
     }
 
     private fun handleDenyReasons(attributes: List<Attribute>) {
-        attributes
-                .find { it.manglerTilgangSosialhjelp() }
-                ?.let { throw ManglendeModiaSosialhjelpTilgangException("Abac deny - veileder mangler tilgang til sosialhjelp (egen AD-rolle).")  }
-
-        attributes
-                .find { it.manglerTilgangKode6Kode7EllerEgenAnsatt() }
-                ?.let { throw ManglendeTilgangException("Abac deny - veileder mangler tilgang til kode6/kode7/egenAnsatt")  }
+        when {
+            attributes.any { it.manglerTilgangSosialhjelp() } -> throw ManglendeModiaSosialhjelpTilgangException("Abac deny - veileder mangler tilgang til sosialhjelp (egen AD-rolle).")
+            attributes.any { it.manglerTilgangKode6Kode7EllerEgenAnsatt() } -> throw ManglendeTilgangException("Abac deny - veileder mangler tilgang til kode6/kode7/egenAnsatt")
+            else -> throw AbacException("Abac deny - ukjent årsak.")
+        }
     }
 
     companion object {
