@@ -26,6 +26,10 @@ class ManglendeTilgangException(
         override val message: String?
 ) : RuntimeException(message)
 
+class ManglendeModiaSosialhjelpTilgangException(
+        override val message: String?
+) : RuntimeException(message)
+
 class PdlException(
         override val message: String?
 ) : RuntimeException(message)
