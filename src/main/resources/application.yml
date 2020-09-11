@@ -50,7 +50,7 @@ no.nav.sosialhjelp.idporten:
 
 #Token-validering
 no.nav.security.jwt:
-  issuer.veileder:
+  issuer.azuread:
     discoveryurl: ${AZURE_APP_WELL_KNOWN_URL}
     accepted_audience: ${AZURE_APP_CLIENT_ID}
     cookie_name: sosialhjelp-modia

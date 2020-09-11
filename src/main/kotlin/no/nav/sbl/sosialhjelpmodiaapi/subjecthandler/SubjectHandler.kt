@@ -77,7 +77,7 @@ class IssoSubjectHandlerImpl(
     }
 
     companion object {
-        private const val ISSUER = "veileder" // todo blir dette riktig?
+        private const val ISSUER = "azuread" // todo blir dette riktig?
         private val log by logger()
     }
 }
