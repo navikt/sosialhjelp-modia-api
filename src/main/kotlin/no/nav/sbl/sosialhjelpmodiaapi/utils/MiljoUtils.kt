@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.utils
 
-import net.bytebuddy.implementation.bytecode.Throw
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
