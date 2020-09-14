@@ -65,13 +65,13 @@ class FiksClientImpl(
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
             val message = e.message?.feilmeldingUtenFnr
             if (e.statusCode == HttpStatus.NOT_FOUND) {
-                throw FiksNotFoundException(e.statusCode, e.message, e, digisosId)
+                throw FiksNotFoundException(e.message, e, digisosId)
             }
-            log.warn("Fiks - hentDigisosSak feilet for id $digisosId - $message - $fiksErrorMessage", e)
-            throw FiksException(e.statusCode, e.message, e)
+            log.warn("Fiks - hentDigisosSak feilet for id $digisosId - ${e.statusCode} $message - $fiksErrorMessage", e)
+            throw FiksException(e.message, e)
         } catch (e: Exception) {
             log.warn("Fiks - hentDigisosSak feilet", e)
-            throw FiksException(null, e.message, e)
+            throw FiksException(e.message, e)
         }
     }
 
@@ -101,11 +101,11 @@ class FiksClientImpl(
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
             val message = e.message?.feilmeldingUtenFnr
-            log.warn("Fiks - hentDokument feilet - $message - $fiksErrorMessage", e)
-            throw FiksException(e.statusCode, e.message, e)
+            log.warn("Fiks - hentDokument feilet - ${e.statusCode} $message - $fiksErrorMessage", e)
+            throw FiksException(e.message, e)
         } catch (e: Exception) {
             log.warn("Fiks - hentDokument feilet", e)
-            throw FiksException(null, e.message, e)
+            throw FiksException(e.message, e)
         }
     }
 
@@ -131,11 +131,11 @@ class FiksClientImpl(
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
             val message = e.message?.feilmeldingUtenFnr
-            log.warn("Fiks - hentAlleDigisosSaker feilet - $message - $fiksErrorMessage", e)
-            throw FiksException(e.statusCode, e.message, e)
+            log.warn("Fiks - hentAlleDigisosSaker feilet - ${e.statusCode} $message - $fiksErrorMessage", e)
+            throw FiksException(e.message, e)
         } catch (e: Exception) {
             log.warn("Fiks - hentAlleDigisosSaker feilet", e)
-            throw FiksException(null, e.message, e)
+            throw FiksException(e.message, e)
         }
     }
 

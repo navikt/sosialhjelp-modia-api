@@ -73,7 +73,7 @@ class IssoSubjectHandlerImpl(
     }
 
     override fun getConsumerId(): String {
-        return System.getProperty("consumerid")
+        return "srvsosialhjelp-mod"
     }
 
     companion object {

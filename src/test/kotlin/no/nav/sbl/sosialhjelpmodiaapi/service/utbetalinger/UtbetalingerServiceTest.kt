@@ -80,6 +80,7 @@ internal class UtbetalingerServiceTest {
                                 fom = LocalDate.of(2019, 8, 1),
                                 tom = LocalDate.of(2019, 8, 31),
                                 mottaker = "utleier",
+                                annenMottaker = false,
                                 kontonummer = "kontonr",
                                 utbetalingsmetode = "utbetalingsmetode",
                                 vilkar = mutableListOf(),
@@ -119,8 +120,8 @@ internal class UtbetalingerServiceTest {
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
-                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 8, 12), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
+                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 8, 12), null, null, null,  false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
                 ),
                 datoOpprettet = LocalDate.now()
         ))
@@ -151,8 +152,8 @@ internal class UtbetalingerServiceTest {
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
-                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 9, 12), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
+                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 9, 12), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
                 ),
                 datoOpprettet = LocalDate.now()
         ))
@@ -180,7 +181,7 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         val vilkar = Vilkar("vilkar1", "Skal hoppe", false, LocalDateTime.now(), LocalDateTime.now())
         val utbetaling1 = Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
-                null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(vilkar), mutableListOf(), LocalDateTime.now())
+                null, LocalDate.of(2019, 8, 10), null, null, null, false, null, null, mutableListOf(vilkar), mutableListOf(), LocalDateTime.now())
         model.saker.add(Sak(
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING,
@@ -206,7 +207,7 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         val dokumentasjonkrav = Dokumentasjonkrav("dokumentasjonskrav", "Skal hoppe", false)
         val utbetaling1 = Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
-                null, LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf(dokumentasjonkrav), LocalDateTime.now())
+                null, LocalDate.of(2019, 8, 10), null, null, null, false, null, null, mutableListOf(), mutableListOf(dokumentasjonkrav), LocalDateTime.now())
         model.saker.add(Sak(
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING,
@@ -235,7 +236,7 @@ internal class UtbetalingerServiceTest {
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
                         Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null,
-                                LocalDate.of(2019, 8, 10), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())),
+                                LocalDate.of(2019, 8, 10), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())),
                 datoOpprettet = LocalDate.now()
         ))
 
@@ -247,7 +248,7 @@ internal class UtbetalingerServiceTest {
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
                         Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.ONE, "Barnehage og SFO", null,
-                                LocalDate.of(2019, 9, 12), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())),
+                                LocalDate.of(2019, 9, 12), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())),
                 datoOpprettet = LocalDate.now()
         ))
 
@@ -296,6 +297,7 @@ internal class UtbetalingerServiceTest {
                                 fom = LocalDate.of(2019, 8, 1),
                                 tom = LocalDate.of(2019, 8, 31),
                                 mottaker = "utleier",
+                                annenMottaker = true,
                                 kontonummer = "kontonr",
                                 utbetalingsmetode = "utbetalingsmetode",
                                 vilkar = mutableListOf(),
@@ -319,6 +321,7 @@ internal class UtbetalingerServiceTest {
         assertThat(response[0].fom).isEqualTo("2019-08-01")
         assertThat(response[0].tom).isEqualTo("2019-08-31")
         assertThat(response[0].mottaker).isEqualTo("utleier")
+        assertThat(response[0].annenMottaker).isTrue()
         assertThat(response[0].kontonummer).isEqualTo("kontonr")
         assertThat(response[0].utbetalingsmetode).isEqualTo("utbetalingsmetode")
     }
@@ -332,10 +335,10 @@ internal class UtbetalingerServiceTest {
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(
-                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 1), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                        Utbetaling("Sak2", UtbetalingsStatus.PLANLAGT_UTBETALING, BigDecimal.TEN, "Tannlege", LocalDate.of(2019, 9, 1), null, null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                        Utbetaling("Sak3", UtbetalingsStatus.STOPPET, BigDecimal.TEN, "Depositum", null, LocalDate.of(2019, 10, 1), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                        Utbetaling("Sak4", UtbetalingsStatus.ANNULLERT, BigDecimal.TEN, "Kinopenger", null, LocalDate.of(2019, 11, 1), null, null, null, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
+                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 1), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak2", UtbetalingsStatus.PLANLAGT_UTBETALING, BigDecimal.TEN, "Tannlege", LocalDate.of(2019, 9, 1), null, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak3", UtbetalingsStatus.STOPPET, BigDecimal.TEN, "Depositum", null, LocalDate.of(2019, 10, 1), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak4", UtbetalingsStatus.ANNULLERT, BigDecimal.TEN, "Kinopenger", null, LocalDate.of(2019, 11, 1), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
                 ),
                 datoOpprettet = LocalDate.now()
         ))

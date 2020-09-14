@@ -50,10 +50,10 @@ class DigisosApiClientImpl(
             return id
         } catch (e: HttpStatusCodeException) {
             log.warn("Fiks - oppdaterDigisosSak feilet - ${e.statusCode} ${e.statusText}", e)
-            throw FiksException(e.statusCode, e.message, e)
+            throw FiksException(e.message, e)
         } catch (e: Exception) {
             log.error(e.message, e)
-            throw FiksException(null, e.message, e)
+            throw FiksException(e.message, e)
         }
     }
 
@@ -65,10 +65,10 @@ class DigisosApiClientImpl(
             return response.body?.replace("\"", "")
         } catch (e: HttpStatusCodeException) {
             log.warn("Fiks - opprettDigisosSak feilet - ${e.statusCode} ${e.statusText}", e)
-            throw FiksException(e.statusCode, e.message, e)
+            throw FiksException(e.message, e)
         } catch (e: Exception) {
             log.error(e.message, e)
-            throw FiksException(null, e.message, e)
+            throw FiksException(e.message, e)
         }
     }
 
