@@ -32,7 +32,7 @@ class AbacService(
     fun harTilgang(fnr: String, token: String) {
         val request = Request(
                 environment = Attributes(mutableListOf(
-                        Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod"), // SUbjectHAndler.getconsumerId?
+                        Attribute(ENVIRONMENT_FELLES_PEP_ID, SRVSOSIALHJELP_MOD),
 //                        Attribute(ENVIRONMENT_FELLES_AZURE_JWT_TOKEN_BODY, token))), // azure token eller oidc token?
                         Attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody(token)))),
                 action = null,
@@ -96,6 +96,8 @@ class AbacService(
     }
 
     companion object {
+        private const val SRVSOSIALHJELP_MOD = "srvsosialhjelp-mod"
+
         private const val ENVIRONMENT_FELLES_AZURE_JWT_TOKEN_BODY = "no.nav.abac.attributter.environment.felles.azure_jwt_token_body"
 
         private val log by logger()
