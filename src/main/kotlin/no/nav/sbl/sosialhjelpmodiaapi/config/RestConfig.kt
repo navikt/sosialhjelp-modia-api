@@ -14,10 +14,18 @@ import java.nio.charset.StandardCharsets
 class RestConfig {
 
     @Bean
-    fun restTemplate(builder: RestTemplateBuilder): RestTemplate =
-            builder
-//                    .messageConverters(MappingJackson2HttpMessageConverter(objectMapper))
-                    .build()
+    fun restTemplate(builder: RestTemplateBuilder): RestTemplate {
+        val restTemplate = builder
+                .build()
+
+        restTemplate.messageConverters
+                .removeIf { httpMessageConverter -> httpMessageConverter.javaClass == MappingJackson2HttpMessageConverter::class.java }
+
+        restTemplate.messageConverters
+                .add(MappingJackson2HttpMessageConverter(objectMapper))
+
+        return restTemplate
+    }
 
     @Bean
     @Profile("!(mock | local)")
