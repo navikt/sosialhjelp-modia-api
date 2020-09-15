@@ -11,6 +11,9 @@ spec:
   azure:
     application:
       enabled: true
+{{#if dev}}
+      tenant: trygdeetaten.no
+{{/if}}
   liveness:
     path: /sosialhjelp/modia-api/internal/isAlive
     initialDelay: 20
