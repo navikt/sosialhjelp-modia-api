@@ -22,6 +22,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.common.ManglendeModiaSosialhjelpTilgangExc
 import no.nav.sbl.sosialhjelpmodiaapi.common.ManglendeTilgangException
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
+import no.nav.sbl.sosialhjelpmodiaapi.utils.Miljo.SRVSOSIALHJELP_MOD
 import org.springframework.stereotype.Component
 
 @Component
@@ -54,7 +55,7 @@ class AbacService(
     fun ping() {
         val request = Request(
                 environment = Attributes(mutableListOf(
-                        Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod"))),
+                        Attribute(ENVIRONMENT_FELLES_PEP_ID, SRVSOSIALHJELP_MOD))),
                 action = Attributes(mutableListOf(
                         Attribute(ACTION_ID, "ping"))),
                 resource = Attributes(mutableListOf(
@@ -96,8 +97,6 @@ class AbacService(
     }
 
     companion object {
-        private const val SRVSOSIALHJELP_MOD = "srvsosialhjelp-mod"
-
         private const val ENVIRONMENT_FELLES_AZURE_JWT_TOKEN_BODY = "no.nav.abac.attributter.environment.felles.azure_jwt_token_body"
 
         private val log by logger()
