@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 interface SubjectHandler {
-    fun getConsumerId(): String
     fun getUserIdFromToken(): String
     fun getToken(): String
 }
@@ -23,10 +22,6 @@ class StaticSubjectHandlerImpl : SubjectHandler {
 
     override fun getToken(): String {
         return this.token
-    }
-
-    override fun getConsumerId(): String {
-        return "StaticConsumerId"
     }
 
     fun setUser(user: String) {
@@ -70,10 +65,6 @@ class IssoSubjectHandlerImpl(
 
     override fun getToken(): String {
         return tokenValidationContext.getJwtToken(ISSUER).tokenAsString
-    }
-
-    override fun getConsumerId(): String {
-        return System.getProperty("consumerid") ?: "srvsosialhjelp-mod"
     }
 
     companion object {
