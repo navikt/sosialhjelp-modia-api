@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.service.utbetalinger
 
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontor
+import no.nav.sbl.sosialhjelpmodiaapi.domain.Utbetaling
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
@@ -40,6 +41,8 @@ class UtbetalingerService(
 
         return model.saker
                 .flatMap { sak ->
+                    infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(sak.utbetalinger, digisosSak.kommunenummer)
+
                     sak.utbetalinger
                             .filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
                             .map { utbetaling ->
@@ -61,6 +64,20 @@ class UtbetalingerService(
                                 )
                             }
                 }
+    }
+
+    private fun infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(utbetalinger: List<Utbetaling>, kommunenummer: String) {
+        utbetalinger
+                .filter { it.status == UtbetalingsStatus.UTBETALT && it.utbetalingsDato == null }
+                .forEach { log.info("Utbetaling (${it.referanse}) med status=${UtbetalingsStatus.UTBETALT} har ikke utbetalingsDato. Kommune=$kommunenummer") }
+
+        utbetalinger
+                .filter { it.status == UtbetalingsStatus.PLANLAGT_UTBETALING && it.forfallsDato == null }
+                .forEach { log.info("Utbetaling (${it.referanse}) med status=${UtbetalingsStatus.PLANLAGT_UTBETALING} har ikke forfallsDato. Kommune=$kommunenummer") }
+
+        utbetalinger
+                .filter { it.status == UtbetalingsStatus.STOPPET && (it.forfallsDato == null || it.utbetalingsDato == null) }
+                .forEach { log.info("Utbetaling (${it.referanse}) med status=${UtbetalingsStatus.STOPPET} mangler forfallsDato eller utbetalingsDato. Kommune=$kommunenummer") }
     }
 
     companion object {

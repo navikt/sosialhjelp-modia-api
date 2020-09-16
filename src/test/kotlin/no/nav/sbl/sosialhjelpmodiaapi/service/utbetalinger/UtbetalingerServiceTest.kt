@@ -48,6 +48,7 @@ internal class UtbetalingerServiceTest {
         clearAllMocks()
 
         every { mockDigisosSak.fiksDigisosId } returns digisosId
+        every { mockDigisosSak.kommunenummer } returns "0001"
     }
 
     @Test
@@ -258,6 +259,8 @@ internal class UtbetalingerServiceTest {
 
         every { mockDigisosSak.fiksDigisosId } returns id1
         every { mockDigisosSak2.fiksDigisosId } returns id2
+        every { mockDigisosSak.kommunenummer } returns "1111"
+        every { mockDigisosSak2.kommunenummer } returns "2222"
         every { eventService.createModel(mockDigisosSak) } returns model
         every { eventService.createModel(mockDigisosSak2) } returns model2
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak, mockDigisosSak2)
