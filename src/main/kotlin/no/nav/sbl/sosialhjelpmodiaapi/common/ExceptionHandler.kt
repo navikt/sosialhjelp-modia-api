@@ -69,6 +69,13 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         return ResponseEntity(HttpStatus.OK)
     }
 
+    @ExceptionHandler(ManglendeModiaSosialhjelpTilgangException::class)
+    fun handleManglendeModiaSosialhjelpTilgangException(e: ManglendeModiaSosialhjelpTilgangException): ResponseEntity<FrontendErrorMessage> {
+        // "veileder manger ad-rolle for å kunne bruke modia sosialhjelp"
+        val error = FrontendErrorMessage(TILGANG_ERROR, "Mangler tilgang")
+        return ResponseEntity(error, HttpStatus.FORBIDDEN)
+    }
+
     @ExceptionHandler(value = [JwtTokenUnauthorizedException::class, JwtTokenMissingException::class])
     fun handleTokenValidationExceptions(
             ex: RuntimeException, request: WebRequest): ResponseEntity<FrontendErrorMessage> {
@@ -105,6 +112,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         private const val NORG_ERROR = "norg_error"
         private const val PDL_ERROR = "pdl_error"
         private const val ABAC_ERROR = "abac_error"
+        private const val TILGANG_ERROR = "tilgang_error"
     }
 
     open class FrontendErrorMessage(

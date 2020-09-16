@@ -6,14 +6,22 @@ import no.nav.abac.xacml.NavAttributter.RESOURCE_FELLES_PERSON_FNR
 import no.nav.abac.xacml.NavAttributter.RESOURCE_FELLES_RESOURCE_TYPE
 import no.nav.abac.xacml.StandardAttributter.ACTION_ID
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacClient
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacConstants.DENY_REASON
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacConstants.SOSIALHJELP_DOMENE
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacConstants.SOSIALHJELP_RESOURCE_TYPE
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Advice
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Attribute
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Attributes
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Decision
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Request
-import no.nav.sbl.sosialhjelpmodiaapi.common.ManglendeTilgangException
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.manglerTilgangKode6Kode7EllerEgenAnsatt
+import no.nav.sbl.sosialhjelpmodiaapi.client.abac.manglerTilgangSosialhjelp
 import no.nav.sbl.sosialhjelpmodiaapi.common.AbacException
+import no.nav.sbl.sosialhjelpmodiaapi.common.ManglendeModiaSosialhjelpTilgangException
+import no.nav.sbl.sosialhjelpmodiaapi.common.ManglendeTilgangException
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
+import no.nav.sbl.sosialhjelpmodiaapi.utils.Miljo.SRVSOSIALHJELP_MOD
 import org.springframework.stereotype.Component
 
 @Component
@@ -24,30 +32,32 @@ class AbacService(
     fun harTilgang(fnr: String, token: String) {
         val request = Request(
                 environment = Attributes(mutableListOf(
-                        Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod"),
+                        Attribute(ENVIRONMENT_FELLES_PEP_ID, SRVSOSIALHJELP_MOD),
                         Attribute(ENVIRONMENT_FELLES_AZURE_JWT_TOKEN_BODY, tokenBody(token)))),
                 action = null,
                 resource = Attributes(mutableListOf(
-                        Attribute(RESOURCE_FELLES_DOMENE, "sosialhjelp"),
-                        Attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.sosialhjelp"),
+                        Attribute(RESOURCE_FELLES_DOMENE, SOSIALHJELP_DOMENE),
+                        Attribute(RESOURCE_FELLES_RESOURCE_TYPE, SOSIALHJELP_RESOURCE_TYPE),
                         Attribute(RESOURCE_FELLES_PERSON_FNR, fnr))),
                 accessSubject = null)
 
         val abacResponse = abacClient.sjekkTilgang(request)
-        if (abacResponse.decision != Decision.Permit) {
-            log.warn("AbacResponse med decision=${abacResponse.decision}.")
-            throw ManglendeTilgangException("AbacResponse med decision=${abacResponse.decision}.")
+
+        when (abacResponse.decision) {
+            Decision.Permit -> {}
+            Decision.Deny -> handleDenyAdvices(abacResponse.associatedAdvice)
+            Decision.NotApplicable, Decision.Indeterminate -> throw AbacException("AbacResponse med decision=${abacResponse.decision}.")
         }
     }
 
     fun ping() {
         val request = Request(
                 environment = Attributes(mutableListOf(
-                        Attribute(ENVIRONMENT_FELLES_PEP_ID, "srvsosialhjelp-mod"))),
+                        Attribute(ENVIRONMENT_FELLES_PEP_ID, SRVSOSIALHJELP_MOD))),
                 action = Attributes(mutableListOf(
                         Attribute(ACTION_ID, "ping"))),
                 resource = Attributes(mutableListOf(
-                        Attribute(RESOURCE_FELLES_DOMENE, "sosialhjelp"))),
+                        Attribute(RESOURCE_FELLES_DOMENE, SOSIALHJELP_DOMENE))),
                 accessSubject = null)
 
         val abacResponse = abacClient.sjekkTilgang(request)
@@ -67,6 +77,21 @@ class AbacService(
             return token.substring(7)
         }
         return token
+    }
+
+    private fun handleDenyAdvices(advices: List<Advice>?) {
+        val attributes: List<Attribute>? = advices
+                ?.firstOrNull { it.id == DENY_REASON }?.attributeAssignment
+
+        attributes?.let { handleDenyReasons(it) } ?: throw AbacException("Abac - fikk Deny, men ingen advices/attributes med forklaring.")
+    }
+
+    private fun handleDenyReasons(attributes: List<Attribute>) {
+        when {
+            attributes.any { it.manglerTilgangSosialhjelp() } -> throw ManglendeModiaSosialhjelpTilgangException("Abac deny - veileder mangler tilgang til sosialhjelp (egen AD-rolle).")
+            attributes.any { it.manglerTilgangKode6Kode7EllerEgenAnsatt() } -> throw ManglendeTilgangException("Abac deny - veileder mangler tilgang til kode6/kode7/egenAnsatt")
+            else -> throw AbacException("Abac deny - ukjent årsak.")
+        }
     }
 
     companion object {
