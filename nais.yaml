@@ -25,6 +25,8 @@ spec:
     min: {{minReplicas}}
     max: {{maxReplicas}}
   webproxy: {{webProxyEnabled}}
+  envFrom:
+    - secret: redis-password-modia-api
 {{#if accessPoliciesForGcpEnabled}}
   accessPolicy:
     outbound:
