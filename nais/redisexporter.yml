@@ -22,6 +22,8 @@ spec:
       memory: 100Mi
   liveness:
     path: /health
+  envFrom:
+    - secret: redis-password-modia-api
   env:
     - name: REDIS_ADDR
       value: sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local:6379

@@ -20,3 +20,5 @@ spec:
       memory: 128Mi
   service:
     port: 6379
+  envFrom:
+    - secret: redis-password-modia-api
