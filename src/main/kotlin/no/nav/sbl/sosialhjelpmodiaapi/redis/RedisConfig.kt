@@ -19,12 +19,6 @@ class RedisConfig(
         cacheProperties.startInMemoryRedisIfMocked()
 
         val redisUri = RedisURI.create(properties.host, properties.port)
-        if (properties.password == null) {
-            log.info("redis.password er null");
-        } else {
-            log.info("redis.password har så mange tegn: " + properties.password.length);
-        }
-        redisUri.setPassword(properties.password)
 
         return RedisClient.create(redisUri)
     }
