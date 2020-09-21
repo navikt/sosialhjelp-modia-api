@@ -40,7 +40,7 @@ class SoknadsoversiktController(
 
     @PostMapping("/saker")
     fun hentAlleSaker(@RequestHeader headers: MultiValueMap<String, String>, @RequestBody ident: Ident): ResponseEntity<List<SaksListeResponse>> {
-        log.info("Debug timing: hentAlleSaker Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
+        log.info("Debug timing: hentAlleSaker Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         log.info("Alle headere til hentAlleSaker: $headers")
         val token = headers.getFirst(HttpHeaders.AUTHORIZATION)
         abacService.harTilgang(ident.fnr, token!!)
@@ -68,7 +68,7 @@ class SoknadsoversiktController(
 
     @PostMapping("/{fiksDigisosId}/saksDetaljer")
     fun hentSaksDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SaksDetaljerResponse> {
-        log.info("Debug timing: hentSaksDetaljer Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
+        log.info("Debug timing: hentSaksDetaljer Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         abacService.harTilgang(ident.fnr, token)
 
         val sak = fiksClient.hentDigisosSak(fiksDigisosId)

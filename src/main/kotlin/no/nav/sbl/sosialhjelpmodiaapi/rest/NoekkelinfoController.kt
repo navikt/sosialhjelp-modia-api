@@ -27,7 +27,7 @@ class NoekkelinfoController(
 
     @PostMapping("/{fiksDigisosId}/noekkelinfo")
     fun hentNoekkelInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadNoekkelinfoResponse> {
-        log.info("Debug timing: hentNoekkelInfo Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
+        log.info("Debug timing: hentNoekkelInfo Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         abacService.harTilgang(ident.fnr, token)
 
         val noekkelinfo = noekkelinfoService.hentNoekkelInfo(fiksDigisosId)

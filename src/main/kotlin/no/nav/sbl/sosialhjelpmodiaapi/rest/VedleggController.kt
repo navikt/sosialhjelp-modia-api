@@ -29,7 +29,7 @@ class VedleggController(
 
     @PostMapping("/{fiksDigisosId}/vedlegg")
     fun hentVedlegg(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<VedleggResponse>> {
-        log.info("Debug timing: hentVedlegg Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
+        log.info("Debug timing: hentVedlegg Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         abacService.harTilgang(ident.fnr, token)
 
         val internalVedleggList: List<InternalVedlegg> = vedleggService.hentAlleOpplastedeVedlegg(fiksDigisosId)

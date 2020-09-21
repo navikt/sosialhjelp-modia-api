@@ -26,7 +26,7 @@ class PersonInfoController(
 
     @PostMapping("/personinfo")
     fun hentPersonInfo(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<PersoninfoResponse> {
-        log.info("Debug timing: hentPersonInfo Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
+        log.info("Debug timing: hentPersonInfo Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         abacService.harTilgang(ident.fnr, token)
 
         val personinfoResponse = personinfoService.hentPersoninfo(ident.fnr)

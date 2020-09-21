@@ -28,7 +28,7 @@ class OppgaveController(
 
     @PostMapping("/{fiksDigisosId}/oppgaver")
     fun hentOppgaver(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<OppgaveResponse>> {
-        log.info("Debug timing: hentOppgaver Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
+        log.info("Debug timing: hentOppgaver Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         abacService.harTilgang(ident.fnr, token)
 
         val oppgaver = oppgaveService.hentOppgaver(fiksDigisosId)

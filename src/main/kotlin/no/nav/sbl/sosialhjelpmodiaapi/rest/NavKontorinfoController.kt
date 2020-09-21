@@ -22,7 +22,7 @@ class NavKontorinfoController(
 
     @GetMapping("/kontorinfo", produces = ["application/json;charset=UTF-8"])
     fun hentPersonInfo(@RequestParam(name = "enhetsnr") enhetsnr: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<String> {
-        log.info("Debug timing: hentPersonInfo Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
+        log.info("Debug timing: hentPersonInfo Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         val enhet = norgClient.hentNavEnhet(enhetsnr)
         if (enhet.sosialeTjenester.isNullOrBlank()) {
             return ResponseEntity.noContent().build()

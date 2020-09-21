@@ -30,7 +30,7 @@ class UtbetalingerController(
 
     @PostMapping("/utbetalinger")
     fun hentUtbetalinger(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<UtbetalingerResponse>> {
-        log.info("Debug timing: hentUtbetalinger Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
+        log.info("Debug timing: hentUtbetalinger Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         abacService.harTilgang(ident.fnr, token)
 
         return ResponseEntity.ok().body(utbetalingerService.hentUtbetalinger(ident.fnr))
@@ -38,7 +38,7 @@ class UtbetalingerController(
 
     @PostMapping("/{fiksDigisosId}/utbetalinger")
     fun hentUtbetalingerForDigisosSak(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<UtbetalingerResponse>> {
-        log.info("Debug timing: hentUtbetalingerForDigisosSak Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
+        log.info("Debug timing: hentUtbetalingerForDigisosSak Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         abacService.harTilgang(ident.fnr, token)
 
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)

@@ -28,7 +28,7 @@ class KommuneController(
 
     @PostMapping("/kommuner/{kommunenummer}")
     fun hentKommuneInfo(@PathVariable kommunenummer: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<KommuneResponse> {
-        log.info("Debug timing: hentKommuneInfo Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
+        log.info("Debug timing: hentKommuneInfo Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         abacService.harTilgang(ident.fnr, token)
 
         val kommuneInfo = kommuneService.get(kommunenummer)

@@ -28,7 +28,7 @@ class SaksStatusController(
 
     @PostMapping("/{fiksDigisosId}/saksStatus")
     fun hentSaksStatuser(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SaksStatusResponse>> {
-        log.info("Debug timing: hentSaksStatuser Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
+        log.info("Debug timing: hentSaksStatuser Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         abacService.harTilgang(ident.fnr, token)
 
         val saksStatuser = saksStatusService.hentSaksStatuser(fiksDigisosId)

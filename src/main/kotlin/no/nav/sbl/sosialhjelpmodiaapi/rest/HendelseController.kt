@@ -27,7 +27,7 @@ class HendelseController(
 
     @PostMapping("/{fiksDigisosId}/hendelser")
     fun hentHendelser(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<HendelseResponse>> {
-        log.info("Debug timing: hentHendelser Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
+        log.info("Debug timing: hentHendelser Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         abacService.harTilgang(ident.fnr, token)
 
         val hendelser = hendelseService.hentHendelser(fiksDigisosId)
