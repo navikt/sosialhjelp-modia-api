@@ -6,6 +6,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.X_B3_SPANID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.X_B3_TRACEID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.X_OT_SPAN_CONTEXT
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.X_REQUEST_ID
+import org.joda.time.DateTime
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import javax.servlet.Filter
@@ -25,6 +26,11 @@ class IstioTracingForwardingFilter : Filter {
         httpRequest.getHeader(X_B3_SAMPLED)?.let { MDC.put(X_B3_SAMPLED, it) }
         httpRequest.getHeader(X_B3_FLAGS)?.let { MDC.put(X_B3_FLAGS, it) }
         httpRequest.getHeader(X_OT_SPAN_CONTEXT)?.let { MDC.put(X_OT_SPAN_CONTEXT, it) }
+        val randomString = (1..5)
+                .map { i -> kotlin.random.Random.nextInt(0, 9) }
+                .joinToString("");
+        MDC.put("RequestId", randomString)
+        MDC.put("input_timing", DateTime.now().millis.toString())
 
         try {
             chain?.doFilter(request, response)

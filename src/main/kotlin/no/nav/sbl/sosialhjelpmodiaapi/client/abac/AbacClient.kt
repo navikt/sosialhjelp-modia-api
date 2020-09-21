@@ -5,6 +5,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.common.AbacException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
+import org.joda.time.DateTime
+import org.slf4j.MDC
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -35,7 +37,10 @@ class AbacClientImpl(
         val requestEntity = HttpEntity(postingString, headers())
 
         val responseBody = try {
+
+            val start = DateTime.now()
             val response = serviceuserBasicAuthRestTemplate.exchange(url, HttpMethod.POST, requestEntity, String::class.java)
+            log.info("Debug timing: sjekkTilgang Pre: ${start.millis - MDC.get("input_timing").toLong()} Abac: ${DateTime.now().millis-start.millis} | ${start.millis} | ${MDC.get("RequestId")}")
             response.body!!
         } catch (e: HttpStatusCodeException) {
             log.error("Abac - noe feilet. Status: ${e.statusCode}, message: ${e.message}.", e)
