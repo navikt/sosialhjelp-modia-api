@@ -68,11 +68,15 @@ class SoknadsoversiktController(
 
     @PostMapping("/{fiksDigisosId}/saksDetaljer")
     fun hentSaksDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SaksDetaljerResponse> {
-        log.info("Debug timing: hentSaksDetaljer Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
+        val start = DateTime.now().millis
+        log.info("Debug timing: hentSaksDetaljer Timing: ${start - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         abacService.harTilgang(ident.fnr, token)
+        val time1 = DateTime.now().millis
 
         val sak = fiksClient.hentDigisosSak(fiksDigisosId)
+        val time2 = DateTime.now().millis
         val model = eventService.createSoknadsoversiktModel(sak)
+        log.info("Debug timing: hentSaksDetaljer Abac: ${time1 - start} Sak: ${time2 - time1} Abac: ${DateTime.now().millis - time2} | ${MDC.get("RequestId")}")
         val saksDetaljerResponse = SaksDetaljerResponse(
                 fiksDigisosId = sak.fiksDigisosId,
                 soknadTittel = hentNavn(model),
