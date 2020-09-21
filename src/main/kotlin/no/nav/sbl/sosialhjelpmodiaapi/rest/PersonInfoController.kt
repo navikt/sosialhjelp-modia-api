@@ -3,8 +3,11 @@ package no.nav.sbl.sosialhjelpmodiaapi.rest
 import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.PersoninfoResponse
+import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.service.personinfo.PersoninfoService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import org.joda.time.DateTime
+import org.slf4j.MDC
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -23,9 +26,14 @@ class PersonInfoController(
 
     @PostMapping("/personinfo")
     fun hentPersonInfo(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<PersoninfoResponse> {
+        log.info("Debug timing: hentPersonInfo Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
         abacService.harTilgang(ident.fnr, token)
 
         val personinfoResponse = personinfoService.hentPersoninfo(ident.fnr)
         return ResponseEntity.ok(personinfoResponse)
+    }
+
+    companion object {
+        private val log by logger()
     }
 }

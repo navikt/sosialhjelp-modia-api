@@ -2,9 +2,12 @@ package no.nav.sbl.sosialhjelpmodiaapi.rest
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KommuneResponse
+import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneService
 import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import org.joda.time.DateTime
+import org.slf4j.MDC
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -25,6 +28,7 @@ class KommuneController(
 
     @PostMapping("/kommuner/{kommunenummer}")
     fun hentKommuneInfo(@PathVariable kommunenummer: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<KommuneResponse> {
+        log.info("Debug timing: hentKommuneInfo Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
         abacService.harTilgang(ident.fnr, token)
 
         val kommuneInfo = kommuneService.get(kommunenummer)
@@ -38,5 +42,9 @@ class KommuneController(
                         harNksTilgang = kommuneInfo.harNksTilgang,
                         behandlingsansvarlig = kommuneInfo.behandlingsansvarlig
                 ))
+    }
+
+    companion object {
+        private val log by logger()
     }
 }

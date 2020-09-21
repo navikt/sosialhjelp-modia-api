@@ -3,8 +3,11 @@ package no.nav.sbl.sosialhjelpmodiaapi.rest
 import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatusResponse
+import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.service.saksstatus.SaksStatusService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import org.joda.time.DateTime
+import org.slf4j.MDC
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -25,6 +28,7 @@ class SaksStatusController(
 
     @PostMapping("/{fiksDigisosId}/saksStatus")
     fun hentSaksStatuser(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SaksStatusResponse>> {
+        log.info("Debug timing: hentSaksStatuser Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
         abacService.harTilgang(ident.fnr, token)
 
         val saksStatuser = saksStatusService.hentSaksStatuser(fiksDigisosId)
@@ -32,5 +36,9 @@ class SaksStatusController(
             return ResponseEntity(HttpStatus.NO_CONTENT)
         }
         return ResponseEntity.ok(saksStatuser)
+    }
+
+    companion object {
+        private val log by logger()
     }
 }

@@ -3,8 +3,11 @@ package no.nav.sbl.sosialhjelpmodiaapi.rest
 import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadNoekkelinfoResponse
+import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.service.noekkelinfo.NoekkelinfoService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import org.joda.time.DateTime
+import org.slf4j.MDC
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -24,9 +27,14 @@ class NoekkelinfoController(
 
     @PostMapping("/{fiksDigisosId}/noekkelinfo")
     fun hentNoekkelInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadNoekkelinfoResponse> {
+        log.info("Debug timing: hentNoekkelInfo Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
         abacService.harTilgang(ident.fnr, token)
 
         val noekkelinfo = noekkelinfoService.hentNoekkelInfo(fiksDigisosId)
         return ResponseEntity.ok().body(noekkelinfo)
+    }
+
+    companion object {
+        private val log by logger()
     }
 }

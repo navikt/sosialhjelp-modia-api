@@ -16,6 +16,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.service.saksstatus.DEFAULT_TITTEL
 import no.nav.sbl.sosialhjelpmodiaapi.unixTimestampToDate
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import org.joda.time.DateTime
+import org.slf4j.MDC
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.util.MultiValueMap
@@ -38,6 +40,7 @@ class SoknadsoversiktController(
 
     @PostMapping("/saker")
     fun hentAlleSaker(@RequestHeader headers: MultiValueMap<String, String>, @RequestBody ident: Ident): ResponseEntity<List<SaksListeResponse>> {
+        log.info("Debug timing: hentAlleSaker Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
         log.info("Alle headere til hentAlleSaker: $headers")
         val token = headers.getFirst(HttpHeaders.AUTHORIZATION)
         abacService.harTilgang(ident.fnr, token!!)
@@ -65,6 +68,7 @@ class SoknadsoversiktController(
 
     @PostMapping("/{fiksDigisosId}/saksDetaljer")
     fun hentSaksDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SaksDetaljerResponse> {
+        log.info("Debug timing: hentSaksDetaljer Timing: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()}")
         abacService.harTilgang(ident.fnr, token)
 
         val sak = fiksClient.hentDigisosSak(fiksDigisosId)
