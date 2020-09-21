@@ -21,9 +21,12 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.SendingType
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Soknadsmottaker
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_SENDT
+import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import no.nav.sosialhjelp.api.fiks.DigisosSak
+import org.joda.time.DateTime
+import org.slf4j.MDC
 import org.springframework.stereotype.Component
 
 @Component
@@ -33,7 +36,10 @@ class EventService(
 ) {
 
     fun createModel(digisosSak: DigisosSak): InternalDigisosSoker {
+        val start = DateTime.now().millis
+        log.info("Debug timing: createModel inn: ${start - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         val jsonDigisosSoker: JsonDigisosSoker? = innsynService.hentJsonDigisosSoker(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata)
+        val timing1 = DateTime.now().millis
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
 
         val enhetsnummer: String? = digisosSak.tilleggsinformasjon?.enhetsnummer
@@ -51,15 +57,21 @@ class EventService(
             }
         }
 
+        val timing2 = DateTime.now().millis
         jsonDigisosSoker?.hendelser
                 ?.sortedBy { it.hendelsestidspunkt }
                 ?.forEach { model.applyHendelse(it) }
+        val timing3 = DateTime.now().millis
+        log.info("Debug timing: createSoknadsoversiktModel jsonDigisosSoker: ${timing1 - start} misc: ${timing2 - timing1} hendelser: ${timing3 - timing2} | ${MDC.get("RequestId")}")
 
         return model
     }
 
     fun createSoknadsoversiktModel(digisosSak: DigisosSak): InternalDigisosSoker {
+        val start = DateTime.now().millis
+        log.info("Debug timing: createSoknadsoversiktModel inn: ${start - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         val jsonDigisosSoker: JsonDigisosSoker? = innsynService.hentJsonDigisosSoker(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata)
+        val timing1 = DateTime.now().millis
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
 
         val model = InternalDigisosSoker()
@@ -69,10 +81,13 @@ class EventService(
         if (jsonDigisosSoker == null) {
             return model
         }
+        val timing2 = DateTime.now().millis
         jsonDigisosSoker.hendelser
                 .sortedBy { it.hendelsestidspunkt }
                 .forEach { model.applyHendelse(it) }
+        val timing3 = DateTime.now().millis
 
+        log.info("Debug timing: createSoknadsoversiktModel jsonDigisosSoker: ${timing1 - start} misc: ${timing2 - timing1} hendelser: ${timing3 - timing2} | ${MDC.get("RequestId")}")
         return model
     }
 
@@ -90,5 +105,9 @@ class EventService(
             is JsonRammevedtak -> apply(hendelse) // Gjør ingenting as of now
             else -> throw RuntimeException("Hendelsetype ${hendelse.type.value()} mangler mapping")
         }
+    }
+
+    companion object {
+        private val log by logger()
     }
 }

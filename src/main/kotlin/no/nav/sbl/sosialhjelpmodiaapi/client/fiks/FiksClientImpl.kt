@@ -41,6 +41,7 @@ class FiksClientImpl(
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
 
     override fun hentDigisosSak(digisosId: String): DigisosSak {
+        log.info("Debug timing: hentDigisosSak inn: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
         val virksomhetsToken = runBlocking { idPortenClient.requestToken() }
         val sporingsId = genererSporingsId()
 

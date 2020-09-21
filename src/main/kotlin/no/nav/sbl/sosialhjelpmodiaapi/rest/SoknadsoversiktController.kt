@@ -76,7 +76,7 @@ class SoknadsoversiktController(
         val sak = fiksClient.hentDigisosSak(fiksDigisosId)
         val time2 = DateTime.now().millis
         val model = eventService.createSoknadsoversiktModel(sak)
-        log.info("Debug timing: hentSaksDetaljer Abac: ${time1 - start} Sak: ${time2 - time1} Abac: ${DateTime.now().millis - time2} | ${MDC.get("RequestId")}")
+        log.info("Debug timing: hentSaksDetaljer Abac: ${time1 - start} Sak: ${time2 - time1} Model: ${DateTime.now().millis - time2} | ${MDC.get("RequestId")}")
         val saksDetaljerResponse = SaksDetaljerResponse(
                 fiksDigisosId = sak.fiksDigisosId,
                 soknadTittel = hentNavn(model),
