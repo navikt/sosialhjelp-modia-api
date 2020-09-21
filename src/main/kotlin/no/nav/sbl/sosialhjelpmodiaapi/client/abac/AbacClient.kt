@@ -40,7 +40,7 @@ class AbacClientImpl(
 
             val start = DateTime.now()
             val response = serviceuserBasicAuthRestTemplate.exchange(url, HttpMethod.POST, requestEntity, String::class.java)
-            log.info("Debug timing: sjekkTilgang Pre: ${start.millis - MDC.get("input_timing").toLong()} Abac: ${DateTime.now().millis-start.millis} | ${start.millis} | ${MDC.get("RequestId")}")
+            log.info("Debug timing: sjekkTilgang Pre: ${start.millis - (MDC.get("input_timing") ?: "-1").toLong()} Abac: ${DateTime.now().millis-start.millis} | ${start.millis} | ${MDC.get("RequestId") ?: ""}")
             response.body!!
         } catch (e: HttpStatusCodeException) {
             log.error("Abac - noe feilet. Status: ${e.statusCode}, message: ${e.message}.", e)

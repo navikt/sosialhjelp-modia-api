@@ -58,7 +58,7 @@ class FiksClientImpl(
             val digisosSak = response.body!!
 
             auditService.reportFiks(digisosSak.sokerFnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId", HttpMethod.GET, sporingsId)
-            log.info("Debug timing: hentDigisosSak Pre: ${start.millis - MDC.get("input_timing").toLong()} Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis} | ${start.millis} | ${MDC.get("RequestId")}")
+            log.info("Debug timing: hentDigisosSak Pre: ${start.millis - (MDC.get("input_timing") ?: "-1").toLong()} Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis} | ${start.millis} | ${MDC.get("RequestId")}")
 
             return digisosSak
 
@@ -94,7 +94,7 @@ class FiksClientImpl(
             val middle = DateTime.now()
 
             auditService.reportFiks(fnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId", HttpMethod.GET, sporingsId)
-            log.info("Debug timing: hentDokument Pre: ${start.millis - MDC.get("input_timing").toLong()} Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis} | ${start.millis} | ${MDC.get("RequestId")}")
+            log.info("Debug timing: hentDokument Pre: ${start.millis - (MDC.get("input_timing") ?: "-1").toLong()} Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis} | ${start.millis} | ${MDC.get("RequestId") ?: ""}")
 
             log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
             return response.body!!
@@ -125,7 +125,7 @@ class FiksClientImpl(
             val middle = DateTime.now()
 
             auditService.reportFiks(fnr, urlTemplate, HttpMethod.POST, sporingsId)
-            log.info("Debug timing: hentAlleDigisosSaker Pre: ${start.millis - MDC.get("input_timing").toLong()} Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis} | ${start.millis} | ${MDC.get("RequestId")}")
+            log.info("Debug timing: hentAlleDigisosSaker Pre: ${start.millis - (MDC.get("input_timing") ?: "-1").toLong()} Fiks: ${middle.millis-start.millis} Audit: ${DateTime.now().millis-middle.millis} | ${start.millis} | ${MDC.get("RequestId") ?: ""}")
 
             return response.body!!
 
