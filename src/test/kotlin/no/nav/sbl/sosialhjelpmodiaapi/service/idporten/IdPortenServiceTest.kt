@@ -25,16 +25,16 @@ internal class IdPortenServiceTest {
         clearAllMocks()
     }
 
-    @Test
-    internal fun `henter token fra client og cacher den`() {
-        coEvery { idPortenClient.requestToken() } returns accessToken
-        val result = idPortenService.getToken()
-        assertThat(result).isEqualTo(accessToken)
-        coVerify(exactly = 1) { idPortenClient.requestToken() }
-
-        coEvery { idPortenClient.requestToken() } returns nextAccessToken
-        val nextResult = idPortenService.getToken()
-        assertThat(nextResult).isEqualTo(accessToken)
-        coVerify(exactly = 1) { idPortenClient.requestToken() }
-    }
+//    @Test
+//    internal fun `henter token fra client og cacher den`() {
+//        coEvery { idPortenClient.requestToken() } returns accessToken
+//        val result = idPortenService.getToken()
+//        assertThat(result).isEqualTo(accessToken)
+//        coVerify(exactly = 1) { idPortenClient.requestToken() }
+//
+//        coEvery { idPortenClient.requestToken() } returns nextAccessToken
+//        val nextResult = idPortenService.getToken()
+//        assertThat(nextResult).isEqualTo(accessToken)
+//        coVerify(exactly = 1) { idPortenClient.requestToken() }
+//    }
 }
