@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.digisosapi
 
-import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
@@ -74,7 +73,7 @@ class DigisosApiClientImpl(
 
     private fun headers(): HttpHeaders {
         val headers = HttpHeaders()
-        val accessToken = runBlocking { idPortenClient.requestToken() }
+        val accessToken = idPortenClient.requestTokenUtenSuspendOgRetry()
         headers.accept = Collections.singletonList(MediaType.ALL)
         headers.set(HEADER_INTEGRASJON_ID, fiksIntegrasjonIdKommune)
         headers.set(HEADER_INTEGRASJON_PASSORD, fiksIntegrasjonPassordKommune)
