@@ -2,7 +2,6 @@ package no.nav.sbl.sosialhjelpmodiaapi.client.fiks
 
 import io.mockk.Runs
 import io.mockk.clearAllMocks
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -40,7 +39,7 @@ internal class FiksClientTest {
     fun init() {
         clearAllMocks()
 
-        coEvery { idPortenClient.requestToken().token } returns "token"
+        every { idPortenClient.requestTokenUtenSuspendOgRetry().token } returns "token"
         every { auditService.reportFiks(any(), any(), any(), any()) } just Runs
     }
 
