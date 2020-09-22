@@ -50,10 +50,8 @@ no.nav.sosialhjelp.idporten:
 
 #Token-validering
 no.nav.security.jwt:
-  issuer.veileder:
-    proxyurl:
-    discoveryurl: ${NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_DISCOVERYURL}
-    accepted_audience: ${NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE}
-    cookie_name: ID_token
+  issuer.azuread:
+    discoveryurl: ${AZURE_APP_WELL_KNOWN_URL}
+    accepted_audience: ${AZURE_APP_CLIENT_ID}, api://${AZURE_APP_CLIENT_ID}
 
 loginurl: ${LOGINURL:http://localhost:8383/sosialhjelp/modia-api/local/cookie} # TODO: må fikses når vi finner ut url i miljø.
