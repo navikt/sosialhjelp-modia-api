@@ -16,7 +16,7 @@ class IdPortenService(
 
     private var cachedToken: CachedToken? = null
 
-    constructor() {
+    init {
         val tidspunktForHenting: LocalDateTime = LocalDateTime.now()
         runBlocking(Dispatchers.IO) { idPortenClient.requestToken() }
                 .also { cachedToken = CachedToken(it, tidspunktForHenting) }
