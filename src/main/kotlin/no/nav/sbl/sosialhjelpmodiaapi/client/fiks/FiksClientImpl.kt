@@ -9,12 +9,12 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.feilmeldingUtenFnr
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
+import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.toFiksErrorMessage
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.fiksHeaders
 import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.idporten.client.IdPortenClient
 import org.joda.time.DateTime
 import org.slf4j.MDC
 import org.springframework.context.annotation.Profile
@@ -33,7 +33,7 @@ import java.util.*
 class FiksClientImpl(
         private val clientProperties: ClientProperties,
         private val restTemplate: RestTemplate,
-        private val idPortenClient: IdPortenClient,
+        private val idPortenService: IdPortenService,
         private val auditService: AuditService
 ) : FiksClient {
 
@@ -41,7 +41,7 @@ class FiksClientImpl(
 
     override fun hentDigisosSak(digisosId: String): DigisosSak {
         log.info("Debug timing: hentDigisosSak inn: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
-        val virksomhetsToken = idPortenClient.requestTokenUtenSuspendOgRetry()
+        val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
 
         log.info("Forsøker å hente digisosSak fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId")
@@ -77,7 +77,7 @@ class FiksClientImpl(
     }
 
     override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
-        val virksomhetsToken = idPortenClient.requestTokenUtenSuspendOgRetry()
+        val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
 
         log.info("Forsøker å hente dokument fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId")
@@ -111,7 +111,7 @@ class FiksClientImpl(
     }
 
     override fun hentAlleDigisosSaker(fnr: String): List<DigisosSak> {
-        val virksomhetsToken = idPortenClient.requestTokenUtenSuspendOgRetry()
+        val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
         try {
             val headers = fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)

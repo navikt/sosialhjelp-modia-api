@@ -11,9 +11,9 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_digisossak_response_string
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_minimal_jsondigisossoker_response_string
+import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.idporten.client.IdPortenClient
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -28,10 +28,10 @@ internal class FiksClientTest {
 
     private val clientProperties: ClientProperties = mockk(relaxed = true)
     private val restTemplate: RestTemplate = mockk()
-    private val idPortenClient: IdPortenClient = mockk()
+    private val idPortenService: IdPortenService = mockk()
     private val auditService: AuditService = mockk()
 
-    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenClient, auditService)
+    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenService, auditService)
 
     private val id = "123"
 
@@ -39,7 +39,7 @@ internal class FiksClientTest {
     fun init() {
         clearAllMocks()
 
-        every { idPortenClient.requestTokenUtenSuspendOgRetry().token } returns "token"
+        every { idPortenService.getToken().token } returns "token"
         every { auditService.reportFiks(any(), any(), any(), any()) } just Runs
     }
 

@@ -8,6 +8,12 @@ metadata:
 spec:
   image: {{image}}
   port: 8383
+  azure:
+    application:
+      enabled: true
+{{#if dev}}
+      tenant: trygdeetaten.no
+{{/if}}
   liveness:
     path: /sosialhjelp/modia-api/internal/isAlive
     initialDelay: 20
@@ -31,6 +37,7 @@ spec:
       external:
         - host: "oidc-ver2.difi.no"
         - host: "register.geonorge.no"
+        - host: "login.microsoftonline.com"
       rules:
         - application: sosialhjelp-mock-alt-api
   filesFrom:
