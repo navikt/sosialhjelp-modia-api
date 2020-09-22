@@ -17,8 +17,9 @@ class IdPortenService(
 
     fun getToken(): AccessToken {
         if (shouldRenewToken(cachedToken)) {
+            val tidspunktForHenting: LocalDateTime = LocalDateTime.now()
             return runBlocking(Dispatchers.IO) { idPortenClient.requestToken() }
-                    .also { cachedToken = CachedToken(it, LocalDateTime.now()) }
+                    .also { cachedToken = CachedToken(it, tidspunktForHenting) }
         }
 
         return cachedToken!!.accessToken
