@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.digisosapi
 
-import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
