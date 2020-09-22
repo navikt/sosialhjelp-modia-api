@@ -41,12 +41,12 @@ class FiksClientImpl(
 
     override fun hentDigisosSak(digisosId: String): DigisosSak {
         log.info("Debug timing: hentDigisosSak inn: ${DateTime.now().millis - (MDC.get("input_timing") ?: "-1").toLong()} | ${MDC.get("RequestId")}")
-//        val virksomhetsToken = runBlocking { idPortenClient.requestToken() }
+        val virksomhetsToken = idPortenClient.requestTokenUtenSuspendOgRetry()
         val sporingsId = genererSporingsId()
 
         log.info("Forsøker å hente digisosSak fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId")
         try {
-            val headers = fiksHeaders(clientProperties, BEARER + "dummyToken")
+            val headers = fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)
             val uriComponents = urlWithSporingsId(baseUrl + PATH_DIGISOSSAK)
             val vars = mapOf(DIGISOSID to digisosId, SPORINGSID to sporingsId)
 
@@ -77,12 +77,12 @@ class FiksClientImpl(
     }
 
     override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
-//        val virksomhetsToken = runBlocking { idPortenClient.requestToken() }
+        val virksomhetsToken = idPortenClient.requestTokenUtenSuspendOgRetry()
         val sporingsId = genererSporingsId()
 
         log.info("Forsøker å hente dokument fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId")
         try {
-            val headers = fiksHeaders(clientProperties, BEARER + "dummyToken")
+            val headers = fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)
             val uriComponents = urlWithSporingsId(baseUrl + PATH_DOKUMENT)
             val vars = mapOf(
                     DIGISOSID to digisosId,
@@ -111,10 +111,10 @@ class FiksClientImpl(
     }
 
     override fun hentAlleDigisosSaker(fnr: String): List<DigisosSak> {
-//        val virksomhetsToken = runBlocking { idPortenClient.requestToken() }
+        val virksomhetsToken = idPortenClient.requestTokenUtenSuspendOgRetry()
         val sporingsId = genererSporingsId()
         try {
-            val headers = fiksHeaders(clientProperties, BEARER + "dummyToken")
+            val headers = fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)
             val urlTemplate = baseUrl + PATH_ALLE_DIGISOSSAKER
             val uriComponents = urlWithSporingsId(urlTemplate)
             val vars = mapOf(SPORINGSID to sporingsId)
@@ -150,7 +150,7 @@ class FiksClientImpl(
     companion object {
         private val log by logger()
 
-//        Query param navn
+        // Query param navn
         private const val SPORINGSID = "sporingsId"
         private const val DIGISOSID = "digisosId"
         private const val DOKUMENTLAGERID = "dokumentlagerId"

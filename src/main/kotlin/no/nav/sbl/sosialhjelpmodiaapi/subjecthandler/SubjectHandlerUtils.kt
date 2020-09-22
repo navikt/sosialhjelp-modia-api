@@ -13,10 +13,6 @@ object SubjectHandlerUtils {
         return subjectHandlerService.getUserIdFromToken()
     }
 
-    fun getConsumerId() : String {
-        return subjectHandlerService.getConsumerId()
-    }
-
     fun getToken() : String {
         return subjectHandlerService.getToken()
     }

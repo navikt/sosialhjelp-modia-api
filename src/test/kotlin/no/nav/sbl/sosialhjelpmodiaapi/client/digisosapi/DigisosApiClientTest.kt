@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.digisosapi
 
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
@@ -28,7 +27,7 @@ internal class DigisosApiClientTest {
         val mockResponse: ResponseEntity<String> = mockk()
         every { mockResponse.statusCode.is2xxSuccessful } returns true
         every { mockResponse.body } returns ok_komplett_jsondigisossoker_response
-        coEvery { idPortenClient.requestToken() } returns AccessToken("Token")
+        every { idPortenClient.requestTokenUtenSuspendOgRetry() } returns AccessToken("Token")
         every {
             restTemplate.exchange(
                     any<String>(),

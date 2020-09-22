@@ -233,7 +233,13 @@ val digisosSoker = JsonDigisosSoker()
                                 .withTom(toDateString(DateTime.now().minusMonths(2).minusDays(5).withDayOfMonth(1).minusDays(1)))
                                 .withAnnenMottaker(false)
                                 .withMottaker("Ola Nordman")
-                                .withKontonummer(null)
-                                .withUtbetalingsmetode("pengekort")
+                                .withKontonummer("0102 0304 050607")
+                                .withUtbetalingsmetode("pengekort"),
+
+                        JsonUtbetaling()
+                                .withType(JsonHendelse.Type.UTBETALING)
+                                .withHendelsestidspunkt(toStringWithTimezone(DateTime.now().plusMonths(1).minusDays(3)))
+                                .withUtbetalingsreferanse("Betaling 5")
+                                .withUtbetalingsdato(toDateString(DateTime.now().minusMonths(1).withDayOfMonth(10)))
                 )
         )!!

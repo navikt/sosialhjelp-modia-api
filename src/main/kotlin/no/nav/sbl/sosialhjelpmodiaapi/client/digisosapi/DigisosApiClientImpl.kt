@@ -73,10 +73,11 @@ class DigisosApiClientImpl(
 
     private fun headers(): HttpHeaders {
         val headers = HttpHeaders()
+        val accessToken = idPortenClient.requestTokenUtenSuspendOgRetry()
         headers.accept = Collections.singletonList(MediaType.ALL)
         headers.set(HEADER_INTEGRASJON_ID, fiksIntegrasjonIdKommune)
         headers.set(HEADER_INTEGRASJON_PASSORD, fiksIntegrasjonPassordKommune)
-        headers.set(AUTHORIZATION, BEARER + "dummyToken")
+        headers.set(AUTHORIZATION, BEARER + accessToken.token)
         headers.contentType = MediaType.APPLICATION_JSON
         return headers
     }
