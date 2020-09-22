@@ -104,7 +104,7 @@ internal class AbacServiceTest {
         service.harTilgang(fnr, "$BEARER part1.part2.part3")
 
         assertThat(request.isCaptured).isTrue()
-        assertThat(request.captured.environment?.attributes?.first { it.attributeId == NavAttributter.ENVIRONMENT_FELLES_OIDC_TOKEN_BODY }?.value)
+        assertThat(request.captured.environment?.attributes?.first { it.attributeId.endsWith(".felles.azure_jwt_token_body") }?.value)
                 .doesNotContain(BEARER)
                 .isEqualTo("part2")
     }
