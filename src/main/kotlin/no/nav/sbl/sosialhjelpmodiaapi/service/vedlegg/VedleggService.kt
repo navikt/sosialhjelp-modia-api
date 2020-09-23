@@ -1,11 +1,14 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
+import no.nav.sbl.sosialhjelpmodiaapi.flatMapParallel
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
@@ -57,21 +60,23 @@ class VedleggService(
     }
 
     fun hentEttersendteVedlegg(digisosSak: DigisosSak, model: InternalDigisosSoker): List<InternalVedlegg> {
-        val alleVedlegg = digisosSak.ettersendtInfoNAV?.ettersendelser
-                ?.flatMap { ettersendelse ->
-                    val jsonVedleggSpesifikasjon = hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, ettersendelse.vedleggMetadata)
-                    jsonVedleggSpesifikasjon.vedlegg
-                            .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
-                            .map { vedlegg ->
-                                InternalVedlegg(
-                                        type = vedlegg.type,
-                                        tilleggsinfo = vedlegg.tilleggsinfo,
-                                        innsendelsesfrist = hentInnsendelsesfristFraOppgave(model, vedlegg),
-                                        antallFiler = matchDokumentInfoOgJsonFiler(ettersendelse.vedlegg, vedlegg.filer),
-                                        datoLagtTil = unixToLocalDateTime(ettersendelse.timestampSendt)
-                                )
-                            }
-                } ?: emptyList()
+        val alleVedlegg = runBlocking(Dispatchers.IO) {
+            digisosSak.ettersendtInfoNAV?.ettersendelser
+                    ?.flatMapParallel { ettersendelse ->
+                        val jsonVedleggSpesifikasjon = hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, ettersendelse.vedleggMetadata)
+                        jsonVedleggSpesifikasjon.vedlegg
+                                .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
+                                .map { vedlegg ->
+                                    InternalVedlegg(
+                                            type = vedlegg.type,
+                                            tilleggsinfo = vedlegg.tilleggsinfo,
+                                            innsendelsesfrist = hentInnsendelsesfristFraOppgave(model, vedlegg),
+                                            antallFiler = matchDokumentInfoOgJsonFiler(ettersendelse.vedlegg, vedlegg.filer),
+                                            datoLagtTil = unixToLocalDateTime(ettersendelse.timestampSendt)
+                                    )
+                                }
+                    }
+        } ?: emptyList()
         return kombinerAlleLikeVedlgg(alleVedlegg)
     }
 
