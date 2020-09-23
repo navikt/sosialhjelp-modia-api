@@ -29,7 +29,7 @@ class UtbetalingerController(
     fun hentUtbetalinger(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<UtbetalingerResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
-        return ResponseEntity.ok().body(utbetalingerService.hentUtbetalinger(ident.fnr))
+        return ResponseEntity.ok().body(utbetalingerService.hentAlleUtbetalinger(ident.fnr))
     }
 
     @PostMapping("/{fiksDigisosId}/utbetalinger")

@@ -1,5 +1,9 @@
 package no.nav.sbl.sosialhjelpmodiaapi
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.service.saksstatus.DEFAULT_TITTEL
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
@@ -88,4 +92,12 @@ fun getenv(key: String, default: String): String {
     } catch (e: Exception) {
         default
     }
+}
+
+suspend fun <A, B> Iterable<A>.flatMapParallel(f: suspend (A) -> List<B>): List<B> = coroutineScope {
+    map {
+        async(Dispatchers.IO) {
+            f(it)
+        }
+    }.awaitAll().flatten()
 }
