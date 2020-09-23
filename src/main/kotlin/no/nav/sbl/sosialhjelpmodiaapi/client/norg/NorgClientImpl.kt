@@ -5,6 +5,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CALL_ID
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.forwardHeaders
 import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils.getCallId
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.springframework.context.annotation.Profile
@@ -46,7 +47,7 @@ class NorgClientImpl(
     }
 
     private fun createRequestEntity(): HttpEntity<Nothing> {
-        val headers = HttpHeaders()
+        val headers = forwardHeaders()
         headers.set(HEADER_CALL_ID, getCallId())
         return HttpEntity(headers)
     }

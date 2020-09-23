@@ -24,13 +24,13 @@ class STSCheck(
     override val importance = Importance.WARNING
 
     override fun doCheck() {
-//        try {
-//            val requestUrl = "$address/.well-known/openid-configuration"
-//            restTemplate.exchange(requestUrl, HttpMethod.GET, null, String::class.java)
-//        } catch (e: RestClientException) {
-//            log.warn("Selftest - STS - noe feilet", e)
-//            throw e
-//        }
+        try {
+            val requestUrl = "$address/.well-known/openid-configuration"
+            restTemplate.exchange(requestUrl, HttpMethod.GET, null, String::class.java)
+        } catch (e: RestClientException) {
+            log.warn("Selftest - STS - noe feilet", e)
+            throw e
+        }
     }
 
     companion object {

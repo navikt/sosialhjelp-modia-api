@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.client.kommunenavn
 
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.forwardHeaders
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -16,7 +17,7 @@ class KommunenavnClient(
             val response = restTemplate.exchange(
                     "https://register.geonorge.no/api/subregister/sosi-kodelister/kartverket/kommunenummer-alle.json",
                     HttpMethod.GET,
-                    HttpEntity<Nothing>(HttpHeaders()),
+                    HttpEntity<Nothing>(forwardHeaders()),
                     typeRef<KommunenavnProperties>()
             )
             return response.body!!

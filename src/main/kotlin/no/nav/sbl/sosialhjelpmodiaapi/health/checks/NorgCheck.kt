@@ -4,6 +4,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.common.NorgException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CALL_ID
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.forwardHeaders
 import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils.getCallId
 import no.nav.sosialhjelp.selftest.DependencyCheck
 import no.nav.sosialhjelp.selftest.DependencyType
@@ -30,7 +31,7 @@ class NorgCheck(
 
     override fun doCheck() {
         try {
-            val headers = HttpHeaders()
+            val headers = forwardHeaders()
             headers.set(HEADER_CALL_ID, getCallId())
 
             // samme kall som selftest i soknad-api

@@ -34,7 +34,7 @@ object IntegrationUtils {
         return headers
     }
 
-    fun forwardHeaders(headers: HttpHeaders) {
+    fun forwardHeaders(headers: HttpHeaders = HttpHeaders()): HttpHeaders {
         headers.set(X_REQUEST_ID, MDC.get(X_REQUEST_ID))
         headers.set(X_B3_TRACEID, MDC.get(X_B3_TRACEID))
         headers.set(X_B3_SPANID, MDC.get(X_B3_SPANID))
@@ -42,6 +42,7 @@ object IntegrationUtils {
         headers.set(X_B3_SAMPLED, MDC.get(X_B3_SAMPLED))
         headers.set(X_B3_FLAGS, MDC.get(X_B3_FLAGS))
         headers.set(X_OT_SPAN_CONTEXT, MDC.get(X_OT_SPAN_CONTEXT))
+        return headers
     }
 
     private fun defaultFiksHeaders(clientProperties: ClientProperties): HttpHeaders {
