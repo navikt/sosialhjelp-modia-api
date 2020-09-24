@@ -6,6 +6,7 @@
   "secretKvPaths": {
     "/var/run/secrets/nais.io/virksomhetssertifikat": "/secret/virksomhetssertifikat/preprod/shared",
     "/var/run/secrets/nais.io/vault": "/kv/preprod/fss/sosialhjelp-modia-api/teamdigisos",
+    "/var/run/secrets/nais.io/appdynamics": "/apikey/appdynamics/dev",
     "/serviceuser/srvsosialhjelp-mod": "/serviceuser/data/dev/srvsosialhjelp-mod"
   },
   "env": {
