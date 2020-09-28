@@ -23,11 +23,6 @@
     "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local",
     "CACHE_TIME_TO_LIVE_SECONDS": "10"
   },
-  "inboundApplication": [
-    "sosialhjelp-modia-oidc-auth-proxy"
-  ],
-  "outboundApplication": [],
-  "outboundHost": [],
   "minReplicas": "2",
   "maxReplicas": "4",
   "prometheusEnabled": true,

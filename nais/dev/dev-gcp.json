@@ -14,15 +14,6 @@
     "STS_TOKEN_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api/sosialhjelp/mock-alt-api/sts_token_endpoint_url",
     "VIRKSERT_STI": "/var/run/secrets"
   },
-  "inboundApplication": [],
-  "outboundApplication": [
-    "sosialhjelp-mock-alt-api"
-  ],
-  "outboundHost": [
-    "oidc-ver2.difi.no",
-    "register.geonorge.no",
-    "login.microsoftonline.com"
-  ],
   "minReplicas": "1",
   "maxReplicas": "1",
   "prometheusEnabled": true,
