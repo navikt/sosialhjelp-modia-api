@@ -51,7 +51,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(PdlException::class)
     fun handlePdlError(e: PdlException): ResponseEntity<FrontendErrorMessage> {
-//        log.error("Noe feilet ved kall til Pdl", e)
+        log.error("Noe feilet ved kall til Pdl", e)
         val error = FrontendErrorMessage(PDL_ERROR, "Noe uventet feilet")
         return ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR)
     }
