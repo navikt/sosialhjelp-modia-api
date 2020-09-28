@@ -18,6 +18,6 @@
   "maxReplicas": "1",
   "prometheusEnabled": true,
   "webProxyEnabled": false,
-  "virksomhetssertifikatFromSecret": true,
+  "isGcp": true,
   "vaultEnabled": false
 }

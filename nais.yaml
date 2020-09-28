@@ -42,7 +42,7 @@ spec:
         - host: "login.microsoftonline.com"
       rules:
         - application: sosialhjelp-mock-alt-api
-{{#if virksomhetssertifikatFromSecret}}
+{{#if isGcp}}
   filesFrom:
     - secret: virksomhetssertifikat
 {{/if}}
