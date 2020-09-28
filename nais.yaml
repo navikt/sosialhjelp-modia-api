@@ -33,6 +33,9 @@ spec:
   webproxy: {{webProxyEnabled}}
 {{#if accessPoliciesForGcpEnabled}}
   accessPolicy:
+    inbound:
+      rules:
+        - application: sosialhjelp-modia-oidc-auth-proxy
     outbound:
       external:
         - host: "oidc-ver2.difi.no"
