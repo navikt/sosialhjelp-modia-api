@@ -45,7 +45,7 @@ class StaticSubjectHandlerImpl : SubjectHandler {
 
 @Profile("!(mock | mock-alt)")
 @Component
-class IssoSubjectHandlerImpl(
+class AzureADSubjectHandlerImpl(
         private val tokenValidationContextHolder: TokenValidationContextHolder
 ) : SubjectHandler {
 
