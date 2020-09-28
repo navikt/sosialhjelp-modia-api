@@ -31,7 +31,6 @@ spec:
     min: {{minReplicas}}
     max: {{maxReplicas}}
   webproxy: {{webProxyEnabled}}
-{{#if accessPoliciesForGcpEnabled}}
   accessPolicy:
     inbound:
       rules:
