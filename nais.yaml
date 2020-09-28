@@ -34,18 +34,14 @@ spec:
   accessPolicy:
     inbound:
       rules:
-{{#each inboundApplication}}
-        - application: {{this}}
-{{/each}}
+        - application: sosialhjelp-modia-oidc-auth-proxy
     outbound:
       external:
-{{#each outboundHost}}
-        - host: "{{this}}"
-{{/each}}
+        - host: "oidc-ver2.difi.no"
+        - host: "register.geonorge.no"
+        - host: "login.microsoftonline.com"
       rules:
-{{#each outboundApplication}}
-        - application: {{this}}
-{{/each}}
+        - application: sosialhjelp-mock-alt-api
 {{#if virksomhetssertifikatFromSecret}}
   filesFrom:
     - secret: virksomhetssertifikat
