@@ -31,8 +31,10 @@ spec:
     min: {{minReplicas}}
     max: {{maxReplicas}}
   webproxy: {{webProxyEnabled}}
-{{#if accessPoliciesForGcpEnabled}}
   accessPolicy:
+    inbound:
+      rules:
+        - application: sosialhjelp-modia-oidc-auth-proxy
     outbound:
       external:
         - host: "oidc-ver2.difi.no"
@@ -40,6 +42,7 @@ spec:
         - host: "login.microsoftonline.com"
       rules:
         - application: sosialhjelp-mock-alt-api
+{{#if virksomhetssertifikatFromSecret}}
   filesFrom:
     - secret: virksomhetssertifikat
 {{/if}}

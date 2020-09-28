@@ -51,7 +51,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(PdlException::class)
     fun handlePdlError(e: PdlException): ResponseEntity<FrontendErrorMessage> {
-//        log.error("Noe feilet ved kall til Pdl", e)
+        log.error("Noe feilet ved kall til Pdl", e)
         val error = FrontendErrorMessage(PDL_ERROR, "Noe uventet feilet")
         return ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR)
     }
@@ -71,7 +71,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(ManglendeModiaSosialhjelpTilgangException::class)
     fun handleManglendeModiaSosialhjelpTilgangException(e: ManglendeModiaSosialhjelpTilgangException): ResponseEntity<FrontendErrorMessage> {
-        // "veileder manger ad-rolle for å kunne bruke modia sosialhjelp"
+        log.info("Veileder manger ad-rolle for tilgang til sosialhjelp i modia.")
         val error = FrontendErrorMessage(TILGANG_ERROR, "Mangler tilgang")
         return ResponseEntity(error, HttpStatus.FORBIDDEN)
     }
