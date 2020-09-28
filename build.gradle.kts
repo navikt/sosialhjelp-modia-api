@@ -11,7 +11,7 @@ object Versions {
     const val springBoot = "2.3.3.RELEASE"
     const val logback = "1.2.3"
     const val logstash = "6.3"
-    const val sosialhjelpCommon = "1.dc27ba6-SNAPSHOT"
+    const val sosialhjelpCommon = "1.a573c55"
     const val filformat = "1.2020.06.25-09.12-23b98d57ab78"
     const val micrometerRegistry = "1.5.1"
     const val prometheus = "0.8.1"
@@ -74,7 +74,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
 
 //    Spring
-    implementation("org.springframework.boot:spring-boot-starter-web:${Versions.springBoot}")
+    implementation("org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-jetty:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-actuator:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-logging:${Versions.springBoot}")
