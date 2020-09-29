@@ -68,21 +68,21 @@ class UtbetalingerService(
 
     private fun toUtbetalingResponse(utbetaling: Utbetaling, fiksDigisosId: String, behandlendeNavKontor: NavKontorInformasjon?): UtbetalingerResponse {
         return UtbetalingerResponse(
-                    tittel = utbetaling.beskrivelse,
-                    belop = utbetaling.belop.toDouble(),
-                    utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato
-                            ?: utbetaling.forfallsDato,
-                    status = utbetaling.status,
-                    fiksDigisosId = fiksDigisosId,
-                    fom = utbetaling.fom,
-                    tom = utbetaling.tom,
-                    mottaker = utbetaling.mottaker,
-                    annenMottaker = utbetaling.annenMottaker,
-                    kontonummer = utbetaling.kontonummer,
-                    utbetalingsmetode = utbetaling.utbetalingsmetode,
-                    harVilkar = !utbetaling.vilkar.isNullOrEmpty(),
-                    navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }
-            )
+                tittel = utbetaling.beskrivelse,
+                belop = utbetaling.belop.toDouble(),
+                utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato
+                        ?: utbetaling.forfallsDato,
+                status = utbetaling.status,
+                fiksDigisosId = fiksDigisosId,
+                fom = utbetaling.fom,
+                tom = utbetaling.tom,
+                mottaker = utbetaling.mottaker,
+                annenMottaker = utbetaling.annenMottaker,
+                kontonummer = utbetaling.kontonummer,
+                utbetalingsmetode = utbetaling.utbetalingsmetode,
+                harVilkar = !utbetaling.vilkar.isNullOrEmpty(),
+                navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }
+        )
     }
 
     private fun infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(utbetalinger: List<Utbetaling>, kommunenummer: String) {
