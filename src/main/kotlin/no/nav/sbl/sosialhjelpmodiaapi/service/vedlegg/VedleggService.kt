@@ -100,12 +100,7 @@ class VedleggService(
     }
 
     private fun hentVedleggSpesifikasjon(fnr: String, fiksDigisosId: String, dokumentlagerId: String): JsonVedleggSpesifikasjon {
-        return try {
-            fiksClient.hentDokument(fnr, fiksDigisosId, dokumentlagerId, JsonVedleggSpesifikasjon::class.java) as JsonVedleggSpesifikasjon
-        } catch (e: Exception) {
-            log.info("Midlertidig fjernet henting av vedleggspesifikasjon. dokumentlagerId: $dokumentlagerId")
-            JsonVedleggSpesifikasjon()
-        }
+        return fiksClient.hentDokument(fnr, fiksDigisosId, dokumentlagerId, JsonVedleggSpesifikasjon::class.java) as JsonVedleggSpesifikasjon
     }
 
     private fun matchDokumentInfoOgJsonFiler(dokumentInfoList: List<DokumentInfo>, jsonFiler: List<JsonFiler>): Int {
