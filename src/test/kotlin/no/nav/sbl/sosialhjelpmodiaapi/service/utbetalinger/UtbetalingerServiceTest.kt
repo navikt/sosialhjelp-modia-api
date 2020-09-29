@@ -18,11 +18,13 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Vilkar
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.StaticSubjectHandlerImpl
+import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.resetSubjectHandlerImpl
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.setNewSubjectHandlerImpl
 import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextServiceImpl
 import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextServiceMock
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -59,6 +61,11 @@ internal class UtbetalingerServiceTest {
 
         coEvery { mockDigisosSak.fiksDigisosId } returns digisosId
         coEvery { mockDigisosSak.kommunenummer } returns "0001"
+    }
+
+    @AfterEach
+    internal fun tearDown() {
+        resetSubjectHandlerImpl()
     }
 
     @Test
