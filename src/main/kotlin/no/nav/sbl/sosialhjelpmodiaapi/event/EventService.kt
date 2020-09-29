@@ -57,7 +57,7 @@ class EventService(
     }
 
     fun getNavenhetsnavnOrDefault(enhetsnummer: String): String {
-        if (enhetsnummer.isEmpty()) {
+        if (enhetsnummer.isNotEmpty()) {
             return norgClient.hentNavEnhet(enhetsnummer).navn
         }
         return "[Kan ikke hente NAV-kontor]"
