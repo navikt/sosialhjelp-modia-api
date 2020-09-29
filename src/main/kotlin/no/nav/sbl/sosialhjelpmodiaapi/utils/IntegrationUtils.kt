@@ -28,9 +28,6 @@ object IntegrationUtils {
     const val X_B3_FLAGS = "x-b3-flags"
     const val X_OT_SPAN_CONTEXT = "x-ot-span-context"
 
-    @Value("\${spring.profiles.active}")
-    private var activeProfile: String = ""
-
     fun fiksHeaders(clientProperties: ClientProperties, token: String): HttpHeaders {
         val headers = defaultFiksHeaders(clientProperties)
         headers.set(HttpHeaders.AUTHORIZATION, token)
