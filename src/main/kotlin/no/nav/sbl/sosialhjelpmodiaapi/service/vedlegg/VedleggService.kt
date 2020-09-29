@@ -9,7 +9,6 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.flatMapParallel
-import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
@@ -148,8 +147,4 @@ class VedleggService(
             var antallFiler: Int,
             val datoLagtTil: LocalDateTime?
     )
-
-    companion object {
-        private val log by logger()
-    }
 }
