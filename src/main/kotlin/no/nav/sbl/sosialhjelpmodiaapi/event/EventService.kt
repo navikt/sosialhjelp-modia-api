@@ -36,19 +36,17 @@ class EventService(
         val jsonDigisosSoker: JsonDigisosSoker? = innsynService.hentJsonDigisosSoker(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata)
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
 
-        val enhetsnummer: String? = digisosSak.tilleggsinformasjon?.enhetsnummer
-
         val model = InternalDigisosSoker()
+        // Default status == SENDT. Gjelder også for papirsøknader hvor timestampSendt == null
+        model.status = SoknadsStatus.SENDT
 
         if (timestampSendt != null) {
-            model.status = SoknadsStatus.SENDT
+            val enhetsnummer: String = digisosSak.tilleggsinformasjon?.enhetsnummer ?: ""
+            val navenhetsnavn = getNavenhetsnavnOrDefault(enhetsnummer)
 
-            if (enhetsnummer != null) {
-                val navEnhetsnavn = norgClient.hentNavEnhet(enhetsnummer).navn
-                model.soknadsmottaker = Soknadsmottaker(enhetsnummer, navEnhetsnavn)
-                model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til $navEnhetsnavn.", unixToLocalDateTime(timestampSendt), VIS_SOKNADEN))
-                model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, unixToLocalDateTime(timestampSendt), enhetsnummer, navEnhetsnavn))
-            }
+            model.soknadsmottaker = Soknadsmottaker(enhetsnummer, navenhetsnavn)
+            model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til $navenhetsnavn.", unixToLocalDateTime(timestampSendt), VIS_SOKNADEN))
+            model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, unixToLocalDateTime(timestampSendt), enhetsnummer, navenhetsnavn))
         }
 
         jsonDigisosSoker?.hendelser
@@ -56,6 +54,14 @@ class EventService(
                 ?.forEach { model.applyHendelse(it) }
 
         return model
+    }
+
+    fun getNavenhetsnavnOrDefault(enhetsnummer: String): String {
+        if (enhetsnummer.isEmpty()) {
+            return norgClient.hentNavEnhet(enhetsnummer).navn
+        }
+        return "[Kan ikke hente NAV-kontor]"
+
     }
 
     fun createSoknadsoversiktModel(digisosSak: DigisosSak): InternalDigisosSoker {

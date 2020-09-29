@@ -72,3 +72,41 @@ val defaultDigisosSak = DigisosSak(
                 enhetsnummer = "1234"
         )
 )
+
+val minimalPapirsoknad = DigisosSak(
+        fiksDigisosId = "ff7a4826-01a1-11eb-adc1-0242ac120002-minimal-papir",
+        sokerFnr = "string",
+        fiksOrgId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        kommunenummer = "0301",
+        sistEndret = 0,
+        originalSoknadNAV = null,
+        ettersendtInfoNAV = null,
+        digisosSoker = DigisosSoker(
+                metadata = "mock-digisossoker-minimal",
+                dokumenter = emptyList(),
+                timestampSistOppdatert = 1601309557
+        ),
+        tilleggsinformasjon = null
+)
+
+val minimalDigitalsoknad = DigisosSak(
+        fiksDigisosId = "a2460722-01a5-11eb-adc1-0242ac120002-minimal-digital",
+        sokerFnr = "string",
+        fiksOrgId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        kommunenummer = "0301",
+        sistEndret = 0,
+        originalSoknadNAV = OriginalSoknadNAV(
+                navEksternRefId = "11000001",
+                metadata = "mock-soknad-minimal",
+                vedleggMetadata = "mock-soknad-vedlegg-metadata",
+                soknadDokument = DokumentInfo(
+                        filnavn = "Soknad.pdf",
+                        dokumentlagerDokumentId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                        storrelse = 0),
+                vedlegg = emptyList(),
+                timestampSendt = 1601309557
+        ),
+        ettersendtInfoNAV = null,
+        digisosSoker = null,
+        tilleggsinformasjon = null
+)

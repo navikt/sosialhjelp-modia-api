@@ -102,3 +102,40 @@ val defaultJsonSoknad: JsonSoknad = JsonSoknad()
         .withKompatibilitet(
                 emptyList()
         )
+
+val minimalJsonSoknad: JsonSoknad = JsonSoknad()
+        .withVersion("1.0.0")
+        .withData(
+                JsonData()
+                        .withPersonalia(
+                                JsonPersonalia()
+                                        .withPersonIdentifikator(
+                                                JsonPersonIdentifikator()
+                                                        .withKilde(JsonPersonIdentifikator.Kilde.SYSTEM)
+                                                        .withVerdi("12345678901")
+                                        )
+                                        .withNavn(
+                                                JsonSokernavn()
+                                                        .withKilde(JsonSokernavn.Kilde.SYSTEM)
+                                                        .withFornavn("")
+                                                        .withMellomnavn("")
+                                                        .withEtternavn("")
+                                        )
+                        )
+                        .withBosituasjon(
+                                JsonBosituasjon()
+                                        .withKilde(JsonKildeBruker.BRUKER)
+                        )
+        )
+        .withMottaker(
+                JsonSoknadsmottaker()
+                        .withNavEnhetsnavn("NAV Eiganes og Tasta, Stavanger kommune")
+                        .withEnhetsnummer("0301")
+                        .withKommunenummer("1337")
+        )
+        .withDriftsinformasjon(
+                JsonDriftsinformasjon()
+        )
+        .withKompatibilitet(
+                emptyList()
+        )

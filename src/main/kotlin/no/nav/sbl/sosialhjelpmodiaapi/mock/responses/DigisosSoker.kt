@@ -243,3 +243,18 @@ val digisosSoker = JsonDigisosSoker()
                                 .withUtbetalingsdato(toDateString(DateTime.now().minusMonths(1).withDayOfMonth(10)))
                 )
         )!!
+
+val minimalDigisosSoker = JsonDigisosSoker()
+        .withVersion("1.0.0")
+        .withAvsender(
+                JsonAvsender()
+                        .withSystemnavn("Testsystemet")
+                        .withSystemversjon("1.0.0"))
+        .withHendelser(
+                listOf(
+                        JsonSoknadsStatus()
+                                .withType(JsonHendelse.Type.SOKNADS_STATUS)
+                                .withHendelsestidspunkt(toStringWithTimezone(DateTime.now().minusDays(10)))//"2018-10-08T11:00:00.000Z"
+                                .withStatus(JsonSoknadsStatus.Status.MOTTATT),
+                )
+        )!!
