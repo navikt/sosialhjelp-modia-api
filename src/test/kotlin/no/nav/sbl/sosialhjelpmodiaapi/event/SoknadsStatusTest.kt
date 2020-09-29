@@ -82,6 +82,7 @@ internal class SoknadsStatusTest {
     @Test
     fun `soknadsStatus MOTTATT papirsoknad`() {
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns null
+        every { mockDigisosSak.originalSoknadNAV } returns null
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
