@@ -9,10 +9,10 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CALL_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CONSUMER_TOKEN
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_TEMA
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.TEMA_KOM
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.forwardHeaders
 import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils.getCallId
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
@@ -56,7 +56,7 @@ class PdlClientImpl(
 
     override fun ping() {
         try {
-            restTemplate.exchange(baseurl, HttpMethod.OPTIONS, HttpEntity(null, null), String::class.java)
+            restTemplate.exchange(baseurl, HttpMethod.OPTIONS, HttpEntity(null, forwardHeaders()), String::class.java)
         } catch (e: RestClientException) {
             log.error("PDL - ping feilet, requesturl: $baseurl", e)
             throw e
@@ -68,7 +68,7 @@ class PdlClientImpl(
     private fun createRequestEntity(request: PdlRequest): HttpEntity<PdlRequest> {
         val stsToken: String = stsClient.token()
 
-        val headers = HttpHeaders()
+        val headers = forwardHeaders()
         headers.contentType = APPLICATION_JSON
         headers.set(HEADER_CALL_ID, getCallId())
         headers.set(HEADER_CONSUMER_TOKEN, BEARER + stsToken)

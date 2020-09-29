@@ -27,14 +27,14 @@ internal class IdPortenServiceTest {
 
     @Test
     internal fun `henter token fra client og cacher den`() {
-        coEvery { idPortenClient.requestToken() } returns accessToken
+        coEvery { idPortenClient.requestToken(headers = any()) } returns accessToken
         val result = idPortenService.getToken()
         assertThat(result).isEqualTo(accessToken)
-        coVerify(exactly = 1) { idPortenClient.requestToken() }
+        coVerify(exactly = 1) { idPortenClient.requestToken(headers = any()) }
 
-        coEvery { idPortenClient.requestToken() } returns nextAccessToken
+        coEvery { idPortenClient.requestToken(headers = any()) } returns nextAccessToken
         val nextResult = idPortenService.getToken()
         assertThat(nextResult).isEqualTo(accessToken)
-        coVerify(exactly = 1) { idPortenClient.requestToken() }
+        coVerify(exactly = 1) { idPortenClient.requestToken(headers = any()) }
     }
 }
