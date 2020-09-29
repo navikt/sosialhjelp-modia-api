@@ -4,6 +4,7 @@ import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Dokumentasjonkrav
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
@@ -16,6 +17,10 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Vilkar
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
+import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.StaticSubjectHandlerImpl
+import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.setNewSubjectHandlerImpl
+import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextServiceImpl
+import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextServiceMock
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -24,13 +29,15 @@ import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
+import kotlin.coroutines.CoroutineContext
 import kotlin.test.assertTrue
 
 internal class UtbetalingerServiceTest {
     private val fiksClient: FiksClient = mockk()
     private val eventService: EventService = mockk()
+    private val requestContextService = RequestContextServiceImpl()
 
-    private val service = UtbetalingerService(fiksClient, eventService)
+    private val service = UtbetalingerService(fiksClient, eventService, requestContextService)
 
     private val mockDigisosSak: DigisosSak = mockk()
 
@@ -47,6 +54,8 @@ internal class UtbetalingerServiceTest {
     @BeforeEach
     fun init() {
         clearAllMocks()
+
+        setNewSubjectHandlerImpl(StaticSubjectHandlerImpl())
 
         coEvery { mockDigisosSak.fiksDigisosId } returns digisosId
         coEvery { mockDigisosSak.kommunenummer } returns "0001"

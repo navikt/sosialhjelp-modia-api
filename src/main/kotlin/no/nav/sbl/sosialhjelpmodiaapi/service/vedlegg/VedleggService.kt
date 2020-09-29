@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.runBlocking
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
@@ -9,7 +10,10 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.flatMapParallel
+import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
+import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextService
+import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
 import org.springframework.stereotype.Component
@@ -21,7 +25,8 @@ const val VEDLEGG_KREVES_STATUS = "VedleggKreves"
 @Component
 class VedleggService(
         private val fiksClient: FiksClient,
-        private val eventService: EventService
+        private val eventService: EventService,
+        private val requestContextService: RequestContextService
 ) {
 
     fun hentAlleOpplastedeVedlegg(fiksDigisosId: String): List<InternalVedlegg> {
@@ -60,7 +65,12 @@ class VedleggService(
     }
 
     fun hentEttersendteVedlegg(digisosSak: DigisosSak, model: InternalDigisosSoker): List<InternalVedlegg> {
-        val alleVedlegg = runBlocking(Dispatchers.IO) {
+        val alleVedlegg = runBlocking(
+                context = requestContextService.getCoroutineContext(
+                context = GlobalScope.coroutineContext,
+                userId = SubjectHandlerUtils.getUserIdFromToken(),
+                callId = MDCUtils.getCallId() ?: ""
+        ) + Dispatchers.IO) {
             digisosSak.ettersendtInfoNAV?.ettersendelser
                     ?.flatMapParallel { ettersendelse ->
                         val jsonVedleggSpesifikasjon = hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, ettersendelse.vedleggMetadata)
