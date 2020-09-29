@@ -3,7 +3,6 @@ package no.nav.sbl.sosialhjelpmodiaapi.service.utbetalinger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope.coroutineContext
 import kotlinx.coroutines.runBlocking
-
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontor
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontorInformasjon
@@ -13,9 +12,9 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.flatMapParallel
 import no.nav.sbl.sosialhjelpmodiaapi.logger
-import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.getUserIdFromToken
+import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextService
-import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils.getCallId
+import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.springframework.stereotype.Component
 
@@ -38,12 +37,15 @@ class UtbetalingerService(
         return runBlocking(
                 context = requestContextService.getCoroutineContext(
                         context = coroutineContext,
-                        userId = getUserIdFromToken(),
-                        callId = getCallId() ?: ""
-                ) + Dispatchers.IO
+//                        userId = getUserIdFromToken(),
+//                        callId = getCallId() ?: ""
+                )
         ) {
             digisosSaker
-                    .flatMapParallel { getUtbetalinger(it) }
+                    .flatMapParallel {
+                        log.info("flatMapParallel - ${Thread.currentThread().name} - getUserId: ${SubjectHandlerUtils.getUserIdFromToken()}, getCallId: ${MDCUtils.getCallId()}")
+                        getUtbetalinger(it)
+                    }
                     .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         }
     }

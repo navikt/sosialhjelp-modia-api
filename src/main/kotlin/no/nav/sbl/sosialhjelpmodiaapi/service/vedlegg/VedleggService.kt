@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope.coroutineContext
 import kotlinx.coroutines.runBlocking
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
@@ -10,6 +9,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.flatMapParallel
+import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextService
@@ -68,12 +68,13 @@ class VedleggService(
         val alleVedlegg = runBlocking(
                 context = requestContextService.getCoroutineContext(
                         context = coroutineContext,
-                        userId = SubjectHandlerUtils.getUserIdFromToken(),
-                        callId = MDCUtils.getCallId() ?: ""
-                ) + Dispatchers.IO
+//                        userId = SubjectHandlerUtils.getUserIdFromToken(),
+//                        callId = MDCUtils.getCallId() ?: ""
+                )
         ) {
             digisosSak.ettersendtInfoNAV?.ettersendelser
                     ?.flatMapParallel { ettersendelse ->
+                        log.info("flatMapParallel - ${Thread.currentThread().name} - getUserId: ${SubjectHandlerUtils.getUserIdFromToken()}, getCallId: ${MDCUtils.getCallId()}")
                         val jsonVedleggSpesifikasjon = hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, ettersendelse.vedleggMetadata)
                         jsonVedleggSpesifikasjon.vedlegg
                                 .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
@@ -159,4 +160,8 @@ class VedleggService(
             var antallFiler: Int,
             val datoLagtTil: LocalDateTime?
     )
+
+    companion object {
+        private val log by logger()
+    }
 }
