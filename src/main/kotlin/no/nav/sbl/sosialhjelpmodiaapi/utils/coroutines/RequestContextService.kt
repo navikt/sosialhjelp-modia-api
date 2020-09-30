@@ -1,16 +1,12 @@
 package no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines
 
+import org.springframework.web.context.request.RequestAttributes
 import kotlin.coroutines.CoroutineContext
 
 interface RequestContextService {
 
     fun getCoroutineContext(
             context: CoroutineContext,
-//            userId: String,
-//            callId: String
+            requestAttributes: RequestAttributes?
     ): CoroutineContext
-
-//    fun getUserId(): String
-//    fun getCallId(): String
-    fun getRequestContext(): RequestContextServiceImpl.RequestContext
 }

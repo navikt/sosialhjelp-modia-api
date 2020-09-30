@@ -1,22 +1,24 @@
 package no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines
 
 import kotlinx.coroutines.asContextElement
-import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
+import org.springframework.web.context.request.RequestAttributes
+import org.springframework.web.context.request.RequestContextHolder
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 
 private class CoroutineRequestContext(
-//        internal val callId: String,
-//        internal val userId: String
+        internal val requestAttributes: RequestAttributes?
 ) : AbstractCoroutineContextElement(Key) {
 
-    companion object Key: CoroutineContext.Key<CoroutineRequestContext>
+    internal companion object Key: CoroutineContext.Key<CoroutineRequestContext>
 }
 
 private fun CoroutineContext.requestContext() = get(CoroutineRequestContext.Key) ?: throw IllegalStateException("Request Context har ikke blitt satt.")
-//internal fun CoroutineContext.userId() = requestContext().userId
-//internal fun CoroutineContext.callId() = requestContext().callId
+
+private fun setRequestAttributes(requestAttributes: RequestAttributes?) {
+    requestAttributes?.let { RequestContextHolder.setRequestAttributes(it) }
+}
 
 @Component
 class RequestContextServiceImpl : RequestContextService {
@@ -27,24 +29,22 @@ class RequestContextServiceImpl : RequestContextService {
 
     override fun getCoroutineContext(
             context: CoroutineContext,
-//            userId: String,
-//            callId: String
-    ) = context + requestContexts.asContextElement(
-//            RequestContext(
-//                    userId, callId
-//            )
-    ) + CoroutineRequestContext(
-//            callId, userId
-    )
+            requestAttributes: RequestAttributes?
+    ): CoroutineContext {
 
-    override fun getRequestContext() = requestContexts.get() ?: throw IllegalStateException("Request Context ikke satt.")
+        setRequestAttributes(requestAttributes)
 
-//    override fun getUserId(): String = getRequestContext().userId
-//    override fun getCallId(): String = getRequestContext().callId
+        return context + requestContexts.asContextElement(
+                RequestContext(
+                        requestAttributes
+                )
+        ) + CoroutineRequestContext(
+                requestAttributes
+        )
+    }
 
     data class RequestContext(
-            val userId: String,
-            val callId: String
+            val requestAttributes: RequestAttributes?
     )
 }
 
@@ -54,26 +54,17 @@ class RequestContextServiceMock : RequestContextService {
     }
     override fun getCoroutineContext(
             context: CoroutineContext,
-//            userId: String,
-//            callId: String
-    ) = context + requestContexts.asContextElement(
-//            RequestContextServiceImpl.RequestContext(
-//                    userId, callId
-//            )
-    ) + CoroutineRequestContext(
-//            callId, userId
-    )
+            requestAttributes: RequestAttributes?
+    ): CoroutineContext {
 
+        setRequestAttributes(requestAttributes)
 
-//    override fun getUserId(): String {
-//        return "11111111111"
-//    }
-//
-//    override fun getCallId(): String {
-//        TODO("Not yet implemented")
-//    }
-
-    override fun getRequestContext(): RequestContextServiceImpl.RequestContext {
-        TODO("Not yet implemented")
+        return context + requestContexts.asContextElement(
+                RequestContextServiceImpl.RequestContext(
+                        requestAttributes
+                )
+        ) + CoroutineRequestContext(
+                requestAttributes
+        )
     }
 }

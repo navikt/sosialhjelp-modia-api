@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.utbetalinger
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope.coroutineContext
 import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
@@ -17,6 +16,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextService
 import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.springframework.stereotype.Component
+import org.springframework.web.context.request.RequestContextHolder
 
 
 @Component
@@ -37,8 +37,7 @@ class UtbetalingerService(
         return runBlocking(
                 context = requestContextService.getCoroutineContext(
                         context = coroutineContext,
-//                        userId = getUserIdFromToken(),
-//                        callId = getCallId() ?: ""
+                        requestAttributes = RequestContextHolder.getRequestAttributes()
                 )
         ) {
             digisosSaker

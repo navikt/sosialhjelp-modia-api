@@ -17,6 +17,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
 import org.springframework.stereotype.Component
+import org.springframework.web.context.request.RequestContextHolder
 import java.time.LocalDateTime
 
 const val LASTET_OPP_STATUS = "LastetOpp"
@@ -68,8 +69,7 @@ class VedleggService(
         val alleVedlegg = runBlocking(
                 context = requestContextService.getCoroutineContext(
                         context = coroutineContext,
-//                        userId = SubjectHandlerUtils.getUserIdFromToken(),
-//                        callId = MDCUtils.getCallId() ?: ""
+                        requestAttributes = RequestContextHolder.getRequestAttributes()
                 )
         ) {
             digisosSak.ettersendtInfoNAV?.ettersendelser
