@@ -1,7 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.utbetalinger
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontor
@@ -15,7 +13,6 @@ import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextService
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.springframework.stereotype.Component
-import org.springframework.web.context.request.RequestContextHolder
 
 
 @Component
@@ -33,12 +30,7 @@ class UtbetalingerService(
             return emptyList()
         }
 
-        return runBlocking(
-                context = requestContextService.getCoroutineContext(
-                        context = GlobalScope.coroutineContext + Dispatchers.IO,
-                        requestAttributes = RequestContextHolder.getRequestAttributes()
-                )
-        ) {
+        return runBlocking(context = requestContextService.getCoroutineContext()) {
             digisosSaker
                     .flatMapParallel { getUtbetalinger(it) }
                     .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
