@@ -10,8 +10,6 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.flatMapParallel
-import no.nav.sbl.sosialhjelpmodiaapi.logger
-import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextService
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.springframework.stereotype.Component
@@ -33,8 +31,6 @@ class UtbetalingerService(
             return emptyList()
         }
 
-        log.info("før coroutine - getUserId: ${SubjectHandlerUtils.getUserIdFromToken()}")
-
         return runBlocking(
                 context = requestContextService.getCoroutineContext(
                         context = coroutineContext,
@@ -42,10 +38,7 @@ class UtbetalingerService(
                 )
         ) {
             digisosSaker
-                    .flatMapParallel {
-                        log.info("flatMapParallel - ${Thread.currentThread().name} - getUserId: ${SubjectHandlerUtils.getUserIdFromToken()}")
-                        getUtbetalinger(it)
-                    }
+                    .flatMapParallel { getUtbetalinger(it) }
                     .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         }
     }
