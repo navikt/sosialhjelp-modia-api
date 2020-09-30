@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.config
 
+import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCFilter
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.web.client.RestTemplateBuilder
@@ -15,9 +16,16 @@ class RestConfig {
 
     @Bean
     fun restTemplate(builder: RestTemplateBuilder): RestTemplate {
-        return builder
-                .additionalMessageConverters(MappingJackson2HttpMessageConverter(objectMapper))
+        val restTemplate = builder
                 .build()
+
+        restTemplate.messageConverters
+                .removeIf { httpMessageConverter -> httpMessageConverter.javaClass == MappingJackson2HttpMessageConverter::class.java }
+
+        restTemplate.messageConverters
+                .add(MappingJackson2HttpMessageConverter(objectMapper))
+
+        return restTemplate
     }
 
     @Bean
@@ -37,6 +45,11 @@ class RestConfig {
     @Bean
     fun corsFilter(): CORSFilter {
         return CORSFilter()
+    }
+
+    @Bean
+    fun mdcFilter(): MDCFilter {
+        return MDCFilter()
     }
 
     companion object {

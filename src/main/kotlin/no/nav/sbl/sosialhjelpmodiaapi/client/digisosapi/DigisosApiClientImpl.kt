@@ -1,16 +1,16 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.digisosapi
 
-import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.utils.DigisosApiWrapper
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_PASSORD
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.forwardHeaders
 import no.nav.sbl.sosialhjelpmodiaapi.utils.Miljo.getTestbrukerNatalie
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
-import no.nav.sosialhjelp.idporten.client.IdPortenClient
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -28,7 +28,7 @@ import java.util.*
 class DigisosApiClientImpl(
         clientProperties: ClientProperties,
         private val restTemplate: RestTemplate,
-        private val idPortenClient: IdPortenClient
+        private val idPortenService: IdPortenService
 ) : DigisosApiClient {
 
     private val testbrukerNatalie = getTestbrukerNatalie()
@@ -43,38 +43,38 @@ class DigisosApiClientImpl(
             id = opprettDigisosSak()
             log.info("Laget ny digisossak: $id")
         }
-        val httpEntity = HttpEntity(objectMapper.writeValueAsString(digisosApiWrapper), headers())
+        val httpEntity = HttpEntity(objectMapper.writeValueAsString(digisosApiWrapper), forwardHeaders(headers()))
         try {
             restTemplate.exchange("$baseUrl/digisos/api/v1/11415cd1-e26d-499a-8421-751457dfcbd5/$id", HttpMethod.POST, httpEntity, String::class.java)
             log.info("Postet DigisosSak til Fiks")
             return id
         } catch (e: HttpStatusCodeException) {
             log.warn("Fiks - oppdaterDigisosSak feilet - ${e.statusCode} ${e.statusText}", e)
-            throw FiksException(e.statusCode, e.message, e)
+            throw FiksException(e.message, e)
         } catch (e: Exception) {
             log.error(e.message, e)
-            throw FiksException(null, e.message, e)
+            throw FiksException(e.message, e)
         }
     }
 
     fun opprettDigisosSak(): String? {
-        val httpEntity = HttpEntity("", headers())
+        val httpEntity = HttpEntity("", forwardHeaders())
         try {
             val response = restTemplate.exchange("$baseUrl/digisos/api/v1/11415cd1-e26d-499a-8421-751457dfcbd5/ny?sokerFnr=$testbrukerNatalie", HttpMethod.POST, httpEntity, String::class.java)
             log.info("Opprettet sak hos Fiks. Digisosid: ${response.body}")
             return response.body?.replace("\"", "")
         } catch (e: HttpStatusCodeException) {
             log.warn("Fiks - opprettDigisosSak feilet - ${e.statusCode} ${e.statusText}", e)
-            throw FiksException(e.statusCode, e.message, e)
+            throw FiksException(e.message, e)
         } catch (e: Exception) {
             log.error(e.message, e)
-            throw FiksException(null, e.message, e)
+            throw FiksException(e.message, e)
         }
     }
 
     private fun headers(): HttpHeaders {
         val headers = HttpHeaders()
-        val accessToken = runBlocking { idPortenClient.requestToken() }
+        val accessToken = idPortenService.getToken()
         headers.accept = Collections.singletonList(MediaType.ALL)
         headers.set(HEADER_INTEGRASJON_ID, fiksIntegrasjonIdKommune)
         headers.set(HEADER_INTEGRASJON_PASSORD, fiksIntegrasjonPassordKommune)

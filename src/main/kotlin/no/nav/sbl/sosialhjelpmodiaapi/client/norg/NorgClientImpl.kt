@@ -5,11 +5,10 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CALL_ID
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.forwardHeaders
 import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils.getCallId
-import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpStatusCodeException
@@ -38,15 +37,15 @@ class NorgClientImpl(
 
         } catch (e: HttpStatusCodeException) {
             log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
-            throw NorgException(e.statusCode, e.message, e)
+            throw NorgException(e.message, e)
         } catch (e: Exception) {
             log.warn("Norg2 - Noe feilet", e)
-            throw NorgException(null, e.message, e)
+            throw NorgException(e.message, e)
         }
     }
 
     private fun createRequestEntity(): HttpEntity<Nothing> {
-        val headers = HttpHeaders()
+        val headers = forwardHeaders()
         headers.set(HEADER_CALL_ID, getCallId())
         return HttpEntity(headers)
     }

@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.abac
 
 import no.nav.abac.xacml.NavAttributter
-import no.nav.sbl.sosialhjelpmodiaapi.common.TilgangskontrollException
+import no.nav.sbl.sosialhjelpmodiaapi.common.AbacException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
@@ -39,10 +39,10 @@ class AbacClientImpl(
             response.body!!
         } catch (e: HttpStatusCodeException) {
             log.error("Abac - noe feilet. Status: ${e.statusCode}, message: ${e.message}.", e)
-            throw TilgangskontrollException("Noe feilet ved kall til Abac.", e)
+            throw AbacException("Noe feilet ved kall til Abac.", e)
         } catch (e: Exception) {
             log.error("Abac - noe feilet.", e)
-            throw TilgangskontrollException("Noe feilet ved kall til Abac.", e)
+            throw AbacException("Noe feilet ved kall til Abac.", e)
         }
 
         val xacmlResponse = XacmlMapper.mapRawResponse(responseBody)

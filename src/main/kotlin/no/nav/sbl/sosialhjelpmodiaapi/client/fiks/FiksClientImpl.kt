@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.fiks
 
-import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_ALLE_DIGISOSSAKER
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_DIGISOSSAK
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_DOKUMENT
@@ -11,6 +10,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.feilmeldingUtenFnr
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
 import no.nav.sbl.sosialhjelpmodiaapi.redis.RedisService
+import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.getUserIdFromToken
 import no.nav.sbl.sosialhjelpmodiaapi.toFiksErrorMessage
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
@@ -18,7 +18,6 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.fiksHeaders
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.idporten.client.IdPortenClient
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
@@ -35,7 +34,7 @@ import java.util.*
 class FiksClientImpl(
         private val clientProperties: ClientProperties,
         private val restTemplate: RestTemplate,
-        private val idPortenClient: IdPortenClient,
+        private val idPortenService: IdPortenService,
         private val auditService: AuditService,
         private val redisService: RedisService
 ) : FiksClient {
@@ -59,7 +58,7 @@ class FiksClientImpl(
     private fun hentDigisosSakFraCache(key: String) = redisService.get(key, DigisosSak::class.java) as DigisosSak?
 
     private fun hentDigisosSakFraFiks(digisosId: String): DigisosSak {
-        val virksomhetsToken = runBlocking { idPortenClient.requestToken() }
+        val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
 
         log.info("Forsøker å hente digisosSak fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId")
@@ -81,13 +80,13 @@ class FiksClientImpl(
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
             val message = e.message?.feilmeldingUtenFnr
             if (e.statusCode == HttpStatus.NOT_FOUND) {
-                throw FiksNotFoundException(e.statusCode, e.message, e, digisosId)
+                throw FiksNotFoundException(e.message, e, digisosId)
             }
-            log.warn("Fiks - hentDigisosSak feilet for id $digisosId - $message - $fiksErrorMessage", e)
-            throw FiksException(e.statusCode, e.message, e)
+            log.warn("Fiks - hentDigisosSak feilet for id $digisosId - ${e.statusCode} $message - $fiksErrorMessage", e)
+            throw FiksException(e.message, e)
         } catch (e: Exception) {
             log.warn("Fiks - hentDigisosSak feilet", e)
-            throw FiksException(null, e.message, e)
+            throw FiksException(e.message, e)
         }
     }
 
@@ -108,7 +107,7 @@ class FiksClientImpl(
     private fun hentDokumentFraCache(key: String, requestedClass: Class<out Any>) = redisService.get(key, requestedClass)
 
     private fun hentDokumentFraFiks(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
-        val virksomhetsToken = runBlocking { idPortenClient.requestToken() }
+        val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
 
         log.info("Forsøker å hente dokument fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId")
@@ -130,16 +129,16 @@ class FiksClientImpl(
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
             val message = e.message?.feilmeldingUtenFnr
-            log.warn("Fiks - hentDokument feilet - $message - $fiksErrorMessage", e)
-            throw FiksException(e.statusCode, e.message, e)
+            log.warn("Fiks - hentDokument feilet - ${e.statusCode} $message - $fiksErrorMessage", e)
+            throw FiksException(e.message, e)
         } catch (e: Exception) {
             log.warn("Fiks - hentDokument feilet", e)
-            throw FiksException(null, e.message, e)
+            throw FiksException(e.message, e)
         }
     }
 
     override fun hentAlleDigisosSaker(fnr: String): List<DigisosSak> {
-        val virksomhetsToken = runBlocking { idPortenClient.requestToken() }
+        val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
         try {
             val headers = fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)
@@ -157,11 +156,11 @@ class FiksClientImpl(
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
             val message = e.message?.feilmeldingUtenFnr
-            log.warn("Fiks - hentAlleDigisosSaker feilet - $message - $fiksErrorMessage", e)
-            throw FiksException(e.statusCode, e.message, e)
+            log.warn("Fiks - hentAlleDigisosSaker feilet - ${e.statusCode} $message - $fiksErrorMessage", e)
+            throw FiksException(e.message, e)
         } catch (e: Exception) {
             log.warn("Fiks - hentAlleDigisosSaker feilet", e)
-            throw FiksException(null, e.message, e)
+            throw FiksException(e.message, e)
         }
     }
 
