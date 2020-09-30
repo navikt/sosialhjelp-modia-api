@@ -13,7 +13,6 @@ import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextService
-import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
 import org.springframework.stereotype.Component
@@ -66,6 +65,8 @@ class VedleggService(
     }
 
     fun hentEttersendteVedlegg(digisosSak: DigisosSak, model: InternalDigisosSoker): List<InternalVedlegg> {
+
+        log.info("før flatMapParallel - getUserId: ${SubjectHandlerUtils.getUserIdFromToken()}")
         val alleVedlegg = runBlocking(
                 context = requestContextService.getCoroutineContext(
                         context = coroutineContext,
@@ -74,7 +75,7 @@ class VedleggService(
         ) {
             digisosSak.ettersendtInfoNAV?.ettersendelser
                     ?.flatMapParallel { ettersendelse ->
-                        log.info("flatMapParallel - ${Thread.currentThread().name} - getUserId: ${SubjectHandlerUtils.getUserIdFromToken()}, getCallId: ${MDCUtils.getCallId()}")
+                        log.info("flatMapParallel - ${Thread.currentThread().name} - getUserId: ${SubjectHandlerUtils.getUserIdFromToken()}")
                         val jsonVedleggSpesifikasjon = hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, ettersendelse.vedleggMetadata)
                         jsonVedleggSpesifikasjon.vedlegg
                                 .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
