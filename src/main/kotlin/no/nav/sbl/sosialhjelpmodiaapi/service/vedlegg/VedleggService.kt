@@ -66,7 +66,7 @@ class VedleggService(
     fun hentEttersendteVedlegg(digisosSak: DigisosSak, model: InternalDigisosSoker): List<InternalVedlegg> {
         val alleVedlegg = runBlocking(
                 context = requestContextService.getCoroutineContext(
-                        context = GlobalScope.coroutineContext,
+                        context = GlobalScope.coroutineContext + Dispatchers.IO,
                         requestAttributes = RequestContextHolder.getRequestAttributes()
                 )
         ) {

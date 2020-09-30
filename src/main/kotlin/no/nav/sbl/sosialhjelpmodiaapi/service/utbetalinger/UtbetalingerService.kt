@@ -35,7 +35,7 @@ class UtbetalingerService(
 
         return runBlocking(
                 context = requestContextService.getCoroutineContext(
-                        context = GlobalScope.coroutineContext,
+                        context = GlobalScope.coroutineContext + Dispatchers.IO,
                         requestAttributes = RequestContextHolder.getRequestAttributes()
                 )
         ) {
