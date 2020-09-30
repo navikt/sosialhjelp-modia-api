@@ -18,7 +18,7 @@ class KommuneService(
         hentFraCache(kommunenummer)?.let { return it }
 
         val kommuneInfo = kommuneInfoClient.get(kommunenummer)
-        redisService.put(kommunenummer, objectMapper.writeValueAsString(kommuneInfo))
+        redisService.put(kommunenummer, objectMapper.writeValueAsBytes(kommuneInfo))
         return kommuneInfo
     }
 

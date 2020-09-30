@@ -51,7 +51,7 @@ class FiksClientImpl(
                 ?.let { return it }
 
         val digisosSak = hentDigisosSakFraFiks(digisosId)
-        redisService.put(key, objectMapper.writeValueAsString(digisosSak))
+        redisService.put(key, objectMapper.writeValueAsBytes(digisosSak))
         return digisosSak
     }
 
@@ -100,7 +100,7 @@ class FiksClientImpl(
                 ?.let { return it }
 
         val dokument = hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
-        redisService.put(key, objectMapper.writeValueAsString(dokument))
+        redisService.put(key, objectMapper.writeValueAsBytes(dokument))
         return dokument
     }
 

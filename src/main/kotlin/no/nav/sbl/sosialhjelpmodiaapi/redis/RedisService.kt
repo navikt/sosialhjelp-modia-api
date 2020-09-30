@@ -18,7 +18,7 @@ class RedisService(
 ) {
 
     fun get(key: String, requestedClass: Class<out Any>): Any? {
-        val get: String? = redisStore.get(key) // Redis har konfigurert timout for disse.
+        val get: ByteArray? = redisStore.get(key) // Redis har konfigurert timout for disse.
         return if (get != null) {
             try {
                 val obj = objectMapper.readValue(get, requestedClass)
@@ -37,7 +37,7 @@ class RedisService(
         }
     }
 
-    fun put(key: String, value: String) {
+    fun put(key: String, value: ByteArray) {
         val set = redisStore.set(key, value, cacheProperties.timeToLiveSeconds)
         if (set == null) {
             log.warn("Cache put feilet eller fikk timeout")
