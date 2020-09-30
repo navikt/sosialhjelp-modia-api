@@ -8,6 +8,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.DigisosApiWrapper
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_INTEGRASJON_PASSORD
+import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.forwardHeaders
 import no.nav.sbl.sosialhjelpmodiaapi.utils.Miljo.getTestbrukerNatalie
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.springframework.context.annotation.Profile
@@ -42,7 +43,7 @@ class DigisosApiClientImpl(
             id = opprettDigisosSak()
             log.info("Laget ny digisossak: $id")
         }
-        val httpEntity = HttpEntity(objectMapper.writeValueAsString(digisosApiWrapper), headers())
+        val httpEntity = HttpEntity(objectMapper.writeValueAsString(digisosApiWrapper), forwardHeaders(headers()))
         try {
             restTemplate.exchange("$baseUrl/digisos/api/v1/11415cd1-e26d-499a-8421-751457dfcbd5/$id", HttpMethod.POST, httpEntity, String::class.java)
             log.info("Postet DigisosSak til Fiks")
@@ -57,7 +58,7 @@ class DigisosApiClientImpl(
     }
 
     fun opprettDigisosSak(): String? {
-        val httpEntity = HttpEntity("", headers())
+        val httpEntity = HttpEntity("", forwardHeaders())
         try {
             val response = restTemplate.exchange("$baseUrl/digisos/api/v1/11415cd1-e26d-499a-8421-751457dfcbd5/ny?sokerFnr=$testbrukerNatalie", HttpMethod.POST, httpEntity, String::class.java)
             log.info("Opprettet sak hos Fiks. Digisosid: ${response.body}")
