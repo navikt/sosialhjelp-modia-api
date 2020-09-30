@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.runBlocking
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
@@ -65,9 +66,9 @@ class VedleggService(
     fun hentEttersendteVedlegg(digisosSak: DigisosSak, model: InternalDigisosSoker): List<InternalVedlegg> {
         val alleVedlegg = runBlocking(
                 context = requestContextService.getCoroutineContext(
-                        context = Dispatchers.Default,
+                        context = GlobalScope.coroutineContext,
                         requestAttributes = RequestContextHolder.getRequestAttributes()
-                )
+                ) + Dispatchers.Default
         ) {
             digisosSak.ettersendtInfoNAV?.ettersendelser
                     ?.flatMapParallel { ettersendelse ->

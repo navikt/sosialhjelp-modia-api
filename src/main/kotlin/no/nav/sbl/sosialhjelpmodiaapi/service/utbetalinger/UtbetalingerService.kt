@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.utbetalinger
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontor
@@ -34,9 +35,9 @@ class UtbetalingerService(
 
         return runBlocking(
                 context = requestContextService.getCoroutineContext(
-                        context = Dispatchers.Default,
+                        context = GlobalScope.coroutineContext,
                         requestAttributes = RequestContextHolder.getRequestAttributes()
-                )
+                ) + Dispatchers.Default
         ) {
             digisosSaker
                     .flatMapParallel { getUtbetalinger(it) }
