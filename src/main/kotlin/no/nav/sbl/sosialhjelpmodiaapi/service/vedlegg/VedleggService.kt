@@ -68,7 +68,7 @@ class VedleggService(
                 context = requestContextService.getCoroutineContext(
                         context = GlobalScope.coroutineContext,
                         requestAttributes = RequestContextHolder.getRequestAttributes()
-                ) + Dispatchers.Default
+                )
         ) {
             digisosSak.ettersendtInfoNAV?.ettersendelser
                     ?.flatMapParallel { ettersendelse ->

@@ -37,7 +37,7 @@ class UtbetalingerService(
                 context = requestContextService.getCoroutineContext(
                         context = GlobalScope.coroutineContext,
                         requestAttributes = RequestContextHolder.getRequestAttributes()
-                ) + Dispatchers.Default
+                )
         ) {
             digisosSaker
                     .flatMapParallel { getUtbetalinger(it) }
