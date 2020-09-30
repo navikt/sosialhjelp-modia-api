@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.utbetalinger
 
-import kotlinx.coroutines.GlobalScope.coroutineContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontor
@@ -10,6 +10,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.flatMapParallel
+import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextService
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.springframework.stereotype.Component
@@ -33,7 +34,7 @@ class UtbetalingerService(
 
         return runBlocking(
                 context = requestContextService.getCoroutineContext(
-                        context = coroutineContext,
+                        context = Dispatchers.Default,
                         requestAttributes = RequestContextHolder.getRequestAttributes()
                 )
         ) {
