@@ -26,7 +26,7 @@ no.nav.sosialhjelp.idporten:
   truststore_filepath: filepath
 
 no.nav.security.jwt:
-  issuer.veileder:
+  issuer.azuread:
     discoveryurl: http://metadata
     accepted_audience: aud-localhost
     cookie_name: localhost-idtoken

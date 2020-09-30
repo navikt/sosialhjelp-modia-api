@@ -10,7 +10,7 @@ modia:
     time_to_live_seconds: 5
 
 no.nav.security.jwt:
-  issuer.veileder:
+  issuer.azuread:
     discoveryurl: http://metadata
     accepted_audience: aud-localhost
     cookie_name: localhost-idtoken

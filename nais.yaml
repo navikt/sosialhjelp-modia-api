@@ -8,6 +8,12 @@ metadata:
 spec:
   image: {{image}}
   port: 8383
+  azure:
+    application:
+      enabled: true
+{{#if dev}}
+      tenant: trygdeetaten.no
+{{/if}}
   liveness:
     path: /sosialhjelp/modia-api/internal/isAlive
     initialDelay: 20
@@ -27,14 +33,18 @@ spec:
   webproxy: {{webProxyEnabled}}
   envFrom:
     - secret: redis-password-modia-api
-{{#if accessPoliciesForGcpEnabled}}
   accessPolicy:
+    inbound:
+      rules:
+        - application: sosialhjelp-modia-oidc-auth-proxy
     outbound:
       external:
         - host: "oidc-ver2.difi.no"
         - host: "register.geonorge.no"
+        - host: "login.microsoftonline.com"
       rules:
         - application: sosialhjelp-mock-alt-api
+{{#if isGcp}}
   filesFrom:
     - secret: virksomhetssertifikat
 {{/if}}

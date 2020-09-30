@@ -102,3 +102,5 @@ val defaultJsonSoknad: JsonSoknad = JsonSoknad()
         .withKompatibilitet(
                 emptyList()
         )
+
+val minimalJsonSoknad: JsonSoknad = JsonSoknad()

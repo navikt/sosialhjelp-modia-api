@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll
 
-import no.nav.abac.xacml.NavAttributter.ENVIRONMENT_FELLES_OIDC_TOKEN_BODY
 import no.nav.abac.xacml.NavAttributter.ENVIRONMENT_FELLES_PEP_ID
 import no.nav.abac.xacml.NavAttributter.RESOURCE_FELLES_DOMENE
 import no.nav.abac.xacml.NavAttributter.RESOURCE_FELLES_PERSON_FNR
@@ -34,8 +33,7 @@ class AbacService(
         val request = Request(
                 environment = Attributes(mutableListOf(
                         Attribute(ENVIRONMENT_FELLES_PEP_ID, SRVSOSIALHJELP_MOD),
-//                        Attribute(ENVIRONMENT_FELLES_AZURE_JWT_TOKEN_BODY, token))), // azure token eller oidc token?
-                        Attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody(token)))),
+                        Attribute(ENVIRONMENT_FELLES_AZURE_JWT_TOKEN_BODY, tokenBody(token)))),
                 action = null,
                 resource = Attributes(mutableListOf(
                         Attribute(RESOURCE_FELLES_DOMENE, SOSIALHJELP_DOMENE),

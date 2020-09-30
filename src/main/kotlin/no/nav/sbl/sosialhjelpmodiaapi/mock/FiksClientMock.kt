@@ -4,12 +4,7 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
-import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.defaultDigisosSak
-import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.defaultJsonSoknad
-import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.digisosSoker
-import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.jsonVedleggSpesifikasjonEttersendelse
-import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.jsonVedleggSpesifikasjonEttersendelse_2
-import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.jsonVedleggSpesifikasjonSoknad
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.*
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.EttersendtInfoNAV
 import org.springframework.context.annotation.Profile
@@ -22,48 +17,51 @@ import java.util.*
 @Component
 class FiksClientMock : FiksClient {
 
-    private val innsynMap = mutableMapOf<String, DigisosSak>()
+    private val innsynMap = initialInnsynMap()
     private val dokumentMap = mutableMapOf<String, Any>()
 
+    fun initialInnsynMap(): MutableMap<String, DigisosSak> {
+        val initialInnsynMap = mutableMapOf<String, DigisosSak>()
+        initialInnsynMap[defaultDigisosSak.fiksDigisosId] = defaultDigisosSak
+        initialInnsynMap[minimalPapirsoknad.fiksDigisosId] = minimalPapirsoknad
+        initialInnsynMap[minimalDigitalsoknad.fiksDigisosId] = minimalDigitalsoknad
+        return initialInnsynMap;
+    }
+
     override fun hentDigisosSak(digisosId: String): DigisosSak {
-        return innsynMap.getOrElse(digisosId, {
-            val default = defaultDigisosSak.copyDigisosSokerWithNewMetadataId(digisosId, innsynMap.size.toLong())
-            innsynMap[digisosId] = default
-            default
-        })
+        return innsynMap.getOrDefault(digisosId, defaultDigisosSak)
     }
 
     override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
         return when (requestedClass) {
-            JsonDigisosSoker::class.java -> dokumentMap.getOrElse(dokumentlagerId, {
-                val default = digisosSoker
-                dokumentMap[dokumentlagerId] = default
-                default
-            })
-            JsonSoknad::class.java -> dokumentMap.getOrElse(dokumentlagerId, {
-                val default = defaultJsonSoknad
-                dokumentMap[dokumentlagerId] = default
-                default
-            })
-            JsonVedleggSpesifikasjon::class.java ->
-                when (dokumentlagerId) {
-                    "mock-soknad-vedlegg-metadata" -> dokumentMap.getOrElse(dokumentlagerId, {
-                        val default = jsonVedleggSpesifikasjonSoknad
-                        dokumentMap[dokumentlagerId] = default
-                        default
-                    })
-                    "mock-ettersendelse-vedlegg-metadata" -> dokumentMap.getOrElse(dokumentlagerId, {
-                        val default = jsonVedleggSpesifikasjonEttersendelse
-                        dokumentMap[dokumentlagerId] = default
-                        default
-                    })
-                    else -> dokumentMap.getOrElse(dokumentlagerId, {
-                        val default = jsonVedleggSpesifikasjonEttersendelse_2
-                        dokumentMap[dokumentlagerId] = default
-                        default
-                    })
-                }
+            JsonDigisosSoker::class.java -> hentDigisosSoker(dokumentlagerId)
+            JsonSoknad::class.java -> hentSoknad(dokumentlagerId)
+            JsonVedleggSpesifikasjon::class.java -> hentVedleggSpesifikasjon(dokumentlagerId)
             else -> requestedClass.getDeclaredConstructor(requestedClass).newInstance()
+        }
+    }
+
+    fun hentDigisosSoker(dokumentlagerId: String): Any {
+        return when (dokumentlagerId) {
+            "mock-digisossoker" -> dokumentMap.getOrDefault(dokumentlagerId, digisosSoker)
+            "mock-digisossoker-minimal" -> dokumentMap.getOrDefault(dokumentlagerId, minimalDigisosSoker)
+            else -> dokumentMap.getOrDefault(dokumentlagerId, digisosSoker)
+        }
+    }
+
+    fun hentSoknad(dokumentlagerId: String): Any {
+        return when (dokumentlagerId) {
+            "mock-soknad" -> dokumentMap.getOrDefault(dokumentlagerId, defaultJsonSoknad)
+            "mock-soknad-minimal" -> dokumentMap.getOrDefault(dokumentlagerId, minimalJsonSoknad)
+            else -> dokumentMap.getOrDefault(dokumentlagerId, defaultJsonSoknad)
+        }
+    }
+
+    fun hentVedleggSpesifikasjon(dokumentlagerId: String): Any {
+        return when (dokumentlagerId) {
+            "mock-soknad-vedlegg-metadata" -> dokumentMap.getOrDefault(dokumentlagerId, jsonVedleggSpesifikasjonSoknad)
+            "mock-ettersendelse-vedlegg-metadata" -> dokumentMap.getOrDefault(dokumentlagerId, jsonVedleggSpesifikasjonEttersendelse)
+            else -> dokumentMap.getOrDefault(dokumentlagerId, jsonVedleggSpesifikasjonEttersendelse_2)
         }
     }
 

@@ -233,7 +233,28 @@ val digisosSoker = JsonDigisosSoker()
                                 .withTom(toDateString(DateTime.now().minusMonths(2).minusDays(5).withDayOfMonth(1).minusDays(1)))
                                 .withAnnenMottaker(false)
                                 .withMottaker("Ola Nordman")
-                                .withKontonummer(null)
-                                .withUtbetalingsmetode("pengekort")
+                                .withKontonummer("0102 0304 050607")
+                                .withUtbetalingsmetode("pengekort"),
+
+                        JsonUtbetaling()
+                                .withType(JsonHendelse.Type.UTBETALING)
+                                .withHendelsestidspunkt(toStringWithTimezone(DateTime.now().plusMonths(1).minusDays(3)))
+                                .withUtbetalingsreferanse("Betaling 5")
+                                .withUtbetalingsdato(toDateString(DateTime.now().minusMonths(1).withDayOfMonth(10)))
+                )
+        )!!
+
+val minimalDigisosSoker = JsonDigisosSoker()
+        .withVersion("1.0.0")
+        .withAvsender(
+                JsonAvsender()
+                        .withSystemnavn("Testsystemet")
+                        .withSystemversjon("1.0.0"))
+        .withHendelser(
+                listOf(
+                        JsonSoknadsStatus()
+                                .withType(JsonHendelse.Type.SOKNADS_STATUS)
+                                .withHendelsestidspunkt(toStringWithTimezone(DateTime.now().minusDays(10)))//"2018-10-08T11:00:00.000Z"
+                                .withStatus(JsonSoknadsStatus.Status.MOTTATT),
                 )
         )!!

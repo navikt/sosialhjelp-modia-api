@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.fiks
 
-import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_ALLE_DIGISOSSAKER
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_DIGISOSSAK
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_DOKUMENT
@@ -10,12 +9,12 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.feilmeldingUtenFnr
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
+import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.toFiksErrorMessage
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.fiksHeaders
 import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.idporten.client.IdPortenClient
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
@@ -32,14 +31,14 @@ import java.util.*
 class FiksClientImpl(
         private val clientProperties: ClientProperties,
         private val restTemplate: RestTemplate,
-        private val idPortenClient: IdPortenClient,
+        private val idPortenService: IdPortenService,
         private val auditService: AuditService
 ) : FiksClient {
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
 
     override fun hentDigisosSak(digisosId: String): DigisosSak {
-        val virksomhetsToken = runBlocking { idPortenClient.requestToken() }
+        val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
 
         log.info("Forsøker å hente digisosSak fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId")
@@ -72,7 +71,7 @@ class FiksClientImpl(
     }
 
     override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
-        val virksomhetsToken = runBlocking { idPortenClient.requestToken() }
+        val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
 
         log.info("Forsøker å hente dokument fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId")
@@ -103,7 +102,7 @@ class FiksClientImpl(
     }
 
     override fun hentAlleDigisosSaker(fnr: String): List<DigisosSak> {
-        val virksomhetsToken = runBlocking { idPortenClient.requestToken() }
+        val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
         try {
             val headers = fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)
@@ -139,7 +138,7 @@ class FiksClientImpl(
     companion object {
         private val log by logger()
 
-//        Query param navn
+        //        Query param navn
         private const val SPORINGSID = "sporingsId"
         private const val DIGISOSID = "digisosId"
         private const val DOKUMENTLAGERID = "dokumentlagerId"

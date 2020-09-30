@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@ProtectedWithClaims(issuer = "veileder")
+@ProtectedWithClaims(issuer = "azuread")
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class UtbetalingerController(
@@ -29,7 +29,7 @@ class UtbetalingerController(
     fun hentUtbetalinger(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<UtbetalingerResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
-        return ResponseEntity.ok().body(utbetalingerService.hentUtbetalinger(ident.fnr))
+        return ResponseEntity.ok().body(utbetalingerService.hentAlleUtbetalinger(ident.fnr))
     }
 
     @PostMapping("/{fiksDigisosId}/utbetalinger")
