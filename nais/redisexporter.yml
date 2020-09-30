@@ -1,10 +1,10 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: sosialhjelp-modia-api-redisexporter
-  namespace: teamdigisos
   labels:
     team: teamdigisos
+  name: sosialhjelp-modia-api-redisexporter
+  namespace: teamdigisos
 spec:
   image: oliver006/redis_exporter:v1.11.1
   port: 9121
@@ -22,10 +22,10 @@ spec:
       memory: 100Mi
   liveness:
     path: /health
-  envFrom:
-    - secret: redis-password-modia-api
   env:
     - name: REDIS_ADDR
       value: sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local:6379
     - name: REDIS_EXPORTER_LOG_FORMAT
       value: json
+  envFrom:
+    - secret: redis-password-modia-api
