@@ -26,7 +26,7 @@ fun InternalDigisosSoker.apply(
     }
 
     val destinasjon = try {
-        norgClient.hentNavEnhet(hendelse.navKontor).navn
+        norgClient.hentNavEnhet(hendelse.navKontor)!!.navn
     } catch (e: NorgException) {
         "et annet NAV-kontor"
     }

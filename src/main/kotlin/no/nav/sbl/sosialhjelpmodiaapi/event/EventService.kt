@@ -58,10 +58,10 @@ class EventService(
 
     fun getNavenhetsnavnOrDefault(enhetsnummer: String): String {
         if (enhetsnummer.isNotEmpty()) {
-            return norgClient.hentNavEnhet(enhetsnummer).navn
+            val navenhet = norgClient.hentNavEnhet(enhetsnummer)
+            if (!navenhet?.navn.isNullOrEmpty()) return navenhet!!.navn
         }
         return "[Kan ikke hente NAV-kontor]"
-
     }
 
     fun createSoknadsoversiktModel(digisosSak: DigisosSak): InternalDigisosSoker {

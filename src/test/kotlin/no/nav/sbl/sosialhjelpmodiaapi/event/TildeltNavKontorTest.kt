@@ -38,14 +38,14 @@ internal class TildeltNavKontorTest {
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
-        every { norgClient.hentNavEnhet(enhetsnr).navn } returns enhetsnavn
+        every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
 
         resetHendelser()
     }
 
     @Test
     fun `tildeltNavKontor skal hente navenhets navn fra Norg`() {
-        every { norgClient.hentNavEnhet(navKontor).navn } returns enhetNavn
+        every { norgClient.hentNavEnhet(navKontor)!!.navn } returns enhetNavn
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
@@ -101,7 +101,7 @@ internal class TildeltNavKontorTest {
     @Test
     fun `tildeltNavKontor til samme navKontor som soknad ble sendt til - gir ingen hendelse`() {
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns navKontor
-        every { norgClient.hentNavEnhet(navKontor).navn } returns enhetNavn
+        every { norgClient.hentNavEnhet(navKontor)!!.navn } returns enhetNavn
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
@@ -123,7 +123,7 @@ internal class TildeltNavKontorTest {
 
     @Test
     fun `flere identiske tildeltNavKontor-hendelser skal kun gi en hendelse i historikk`() {
-        every { norgClient.hentNavEnhet(navKontor).navn } returns enhetNavn
+        every { norgClient.hentNavEnhet(navKontor)!!.navn } returns enhetNavn
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
@@ -147,8 +147,8 @@ internal class TildeltNavKontorTest {
 
     @Test
     fun `tildeltNavKontor til ulike kontor gir like mange hendelser`() {
-        every { norgClient.hentNavEnhet(navKontor).navn } returns enhetNavn
-        every { norgClient.hentNavEnhet(navKontor2).navn } returns enhetNavn2
+        every { norgClient.hentNavEnhet(navKontor)!!.navn } returns enhetNavn
+        every { norgClient.hentNavEnhet(navKontor2)!!.navn } returns enhetNavn2
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)

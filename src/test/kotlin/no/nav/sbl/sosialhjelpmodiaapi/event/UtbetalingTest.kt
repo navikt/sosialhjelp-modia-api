@@ -30,7 +30,7 @@ internal class UtbetalingTest {
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
-        every { norgClient.hentNavEnhet(enhetsnr).navn } returns enhetsnavn
+        every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
 
         resetHendelser()
     }
