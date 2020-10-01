@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @ProtectedWithClaims(issuer = "azuread")
@@ -26,10 +27,10 @@ class UtbetalingerController(
 ) {
 
     @PostMapping("/utbetalinger")
-    fun hentUtbetalinger(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<UtbetalingerResponse>> {
+    fun hentUtbetalinger(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident, @RequestParam(defaultValue = "3") month: Int): ResponseEntity<List<UtbetalingerResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
-        return ResponseEntity.ok().body(utbetalingerService.hentAlleUtbetalinger(ident.fnr))
+        return ResponseEntity.ok().body(utbetalingerService.hentAlleUtbetalinger(ident.fnr, month))
     }
 
     @PostMapping("/{fiksDigisosId}/utbetalinger")
