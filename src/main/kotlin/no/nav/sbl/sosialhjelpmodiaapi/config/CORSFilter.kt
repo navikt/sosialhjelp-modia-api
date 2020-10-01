@@ -28,7 +28,7 @@ class CORSFilter : Filter {
 
         if (!isRunningInProd() || ALLOWED_ORIGINS.contains(origin)) {
             httpResponse.setHeader("Access-Control-Allow-Origin", origin)
-            httpResponse.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, X-XSRF-TOKEN, Authorization, Nav-Call-Id, x-client-trace-id, x-b3-spanid, x-b3-traceid")
+            httpResponse.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, X-XSRF-TOKEN, Authorization, Nav-Call-Id, x-request-id, x-client-trace-id, x-b3-traceid, x-b3-spanid, x-b3-parentspanid, x-b3-sampled, x-b3-flags")
             httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
             httpResponse.setHeader("Access-Control-Allow-Credentials", "true")
         }
