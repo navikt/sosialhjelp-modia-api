@@ -22,7 +22,7 @@ class UtbetalingerService(
         private val eventService: EventService
 ) {
 
-    fun hentAlleUtbetalinger(fnr: String): List<UtbetalingerResponse> {
+    fun hentAlleUtbetalinger(fnr: String, months: Int): List<UtbetalingerResponse> {
         val digisosSaker = fiksClient.hentAlleDigisosSaker(fnr)
 
         if (digisosSaker.isEmpty()) {
@@ -32,6 +32,7 @@ class UtbetalingerService(
 
         return runBlocking(Dispatchers.IO) {
             digisosSaker
+                    .filter { isDigisosSakNewerThanMonths(it, months) }
                     .flatMapParallel { digisosSak -> getUtbetalinger(digisosSak) }
                     .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         }
@@ -40,6 +41,10 @@ class UtbetalingerService(
     fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
         return getUtbetalinger(digisosSak)
                 .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
+    }
+
+    fun isDigisosSakNewerThanMonths(digisosSak: DigisosSak, months: Int): Boolean {
+        return digisosSak.sistEndret >= DateTime.now().minusMonths(months).millis
     }
 
     private fun getUtbetalinger(digisosSak: DigisosSak): List<UtbetalingerResponse> {
