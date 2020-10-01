@@ -12,6 +12,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.flatMapParallel
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sosialhjelp.api.fiks.DigisosSak
+import org.joda.time.DateTime
 import org.springframework.stereotype.Component
 
 
@@ -45,46 +46,45 @@ class UtbetalingerService(
         val model = eventService.createModel(digisosSak)
         val behandlendeNavKontor = model.navKontorHistorikk.lastOrNull()
 
-        return model.saker
-                .flatMap { sak ->
-                    infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(sak.utbetalinger, digisosSak.kommunenummer)
-                    sak.utbetalinger
-                            .filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
-                            .map { toUtbetalingResponse(it, digisosSak.fiksDigisosId, behandlendeNavKontor) }
+        return model.utbetalinger
+                .filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
+                .map { utbetaling ->
+                    utbetaling.infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(digisosSak.kommunenummer)
+                    toUtbetalingResponse(utbetaling, digisosSak.fiksDigisosId, behandlendeNavKontor)
                 }
     }
 
     private fun toUtbetalingResponse(utbetaling: Utbetaling, fiksDigisosId: String, behandlendeNavKontor: NavKontorInformasjon?): UtbetalingerResponse {
         return UtbetalingerResponse(
-                    tittel = utbetaling.beskrivelse,
-                    belop = utbetaling.belop.toDouble(),
-                    utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato
-                            ?: utbetaling.forfallsDato,
-                    status = utbetaling.status,
-                    fiksDigisosId = fiksDigisosId,
-                    fom = utbetaling.fom,
-                    tom = utbetaling.tom,
-                    mottaker = utbetaling.mottaker,
-                    annenMottaker = utbetaling.annenMottaker,
-                    kontonummer = utbetaling.kontonummer,
-                    utbetalingsmetode = utbetaling.utbetalingsmetode,
-                    harVilkar = !utbetaling.vilkar.isNullOrEmpty(),
-                    navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }
-            )
+                tittel = utbetaling.beskrivelse,
+                belop = utbetaling.belop.toDouble(),
+                utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato
+                        ?: utbetaling.forfallsDato,
+                status = utbetaling.status,
+                fiksDigisosId = fiksDigisosId,
+                fom = utbetaling.fom,
+                tom = utbetaling.tom,
+                mottaker = utbetaling.mottaker,
+                annenMottaker = utbetaling.annenMottaker,
+                kontonummer = utbetaling.kontonummer,
+                utbetalingsmetode = utbetaling.utbetalingsmetode,
+                harVilkar = !utbetaling.vilkar.isNullOrEmpty(),
+                navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }
+        )
     }
 
-    private fun infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(utbetalinger: List<Utbetaling>, kommunenummer: String) {
-        utbetalinger
-                .filter { it.status == UtbetalingsStatus.UTBETALT && it.utbetalingsDato == null }
-                .forEach { log.info("Utbetaling (${it.referanse}) med status=${UtbetalingsStatus.UTBETALT} har ikke utbetalingsDato. Kommune=$kommunenummer") }
-
-        utbetalinger
-                .filter { it.status == UtbetalingsStatus.PLANLAGT_UTBETALING && it.forfallsDato == null }
-                .forEach { log.info("Utbetaling (${it.referanse}) med status=${UtbetalingsStatus.PLANLAGT_UTBETALING} har ikke forfallsDato. Kommune=$kommunenummer") }
-
-        utbetalinger
-                .filter { it.status == UtbetalingsStatus.STOPPET && (it.forfallsDato == null || it.utbetalingsDato == null) }
-                .forEach { log.info("Utbetaling (${it.referanse}) med status=${UtbetalingsStatus.STOPPET} mangler forfallsDato eller utbetalingsDato. Kommune=$kommunenummer") }
+    private fun Utbetaling.infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(kommunenummer: String) {
+        when {
+            status == UtbetalingsStatus.UTBETALT && utbetalingsDato == null -> {
+                log.info("Utbetaling ($referanse) med status=${UtbetalingsStatus.UTBETALT} har ikke utbetalingsDato. Kommune=$kommunenummer")
+            }
+            status == UtbetalingsStatus.PLANLAGT_UTBETALING && forfallsDato == null -> {
+                log.info("Utbetaling ($referanse) med status=${UtbetalingsStatus.PLANLAGT_UTBETALING} har ikke forfallsDato. Kommune=$kommunenummer")
+            }
+            status == UtbetalingsStatus.STOPPET && (forfallsDato == null || utbetalingsDato == null) -> {
+                log.info("Utbetaling ($referanse) med status=${UtbetalingsStatus.STOPPET} mangler forfallsDato eller utbetalingsDato. Kommune=$kommunenummer")
+            }
+        }
     }
 
     companion object {
