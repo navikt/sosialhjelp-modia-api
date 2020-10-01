@@ -8,8 +8,6 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Dokumentasjonkrav
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontorInformasjon
-import no.nav.sbl.sosialhjelpmodiaapi.domain.Sak
-import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SendingType
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Utbetaling
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
@@ -29,6 +27,8 @@ import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import kotlin.test.assertTrue
 
 internal class UtbetalingerServiceTest {
@@ -58,6 +58,7 @@ internal class UtbetalingerServiceTest {
 
         coEvery { mockDigisosSak.fiksDigisosId } returns digisosId
         coEvery { mockDigisosSak.kommunenummer } returns "0001"
+        coEvery { mockDigisosSak.sistEndret } returns ZonedDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli()
     }
 
     @AfterEach
@@ -71,54 +72,51 @@ internal class UtbetalingerServiceTest {
         coEvery { eventService.createModel(any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns emptyList()
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 12)
 
         assertThat(response).isEmpty()
     }
 
     @Test
     fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling`() {
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
+        val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
+        val tom = LocalDate.now().withDayOfMonth(1).minusDays(1)
+
         val model = InternalDigisosSoker()
-        model.saker.add(Sak(
-                referanse = referanse,
-                saksStatus = SaksStatus.UNDER_BEHANDLING,
-                tittel = tittel,
-                vedtak = mutableListOf(),
-                utbetalinger = mutableListOf(
-                        Utbetaling(
-                                referanse = "Sak1",
-                                status = UtbetalingsStatus.UTBETALT,
-                                belop = BigDecimal.TEN,
-                                beskrivelse = "Nødhjelp",
-                                forfallsDato = null,
-                                utbetalingsDato = LocalDate.of(2019, 8, 10),
-                                fom = LocalDate.of(2019, 8, 1),
-                                tom = LocalDate.of(2019, 8, 31),
-                                mottaker = "utleier",
-                                annenMottaker = false,
-                                kontonummer = "kontonr",
-                                utbetalingsmetode = "utbetalingsmetode",
-                                vilkar = mutableListOf(),
-                                dokumentasjonkrav = mutableListOf(),
-                                datoHendelse = LocalDateTime.now()
-                        )),
-                datoOpprettet = LocalDate.now()
-        ))
+        model.utbetalinger.add(
+                Utbetaling(
+                        referanse = "Sak1",
+                        status = UtbetalingsStatus.UTBETALT,
+                        belop = BigDecimal.TEN,
+                        beskrivelse = "Nødhjelp",
+                        forfallsDato = null,
+                        utbetalingsDato = utbetalingsdato,
+                        fom = fom,
+                        tom = tom,
+                        mottaker = "utleier",
+                        annenMottaker = false,
+                        kontonummer = "kontonr",
+                        utbetalingsmetode = "utbetalingsmetode",
+                        vilkar = mutableListOf(),
+                        dokumentasjonkrav = mutableListOf(),
+                        datoHendelse = LocalDateTime.now()
+                ))
         model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
         coEvery { eventService.createModel(any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3)
 
         assertThat(response).isNotEmpty
         assertThat(response).hasSize(1)
         assertThat(response[0].tittel).isEqualTo("Nødhjelp")
         assertThat(response[0].belop).isEqualTo(10.0)
         assertThat(response[0].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-10")
-        assertThat(response[0].fom).isEqualTo("2019-08-01")
-        assertThat(response[0].tom).isEqualTo("2019-08-31")
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato)
+        assertThat(response[0].fom).isEqualTo(fom)
+        assertThat(response[0].tom).isEqualTo(tom)
         assertThat(response[0].mottaker).isEqualTo("utleier")
         assertThat(response[0].kontonummer).isEqualTo("kontonr")
         assertThat(response[0].utbetalingsmetode).isEqualTo("utbetalingsmetode")
@@ -128,88 +126,78 @@ internal class UtbetalingerServiceTest {
 
     @Test
     fun `hentAlleUtbetalinger skal returnere response med 2 utbetalinger for 1 maned`() {
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
+        val utbetalingsdato2 = LocalDate.now().withDayOfMonth(10).minusMonths(1)
+
         val model = InternalDigisosSoker()
-        model.saker.add(Sak(
-                referanse = referanse,
-                saksStatus = SaksStatus.UNDER_BEHANDLING,
-                tittel = tittel,
-                vedtak = mutableListOf(),
-                utbetalinger = mutableListOf(
-                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 8, 12), null, null, null,  false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
-                ),
-                datoOpprettet = LocalDate.now()
-        ))
+        model.utbetalinger.addAll(
+                mutableListOf(
+                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, utbetalingsdato2, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
+                )
+        )
 
         coEvery { eventService.createModel(any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(2)
         assertThat(response[0].tittel).isEqualTo("Tannlege")
         assertThat(response[0].belop).isEqualTo(10.0)
         assertThat(response[0].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-12")
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato2)
         assertThat(response[1].tittel).isEqualTo("Nødhjelp")
         assertThat(response[1].belop).isEqualTo(10.0)
         assertThat(response[1].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[1].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-10")
+        assertThat(response[1].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato)
     }
 
     @Test
     fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling for 2 maneder`() {
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(2)
+        val utbetalingsdato2 = LocalDate.now().withDayOfMonth(5).minusMonths(1)
+
         val model = InternalDigisosSoker()
-        model.saker.add(Sak(
-                referanse = referanse,
-                saksStatus = SaksStatus.UNDER_BEHANDLING,
-                tittel = tittel,
-                vedtak = mutableListOf(),
-                utbetalinger = mutableListOf(
-                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 10), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, LocalDate.of(2019, 9, 12), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
-                ),
-                datoOpprettet = LocalDate.now()
-        ))
+        model.utbetalinger.addAll(
+                mutableListOf(
+                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, utbetalingsdato2, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
+                )
+        )
 
         coEvery { eventService.createModel(any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(2)
         assertThat(response[0].tittel).isEqualTo("Tannlege")
         assertThat(response[0].belop).isEqualTo(10.0)
         assertThat(response[0].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-09-12")
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato2)
 
         assertThat(response[1].tittel).isEqualTo("Nødhjelp")
         assertThat(response[1].belop).isEqualTo(10.0)
         assertThat(response[1].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[1].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-10")
+        assertThat(response[1].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato)
     }
 
     @Test
     fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med vilkar`() {
         val model = InternalDigisosSoker()
         val vilkar = Vilkar("vilkar1", "Skal hoppe", false, LocalDateTime.now(), LocalDateTime.now())
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val utbetaling1 = Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
-                null, LocalDate.of(2019, 8, 10), null, null, null, false, null, null, mutableListOf(vilkar), mutableListOf(), LocalDateTime.now())
-        model.saker.add(Sak(
-                referanse = referanse,
-                saksStatus = SaksStatus.UNDER_BEHANDLING,
-                tittel = tittel,
-                vedtak = mutableListOf(),
-                utbetalinger = mutableListOf(utbetaling1),
-                datoOpprettet = LocalDate.now()
-        ))
+                null, utbetalingsdato, null, null, null, false, null, null, mutableListOf(vilkar), mutableListOf(), LocalDateTime.now())
+        model.utbetalinger.add(utbetaling1)
 
         coEvery { eventService.createModel(any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
@@ -221,21 +209,15 @@ internal class UtbetalingerServiceTest {
     fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med dokumentasjonkrav`() {
         val model = InternalDigisosSoker()
         val dokumentasjonkrav = Dokumentasjonkrav("dokumentasjonskrav", "Skal hoppe", false)
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val utbetaling1 = Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
-                null, LocalDate.of(2019, 8, 10), null, null, null, false, null, null, mutableListOf(), mutableListOf(dokumentasjonkrav), LocalDateTime.now())
-        model.saker.add(Sak(
-                referanse = referanse,
-                saksStatus = SaksStatus.UNDER_BEHANDLING,
-                tittel = tittel,
-                vedtak = mutableListOf(),
-                utbetalinger = mutableListOf(utbetaling1),
-                datoOpprettet = LocalDate.now()
-        ))
+                null, utbetalingsdato, null, null, null, false, null, null, mutableListOf(), mutableListOf(dokumentasjonkrav), LocalDateTime.now())
+        model.utbetalinger.add(utbetaling1)
 
         coEvery { eventService.createModel(any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
@@ -243,29 +225,21 @@ internal class UtbetalingerServiceTest {
 
     @Test
     fun `hentAlleUtbetalinger skal returnere utbetalinger for alle digisosSaker`() {
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
+        val utbetalingsdato2 = LocalDate.now().withDayOfMonth(10).minusMonths(1)
         val model = InternalDigisosSoker()
-        model.saker.add(Sak(
-                referanse = referanse,
-                saksStatus = SaksStatus.UNDER_BEHANDLING,
-                tittel = tittel,
-                vedtak = mutableListOf(),
-                utbetalinger = mutableListOf(
-                        Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null,
-                                LocalDate.of(2019, 8, 10), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())),
-                datoOpprettet = LocalDate.now()
-        ))
+        model.utbetalinger.add(
+                Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null,
+                        utbetalingsdato, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()
+                )
+        )
 
         val model2 = InternalDigisosSoker()
-        model2.saker.add(Sak(
-                referanse = referanse,
-                saksStatus = SaksStatus.FERDIGBEHANDLET,
-                tittel = tittel,
-                vedtak = mutableListOf(),
-                utbetalinger = mutableListOf(
-                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.ONE, "Barnehage og SFO", null,
-                                LocalDate.of(2019, 9, 12), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())),
-                datoOpprettet = LocalDate.now()
-        ))
+        model2.utbetalinger.add(
+                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.ONE, "Barnehage og SFO", null,
+                        utbetalingsdato2, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()
+                )
+        )
 
         val mockDigisosSak2: DigisosSak = mockk()
         val id1 = "some id"
@@ -275,11 +249,13 @@ internal class UtbetalingerServiceTest {
         coEvery { mockDigisosSak2.fiksDigisosId } returns id2
         coEvery { mockDigisosSak.kommunenummer } returns "1111"
         coEvery { mockDigisosSak2.kommunenummer } returns "2222"
+        coEvery { mockDigisosSak.sistEndret } returns ZonedDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli()
+        coEvery { mockDigisosSak2.sistEndret } returns ZonedDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli()
         coEvery { eventService.createModel(mockDigisosSak) } returns model
         coEvery { eventService.createModel(mockDigisosSak2) } returns model2
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak, mockDigisosSak2)
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3)
 
         assertThat(response).isNotEmpty
         assertThat(response).hasSize(2)
@@ -287,42 +263,40 @@ internal class UtbetalingerServiceTest {
         assertThat(response[0].tittel).isEqualTo("Barnehage og SFO")
         assertThat(response[0].belop).isEqualTo(1.0)
         assertThat(response[0].fiksDigisosId).isEqualTo(id2)
-        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-09-12")
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato2)
 
         assertThat(response[1].tittel).isEqualTo("Nødhjelp")
         assertThat(response[1].belop).isEqualTo(10.0)
         assertThat(response[1].fiksDigisosId).isEqualTo(id1)
-        assertThat(response[1].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-10")
+        assertThat(response[1].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato)
     }
 
     @Test
     internal fun `hentUtbetalingerForDigisosSak skal hente alle utbetalinger for 1 DigisosSak`() {
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
+        val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
+        val tom = LocalDate.now().withDayOfMonth(1).minusDays(1)
+
         val model = InternalDigisosSoker()
-        model.saker.add(Sak(
-                referanse = referanse,
-                saksStatus = SaksStatus.UNDER_BEHANDLING,
-                tittel = tittel,
-                vedtak = mutableListOf(),
-                utbetalinger = mutableListOf(
-                        Utbetaling(
-                                referanse = "Sak1",
-                                status = UtbetalingsStatus.UTBETALT,
-                                belop = BigDecimal.TEN,
-                                beskrivelse = "Nødhjelp",
-                                forfallsDato = null,
-                                utbetalingsDato = LocalDate.of(2019, 8, 10),
-                                fom = LocalDate.of(2019, 8, 1),
-                                tom = LocalDate.of(2019, 8, 31),
-                                mottaker = "utleier",
-                                annenMottaker = true,
-                                kontonummer = "kontonr",
-                                utbetalingsmetode = "utbetalingsmetode",
-                                vilkar = mutableListOf(),
-                                dokumentasjonkrav = mutableListOf(),
-                                datoHendelse = LocalDateTime.now()
-                        )),
-                datoOpprettet = LocalDate.now()
-        ))
+        model.utbetalinger.add(
+                Utbetaling(
+                        referanse = "Sak1",
+                        status = UtbetalingsStatus.UTBETALT,
+                        belop = BigDecimal.TEN,
+                        beskrivelse = "Nødhjelp",
+                        forfallsDato = null,
+                        utbetalingsDato = utbetalingsdato,
+                        fom = fom,
+                        tom = tom,
+                        mottaker = "utleier",
+                        annenMottaker = true,
+                        kontonummer = "kontonr",
+                        utbetalingsmetode = "utbetalingsmetode",
+                        vilkar = mutableListOf(),
+                        dokumentasjonkrav = mutableListOf(),
+                        datoHendelse = LocalDateTime.now()
+                )
+        )
 
         every { eventService.createModel(any()) } returns model
         every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
@@ -334,9 +308,9 @@ internal class UtbetalingerServiceTest {
         assertThat(response[0].tittel).isEqualTo("Nødhjelp")
         assertThat(response[0].belop).isEqualTo(10.0)
         assertThat(response[0].fiksDigisosId).isEqualTo(digisosId)
-        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-10")
-        assertThat(response[0].fom).isEqualTo("2019-08-01")
-        assertThat(response[0].tom).isEqualTo("2019-08-31")
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato)
+        assertThat(response[0].fom).isEqualTo(fom)
+        assertThat(response[0].tom).isEqualTo(tom)
         assertThat(response[0].mottaker).isEqualTo("utleier")
         assertThat(response[0].annenMottaker).isTrue()
         assertThat(response[0].kontonummer).isEqualTo("kontonr")
@@ -345,38 +319,38 @@ internal class UtbetalingerServiceTest {
 
     @Test
     fun `hentAlleUtbetalinger skal filtrere vekk annullerte utbetalinger`() {
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(2).minusMonths(1)
+        val utbetalingsdato2 = LocalDate.now().withDayOfMonth(3).minusMonths(1)
+        val utbetalingsdato3 = LocalDate.now().withDayOfMonth(4).minusMonths(1)
+        val utbetalingsdato4 = LocalDate.now().withDayOfMonth(5).minusMonths(1)
+
         val model = InternalDigisosSoker()
-        model.saker.add(Sak(
-                referanse = referanse,
-                saksStatus = SaksStatus.UNDER_BEHANDLING,
-                tittel = tittel,
-                vedtak = mutableListOf(),
-                utbetalinger = mutableListOf(
-                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, LocalDate.of(2019, 8, 1), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                        Utbetaling("Sak2", UtbetalingsStatus.PLANLAGT_UTBETALING, BigDecimal.TEN, "Tannlege", LocalDate.of(2019, 9, 1), null, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                        Utbetaling("Sak3", UtbetalingsStatus.STOPPET, BigDecimal.TEN, "Depositum", null, LocalDate.of(2019, 10, 1), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                        Utbetaling("Sak4", UtbetalingsStatus.ANNULLERT, BigDecimal.TEN, "Kinopenger", null, LocalDate.of(2019, 11, 1), null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
-                ),
-                datoOpprettet = LocalDate.now()
-        ))
+        model.utbetalinger.addAll(
+                mutableListOf(
+                        Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak2", UtbetalingsStatus.PLANLAGT_UTBETALING, BigDecimal.TEN, "Tannlege", utbetalingsdato2, null, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak3", UtbetalingsStatus.STOPPET, BigDecimal.TEN, "Depositum", null, utbetalingsdato3, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
+                        Utbetaling("Sak4", UtbetalingsStatus.ANNULLERT, BigDecimal.TEN, "Kinopenger", null, utbetalingsdato4, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
+                )
+        )
 
         coEvery { eventService.createModel(any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(3)
         assertThat(response[0].tittel).isEqualTo("Depositum")
         assertThat(response[0].status).isEqualTo(UtbetalingsStatus.STOPPET)
-        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-10-01")
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato3)
 
         assertThat(response[1].tittel).isEqualTo("Tannlege")
         assertThat(response[1].status).isEqualTo(UtbetalingsStatus.PLANLAGT_UTBETALING)
-        assertThat(response[1].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-09-01")
+        assertThat(response[1].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato2)
 
         assertThat(response[2].tittel).isEqualTo("Nødhjelp")
         assertThat(response[2].status).isEqualTo(UtbetalingsStatus.UTBETALT)
-        assertThat(response[2].utbetalingEllerForfallDigisosSoker).isEqualTo("2019-08-01")
+        assertThat(response[2].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato)
     }
 }
