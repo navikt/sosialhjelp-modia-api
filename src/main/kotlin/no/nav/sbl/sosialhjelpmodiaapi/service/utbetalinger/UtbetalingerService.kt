@@ -32,7 +32,7 @@ class UtbetalingerService(
             return emptyList()
         }
 
-        return runBlocking(context = Dispatchers.IO + requestContextService.getCoroutineContext()) {
+        return runBlocking(context = requestContextService.getCoroutineContext()) {
             digisosSaker
                     .filter { isDigisosSakNewerThanMonths(it, months) }
                     .flatMapParallel { getUtbetalinger(it) }
