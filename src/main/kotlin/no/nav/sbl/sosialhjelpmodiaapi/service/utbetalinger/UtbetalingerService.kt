@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.utbetalinger
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontor
@@ -31,7 +32,7 @@ class UtbetalingerService(
             return emptyList()
         }
 
-        return runBlocking(context = requestContextService.getCoroutineContext()) {
+        return runBlocking(context = Dispatchers.IO + requestContextService.getCoroutineContext()) {
             digisosSaker
                     .filter { isDigisosSakNewerThanMonths(it, months) }
                     .flatMapParallel { getUtbetalinger(it) }
