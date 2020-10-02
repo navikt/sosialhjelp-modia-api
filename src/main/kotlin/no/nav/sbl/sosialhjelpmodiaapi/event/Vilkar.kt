@@ -11,16 +11,9 @@ fun InternalDigisosSoker.apply(hendelse: JsonVilkar) {
 
     val log by logger()
 
-    val utbetalinger = mutableListOf<Utbetaling>()
-    for (utbetalingsreferanse in hendelse.utbetalingsreferanse) {
-        for (sak in saker) {
-            for (utbetaling in sak.utbetalinger) {
-                if (utbetaling.referanse == utbetalingsreferanse) {
-                    utbetalinger.add(utbetaling)
-                }
-            }
-        }
-    }
+    val utbetalinger = finnAlleUtbetalingerSomErVilkarRefererTil(hendelse)
+
+    fjernFraUtbetalingerSomIkkeLegereErReferertTilIVilkaret(hendelse)
 
     if (utbetalinger.isEmpty()) {
         log.warn("Fant ingen utbetalinger å knytte vilkår til. Utbetalingsreferanser: ${hendelse.utbetalingsreferanse}")
@@ -36,6 +29,31 @@ fun InternalDigisosSoker.apply(hendelse: JsonVilkar) {
     )
 
     utbetalinger.forEach { it.vilkar.oppdaterEllerLeggTilVilkar(hendelse, vilkar) }
+}
+
+private fun InternalDigisosSoker.finnAlleUtbetalingerSomErVilkarRefererTil(hendelse: JsonVilkar): MutableList<Utbetaling> {
+    val utbetalinger = mutableListOf<Utbetaling>()
+    for (utbetalingsreferanse in hendelse.utbetalingsreferanse) {
+        for (sak in saker) {
+            for (utbetaling in sak.utbetalinger) {
+                if (utbetaling.referanse == utbetalingsreferanse) {
+                    utbetalinger.add(utbetaling)
+                }
+            }
+        }
+    }
+    return utbetalinger
+}
+
+private fun InternalDigisosSoker.fjernFraUtbetalingerSomIkkeLegereErReferertTilIVilkaret(hendelse: JsonVilkar) {
+    for (sak in saker) {
+        for (utbetaling in sak.utbetalinger) {
+            utbetaling.vilkar.removeAll {
+                it.referanse == hendelse.vilkarreferanse
+                        && !hendelse.utbetalingsreferanse.contains(utbetaling.referanse)
+            }
+        }
+    }
 }
 
 private fun MutableList<Vilkar>.oppdaterEllerLeggTilVilkar(hendelse: JsonVilkar, vilkar: Vilkar) {
