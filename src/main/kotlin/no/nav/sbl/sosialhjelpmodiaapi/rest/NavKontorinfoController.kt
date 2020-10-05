@@ -18,7 +18,7 @@ class NavKontorinfoController(
         private val norgClient: NorgClient
 ) {
 
-    @GetMapping("/kontorinfo", produces = ["application/json;charset=UTF-8"])
+    @GetMapping("/kontorinfo")
     fun hentPersonInfo(@RequestParam(name = "enhetsnr") enhetsnr: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<KontorinfoResponse> {
         val enhet = norgClient.hentNavEnhet(enhetsnr)
         if (enhet?.sosialeTjenester.isNullOrBlank()) {
