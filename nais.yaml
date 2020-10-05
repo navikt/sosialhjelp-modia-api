@@ -49,6 +49,8 @@ spec:
 {{#if isGcp}}
   filesFrom:
     - secret: virksomhetssertifikat
+  tracing:
+    enabled: true
 {{/if}}
   vault:
     enabled: {{vaultEnabled}}
