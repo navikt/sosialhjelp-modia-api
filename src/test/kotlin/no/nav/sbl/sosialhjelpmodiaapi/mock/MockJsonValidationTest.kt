@@ -26,7 +26,7 @@ internal class DefaultMockResponseTest {
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns 1L
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns "9999"
-        every { norgClient.hentNavEnhet("9999").navn } returns "NAV test"
+        every { norgClient.hentNavEnhet("9999")!!.navn } returns "NAV test"
 
         assertThatCode { eventService.createModel(mockDigisosSak) }.doesNotThrowAnyException()
     }
