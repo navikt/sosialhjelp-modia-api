@@ -23,6 +23,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.Soknadsmottaker
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_SENDT
 import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
+import no.nav.sbl.sosialhjelpmodiaapi.utils.DEFAULT_NAVENHETSNAVN
+import no.nav.sbl.sosialhjelpmodiaapi.utils.navenhetsnavnOrDefault
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.springframework.stereotype.Component
 
@@ -57,11 +59,9 @@ class EventService(
     }
 
     fun getNavenhetsnavnOrDefault(enhetsnummer: String): String {
-        if (enhetsnummer.isNotEmpty()) {
-            val navenhet = norgClient.hentNavEnhet(enhetsnummer)
-            if (!navenhet?.navn.isNullOrEmpty()) return navenhet!!.navn
-        }
-        return "[Kan ikke hente NAV-kontor]"
+        if (enhetsnummer.isEmpty()) return DEFAULT_NAVENHETSNAVN
+        val navn = norgClient.hentNavEnhet(enhetsnummer)?.navn
+        return navenhetsnavnOrDefault(navn)
     }
 
     fun createSoknadsoversiktModel(digisosSak: DigisosSak): InternalDigisosSoker {

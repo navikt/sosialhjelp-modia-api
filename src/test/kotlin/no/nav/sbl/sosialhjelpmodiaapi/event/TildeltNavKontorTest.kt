@@ -12,11 +12,11 @@ import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_MOTTATT
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_VIDERESENDT
 import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
+import no.nav.sbl.sosialhjelpmodiaapi.utils.DEFAULT_NAVENHETSNAVN
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.http.HttpStatus
 
 internal class TildeltNavKontorTest {
 
@@ -71,6 +71,36 @@ internal class TildeltNavKontorTest {
         val hendelse = model.historikk.last()
         assertThat(hendelse.tittel).isEqualTo(SOKNAD_VIDERESENDT)
         assertThat(hendelse.beskrivelse).contains(enhetNavn)
+    }
+
+    @Test
+    fun `tildeltNavKontor med tom navenhetsnummer skal gi default navenhetsnavn`() {
+        every { norgClient.hentNavEnhet("") } returns null
+        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+                JsonDigisosSoker()
+                        .withAvsender(avsender)
+                        .withVersion("123")
+                        .withHendelser(listOf(
+                                SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                                TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2).withNavKontor("")))
+
+        val model = service.createModel(mockDigisosSak)
+
+        assertThat(model).isNotNull
+        assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
+        assertThat(model.saker).hasSize(0)
+        assertThat(model.historikk).hasSize(3)
+        assertThat(model.navKontorHistorikk).hasSize(2)
+
+        val last = model.navKontorHistorikk.last()
+        assertThat(last.type).isEqualTo(SendingType.VIDERESENDT)
+        assertThat(last.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
+        assertThat(last.navEnhetsnummer).isEqualTo("")
+        assertThat(last.navEnhetsnavn).isEqualTo(DEFAULT_NAVENHETSNAVN)
+
+        val hendelse = model.historikk.last()
+        assertThat(hendelse.tittel).isEqualTo(SOKNAD_VIDERESENDT)
+        assertThat(hendelse.beskrivelse).contains(DEFAULT_NAVENHETSNAVN)
     }
 
     @Test
