@@ -82,7 +82,7 @@ internal class TildeltNavKontorTest {
                         .withVersion("123")
                         .withHendelser(listOf(
                                 SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                                TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2).withNavKontor("")))
+                                TILDELT_EMPTY_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2)))
 
         val model = service.createModel(mockDigisosSak)
 
