@@ -9,6 +9,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.SendingType
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_VIDERESENDT
 import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
+import no.nav.sbl.sosialhjelpmodiaapi.utils.navenhetsnavnOrDefault
 
 fun InternalDigisosSoker.apply(
         hendelse: JsonTildeltNavKontor,
@@ -26,7 +27,8 @@ fun InternalDigisosSoker.apply(
     }
 
     val destinasjon = try {
-        norgClient.hentNavEnhet(hendelse.navKontor).navn
+        val navn = norgClient.hentNavEnhet(hendelse.navKontor)?.navn
+        navenhetsnavnOrDefault(navn)
     } catch (e: NorgException) {
         "et annet NAV-kontor"
     }
