@@ -4,9 +4,11 @@ import no.nav.sbl.sosialhjelpmodiaapi.common.NorgException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.redis.RedisService
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CALL_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.forwardHeaders
 import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils.getCallId
+import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
@@ -19,7 +21,8 @@ import org.springframework.web.client.RestTemplate
 @Component
 class NorgClientImpl(
         clientProperties: ClientProperties,
-        private val restTemplate: RestTemplate
+        private val restTemplate: RestTemplate,
+        private val redisService: RedisService
 ) : NorgClient {
 
     private val baseUrl = clientProperties.norgEndpointUrl
@@ -27,6 +30,17 @@ class NorgClientImpl(
     override fun hentNavEnhet(enhetsnr: String): NavEnhet? {
         if (enhetsnr == "") return null
 
+        hentFraCache(enhetsnr)?.let{ return it }
+
+        return hentFraNorg(enhetsnr)
+                .also { redisService.put(NAVENHET_PREFIX + enhetsnr, objectMapper.writeValueAsBytes(it)) }
+    }
+
+    private fun hentFraCache(enhetsnr: String): NavEnhet? {
+        return redisService.get(NAVENHET_PREFIX + enhetsnr, NavEnhet::class.java) as NavEnhet?
+    }
+
+    private fun hentFraNorg(enhetsnr: String): NavEnhet {
         try {
             log.info("Norg2 - GET enhet $enhetsnr")
             val urlTemplate = "$baseUrl/enhet/{enhetsnr}"
@@ -54,5 +68,7 @@ class NorgClientImpl(
 
     companion object {
         private val log by logger()
+
+        private const val NAVENHET_PREFIX = "NavEnhet"
     }
 }
