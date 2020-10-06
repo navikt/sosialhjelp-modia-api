@@ -5,6 +5,10 @@ metadata:
   namespace: {{namespace}}
   labels:
     team: teamdigisos
+{{#if isGcp}}
+tracing:
+  enabled: true
+{{/if}}
 spec:
   image: {{image}}
   port: 8383

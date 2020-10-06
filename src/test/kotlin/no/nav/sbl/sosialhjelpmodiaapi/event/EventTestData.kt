@@ -73,6 +73,10 @@ val TILDELT_NAV_KONTOR_2: JsonTildeltNavKontor = JsonTildeltNavKontor()
         .withType(JsonHendelse.Type.TILDELT_NAV_KONTOR)
         .withNavKontor(navKontor2)
 
+val TILDELT_EMPTY_NAV_KONTOR: JsonTildeltNavKontor = JsonTildeltNavKontor()
+        .withType(JsonHendelse.Type.TILDELT_NAV_KONTOR)
+        .withNavKontor("")
+
 val SAK1_SAKS_STATUS_UNDERBEHANDLING: JsonSaksStatus = JsonSaksStatus()
         .withType(JsonHendelse.Type.SAKS_STATUS)
         .withStatus(JsonSaksStatus.Status.UNDER_BEHANDLING)

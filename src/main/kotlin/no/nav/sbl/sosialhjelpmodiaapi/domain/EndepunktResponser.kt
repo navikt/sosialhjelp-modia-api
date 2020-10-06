@@ -139,3 +139,7 @@ data class KommuneResponse(
         val harNksTilgang: Boolean,
         val behandlingsansvarlig: String?
 )
+
+data class KontorinfoResponse(
+        val kontorinfo: String
+)
