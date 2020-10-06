@@ -17,7 +17,6 @@ import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.StaticSubjectHandlerImpl
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.resetSubjectHandlerImpl
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.setNewSubjectHandlerImpl
-import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextServiceImpl
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
@@ -34,9 +33,8 @@ import kotlin.test.assertTrue
 internal class UtbetalingerServiceTest {
     private val fiksClient: FiksClient = mockk()
     private val eventService: EventService = mockk()
-    private val requestContextService = RequestContextServiceImpl()
 
-    private val service = UtbetalingerService(fiksClient, eventService, requestContextService)
+    private val service = UtbetalingerService(fiksClient, eventService)
 
     private val mockDigisosSak: DigisosSak = mockk()
 

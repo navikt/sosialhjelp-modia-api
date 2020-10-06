@@ -14,7 +14,6 @@ import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.StaticSubjectHandlerImpl
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.resetSubjectHandlerImpl
 import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.setNewSubjectHandlerImpl
-import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextServiceImpl
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
 import no.nav.sosialhjelp.api.fiks.Ettersendelse
@@ -33,7 +32,7 @@ internal class VedleggServiceTest {
     private val fiksClient: FiksClient = mockk()
     private val eventService: EventService = mockk()
 
-    private val service = VedleggService(fiksClient, eventService, RequestContextServiceImpl())
+    private val service = VedleggService(fiksClient, eventService)
 
     private val mockDigisosSak: DigisosSak = mockk()
     private val mockJsonVedleggSpesifikasjon: JsonVedleggSpesifikasjon = mockk()

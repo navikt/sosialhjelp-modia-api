@@ -11,17 +11,17 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.flatMapParallel
 import no.nav.sbl.sosialhjelpmodiaapi.logger
-import no.nav.sbl.sosialhjelpmodiaapi.utils.coroutines.RequestContextService
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.joda.time.DateTime
 import org.springframework.stereotype.Component
+import org.springframework.web.context.request.RequestContextHolder.getRequestAttributes
+import org.springframework.web.context.request.RequestContextHolder.setRequestAttributes
 
 
 @Component
 class UtbetalingerService(
         private val fiksClient: FiksClient,
-        private val eventService: EventService,
-        private val requestContextService: RequestContextService
+        private val eventService: EventService
 ) {
 
     fun hentAlleUtbetalinger(fnr: String, months: Int): List<UtbetalingerResponse> {
@@ -32,10 +32,15 @@ class UtbetalingerService(
             return emptyList()
         }
 
-        return runBlocking(context = requestContextService.getCoroutineContext()) {
+        val requestAttributes = getRequestAttributes()
+
+        return runBlocking(Dispatchers.IO) {
             digisosSaker
                     .filter { isDigisosSakNewerThanMonths(it, months) }
-                    .flatMapParallel { getUtbetalinger(it) }
+                    .flatMapParallel {
+                        setRequestAttributes(requestAttributes)
+                        getUtbetalinger(it)
+                    }
                     .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         }
     }
