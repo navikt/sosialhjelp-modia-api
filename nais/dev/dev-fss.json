@@ -29,5 +29,6 @@
   "webProxyEnabled": true,
   "isGcp": false,
   "vaultEnabled": true,
-  "dev": true
+  "dev": true,
+  "azureEnabled": true
 }
