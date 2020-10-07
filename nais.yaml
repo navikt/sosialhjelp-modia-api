@@ -10,7 +10,7 @@ spec:
   port: 8383
   azure:
     application:
-      enabled: true
+      enabled: {{azureEnabled}}
 {{#if dev}}
       tenant: trygdeetaten.no
 {{/if}}
