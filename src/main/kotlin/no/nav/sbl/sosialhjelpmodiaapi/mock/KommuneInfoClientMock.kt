@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component
 class KommuneInfoClientMock : KommuneInfoClient {
 
     override fun get(kommunenummer: String): KommuneInfo {
+        if (kommunenummer.equals("0301")) {
+            return KommuneInfo(kommunenummer, true, true, false, false, null, true, "Nabo")
+        }
         return KommuneInfo(kommunenummer, true, true, false, false, null, true, null)
     }
 
@@ -24,7 +27,7 @@ class KommuneInfoClientMock : KommuneInfoClient {
         returnValue.add(KommuneInfo("0000", true, false, false, false, null, true, null))
         returnValue.add(KommuneInfo("8734", true, true, false, false, null, true, null))
         returnValue.add(KommuneInfo("0909", true, true, false, false, null, true, null))
-        returnValue.add(KommuneInfo("0301", true, true, false, false, null, true, null))
+        returnValue.add(KommuneInfo("0301", true, true, false, false, null, true, "En annen kommune"))
         returnValue.add(KommuneInfo("1222", true, true, false, false, null, true, null))
         returnValue.add(KommuneInfo("9002", true, true, false, false, null, true, null))
         returnValue.add(KommuneInfo("6663", true, true, false, false, null, true, null))
@@ -32,6 +35,7 @@ class KommuneInfoClientMock : KommuneInfoClient {
         returnValue.add(KommuneInfo("4455", true, true, false, true, null, true, null))
         returnValue.add(KommuneInfo("1833", false, false, false, false, null, true, null))
         returnValue.add(KommuneInfo("1430", true, true, true, true, null, true, null))
+        returnValue.add(KommuneInfo("0003", true, true, false, false, null, true, "Nabo"))
         return returnValue
     }
 }

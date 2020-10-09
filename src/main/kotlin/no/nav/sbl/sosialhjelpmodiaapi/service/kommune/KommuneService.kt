@@ -15,6 +15,10 @@ class KommuneService(
         return kommuneInfoClient.get(kommunenummer)
     }
 
+    fun getBehandlingsanvarligKommune(kommunenummer: String): String? {
+        return kommuneInfoClient.get(kommunenummer).behandlingsansvarlig
+    }
+
     fun getAll(): List<KommuneInfo> {
         return kommuneInfoClient.getAll()
     }

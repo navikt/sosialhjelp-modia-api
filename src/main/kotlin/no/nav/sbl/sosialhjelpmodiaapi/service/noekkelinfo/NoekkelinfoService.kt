@@ -8,6 +8,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.VideresendtInfo
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.hentSoknadTittel
+import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneService
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommunenavnService
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import org.springframework.stereotype.Component
@@ -16,13 +17,14 @@ import org.springframework.stereotype.Component
 class NoekkelinfoService(
         private val fiksClient: FiksClient,
         private val eventService: EventService,
-        private val kommunenavnService: KommunenavnService
+        private val kommunenavnService: KommunenavnService,
+        private val kommuneService: KommuneService
 ) {
 
     fun hentNoekkelInfo(fiksDigisosId: String): SoknadNoekkelinfoResponse {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
-        val kommunenavn = kommunenavnService.hentKommunenavnFor(digisosSak.kommunenummer)
+        val kommunenavn = hentBehandlendekommune(digisosSak.kommunenummer)
 
         val behandlendeNavKontor: NavKontorInformasjon? = model.navKontorHistorikk.lastOrNull()
 
@@ -37,6 +39,10 @@ class NoekkelinfoService(
                 videresendtHistorikk = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
                 tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt
         )
+    }
+
+    private fun hentBehandlendekommune(kommunenummer: String): String {
+        return kommuneService.getBehandlingsanvarligKommune(kommunenummer) ?: kommunenavnService.hentKommunenavnFor(kommunenummer)
     }
 
     private fun leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model: InternalDigisosSoker): List<VideresendtInfo>? {
