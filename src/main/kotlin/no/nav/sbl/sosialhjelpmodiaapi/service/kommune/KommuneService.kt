@@ -16,9 +16,9 @@ class KommuneService(
     }
 
     fun getBehandlingsanvarligKommune(kommunenummer: String): String? {
-        val kommunenavn = kommuneInfoClient.get(kommunenummer).behandlingsansvarlig
+        val behandlingsansvarlig = kommuneInfoClient.get(kommunenummer).behandlingsansvarlig
 
-        return if (kommunenavn != null) leggTilKommuneINavnet(kommunenavn) else null
+        return if (behandlingsansvarlig != null) leggTilKommuneINavnet(behandlingsansvarlig) else null
     }
 
     private fun leggTilKommuneINavnet(kommunenavn: String): String {
