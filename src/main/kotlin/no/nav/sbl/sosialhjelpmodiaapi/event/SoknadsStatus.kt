@@ -27,7 +27,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonSoknadsStatus) {
         if (navEnhetsnavn == null) {
             "Søknaden med vedlegg er mottatt ved [Kan ikke hente NAV-kontor], {{kommunenavn}}"
         } else {
-            "Søknaden med vedlegg er mottatt ved $navEnhetsnavn."
+            "Søknaden med vedlegg er mottatt ved $navEnhetsnavn, {{kommunenavn}}."
         }
     } else {
         null
