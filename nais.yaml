@@ -5,16 +5,12 @@ metadata:
   namespace: {{namespace}}
   labels:
     team: teamdigisos
-{{#if isGcp}}
-tracing:
-  enabled: true
-{{/if}}
 spec:
   image: {{image}}
   port: 8383
   azure:
     application:
-      enabled: true
+      enabled: {{azureEnabled}}
 {{#if dev}}
       tenant: trygdeetaten.no
 {{/if}}
@@ -53,6 +49,10 @@ spec:
 {{#if isGcp}}
   filesFrom:
     - secret: virksomhetssertifikat
+{{/if}}
+{{#if isGcp}}
+  tracing:
+    enabled: true
 {{/if}}
   vault:
     enabled: {{vaultEnabled}}

@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtakFattet
-import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtaksfil
 import no.nav.sbl.sosialhjelpmodiaapi.common.VIS_BREVET
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
@@ -36,13 +35,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
     }
     sakForReferanse.vedtak.add(vedtak)
 
-    val beskrivelse = beskrivelse(sakForReferanse, hendelse.vedtaksfil)
+    val beskrivelse = "${sakForReferanse.tittel ?: DEFAULT_TITTEL} er ferdig behandlet"
 
     historikk.add(Hendelse(SAK_FERDIGBEHANDLET, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime(), VIS_BREVET))
-}
-
-private fun beskrivelse(sak: Sak, vedtaksfil: JsonVedtaksfil?): String {
-    val beskrivelse = "${sak.tittel ?: DEFAULT_TITTEL} er ferdig behandlet."
-    val vedtaksbrev = if (vedtaksfil == null || vedtaksfil.referanse == null) null else "Med vedtaksbrev."
-    return "$beskrivelse $vedtaksbrev"
 }

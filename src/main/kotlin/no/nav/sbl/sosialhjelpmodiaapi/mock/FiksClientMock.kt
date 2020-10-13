@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.mock
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
-import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.*
@@ -35,7 +34,6 @@ class FiksClientMock : FiksClient {
     override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
         return when (requestedClass) {
             JsonDigisosSoker::class.java -> hentDigisosSoker(dokumentlagerId)
-            JsonSoknad::class.java -> hentSoknad(dokumentlagerId)
             JsonVedleggSpesifikasjon::class.java -> hentVedleggSpesifikasjon(dokumentlagerId)
             else -> requestedClass.getDeclaredConstructor(requestedClass).newInstance()
         }
@@ -46,14 +44,6 @@ class FiksClientMock : FiksClient {
             "mock-digisossoker" -> dokumentMap.getOrDefault(dokumentlagerId, digisosSoker)
             "mock-digisossoker-minimal" -> dokumentMap.getOrDefault(dokumentlagerId, minimalDigisosSoker)
             else -> dokumentMap.getOrDefault(dokumentlagerId, digisosSoker)
-        }
-    }
-
-    fun hentSoknad(dokumentlagerId: String): Any {
-        return when (dokumentlagerId) {
-            "mock-soknad" -> dokumentMap.getOrDefault(dokumentlagerId, defaultJsonSoknad)
-            "mock-soknad-minimal" -> dokumentMap.getOrDefault(dokumentlagerId, minimalJsonSoknad)
-            else -> dokumentMap.getOrDefault(dokumentlagerId, defaultJsonSoknad)
         }
     }
 
