@@ -121,7 +121,6 @@ data class PersoninfoResponse(
         val sammensattNavn: String?,
         val alder: Int?,
         val kjoenn: String?,
-//        val fnr: String,
         val tlfnr: String?
 )
 
