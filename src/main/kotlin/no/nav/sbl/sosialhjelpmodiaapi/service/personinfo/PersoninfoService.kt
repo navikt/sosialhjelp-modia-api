@@ -14,10 +14,8 @@ class PersoninfoService(
 ) {
 
     fun hentPersoninfo(ident: String): PersoninfoResponse {
-
         val hentPerson = pdlClient.hentPerson(ident)
 
-        // utvid med alder, fnr, tlfnr etter hvert
         return PersoninfoResponse(
                 hentPerson?.navn,
                 hentPerson?.alder,
