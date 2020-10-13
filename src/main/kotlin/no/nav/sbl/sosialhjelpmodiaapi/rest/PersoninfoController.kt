@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RestController
 @ProtectedWithClaims(issuer = "azuread")
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
-class PersonInfoController(
+class PersoninfoController(
         private val personinfoService: PersoninfoService,
         private val abacService: AbacService
 ) {
 
     @PostMapping("/personinfo")
-    fun hentPersonInfo(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<PersoninfoResponse> {
+    fun hentPersoninfo(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<PersoninfoResponse> {
         abacService.harTilgang(ident.fnr, token)
 
         val personinfoResponse = personinfoService.hentPersoninfo(ident.fnr)
