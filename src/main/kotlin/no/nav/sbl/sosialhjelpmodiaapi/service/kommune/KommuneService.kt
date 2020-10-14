@@ -15,6 +15,16 @@ class KommuneService(
         return kommuneInfoClient.get(kommunenummer)
     }
 
+    fun getBehandlingsanvarligKommune(kommunenummer: String): String? {
+        val behandlingsansvarlig = kommuneInfoClient.get(kommunenummer).behandlingsansvarlig
+
+        return if (behandlingsansvarlig != null) leggTilKommuneINavnet(behandlingsansvarlig) else null
+    }
+
+    private fun leggTilKommuneINavnet(kommunenavn: String): String {
+       return if (kommunenavn.toLowerCase().endsWith(" kommune")) kommunenavn else "$kommunenavn kommune"
+    }
+
     fun getAll(): List<KommuneInfo> {
         return kommuneInfoClient.getAll()
     }

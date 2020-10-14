@@ -32,7 +32,7 @@ fun InternalDigisosSoker.apply(
     } catch (e: NorgException) {
         "et annet NAV-kontor"
     }
-    val beskrivelse = "Søknaden med vedlegg er videresendt og mottatt ved $destinasjon. Videresendingen vil ikke påvirke saksbehandlingstiden."
+    val beskrivelse = "Søknaden med vedlegg er videresendt og mottatt ved $destinasjon, {{kommunenavn}}. Videresendingen vil ikke påvirke saksbehandlingstiden."
     historikk.add(Hendelse(SOKNAD_VIDERESENDT, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
     navKontorHistorikk.add(NavKontorInformasjon(SendingType.VIDERESENDT, hendelse.hendelsestidspunkt.toLocalDateTime(), hendelse.navKontor, destinasjon))
 }
