@@ -45,26 +45,25 @@ class StaticSubjectHandlerImpl : SubjectHandler {
 
 @Profile("!(mock | mock-alt)")
 @Component
-class IssoSubjectHandlerImpl(
+class AzureADSubjectHandlerImpl(
         private val tokenValidationContextHolder: TokenValidationContextHolder
 ) : SubjectHandler {
 
-    private val tokenValidationContext: TokenValidationContext
-        get() {
-            val tokenValidationContext = tokenValidationContextHolder.tokenValidationContext
-            if (tokenValidationContext == null) {
-                log.error("Could not find TokenValidationContext. Possibly no token in request and request was not captured by JwtToken-validation filters.")
-                throw JwtTokenValidatorException("Could not find TokenValidationContext. Possibly no token in request.")
-            }
-            return tokenValidationContext
+    private fun getTokenValidationContext(): TokenValidationContext {
+        val tokenValidationContext = tokenValidationContextHolder.tokenValidationContext
+        if (tokenValidationContext == null) {
+            log.error("Could not find TokenValidationContext. Possibly no token in request and request was not captured by JwtToken-validation filters.")
+            throw JwtTokenValidatorException("Could not find TokenValidationContext. Possibly no token in request.")
         }
+        return tokenValidationContext
+    }
 
     override fun getUserIdFromToken(): String {
-        return tokenValidationContext.getClaims(ISSUER).subject
+        return getTokenValidationContext().getClaims(ISSUER).subject
     }
 
     override fun getToken(): String {
-        return tokenValidationContext.getJwtToken(ISSUER).tokenAsString
+        return getTokenValidationContext().getJwtToken(ISSUER).tokenAsString
     }
 
     companion object {

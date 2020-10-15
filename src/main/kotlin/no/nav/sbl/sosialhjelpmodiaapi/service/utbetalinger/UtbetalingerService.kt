@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.service.utbetalinger
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.slf4j.MDCContext
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontor
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontorInformasjon
@@ -14,6 +15,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.joda.time.DateTime
 import org.springframework.stereotype.Component
+import org.springframework.web.context.request.RequestContextHolder.getRequestAttributes
+import org.springframework.web.context.request.RequestContextHolder.setRequestAttributes
 
 
 @Component
@@ -30,10 +33,15 @@ class UtbetalingerService(
             return emptyList()
         }
 
-        return runBlocking(Dispatchers.IO) {
+        val requestAttributes = getRequestAttributes()
+
+        return runBlocking(Dispatchers.IO + MDCContext()) {
             digisosSaker
                     .filter { isDigisosSakNewerThanMonths(it, months) }
-                    .flatMapParallel { digisosSak -> getUtbetalinger(digisosSak) }
+                    .flatMapParallel {
+                        setRequestAttributes(requestAttributes)
+                        getUtbetalinger(it)
+                    }
                     .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         }
     }

@@ -10,11 +10,16 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Oppgave
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
+import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.StaticSubjectHandlerImpl
+import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils
+import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.resetSubjectHandlerImpl
+import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.setNewSubjectHandlerImpl
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
 import no.nav.sosialhjelp.api.fiks.Ettersendelse
 import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Instant
@@ -38,6 +43,8 @@ internal class VedleggServiceTest {
     internal fun setUp() {
         clearAllMocks()
 
+        setNewSubjectHandlerImpl(StaticSubjectHandlerImpl())
+
         every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
         every { mockDigisosSak.fiksDigisosId } returns "id"
         every { mockDigisosSak.sokerFnr } returns "fnr"
@@ -52,6 +59,11 @@ internal class VedleggServiceTest {
         every { fiksClient.hentDokument(any(), any(), vedleggMetadata_ettersendelse_2, any()) } returns ettersendteVedleggSpesifikasjon_2
         every { fiksClient.hentDokument(any(), any(), vedleggMetadata_ettersendelse_3, any()) } returns ettersendteVedleggSpesifikasjon_3
         every { fiksClient.hentDokument(any(), any(), vedleggMetadata_ettersendelse_4, any()) } returns ettersendteVedleggSpesifikasjon_4
+    }
+
+    @AfterEach
+    internal fun tearDown() {
+        resetSubjectHandlerImpl()
     }
 
     @Test

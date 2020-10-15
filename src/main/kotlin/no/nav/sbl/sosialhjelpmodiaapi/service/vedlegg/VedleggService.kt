@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.slf4j.MDCContext
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
@@ -13,6 +14,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
 import org.springframework.stereotype.Component
+import org.springframework.web.context.request.RequestContextHolder.getRequestAttributes
+import org.springframework.web.context.request.RequestContextHolder.setRequestAttributes
 import java.time.LocalDateTime
 
 const val LASTET_OPP_STATUS = "LastetOpp"
@@ -60,9 +63,12 @@ class VedleggService(
     }
 
     fun hentEttersendteVedlegg(digisosSak: DigisosSak, model: InternalDigisosSoker): List<InternalVedlegg> {
-        val alleVedlegg = runBlocking(Dispatchers.IO) {
+        val requestAttributes = getRequestAttributes()
+
+        val alleVedlegg = runBlocking(Dispatchers.IO + MDCContext()) {
             digisosSak.ettersendtInfoNAV?.ettersendelser
                     ?.flatMapParallel { ettersendelse ->
+                        setRequestAttributes(requestAttributes)
                         val jsonVedleggSpesifikasjon = hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, ettersendelse.vedleggMetadata)
                         jsonVedleggSpesifikasjon.vedlegg
                                 .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
@@ -77,6 +83,7 @@ class VedleggService(
                                 }
                     }
         } ?: emptyList()
+
         return kombinerAlleLikeVedlgg(alleVedlegg)
     }
 
