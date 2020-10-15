@@ -13,6 +13,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.SendingType
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus.MOTTATT
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_SENDT
+import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommuneService
 import no.nav.sbl.sosialhjelpmodiaapi.service.kommune.KommunenavnService
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import no.nav.sosialhjelp.api.fiks.DigisosSak
@@ -26,7 +27,8 @@ internal class NoekkelinfoServiceTest {
     private val fiksClient: FiksClient = mockk()
     private val eventService: EventService = mockk()
     private val kommunenavnService: KommunenavnService = mockk()
-    private val service = NoekkelinfoService(fiksClient, eventService, kommunenavnService)
+    private val kommuneService: KommuneService = mockk()
+    private val service = NoekkelinfoService(fiksClient, eventService, kommunenavnService, kommuneService)
 
     private val mockDigisosSak: DigisosSak = mockk()
 
@@ -37,6 +39,7 @@ internal class NoekkelinfoServiceTest {
 
     private val enhetNavn2 = "NAV sekundært TestKontor"
     private val enhetsnr2 = "5678"
+    private val kommunenavn2 = "Nabo"
 
     @BeforeEach
     internal fun setUp() {
@@ -46,6 +49,7 @@ internal class NoekkelinfoServiceTest {
         every { mockDigisosSak.sistEndret } returns 123456789
         every { mockDigisosSak.kommunenummer } returns kommunenr
         every { kommunenavnService.hentKommunenavnFor(any()) } returns kommunenavn
+        every { kommuneService.getBehandlingsanvarligKommune(any()) } returns kommunenavn
     }
 
     @Test
@@ -185,5 +189,35 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.kommunenavn).isEqualTo(kommunenavn)
         assertThat(noekkelinfo.videresendtHistorikk).isNull()
         assertThat(noekkelinfo.tidspunktForelopigSvar).isNull()
+    }
+
+    @Test
+    fun `behandlende kommune returneres som kommunenavn hvis satt`() {
+        val model = InternalDigisosSoker()
+        model.status = MOTTATT
+        model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", LocalDateTime.now()))
+
+        every { eventService.createModel(any()) } returns model
+        every { mockDigisosSak.digisosSoker } returns null
+        every { kommuneService.getBehandlingsanvarligKommune(any()) } returns kommunenavn2
+
+        val noekkelinfo = service.hentNoekkelInfo("123")
+
+        assertThat(noekkelinfo.kommunenavn).isEqualTo(kommunenavn2)
+    }
+
+    @Test
+    fun `kommunenavn returneres som kommunenavn hvis behandlingsansvarlig ikke satt`() {
+        val model = InternalDigisosSoker()
+        model.status = MOTTATT
+        model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", LocalDateTime.now()))
+
+        every { eventService.createModel(any()) } returns model
+        every { mockDigisosSak.digisosSoker } returns null
+        every { kommuneService.getBehandlingsanvarligKommune(any()) } returns null
+
+        val noekkelinfo = service.hentNoekkelInfo("123")
+
+        assertThat(noekkelinfo.kommunenavn).isEqualTo(kommunenavn)
     }
 }

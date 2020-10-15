@@ -76,7 +76,7 @@ internal class EventServiceTest {
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.SENDT)
         assertThat(model.historikk).hasSize(1)
-        assertThat(model.historikk[0].beskrivelse).isEqualTo("Søknaden med vedlegg er sendt til [Kan ikke hente NAV-kontor].")
+        assertThat(model.historikk[0].beskrivelse).isEqualTo("Søknaden med vedlegg er sendt til [Kan ikke hente NAV-kontor], {{kommunenavn}}.")
     }
 
     @Test
