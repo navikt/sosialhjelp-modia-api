@@ -24,7 +24,6 @@ import java.util.*
 import kotlin.reflect.full.companionObject
 
 private const val NAIS_CLUSTER_NAME = "NAIS_CLUSTER_NAME"
-private const val NAIS_NAMESPACE = "NAIS_NAMESPACE"
 const val SOKNAD_DEFAULT_TITTEL = "Søknad om økonomisk sosialhjelp"
 
 inline fun <reified T : Any> typeRef(): ParameterizedTypeReference<T> = object : ParameterizedTypeReference<T>() {}
@@ -57,7 +56,10 @@ fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
 }
 
 fun isRunningInProd(): Boolean {
-    return System.getenv(NAIS_CLUSTER_NAME) == "prod-fss" && System.getenv(NAIS_NAMESPACE) == "default"
+    return when (getenv(NAIS_CLUSTER_NAME, "prod-fss")) {
+        "dev-fss", "dev-gcp", "labs-gcp" -> false
+        else -> true
+    }
 }
 
 fun hentSoknadTittel(digisosSak: DigisosSak, model: InternalDigisosSoker): String {
