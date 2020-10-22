@@ -110,6 +110,7 @@ dependencies {
 
 //    Token-validation
     implementation("no.nav.security:token-validation-spring:${Versions.tokenValidation}")
+    implementation("no.nav.security:token-client-spring:${Versions.tokenValidation}")
 
 //    Swagger
     implementation("io.springfox:springfox-swagger2:${Versions.swagger}")

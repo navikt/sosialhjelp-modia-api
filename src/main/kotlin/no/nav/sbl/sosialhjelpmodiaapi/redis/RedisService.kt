@@ -5,6 +5,7 @@ import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelpmodiaapi.client.msgraph.MsGraphClient
 import no.nav.sbl.sosialhjelpmodiaapi.common.DigisosSakTilhorerAnnenBrukerException
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.utils.TokenUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.springframework.stereotype.Component
@@ -14,7 +15,7 @@ import java.io.IOException
 class RedisService(
         private val redisStore: RedisStore,
         private val cacheProperties: CacheProperties,
-        private val msGraphClient: MsGraphClient
+        private val tokenUtils: TokenUtils
 ) {
 
     fun get(key: String, requestedClass: Class<out Any>): Any? {
@@ -52,7 +53,7 @@ class RedisService(
      */
     private fun valider(obj: Any?) {
         when {
-            obj is DigisosSak && obj.sokerFnr != msGraphClient.hentOnPremisesSamAccountName().onPremisesSamAccountName -> throw DigisosSakTilhorerAnnenBrukerException("DigisosSak tilhører annen bruker")
+            obj is DigisosSak && obj.sokerFnr != tokenUtils.getInnloggetNavIdent() -> throw DigisosSakTilhorerAnnenBrukerException("DigisosSak tilhører annen bruker")
             obj is JsonDigisosSoker && obj.additionalProperties.isNotEmpty() -> throw IOException("JsonDigisosSoker har ukjente properties - må tilhøre ett annet objekt. Cache-value tas ikke i bruk")
             obj is JsonVedleggSpesifikasjon && obj.additionalProperties.isNotEmpty() -> throw IOException("JsonVedleggSpesifikasjon har ukjente properties - må tilhøre ett annet objekt. Cache-value tas ikke i bruk")
         }
