@@ -15,7 +15,7 @@ object Versions {
     const val filformat = "1.2020.06.25-09.12-23b98d57ab78"
     const val micrometerRegistry = "1.5.1"
     const val prometheus = "0.8.1"
-    const val tokenValidation = "1.3.0"
+    const val tokenValidation = "1.3.1"
     const val jackson = "2.11.0"
     const val guava = "28.2-jre"
     const val swagger = "2.9.2"
