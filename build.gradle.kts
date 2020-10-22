@@ -20,7 +20,7 @@ object Versions {
     const val guava = "28.2-jre"
     const val swagger = "2.9.2"
     const val abacAttributeConstants = "3.3.13"
-    const val nettyCodec = "4.1.50.Final"
+    const val nettyCodec = "4.1.53.Final"
     const val logbackSyslog4j = "1.0.0"
     const val syslog4j = "0.9.30"
     const val jerseyMediaJaxb = "2.31"
