@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.logging
 
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacResponse
-import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.getUserIdFromToken
+import no.nav.sbl.sosialhjelpmodiaapi.client.msgraph.MsGraphClient
 import no.nav.sbl.sosialhjelpmodiaapi.utils.Miljo.SRVSOSIALHJELP_MOD
 import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils
 import org.springframework.http.HttpMethod
@@ -9,14 +9,15 @@ import org.springframework.stereotype.Component
 
 @Component
 class AuditService(
-        private val auditLogger: AuditLogger
+        private val auditLogger: AuditLogger,
+        private val msGraphClient: MsGraphClient
 ) {
 
     private fun commonAttributes(brukerFnr: String, url: String, httpMethod: HttpMethod): Map<String, Any> {
         return mutableMapOf(
                 CALL_ID to (MDCUtils.getCallId() ?: ""),
                 CONSUMER_ID to SRVSOSIALHJELP_MOD,
-                NAVIDENT to getUserIdFromToken(),
+                NAVIDENT to msGraphClient.hentOnPremisesSamAccountName().onPremisesSamAccountName,
                 BRUKER_FNR to brukerFnr,
                 URL to url,
                 HTTP_METHOD to httpMethod

@@ -2,8 +2,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.redis
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandler
-import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils
+import no.nav.sbl.sosialhjelpmodiaapi.client.msgraph.MsGraphClient
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_digisossak_response_string
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_kommuneinfo_response_string
 import no.nav.sosialhjelp.api.fiks.DigisosSak
@@ -15,16 +14,13 @@ internal class RedisServiceTest {
 
     private val redisStore: RedisStore = mockk()
     private val cacheProperties: CacheProperties = mockk(relaxed = true)
+    private val msGraphClient: MsGraphClient = mockk()
 
-    private val service = RedisService(redisStore, cacheProperties)
-
-    private val mockSubjectHandler: SubjectHandler = mockk()
+    private val service = RedisService(redisStore, cacheProperties, msGraphClient)
 
     @BeforeEach
     internal fun setUp() {
-        SubjectHandlerUtils.setNewSubjectHandlerImpl(mockSubjectHandler)
-
-        every { mockSubjectHandler.getUserIdFromToken() } returns "11111111111"
+        every { msGraphClient.hentOnPremisesSamAccountName().onPremisesSamAccountName } returns "11111111111"
     }
 
     @Test
@@ -54,7 +50,7 @@ internal class RedisServiceTest {
 
     @Test
     internal fun `digisosSak tilhorer annen bruker gir null`() {
-        every { mockSubjectHandler.getUserIdFromToken() } returns "not this user"
+        every { msGraphClient.hentOnPremisesSamAccountName().onPremisesSamAccountName } returns "not this user"
         every { redisStore.get(any()) } returns ok_digisossak_response_string
 
         val digisosSak = service.get("key", DigisosSak::class.java)
