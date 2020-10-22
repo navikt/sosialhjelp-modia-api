@@ -2,7 +2,6 @@ package no.nav.sbl.sosialhjelpmodiaapi.redis
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.sosialhjelpmodiaapi.client.msgraph.MsGraphClient
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_digisossak_response_string
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_kommuneinfo_response_string
 import no.nav.sbl.sosialhjelpmodiaapi.utils.TokenUtils
@@ -21,7 +20,7 @@ internal class RedisServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        every { tokenUtils.getInnloggetNavIdent() } returns "11111111111"
+        every { tokenUtils.hentNavIdentForInnloggetBruker() } returns "11111111111"
     }
 
     @Test
@@ -51,7 +50,7 @@ internal class RedisServiceTest {
 
     @Test
     internal fun `digisosSak tilhorer annen bruker gir null`() {
-        every { tokenUtils.getInnloggetNavIdent() } returns "not this user"
+        every { tokenUtils.hentNavIdentForInnloggetBruker() } returns "not this user"
         every { redisStore.get(any()) } returns ok_digisossak_response_string
 
         val digisosSak = service.get("key", DigisosSak::class.java)

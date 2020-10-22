@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 
 interface TokenUtils {
 
-    fun getInnloggetNavIdent(): String
+    fun hentNavIdentForInnloggetBruker(): String
 }
 
 @Profile("!(mock | mock-alt | local)")
@@ -19,14 +19,14 @@ class TokenUtilsImpl(
         private val msGraphClient: MsGraphClient
 ) : TokenUtils {
 
-    private fun getTokenWithGraphScope(): String {
+    private fun hentTokenMedGraphScope(): String {
         val clientProperties = clientConfigurationProperties.registration["onbehalfof"]
         val response = oAuth2AccessTokenService.getAccessToken(clientProperties)
         return response.accessToken
     }
 
-    override fun getInnloggetNavIdent(): String {
-        return msGraphClient.hentOnPremisesSamAccountName(getTokenWithGraphScope()).onPremisesSamAccountName
+    override fun hentNavIdentForInnloggetBruker(): String {
+        return msGraphClient.hentOnPremisesSamAccountName(hentTokenMedGraphScope()).onPremisesSamAccountName
     }
 }
 
@@ -34,7 +34,7 @@ class TokenUtilsImpl(
 @Component
 class MockTokenUtils : TokenUtils {
 
-    override fun getInnloggetNavIdent(): String {
+    override fun hentNavIdentForInnloggetBruker(): String {
         return "Z123456"
     }
 }

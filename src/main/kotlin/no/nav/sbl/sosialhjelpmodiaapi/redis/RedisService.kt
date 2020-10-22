@@ -2,7 +2,6 @@ package no.nav.sbl.sosialhjelpmodiaapi.redis
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
-import no.nav.sbl.sosialhjelpmodiaapi.client.msgraph.MsGraphClient
 import no.nav.sbl.sosialhjelpmodiaapi.common.DigisosSakTilhorerAnnenBrukerException
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.TokenUtils
@@ -53,7 +52,7 @@ class RedisService(
      */
     private fun valider(obj: Any?) {
         when {
-            obj is DigisosSak && obj.sokerFnr != tokenUtils.getInnloggetNavIdent() -> throw DigisosSakTilhorerAnnenBrukerException("DigisosSak tilhører annen bruker")
+            obj is DigisosSak && obj.sokerFnr != tokenUtils.hentNavIdentForInnloggetBruker() -> throw DigisosSakTilhorerAnnenBrukerException("DigisosSak tilhører annen bruker")
             obj is JsonDigisosSoker && obj.additionalProperties.isNotEmpty() -> throw IOException("JsonDigisosSoker har ukjente properties - må tilhøre ett annet objekt. Cache-value tas ikke i bruk")
             obj is JsonVedleggSpesifikasjon && obj.additionalProperties.isNotEmpty() -> throw IOException("JsonVedleggSpesifikasjon har ukjente properties - må tilhøre ett annet objekt. Cache-value tas ikke i bruk")
         }

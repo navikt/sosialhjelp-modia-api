@@ -17,7 +17,7 @@ class AuditService(
         return mutableMapOf(
                 CALL_ID to (MDCUtils.getCallId() ?: ""),
                 CONSUMER_ID to SRVSOSIALHJELP_MOD,
-                NAVIDENT to tokenUtils.getInnloggetNavIdent(),
+                NAVIDENT to tokenUtils.hentNavIdentForInnloggetBruker(),
                 BRUKER_FNR to brukerFnr,
                 URL to url,
                 HTTP_METHOD to httpMethod
