@@ -41,7 +41,7 @@ class MsGraphClientImpl(
         val headers = IntegrationUtils.forwardHeaders()
         val token = SubjectHandlerUtils.getToken()
         headers.set(HttpHeaders.ACCEPT, APPLICATION_JSON_VALUE)
-        headers.set(HttpHeaders.AUTHORIZATION, BEARER + token)
+        headers.set(HttpHeaders.AUTHORIZATION, token)
         return HttpEntity(headers)
     }
 
