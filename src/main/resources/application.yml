@@ -1,5 +1,7 @@
 consumerid: srvsosialhjelp-mod
 
+debug: true
+
 spring:
   main:
     banner-mode: 'off'
