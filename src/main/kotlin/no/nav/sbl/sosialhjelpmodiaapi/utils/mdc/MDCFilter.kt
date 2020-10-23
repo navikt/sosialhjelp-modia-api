@@ -5,11 +5,13 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils.clearCallId
 import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils.generateCallId
 import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils.setCallId
 import org.springframework.http.HttpMethod
+import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+@Component
 class MDCFilter : OncePerRequestFilter() {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {

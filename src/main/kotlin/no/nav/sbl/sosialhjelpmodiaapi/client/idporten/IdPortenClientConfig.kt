@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.idporten
 
-import no.nav.sbl.sosialhjelpmodiaapi.getenv
+import no.nav.sbl.sosialhjelpmodiaapi.utils.Miljo.getVirkSertSti
 import no.nav.sosialhjelp.idporten.client.IdPortenClient
 import no.nav.sosialhjelp.idporten.client.IdPortenProperties
 import org.springframework.beans.factory.annotation.Value
@@ -36,8 +36,7 @@ class IdPortenClientConfig(
                 configUrl,
                 truststoreType,
                 truststoreFilepath,
-                getenv("VIRKSERT_STI", "/var/run/secrets/nais.io/virksomhetssertifikat")
+                getVirkSertSti()
         )
     }
-
 }

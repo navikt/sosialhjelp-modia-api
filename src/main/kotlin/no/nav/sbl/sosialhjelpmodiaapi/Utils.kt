@@ -23,7 +23,6 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.reflect.full.companionObject
 
-private const val NAIS_CLUSTER_NAME = "NAIS_CLUSTER_NAME"
 const val SOKNAD_DEFAULT_TITTEL = "Søknad om økonomisk sosialhjelp"
 
 inline fun <reified T : Any> typeRef(): ParameterizedTypeReference<T> = object : ParameterizedTypeReference<T>() {}
@@ -55,13 +54,6 @@ fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
     } ?: ofClass
 }
 
-fun isRunningInProd(): Boolean {
-    return when (getenv(NAIS_CLUSTER_NAME, "prod-fss")) {
-        "dev-fss", "dev-gcp", "labs-gcp" -> false
-        else -> true
-    }
-}
-
 fun hentSoknadTittel(digisosSak: DigisosSak, model: InternalDigisosSoker): String {
     return when (digisosSak.digisosSoker) {
         null -> SOKNAD_DEFAULT_TITTEL
@@ -86,14 +78,6 @@ val ErrorMessage.feilmeldingUtenFnr: String?
     get() {
         return this.message?.feilmeldingUtenFnr
     }
-
-fun getenv(key: String, default: String): String {
-    return try {
-        System.getenv(key)
-    } catch (e: Exception) {
-        default
-    }
-}
 
 suspend fun <A, B> Iterable<A>.flatMapParallel(f: suspend (A) -> List<B>): List<B> = coroutineScope {
     map {
