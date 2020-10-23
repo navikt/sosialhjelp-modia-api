@@ -32,20 +32,20 @@ object Versions {
     const val mockk = "1.10.0"
 }
 
-val mainClass = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
+val applicationKt = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
 
 plugins {
     application
     kotlin("jvm") version "1.4.10"
 //    id("org.jmailen.kotlinter") version "2.3.1" // TODO - burde tas i bruk
     id("org.jetbrains.kotlin.plugin.spring") version "1.4.10"
-    id("com.github.johnrengelman.shadow") version "5.2.0"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
     id("com.github.ben-manes.versions") version "0.28.0"
 }
 
 application {
     applicationName = "sosialhjelp-modia-api"
-    mainClassName = mainClass
+    mainClassName = applicationKt
 }
 
 java {
