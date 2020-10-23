@@ -37,3 +37,8 @@ class PdlException(
 class DigisosSakTilhorerAnnenBrukerException(
         override val message: String?
 ) : RuntimeException(message)
+
+class MsGraphException(
+        override val message: String?,
+        override val cause: Throwable? = null
+) : RuntimeException(message, cause)

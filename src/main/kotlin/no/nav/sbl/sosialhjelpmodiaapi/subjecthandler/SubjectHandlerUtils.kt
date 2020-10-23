@@ -9,10 +9,6 @@ object SubjectHandlerUtils {
     private val log by logger()
     private var subjectHandlerService: SubjectHandler = AzureADSubjectHandlerImpl(SpringTokenValidationContextHolder())
 
-    fun getUserIdFromToken() : String {
-        return subjectHandlerService.getUserIdFromToken()
-    }
-
     fun getToken() : String {
         return subjectHandlerService.getToken()
     }

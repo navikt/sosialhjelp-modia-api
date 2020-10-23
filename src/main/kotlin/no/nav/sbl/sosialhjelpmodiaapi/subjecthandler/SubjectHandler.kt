@@ -8,24 +8,14 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 interface SubjectHandler {
-    fun getUserIdFromToken(): String
     fun getToken(): String
 }
 
 class StaticSubjectHandlerImpl : SubjectHandler {
-    private var user = DEFAULT_USER
     private var token = DEFAULT_TOKEN
-
-    override fun getUserIdFromToken(): String {
-        return this.user
-    }
 
     override fun getToken(): String {
         return this.token
-    }
-
-    fun setUser(user: String) {
-        this.user = user
     }
 
     fun setFakeToken(fakeToken: String) {
@@ -33,12 +23,10 @@ class StaticSubjectHandlerImpl : SubjectHandler {
     }
 
     fun reset() {
-        this.user = DEFAULT_USER
         this.token = DEFAULT_TOKEN
     }
 
     companion object {
-        private const val DEFAULT_USER = "11111111111"
         private const val DEFAULT_TOKEN = "token"
     }
 }
@@ -56,10 +44,6 @@ class AzureADSubjectHandlerImpl(
             throw JwtTokenValidatorException("Could not find TokenValidationContext. Possibly no token in request.")
         }
         return tokenValidationContext
-    }
-
-    override fun getUserIdFromToken(): String {
-        return getTokenValidationContext().getClaims(ISSUER).subject
     }
 
     override fun getToken(): String {
