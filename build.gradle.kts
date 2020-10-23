@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav.sbl"
 
 object Versions {
-    const val kotlin = "1.4.0"
+    const val kotlin = "1.4.10"
     const val coroutines = "1.3.9"
     const val springBoot = "2.3.4.RELEASE"
     const val logback = "1.2.3"
@@ -15,8 +15,8 @@ object Versions {
     const val filformat = "1.2020.06.25-09.12-23b98d57ab78"
     const val micrometerRegistry = "1.5.1"
     const val prometheus = "0.8.1"
-    const val tokenValidation = "1.3.0"
-    const val jackson = "2.11.0"
+    const val tokenValidation = "1.3.1"
+    const val jackson = "2.11.2"
     const val guava = "28.2-jre"
     const val swagger = "2.9.2"
     const val abacAttributeConstants = "3.3.13"
@@ -25,10 +25,10 @@ object Versions {
     const val syslog4j = "0.9.30"
     const val jerseyMediaJaxb = "2.31"
     const val redisMock = "0.1.16"
-    const val lettuce = "5.3.1.RELEASE"
+    const val lettuce = "5.3.4.RELEASE"
 
     // Test only
-    const val junitJupiter = "5.6.0"
+    const val junitJupiter = "5.7.0"
     const val mockk = "1.10.0"
 }
 
@@ -36,9 +36,9 @@ val mainClass = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
 
 plugins {
     application
-    kotlin("jvm") version "1.4.0"
+    kotlin("jvm") version "1.4.10"
 //    id("org.jmailen.kotlinter") version "2.3.1" // TODO - burde tas i bruk
-    id("org.jetbrains.kotlin.plugin.spring") version "1.4.0"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.4.10"
     id("com.github.johnrengelman.shadow") version "5.2.0"
     id("com.github.ben-manes.versions") version "0.28.0"
 }
