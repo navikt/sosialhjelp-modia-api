@@ -1,22 +1,23 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.kommune
 
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService
 import no.nav.sosialhjelp.api.fiks.KommuneInfo
 import no.nav.sosialhjelp.client.kommuneinfo.KommuneInfoClient
 import org.springframework.stereotype.Component
 
 @Component
 class KommuneService(
-        private val kommuneInfoClient: KommuneInfoClient
+        private val kommuneInfoClient: KommuneInfoClient,
+        private val idPortenService: IdPortenService
 ) {
 
-
     fun get(kommunenummer: String): KommuneInfo {
-        return kommuneInfoClient.get(kommunenummer)
+        return kommuneInfoClient.get(kommunenummer, getToken())
     }
 
     fun getBehandlingsanvarligKommune(kommunenummer: String): String? {
-        val behandlingsansvarlig = kommuneInfoClient.get(kommunenummer).behandlingsansvarlig
+        val behandlingsansvarlig = kommuneInfoClient.get(kommunenummer, getToken()).behandlingsansvarlig
 
         return if (behandlingsansvarlig != null) leggTilKommuneINavnet(behandlingsansvarlig) else null
     }
@@ -26,7 +27,11 @@ class KommuneService(
     }
 
     fun getAll(): List<KommuneInfo> {
-        return kommuneInfoClient.getAll()
+        return kommuneInfoClient.getAll(getToken())
+    }
+
+    private fun getToken(): String {
+        return idPortenService.getToken().token
     }
 
     companion object {
