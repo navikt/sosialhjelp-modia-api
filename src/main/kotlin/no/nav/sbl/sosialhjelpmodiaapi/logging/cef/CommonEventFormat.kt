@@ -47,11 +47,20 @@ data class Extension(
 
 data class Abac(
         val decision: Decision,
-        val denyPolicy: String,
-        val denyCause: String
+        val denyPolicy: String?,
+        val denyCause: String?,
+        val denyRule: String?
 ) {
     override fun toString(): String {
-        return " flexString1=$decision flexString1Label=Decision flexString2=$denyPolicy flexString2Label=deny_policy cs3=$denyCause cs3Label=deny_cause"
+        return " flexString1=$decision flexString1Label=Decision ${denyPart()}"
+    }
+
+    private fun denyPart(): String? {
+        return if (denyCause != null || denyPolicy != null || denyRule != null) {
+            " flexString2=[cause=$denyCause,policy=$denyPolicy,rule=$denyRule] flexString2Label=abac_deny_response"
+        } else {
+            null
+        }
     }
 }
 

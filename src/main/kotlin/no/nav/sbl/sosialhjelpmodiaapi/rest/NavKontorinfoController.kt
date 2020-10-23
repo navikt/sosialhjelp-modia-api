@@ -24,6 +24,6 @@ class NavKontorinfoController(
         if (enhet?.sosialeTjenester.isNullOrBlank()) {
             return ResponseEntity.noContent().build()
         }
-        return ResponseEntity.ok(KontorinfoResponse(enhet!!.sosialeTjenester!!))
+        return ResponseEntity.ok(KontorinfoResponse(enhet!!.navn, enhet.sosialeTjenester!!))
     }
 }

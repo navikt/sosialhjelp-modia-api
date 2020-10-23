@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.logging
 
 import no.nav.abac.xacml.NavAttributter.ADVICEOROBLIGATION_CAUSE
 import no.nav.abac.xacml.NavAttributter.ADVICEOROBLIGATION_DENY_POLICY
+import no.nav.abac.xacml.NavAttributter.ADVICEOROBLIGATION_DENY_RULE
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacResponse
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.Decision
 import no.nav.sbl.sosialhjelpmodiaapi.logging.cef.Abac
@@ -56,14 +57,15 @@ class AuditLogger {
             Abac(
                     decision = abacResponse.decision,
                     denyPolicy = getAdvice(abacResponse, ADVICEOROBLIGATION_DENY_POLICY),
-                    denyCause = getAdvice(abacResponse, ADVICEOROBLIGATION_CAUSE)
+                    denyCause = getAdvice(abacResponse, ADVICEOROBLIGATION_CAUSE),
+                    denyRule = getAdvice(abacResponse, ADVICEOROBLIGATION_DENY_RULE)
             )
         } else {
             null
         }
     }
 
-    private fun getAdvice(abacResponse: AbacResponse, abacAttributeConstant: String): String {
+    private fun getAdvice(abacResponse: AbacResponse, abacAttributeConstant: String): String? {
         return abacResponse.associatedAdvice
                 ?.flatMap { advice ->
                     advice.attributeAssignment
@@ -71,7 +73,6 @@ class AuditLogger {
                             .orEmpty()
                 }
                 ?.joinToString(separator = ",") { it.value } // potensielt flere denypolicies eller denycauses separeres med komma
-                .orEmpty()
     }
 
     private fun populateFiksIfPresent(values: Map<String, Any>): Fiks? {

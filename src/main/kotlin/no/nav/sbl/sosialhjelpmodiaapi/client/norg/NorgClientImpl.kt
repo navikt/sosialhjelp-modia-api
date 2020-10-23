@@ -28,13 +28,12 @@ class NorgClientImpl(
         if (enhetsnr == "") return null
 
         try {
-            log.info("Norg2 - GET enhet $enhetsnr")
             val urlTemplate = "$baseUrl/enhet/{enhetsnr}"
             val vars = mapOf("enhetsnr" to enhetsnr)
             val requestEntity = createRequestEntity()
             val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, requestEntity, NavEnhet::class.java, vars)
 
-            log.info("Norg2 - GET enhet OK")
+            log.debug("Norg2 - GET enhet $enhetsnr OK")
             return response.body!!
 
         } catch (e: HttpStatusCodeException) {

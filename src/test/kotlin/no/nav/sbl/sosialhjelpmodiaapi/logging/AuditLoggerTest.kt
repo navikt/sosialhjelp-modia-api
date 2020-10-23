@@ -76,8 +76,26 @@ internal class AuditLoggerTest {
                 .contains("suid=Z999888")
                 .contains("duid=11111122222")
                 .contains("flexString1=Deny flexString1Label=Decision")
-                .contains("flexString2=1_denyPolicy,2_denyPolicy flexString2Label=deny_policy")
-                .contains("cs3=1_cause,2_cause cs3Label=deny_cause")
+                .contains("flexString2=[cause=1_cause,2_cause,policy=1_denyPolicy,2_denyPolicy,rule=1_rule,2_rule] flexString2Label=abac_deny_response")
+    }
+
+    @Test
+    internal fun `should info log abac permit`() {
+        every { sporingslogg.info(capture(cefString)) } just Runs
+
+        values[SEVERITY] = Severity.INFO
+        values[ABAC_RESPONSE] = createAbacPermit()
+
+        logger.report(values)
+
+        assertThat(cefString.isCaptured).isTrue()
+        assertThat(cefString.captured)
+                // headers
+                .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|INFO|")
+                // extension
+                .contains("suid=Z999888")
+                .contains("duid=11111122222")
+                .contains("flexString1=Permit flexString1Label=Decision")
     }
 
     @Test
@@ -100,13 +118,18 @@ internal class AuditLoggerTest {
         return AbacResponse(Decision.Deny, listOf(
                 Advice("id", listOf(
                         Attribute(NavAttributter.ADVICEOROBLIGATION_DENY_POLICY, "1_denyPolicy"),
-                        Attribute(NavAttributter.ADVICEOROBLIGATION_CAUSE, "1_cause"))
+                        Attribute(NavAttributter.ADVICEOROBLIGATION_CAUSE, "1_cause"),
+                        Attribute(NavAttributter.ADVICEOROBLIGATION_DENY_RULE, "1_rule"))
                 ),
                 Advice("id2", listOf(
                         Attribute(NavAttributter.ADVICEOROBLIGATION_DENY_POLICY, "2_denyPolicy"),
-                        Attribute(NavAttributter.ADVICEOROBLIGATION_CAUSE, "2_cause"))
+                        Attribute(NavAttributter.ADVICEOROBLIGATION_CAUSE, "2_cause"),
+                        Attribute(NavAttributter.ADVICEOROBLIGATION_DENY_RULE, "2_rule"))
                 )
         ))
+    }
 
+    private fun createAbacPermit(): AbacResponse {
+        return AbacResponse(Decision.Permit, emptyList())
     }
 }
