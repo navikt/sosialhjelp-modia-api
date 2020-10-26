@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.config
 
-import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCFilter
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.web.client.RestTemplateBuilder
@@ -40,16 +39,6 @@ class RestConfig {
         return Jackson2ObjectMapperBuilderCustomizer { jacksonObjectMapperBuilder ->
             jacksonObjectMapperBuilder.configure(objectMapper)
         }
-    }
-
-    @Bean
-    fun corsFilter(): CORSFilter {
-        return CORSFilter()
-    }
-
-    @Bean
-    fun mdcFilter(): MDCFilter {
-        return MDCFilter()
     }
 
     companion object {
