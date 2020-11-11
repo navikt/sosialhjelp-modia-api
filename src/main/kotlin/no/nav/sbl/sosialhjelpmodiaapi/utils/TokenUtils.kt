@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 interface TokenUtils {
-
     fun hentNavIdentForInnloggetBruker(): String
+    fun hentTokenMedGraphScope(): String
 }
 
 @Profile("!(mock | mock-alt | local)")
@@ -19,7 +19,7 @@ class TokenUtilsImpl(
         private val msGraphClient: MsGraphClient
 ) : TokenUtils {
 
-    private fun hentTokenMedGraphScope(): String {
+    override fun hentTokenMedGraphScope(): String {
         val clientProperties = clientConfigurationProperties.registration["onbehalfof"]
         val response = oAuth2AccessTokenService.getAccessToken(clientProperties)
         return response.accessToken
@@ -36,5 +36,9 @@ class MockTokenUtils : TokenUtils {
 
     override fun hentNavIdentForInnloggetBruker(): String {
         return "Z123456"
+    }
+
+    override fun hentTokenMedGraphScope(): String {
+        return "msgraph-token"
     }
 }
