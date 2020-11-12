@@ -1,8 +1,8 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.navkontor
 
 import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
-import no.nav.sbl.sosialhjelpmodiaapi.domain.KontorNavnResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KontorinfoResponse
+import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontorResponse
 import org.springframework.stereotype.Component
 
 @Component
@@ -18,14 +18,14 @@ class NavKontorService(
         return KontorinfoResponse(enhet.navn, enhet.sosialeTjenester)
     }
 
-    fun hentAlleNavKontorinfo(): List<KontorNavnResponse> {
+    fun hentAlleNavKontorinfo(): List<NavKontorResponse> {
         val alleEnheter = norgClient.hentAlleNavEnheter()
         if (alleEnheter.isEmpty()) {
             return emptyList()
         }
         return alleEnheter
                 .filter { it.type == TYPE_LOKAL }
-                .map { KontorNavnResponse(it.enhetNr, it.navn) }
+                .map { NavKontorResponse(it.enhetNr, it.navn, it.sosialeTjenester ?: "") }
     }
 
     companion object {

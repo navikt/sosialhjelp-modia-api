@@ -144,7 +144,8 @@ data class KontorinfoResponse(
         val kontorinfo: String
 )
 
-data class KontorNavnResponse(
+data class NavKontorResponse(
         val enhetsnr: String,
         val navn: String,
+        val sosialeTjenester: String
 )
