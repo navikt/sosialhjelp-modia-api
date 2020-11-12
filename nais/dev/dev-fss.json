@@ -17,6 +17,7 @@
     "ID_PORTEN_CLIENT_ID": "1c3631f4-dbf2-4c12-bdc4-156cbd53c625",
     "ID_PORTEN_SCOPE": "ks:fiks",
     "NORG_ENDPOINT_URL": "https://app-q0.adeo.no/norg2/api/v1",
+    "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.adeo.no/#/startsok?enhetNr=",
     "PDL_ENDPOINT_URL": "https://pdl-api.nais.preprod.local/graphql",
     "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.preprod.local/rest/v1/sts",
     "SPRING_PROFILES_ACTIVE": "dev-fss,log-kibana,log-audit",

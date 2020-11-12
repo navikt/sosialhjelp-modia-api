@@ -23,6 +23,7 @@ client:
   fiks_integrasjonpassord: integrasjonpw
   fiks_integrasjonpassord_kommune: integrasjonpwkommune
   norg_endpoint_url: norgurl
+  norg_oppslag_url: norgurl2
   pdl_endpoint_url: pdlurl
   sts_token_endpoint_url: stsurl
 
