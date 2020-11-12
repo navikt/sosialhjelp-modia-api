@@ -143,3 +143,8 @@ data class KontorinfoResponse(
         val navn: String,
         val kontorinfo: String
 )
+
+data class KontorNavnResponse(
+        val enhetsnr: String,
+        val navn: String,
+)
