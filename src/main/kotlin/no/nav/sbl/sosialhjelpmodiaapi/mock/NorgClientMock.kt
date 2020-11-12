@@ -24,7 +24,8 @@ class NorgClientMock : NorgClient {
                 status = "AKTIV",
                 aktiveringsdato = "1982-04-21",
                 nedleggelsesdato = "null",
-                sosialeTjenester = sosialetjenesterInfo
+                sosialeTjenester = sosialetjenesterInfo,
+                type = "LOKAL"
         )
     }
 
