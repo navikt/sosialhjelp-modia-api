@@ -4,6 +4,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.common.NorgException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CALL_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.forwardHeaders
 import no.nav.sbl.sosialhjelpmodiaapi.utils.mdc.MDCUtils.getCallId
@@ -36,6 +37,22 @@ class NorgClientImpl(
             log.debug("Norg2 - GET enhet $enhetsnr OK")
             return response.body!!
 
+        } catch (e: HttpStatusCodeException) {
+            log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
+            throw NorgException(e.message, e)
+        } catch (e: Exception) {
+            log.warn("Norg2 - Noe feilet", e)
+            throw NorgException(e.message, e)
+        }
+    }
+
+    override fun hentAlleNavEnheter(): List<NavEnhet> {
+        try {
+            val urlTemplate = "$baseUrl/enhet?enhetStatusListe=AKTIV"
+            val requestEntity = createRequestEntity()
+            val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, requestEntity, typeRef<List<NavEnhet>>())
+
+            return response.body!!
         } catch (e: HttpStatusCodeException) {
             log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
             throw NorgException(e.message, e)
