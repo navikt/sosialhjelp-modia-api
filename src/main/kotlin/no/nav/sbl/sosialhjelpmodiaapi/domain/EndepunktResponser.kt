@@ -140,13 +140,8 @@ data class KommuneResponse(
 )
 
 data class KontorinfoResponse(
+        val enhetsnr: String,
         val navn: String,
         val kontorinfo: String,
         val norgUrl: String,
-)
-
-data class NavKontorResponse(
-        val enhetsnr: String,
-        val navn: String,
-        val sosialeTjenester: String
 )

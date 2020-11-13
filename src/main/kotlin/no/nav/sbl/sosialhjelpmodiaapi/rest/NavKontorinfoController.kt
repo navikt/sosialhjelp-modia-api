@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.rest
 
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KontorinfoResponse
-import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontorResponse
 import no.nav.sbl.sosialhjelpmodiaapi.service.navkontor.NavKontorService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.HttpHeaders
@@ -26,7 +25,7 @@ class NavKontorinfoController(
     }
 
     @GetMapping("/alleNavKontorinfo")
-    fun hentAlleNavKontorinfo(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<List<NavKontorResponse>> {
+    fun hentAlleNavKontorinfo(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<List<KontorinfoResponse>> {
         val alleEnheter = navKontorService.hentAlleNavKontorinfo()
         if (alleEnheter.isEmpty()) {
             return ResponseEntity.noContent().build()
