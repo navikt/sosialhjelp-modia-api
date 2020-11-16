@@ -84,4 +84,57 @@ internal class VilkarTest {
         assertThat(model.saker).hasSize(0)
         assertThat(model.historikk).hasSize(3)
     }
+
+    @Test
+    fun `vilkar FØR utbetaling - vilkar knyttes ikke til noen utbetaling`() {
+        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+                JsonDigisosSoker()
+                        .withAvsender(avsender)
+                        .withVersion("123")
+                        .withHendelser(listOf(
+                                SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                                SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                                SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3),
+                                SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_4),
+                                VILKAR_OPPFYLT.withHendelsestidspunkt(tidspunkt_5),
+                                UTBETALING.withHendelsestidspunkt(tidspunkt_6)
+                        ))
+
+        val model = service.createModel(mockDigisosSak)
+
+        assertThat(model).isNotNull
+        assertThat(model.saker).hasSize(1)
+        assertThat(model.historikk).hasSize(5)
+        assertThat(model.saker[0].utbetalinger).hasSize(1)
+        val utbetaling = model.saker[0].utbetalinger[0]
+        assertThat(utbetaling.vilkar).hasSize(0)
+    }
+
+    @Test
+    fun `vilkar og utbetaling har samme hendelsestidspunkt`() {
+        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+                JsonDigisosSoker()
+                        .withAvsender(avsender)
+                        .withVersion("123")
+                        .withHendelser(listOf(
+                                SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                                SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                                SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3),
+                                SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_4),
+                                VILKAR_OPPFYLT.withHendelsestidspunkt(tidspunkt_5),
+                                UTBETALING.withHendelsestidspunkt(tidspunkt_5)
+                        ))
+
+        val model = service.createModel(mockDigisosSak)
+
+        assertThat(model).isNotNull
+        assertThat(model.status).isEqualTo(SoknadsStatus.FERDIGBEHANDLET)
+        assertThat(model.saker).hasSize(1)
+        assertThat(model.historikk).hasSize(5)
+
+        assertThat(model.saker[0].utbetalinger).hasSize(1)
+        val utbetaling = model.saker[0].utbetalinger[0]
+        assertThat(utbetaling.vilkar).hasSize(1)
+        assertThat(utbetaling.vilkar[0].referanse).isEqualTo(vilkar_ref_1)
+    }
 }
