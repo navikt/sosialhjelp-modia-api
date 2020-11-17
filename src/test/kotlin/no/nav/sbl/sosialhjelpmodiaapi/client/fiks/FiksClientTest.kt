@@ -15,13 +15,11 @@ import no.nav.sbl.sosialhjelpmodiaapi.redis.RedisService
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_digisossak_response_string
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_minimal_jsondigisossoker_response_string
 import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService
-import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.StaticSubjectHandlerImpl
-import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils
+import no.nav.sbl.sosialhjelpmodiaapi.utils.TokenUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -38,8 +36,9 @@ internal class FiksClientTest {
     private val idPortenService: IdPortenService = mockk()
     private val auditService: AuditService = mockk()
     private val redisService: RedisService = mockk()
+    private val tokenUtils: TokenUtils = mockk()
 
-    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenService, auditService, redisService)
+    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenService, auditService, redisService, tokenUtils)
 
     private val id = "123"
 
@@ -53,12 +52,7 @@ internal class FiksClientTest {
         every { redisService.get(any(), any()) } returns null
         every { redisService.put(any(), any()) } just Runs
 
-        SubjectHandlerUtils.setNewSubjectHandlerImpl(StaticSubjectHandlerImpl())
-    }
-
-    @AfterEach
-    internal fun tearDown() {
-        SubjectHandlerUtils.resetSubjectHandlerImpl()
+        every { tokenUtils.hentNavIdentForInnloggetBruker() } returns "11111111111"
     }
 
     @Test

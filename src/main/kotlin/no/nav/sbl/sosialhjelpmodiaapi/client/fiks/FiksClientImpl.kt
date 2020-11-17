@@ -11,11 +11,11 @@ import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
 import no.nav.sbl.sosialhjelpmodiaapi.redis.RedisService
 import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService
-import no.nav.sbl.sosialhjelpmodiaapi.subjecthandler.SubjectHandlerUtils.getUserIdFromToken
 import no.nav.sbl.sosialhjelpmodiaapi.toFiksErrorMessage
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.fiksHeaders
+import no.nav.sbl.sosialhjelpmodiaapi.utils.TokenUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.springframework.context.annotation.Profile
@@ -36,7 +36,8 @@ class FiksClientImpl(
         private val restTemplate: RestTemplate,
         private val idPortenService: IdPortenService,
         private val auditService: AuditService,
-        private val redisService: RedisService
+        private val redisService: RedisService,
+        private val tokenUtils: TokenUtils
 ) : FiksClient {
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
@@ -45,7 +46,7 @@ class FiksClientImpl(
         log.debug("Forsøker å hente digisosSak fra cache")
 
         // cache key = "<NavIdent>_<digisosId>"
-        val key = "${getUserIdFromToken()}_$digisosId"
+        val key = "${tokenUtils.hentNavIdentForInnloggetBruker()}_$digisosId"
 
         hentDigisosSakFraCache(key)
                 ?.let { return it }
@@ -93,7 +94,7 @@ class FiksClientImpl(
         log.debug("Forsøker å hente dokument fra cache")
 
         // cache key = "<NavIdent>_<dokumentlagerId>"
-        val key = "${getUserIdFromToken()}_$dokumentlagerId"
+        val key = "${tokenUtils.hentNavIdentForInnloggetBruker()}_$dokumentlagerId"
 
         hentDokumentFraCache(key, requestedClass)
                 ?.let { return it }
