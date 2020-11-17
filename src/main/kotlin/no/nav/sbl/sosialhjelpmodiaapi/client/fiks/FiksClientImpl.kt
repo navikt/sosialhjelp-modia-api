@@ -61,7 +61,6 @@ class FiksClientImpl(
         val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
 
-        log.info("Forsøker å hente digisosSak fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId")
         try {
             val headers = fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)
             val uriComponents = urlWithSporingsId(baseUrl + PATH_DIGISOSSAK)
@@ -85,7 +84,7 @@ class FiksClientImpl(
             log.warn("Fiks - hentDigisosSak feilet for id $digisosId - ${e.statusCode} $message - $fiksErrorMessage", e)
             throw FiksException(e.message, e)
         } catch (e: Exception) {
-            log.warn("Fiks - hentDigisosSak feilet", e)
+            log.warn("Fiks - hentDigisosSak feilet for id $digisosId", e)
             throw FiksException(e.message, e)
         }
     }
@@ -110,7 +109,6 @@ class FiksClientImpl(
         val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
 
-        log.info("Forsøker å hente dokument fra $baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId")
         try {
             val headers = fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)
             val uriComponents = urlWithSporingsId(baseUrl + PATH_DOKUMENT)

@@ -137,23 +137,23 @@ internal class SoknadsoversiktControllerTest {
         every { model2.saker } returns mutableListOf(sak1, sak2)
 
         val response1 = controller.hentSaksDetaljer(id_1, "token", Ident(fnr))
-        val sak1 = response1.body
+        val digisosSak1 = response1.body
 
         assertThat(response1.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(sak1).isNotNull
-        assertThat(sak1?.soknadTittel).isEqualTo("")
-        assertThat(sak1?.harNyeOppgaver).isTrue()
-        assertThat(sak1?.harVilkar).isFalse()
+        assertThat(digisosSak1).isNotNull
+        assertThat(digisosSak1?.soknadTittel).isEqualTo("")
+        assertThat(digisosSak1?.harNyeOppgaver).isTrue()
+        assertThat(digisosSak1?.harVilkar).isFalse()
 
         val response2 = controller.hentSaksDetaljer(id_2, "token", Ident(fnr))
-        val sak2 = response2.body
+        val digisosSak2 = response2.body
 
         assertThat(response2.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(sak2).isNotNull
-        assertThat(sak2?.soknadTittel).contains("Livsopphold", "Strøm")
-        assertThat(sak2?.status).isEqualTo("UNDER BEHANDLING")
-        assertThat(sak2?.harNyeOppgaver).isTrue()
-        assertThat(sak2?.harVilkar).isTrue()
+        assertThat(digisosSak2).isNotNull
+        assertThat(digisosSak2?.soknadTittel).contains("Livsopphold", "Strøm")
+        assertThat(digisosSak2?.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
+        assertThat(digisosSak2?.harNyeOppgaver).isTrue()
+        assertThat(digisosSak2?.harVilkar).isTrue()
     }
 
     @Test

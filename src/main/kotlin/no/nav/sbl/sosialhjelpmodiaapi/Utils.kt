@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -24,8 +23,6 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.reflect.full.companionObject
 
-private const val NAIS_CLUSTER_NAME = "NAIS_CLUSTER_NAME"
-private const val NAIS_NAMESPACE = "NAIS_NAMESPACE"
 const val SOKNAD_DEFAULT_TITTEL = "Søknad om økonomisk sosialhjelp"
 
 inline fun <reified T : Any> typeRef(): ParameterizedTypeReference<T> = object : ParameterizedTypeReference<T>() {}
@@ -57,10 +54,6 @@ fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
     } ?: ofClass
 }
 
-fun isRunningInProd(): Boolean {
-    return System.getenv(NAIS_CLUSTER_NAME) == "prod-fss" && System.getenv(NAIS_NAMESPACE) == "default"
-}
-
 fun hentSoknadTittel(digisosSak: DigisosSak, model: InternalDigisosSoker): String {
     return when (digisosSak.digisosSoker) {
         null -> SOKNAD_DEFAULT_TITTEL
@@ -85,14 +78,6 @@ val ErrorMessage.feilmeldingUtenFnr: String?
     get() {
         return this.message?.feilmeldingUtenFnr
     }
-
-fun getenv(key: String, default: String): String {
-    return try {
-        System.getenv(key)
-    } catch (e: Exception) {
-        default
-    }
-}
 
 suspend fun <A, B> Iterable<A>.flatMapParallel(f: suspend (A) -> List<B>): List<B> = coroutineScope {
     map {

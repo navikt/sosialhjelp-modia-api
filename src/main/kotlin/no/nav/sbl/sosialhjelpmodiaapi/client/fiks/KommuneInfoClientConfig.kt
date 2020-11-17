@@ -4,7 +4,6 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sosialhjelp.client.kommuneinfo.FiksProperties
 import no.nav.sosialhjelp.client.kommuneinfo.KommuneInfoClient
 import no.nav.sosialhjelp.client.kommuneinfo.KommuneInfoClientImpl
-import no.nav.sosialhjelp.idporten.client.IdPortenClient
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -15,11 +14,10 @@ import org.springframework.web.client.RestTemplate
 class KommuneInfoClientConfig {
 
     @Bean
-    fun kommuneInfoClient(restTemplate: RestTemplate, clientProperties: ClientProperties, idPortenClient: IdPortenClient): KommuneInfoClient {
+    fun kommuneInfoClient(restTemplate: RestTemplate, clientProperties: ClientProperties): KommuneInfoClient {
         return KommuneInfoClientImpl(
                 restTemplate,
-                toFiksProperties(clientProperties),
-                idPortenClient
+                toFiksProperties(clientProperties)
         )
     }
 

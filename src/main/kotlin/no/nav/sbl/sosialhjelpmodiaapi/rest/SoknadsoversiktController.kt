@@ -69,19 +69,11 @@ class SoknadsoversiktController(
         val saksDetaljerResponse = SaksDetaljerResponse(
                 fiksDigisosId = sak.fiksDigisosId,
                 soknadTittel = hentNavn(model),
-                status = model.status?.let { mapStatus(it) } ?: "",
+                status = model.status!!,
                 harNyeOppgaver = harNyeOppgaver(model, sak.fiksDigisosId),
                 harVilkar = harVilkar(model)
         )
         return ResponseEntity.ok().body(saksDetaljerResponse)
-    }
-
-    private fun mapStatus(status: SoknadsStatus): String {
-        return if (status == SoknadsStatus.BEHANDLES_IKKE) {
-            SoknadsStatus.FERDIGBEHANDLET.name
-        } else {
-            status.name.replace('_', ' ')
-        }
     }
 
     private fun hentNavn(model: InternalDigisosSoker): String {

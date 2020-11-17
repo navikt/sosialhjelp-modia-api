@@ -2,7 +2,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.service.idporten
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService.CachedToken.Companion.shouldRenewToken
+import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenServiceImpl.CachedToken.Companion.shouldRenewToken
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.forwardHeaders
 import no.nav.sosialhjelp.idporten.client.AccessToken
 import no.nav.sosialhjelp.idporten.client.IdPortenClient
@@ -10,15 +10,21 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
+interface IdPortenService {
+
+    fun getToken(): AccessToken
+
+}
+
 @Component
 @Profile("!mock")
-class IdPortenService(
+class IdPortenServiceImpl(
         private val idPortenClient: IdPortenClient
-) {
+) : IdPortenService {
 
     private var cachedToken: CachedToken? = null
 
-    fun getToken(): AccessToken {
+    override fun getToken(): AccessToken {
         if (shouldRenewToken(cachedToken)) {
             val tidspunktForHenting: LocalDateTime = LocalDateTime.now()
             return runBlocking(Dispatchers.IO) { idPortenClient.requestToken(headers = forwardHeaders()) }

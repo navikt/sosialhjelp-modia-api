@@ -47,12 +47,12 @@ class EventService(
             val navenhetsnavn = getNavenhetsnavnOrDefault(enhetsnummer)
 
             model.soknadsmottaker = Soknadsmottaker(enhetsnummer, navenhetsnavn)
-            model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til $navenhetsnavn.", unixToLocalDateTime(timestampSendt), VIS_SOKNADEN))
+            model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til $navenhetsnavn, {{kommunenavn}}.", unixToLocalDateTime(timestampSendt), VIS_SOKNADEN))
             model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, unixToLocalDateTime(timestampSendt), enhetsnummer, navenhetsnavn))
         }
 
         jsonDigisosSoker?.hendelser
-                ?.sortedBy { it.hendelsestidspunkt }
+                ?.sortedWith(hendelseComparator)
                 ?.forEach { model.applyHendelse(it) }
 
         return model
@@ -76,7 +76,7 @@ class EventService(
             return model
         }
         jsonDigisosSoker.hendelser
-                .sortedBy { it.hendelsestidspunkt }
+                .sortedWith(hendelseComparator)
                 .forEach { model.applyHendelse(it) }
 
         return model
@@ -96,5 +96,26 @@ class EventService(
             is JsonRammevedtak -> apply(hendelse) // Gjør ingenting as of now
             else -> throw RuntimeException("Hendelsetype ${hendelse.type.value()} mangler mapping")
         }
+    }
+
+    companion object {
+
+        /**
+         * Sorter hendelser på hendelsestidspunkt.
+         * Hvis to hendelser har identisk hendelsestidspunkt, og én er Utbetaling og den andre er Vilkår eller Dokumentasjonkrav  -> sorter Utbetaling før Vilkår/Dokumentasjonkrav.
+         * Dette gjør at vi kan knytte Vilkår/Dokumentasjonkrav til Utbetalingen.
+         */
+        private val hendelseComparator = compareBy<JsonHendelse> { it.hendelsestidspunkt }
+                .thenComparator { a, b -> compareHendelseByType(a.type, b.type) }
+
+        private fun compareHendelseByType(a: JsonHendelse.Type, b: JsonHendelse.Type): Int {
+            if (a == JsonHendelse.Type.UTBETALING && (b == JsonHendelse.Type.VILKAR || b == JsonHendelse.Type.DOKUMENTASJONKRAV)) {
+                return -1
+            } else if (b == JsonHendelse.Type.UTBETALING && (a == JsonHendelse.Type.VILKAR || a == JsonHendelse.Type.DOKUMENTASJONKRAV)) {
+                return 1
+            }
+            return 0
+        }
+
     }
 }
