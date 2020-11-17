@@ -1,8 +1,10 @@
 package no.nav.sbl.sosialhjelpmodiaapi.redis
 
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelpmodiaapi.common.DigisosSakTilhorerAnnenBrukerException
+import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.TokenUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
@@ -18,7 +20,7 @@ class RedisService(
 ) {
 
     fun get(key: String, requestedClass: Class<out Any>): Any? {
-        val get: String? = redisStore.get(key) // Redis har konfigurert timout for disse.
+        val get: ByteArray? = redisStore.get(key) // Redis har konfigurert timout for disse.
         return if (get != null) {
             try {
                 val obj = objectMapper.readValue(get, requestedClass)
@@ -37,13 +39,29 @@ class RedisService(
         }
     }
 
-    fun put(key: String, value: String) {
-        val set = redisStore.set(key, value, cacheProperties.timeToLiveSeconds)
+    fun set(key: String, value: ByteArray) {
+        setex(key, value, cacheProperties.timeToLiveSeconds)
+    }
+
+    fun setex(key: String, value: ByteArray, timeToLive: Long) {
+        val set = redisStore.set(key, value, timeToLive)
         if (set == null) {
             log.warn("Cache put feilet eller fikk timeout")
         } else if (set == "OK") {
             log.debug("Cache put OK $key")
         }
+    }
+
+    fun getAlleNavEnheter(): List<NavEnhet>? {
+        val get = redisStore.get(ALLE_NAVENHETER_CACHE_KEY)
+        return if (get != null) {
+            try {
+                objectMapper.readValue(get, jacksonTypeRef<List<NavEnhet>>())
+            } catch (e: IOException) {
+                log.warn("Fant key=$ALLE_NAVENHETER_CACHE_KEY, men feil oppstod ved deserialisering til List<NavEnhet>")
+                null
+            }
+        } else null
     }
 
     /**
