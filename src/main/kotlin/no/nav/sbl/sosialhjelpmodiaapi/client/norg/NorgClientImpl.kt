@@ -75,7 +75,7 @@ class NorgClientImpl(
     }
 
     private fun lagreTilCache(list: List<NavEnhet>) {
-        redisService.setex(ALLE_NAVENHETER_CACHE_KEY, objectMapper.writeValueAsBytes(list), ALLE_NAVENHETER_CACHE_TIME_TO_LIVE_SECONDS)
+        redisService.set(ALLE_NAVENHETER_CACHE_KEY, objectMapper.writeValueAsBytes(list), ALLE_NAVENHETER_CACHE_TIME_TO_LIVE_SECONDS)
     }
 
     companion object {

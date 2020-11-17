@@ -39,11 +39,7 @@ class RedisService(
         }
     }
 
-    fun set(key: String, value: ByteArray) {
-        setex(key, value, cacheProperties.timeToLiveSeconds)
-    }
-
-    fun setex(key: String, value: ByteArray, timeToLive: Long) {
+    fun set(key: String, value: ByteArray, timeToLive: Long = cacheProperties.timeToLiveSeconds) {
         val set = redisStore.set(key, value, timeToLive)
         if (set == null) {
             log.warn("Cache put feilet eller fikk timeout")
