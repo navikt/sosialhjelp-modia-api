@@ -2,17 +2,20 @@ package no.nav.sbl.sosialhjelpmodiaapi.service.navkontor
 
 import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.KontorinfoResponse
+import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
+import no.nav.sbl.sosialhjelpmodiaapi.redis.RedisService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
 class NavKontorService(
         @Value("\${client.norg_oppslag_url}") private val norg_oppslag_url: String,
-        private val norgClient: NorgClient, // todo: legg til caching
+        private val norgClient: NorgClient,
+        private val redisService: RedisService
 ) {
 
     fun hentNavKontorinfo(enhetsnr: String): KontorinfoResponse? {
-        val enhet = norgClient.hentNavEnhet(enhetsnr)
+        val enhet = hentFraCache()?.firstOrNull { it.enhetNr == enhetsnr } ?: norgClient.hentNavEnhet(enhetsnr)
         if (enhet == null || enhet.sosialeTjenester.isNullOrBlank()) {
             return null
         }
@@ -20,7 +23,8 @@ class NavKontorService(
     }
 
     fun hentAlleNavKontorinfo(): List<KontorinfoResponse> {
-        val alleEnheter = norgClient.hentAlleNavEnheter()
+        val alleEnheter = hentFraCache() ?: norgClient.hentAlleNavEnheter()
+
         if (alleEnheter.isEmpty()) {
             return emptyList()
         }
@@ -34,6 +38,10 @@ class NavKontorService(
                             lagNorgUrl(it.enhetNr)
                     )
                 }
+    }
+
+    private fun hentFraCache(): List<NavEnhet>? {
+        return redisService.getAlleNavEnheter()
     }
 
     private fun lagNorgUrl(enhetNr: String): String {
