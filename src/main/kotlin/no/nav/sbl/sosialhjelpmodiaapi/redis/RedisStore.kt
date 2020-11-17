@@ -20,17 +20,17 @@ class RedisStore(
     private val async: RedisAsyncCommands<String, ByteArray> = connection.async()!!
 
     fun get(key: String): ByteArray? {
-        val get: RedisFuture<ByteArray> = async.get(key)
-        val await = get.await(1, TimeUnit.SECONDS)
+        val redisFuture: RedisFuture<ByteArray> = async.get(key)
+        val await = redisFuture.await(1, TimeUnit.SECONDS)
         return if (await) {
-            get.get()
+            redisFuture.get()
         } else null
     }
 
     fun set(key: String, value: ByteArray, timeToLive: Long): String? {
-        val set: RedisFuture<String> = async.setex(key, timeToLive, value)
-        return if (set.await(1, TimeUnit.SECONDS)) {
-            set.get()
+        val redisFuture: RedisFuture<String> = async.setex(key, timeToLive, value)
+        return if (redisFuture.await(1, TimeUnit.SECONDS)) {
+            redisFuture.get()
         } else null
     }
 

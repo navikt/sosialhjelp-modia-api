@@ -20,10 +20,10 @@ class RedisService(
 ) {
 
     fun get(key: String, requestedClass: Class<out Any>): Any? {
-        val get: ByteArray? = redisStore.get(key) // Redis har konfigurert timout for disse.
-        return if (get != null) {
+        val bytes: ByteArray? = redisStore.get(key) // Redis har konfigurert timout for disse.
+        return if (bytes != null) {
             try {
-                val obj = objectMapper.readValue(get, requestedClass)
+                val obj = objectMapper.readValue(bytes, requestedClass)
                 valider(obj)
                 log.debug("Hentet ${requestedClass.simpleName}} fra cache, key=$key")
                 obj
@@ -40,19 +40,19 @@ class RedisService(
     }
 
     fun set(key: String, value: ByteArray, timeToLive: Long = cacheProperties.timeToLiveSeconds) {
-        val set = redisStore.set(key, value, timeToLive)
-        if (set == null) {
+        val result = redisStore.set(key, value, timeToLive)
+        if (result == null) {
             log.warn("Cache put feilet eller fikk timeout")
-        } else if (set == "OK") {
+        } else if (result == "OK") {
             log.debug("Cache put OK $key")
         }
     }
 
     fun getAlleNavEnheter(): List<NavEnhet>? {
-        val get = redisStore.get(ALLE_NAVENHETER_CACHE_KEY)
-        return if (get != null) {
+        val bytes: ByteArray? = redisStore.get(ALLE_NAVENHETER_CACHE_KEY)
+        return if (bytes != null) {
             try {
-                objectMapper.readValue(get, jacksonTypeRef<List<NavEnhet>>())
+                objectMapper.readValue(bytes, jacksonTypeRef<List<NavEnhet>>())
             } catch (e: IOException) {
                 log.warn("Fant key=$ALLE_NAVENHETER_CACHE_KEY, men feil oppstod ved deserialisering til List<NavEnhet>")
                 null
