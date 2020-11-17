@@ -50,19 +50,19 @@ internal class KommuneServiceTest {
 
         assertThat(result).isNotNull
         verify(exactly = 1) { redisService.get(any(), any()) }
-        verify(exactly = 0) { kommuneInfoClient.get(any()) }
+        verify(exactly = 0) { kommuneInfoClient.get(any(), any()) }
         verify(exactly = 0) { redisService.put(any(), any()) }
     }
 
     @Test
     internal fun `hent KommuneInfo fra client`() {
-        every { kommuneInfoClient.get(any()) } returns objectMapper.readValue(ok_kommuneinfo_response_string)
+        every { kommuneInfoClient.get(any(), any()) } returns objectMapper.readValue(ok_kommuneinfo_response_string)
 
         val result = service.get(kommuneNr)
 
         assertThat(result).isNotNull
         verify(exactly = 1) { redisService.get(any(), any()) }
-        verify(exactly = 1) { kommuneInfoClient.get(any()) }
+        verify(exactly = 1) { kommuneInfoClient.get(any(), any()) }
         verify(exactly = 1) { redisService.put(any(), any()) }
     }
 
