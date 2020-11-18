@@ -43,20 +43,20 @@ class FiksClientImpl(
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
 
     override fun hentDigisosSak(digisosId: String): DigisosSak {
-        log.debug("Forsøker å hente digisosSak fra cache")
-
-        // cache key = "<NavIdent>_<digisosId>"
-        val key = "${tokenUtils.hentNavIdentForInnloggetBruker()}_$digisosId"
-
-        hentDigisosSakFraCache(key)
-                ?.let { return it }
-
-        val digisosSak = hentDigisosSakFraFiks(digisosId)
-        redisService.put(key, objectMapper.writeValueAsBytes(digisosSak))
-        return digisosSak
+        return hentDigisosSakFraCache(digisosId) ?: hentDigisosSakFraFiks(digisosId)
     }
 
-    private fun hentDigisosSakFraCache(key: String) = redisService.get(key, DigisosSak::class.java) as DigisosSak?
+    override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
+        return hentDokumentFraCache(dokumentlagerId, requestedClass) ?: hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
+    }
+
+    private fun hentDigisosSakFraCache(digisosId: String): DigisosSak? {
+        log.debug("Forsøker å hente digisosSak fra cache")
+        return redisService.get(cacheKeyFor(digisosId), DigisosSak::class.java) as DigisosSak?
+    }
+
+    // cache key = "<NavIdent>_<digisosId>" eller "<NavIdent>_<dokumentlagerId>"
+    private fun cacheKeyFor(id: String) = "${tokenUtils.hentNavIdentForInnloggetBruker()}_$id"
 
     private fun hentDigisosSakFraFiks(digisosId: String): DigisosSak {
         val virksomhetsToken = idPortenService.getToken()
@@ -75,6 +75,7 @@ class FiksClientImpl(
             auditService.reportFiks(digisosSak.sokerFnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId", HttpMethod.GET, sporingsId)
 
             return digisosSak
+                    .also { lagreTilCache(cacheKeyFor(digisosId), it) }
 
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
@@ -90,21 +91,14 @@ class FiksClientImpl(
         }
     }
 
-    override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
-        log.debug("Forsøker å hente dokument fra cache")
-
-        // cache key = "<NavIdent>_<dokumentlagerId>"
-        val key = "${tokenUtils.hentNavIdentForInnloggetBruker()}_$dokumentlagerId"
-
-        hentDokumentFraCache(key, requestedClass)
-                ?.let { return it }
-
-        val dokument = hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
-        redisService.put(key, objectMapper.writeValueAsBytes(dokument))
-        return dokument
+    private fun lagreTilCache(key: String, digisosSak: DigisosSak) {
+        redisService.set(key, objectMapper.writeValueAsBytes(digisosSak))
     }
 
-    private fun hentDokumentFraCache(key: String, requestedClass: Class<out Any>) = redisService.get(key, requestedClass)
+    private fun hentDokumentFraCache(dokumentlagerId: String, requestedClass: Class<out Any>): Any? {
+        log.debug("Forsøker å hente dokument fra cache")
+        return redisService.get(cacheKeyFor(dokumentlagerId), requestedClass)
+    }
 
     private fun hentDokumentFraFiks(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
         val virksomhetsToken = idPortenService.getToken()
@@ -124,6 +118,7 @@ class FiksClientImpl(
 
             log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
             return response.body!!
+                    .also { lagreTilCache(cacheKeyFor(dokumentlagerId), it) }
 
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
@@ -134,6 +129,10 @@ class FiksClientImpl(
             log.warn("Fiks - hentDokument feilet", e)
             throw FiksException(e.message, e)
         }
+    }
+
+    private fun lagreTilCache(dokumentlagerId: String, dokument: Any) {
+        redisService.set(cacheKeyFor(dokumentlagerId), objectMapper.writeValueAsBytes(dokument))
     }
 
     override fun hentAlleDigisosSaker(fnr: String): List<DigisosSak> {

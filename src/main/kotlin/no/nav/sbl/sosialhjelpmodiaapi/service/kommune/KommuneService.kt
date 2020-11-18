@@ -18,15 +18,18 @@ class KommuneService(
     fun get(kommunenummer: String): KommuneInfo {
         hentFraCache(kommunenummer)?.let { return it }
 
-        val kommuneInfo = kommuneInfoClient.get(kommunenummer, getToken())
-        redisService.put(kommunenummer, objectMapper.writeValueAsBytes(kommuneInfo))
-        return kommuneInfo
+        return kommuneInfoClient.get(kommunenummer, getToken())
+                .also { lagreTilCache(it) }
     }
 
     fun getBehandlingsanvarligKommune(kommunenummer: String): String? {
         val behandlingsansvarlig = get(kommunenummer).behandlingsansvarlig
 
         return if (behandlingsansvarlig != null) leggTilKommuneINavnet(behandlingsansvarlig) else null
+    }
+
+    private fun lagreTilCache(kommuneInfo: KommuneInfo) {
+        redisService.set(kommuneInfo.kommunenummer, objectMapper.writeValueAsBytes(kommuneInfo))
     }
 
     private fun leggTilKommuneINavnet(kommunenavn: String): String {

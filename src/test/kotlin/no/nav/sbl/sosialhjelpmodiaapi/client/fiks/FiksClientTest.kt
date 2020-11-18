@@ -50,7 +50,7 @@ internal class FiksClientTest {
         every { auditService.reportFiks(any(), any(), any(), any()) } just Runs
 
         every { redisService.get(any(), any()) } returns null
-        every { redisService.put(any(), any()) } just Runs
+        every { redisService.set(any(), any()) } just Runs
 
         every { tokenUtils.hentNavIdentForInnloggetBruker() } returns "11111111111"
     }
@@ -99,7 +99,7 @@ internal class FiksClientTest {
         assertThat(result2).isNotNull
 
         verify(exactly = 0) { restTemplate.exchange(any(), any(), any(), DigisosSak::class.java, any()) }
-        verify(exactly = 0) { redisService.put(any(), any()) }
+        verify(exactly = 0) { redisService.set(any(), any()) }
     }
 
     @Test
@@ -121,7 +121,7 @@ internal class FiksClientTest {
         assertThat(result1).isNotNull
         verify(exactly = 1) { redisService.get(any(), DigisosSak::class.java) }
         verify(exactly = 1) { restTemplate.exchange(any(), any(), any(), DigisosSak::class.java, any()) }
-        verify(exactly = 1) { redisService.put(any(), any()) }
+        verify(exactly = 1) { redisService.set(any(), any()) }
 
         every { redisService.get(any(), DigisosSak::class.java) } returns digisosSak
 
@@ -130,7 +130,7 @@ internal class FiksClientTest {
         assertThat(result).isNotNull
         verify(exactly = 2) { redisService.get(any(), any()) }
         verify(exactly = 1) { restTemplate.exchange(any(), any(), any(), DigisosSak::class.java, any()) }
-        verify(exactly = 1) { redisService.put(any(), any()) }
+        verify(exactly = 1) { redisService.set(any(), any()) }
     }
 
     @Test
@@ -156,7 +156,7 @@ internal class FiksClientTest {
         assertThat(result).isNotNull
         verify(exactly = 1) { redisService.get(any(), any()) }
         verify(exactly = 1) { restTemplate.exchange(any(), any(), any(), DigisosSak::class.java, any()) }
-        verify(exactly = 1) { redisService.put(any(), any()) }
+        verify(exactly = 1) { redisService.set(any(), any()) }
     }
 
     @Test
@@ -187,6 +187,6 @@ internal class FiksClientTest {
 
         assertNotNull(result)
         verify(exactly = 0) { restTemplate.exchange(any(), any(), any(), JsonDigisosSoker::class.java, any()) }
-        verify(exactly = 0) { redisService.put(any(), any()) }
+        verify(exactly = 0) { redisService.set(any(), any()) }
     }
 }
