@@ -15,9 +15,11 @@ import java.io.IOException
 @Component
 class RedisService(
         private val redisStore: RedisStore,
-        private val cacheProperties: CacheProperties,
+        cacheProperties: CacheProperties,
         private val tokenUtils: TokenUtils
 ) {
+
+    private val defaultTimeToLiveSeconds = cacheProperties.timeToLiveSeconds
 
     fun get(key: String, requestedClass: Class<out Any>): Any? {
         val bytes: ByteArray? = redisStore.get(key) // Redis har konfigurert timout for disse.
@@ -39,7 +41,7 @@ class RedisService(
         }
     }
 
-    fun set(key: String, value: ByteArray, timeToLive: Long = cacheProperties.timeToLiveSeconds) {
+    fun set(key: String, value: ByteArray, timeToLive: Long = defaultTimeToLiveSeconds) {
         val result = redisStore.set(key, value, timeToLive)
         if (result == null) {
             log.warn("Cache put feilet eller fikk timeout")
