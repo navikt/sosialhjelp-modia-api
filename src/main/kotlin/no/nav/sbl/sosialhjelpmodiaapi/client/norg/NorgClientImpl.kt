@@ -4,6 +4,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.common.NorgException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.redis.ALLE_NAVENHETER_CACHE_KEY
+import no.nav.sbl.sosialhjelpmodiaapi.redis.ALLE_NAVENHETER_CACHE_TIME_TO_LIVE_SECONDS
 import no.nav.sbl.sosialhjelpmodiaapi.redis.RedisService
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CALL_ID
@@ -31,17 +33,6 @@ class NorgClientImpl(
     override fun hentNavEnhet(enhetsnr: String): NavEnhet? {
         if (enhetsnr == "") return null
 
-        hentFraCache(enhetsnr)?.let{ return it }
-
-        return hentFraNorg(enhetsnr)
-                .also { redisService.put(NAVENHET_PREFIX + enhetsnr, objectMapper.writeValueAsBytes(it)) }
-    }
-
-    private fun hentFraCache(enhetsnr: String): NavEnhet? {
-        return redisService.get(NAVENHET_PREFIX + enhetsnr, NavEnhet::class.java) as NavEnhet?
-    }
-
-    private fun hentFraNorg(enhetsnr: String): NavEnhet {
         try {
             val urlTemplate = "$baseUrl/enhet/{enhetsnr}"
             val vars = mapOf("enhetsnr" to enhetsnr)
@@ -67,6 +58,7 @@ class NorgClientImpl(
             val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, requestEntity, typeRef<List<NavEnhet>>())
 
             return response.body!!
+                    .also { lagreTilCache(it) }
         } catch (e: HttpStatusCodeException) {
             log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
             throw NorgException(e.message, e)
@@ -80,6 +72,10 @@ class NorgClientImpl(
         val headers = forwardHeaders()
         headers.set(HEADER_CALL_ID, getCallId())
         return HttpEntity(headers)
+    }
+
+    private fun lagreTilCache(list: List<NavEnhet>) {
+        redisService.set(ALLE_NAVENHETER_CACHE_KEY, objectMapper.writeValueAsBytes(list), ALLE_NAVENHETER_CACHE_TIME_TO_LIVE_SECONDS)
     }
 
     companion object {

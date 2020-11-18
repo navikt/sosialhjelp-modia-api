@@ -25,7 +25,7 @@ internal class RedisServiceTest {
 
     @Test
     internal fun `skal hente fra store`() {
-        every { redisStore.get(any()) } returns ok_digisossak_response_string.encodeToByteArray()
+        every { redisStore.get(any()) } returns ok_digisossak_response_string.toByteArray()
 
         val digisosSak = service.get("key", DigisosSak::class.java)
 
@@ -42,7 +42,7 @@ internal class RedisServiceTest {
 
     @Test
     internal fun `store gir feil type`() {
-        every { redisStore.get(any()) } returns ok_kommuneinfo_response_string.encodeToByteArray()
+        every { redisStore.get(any()) } returns ok_kommuneinfo_response_string.toByteArray()
 
         val digisosSak = service.get("key", DigisosSak::class.java)
         assertThat(digisosSak).isNull()
@@ -51,7 +51,7 @@ internal class RedisServiceTest {
     @Test
     internal fun `digisosSak tilhorer annen bruker gir null`() {
         every { tokenUtils.hentNavIdentForInnloggetBruker() } returns "not this user"
-        every { redisStore.get(any()) } returns ok_digisossak_response_string.encodeToByteArray()
+        every { redisStore.get(any()) } returns ok_digisossak_response_string.toByteArray()
 
         val digisosSak = service.get("key", DigisosSak::class.java)
 
