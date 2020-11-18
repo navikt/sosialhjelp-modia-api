@@ -1,8 +1,10 @@
 package no.nav.sbl.sosialhjelpmodiaapi.redis
 
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelpmodiaapi.common.DigisosSakTilhorerAnnenBrukerException
+import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.TokenUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
@@ -18,10 +20,10 @@ class RedisService(
 ) {
 
     fun get(key: String, requestedClass: Class<out Any>): Any? {
-        val get: String? = redisStore.get(key) // Redis har konfigurert timout for disse.
-        return if (get != null) {
+        val bytes: ByteArray? = redisStore.get(key) // Redis har konfigurert timout for disse.
+        return if (bytes != null) {
             try {
-                val obj = objectMapper.readValue(get, requestedClass)
+                val obj = objectMapper.readValue(bytes, requestedClass)
                 valider(obj)
                 log.debug("Hentet ${requestedClass.simpleName}} fra cache, key=$key")
                 obj
@@ -37,13 +39,25 @@ class RedisService(
         }
     }
 
-    fun put(key: String, value: String) {
-        val set = redisStore.set(key, value, cacheProperties.timeToLiveSeconds)
-        if (set == null) {
+    fun set(key: String, value: ByteArray, timeToLive: Long = cacheProperties.timeToLiveSeconds) {
+        val result = redisStore.set(key, value, timeToLive)
+        if (result == null) {
             log.warn("Cache put feilet eller fikk timeout")
-        } else if (set == "OK") {
+        } else if (result == "OK") {
             log.debug("Cache put OK $key")
         }
+    }
+
+    fun getAlleNavEnheter(): List<NavEnhet>? {
+        val bytes: ByteArray? = redisStore.get(ALLE_NAVENHETER_CACHE_KEY)
+        return if (bytes != null) {
+            try {
+                objectMapper.readValue(bytes, jacksonTypeRef<List<NavEnhet>>())
+            } catch (e: IOException) {
+                log.warn("Fant key=$ALLE_NAVENHETER_CACHE_KEY, men feil oppstod ved deserialisering til List<NavEnhet>")
+                null
+            }
+        } else null
     }
 
     /**
