@@ -80,7 +80,5 @@ class NorgClientImpl(
 
     companion object {
         private val log by logger()
-
-        private const val NAVENHET_PREFIX = "NavEnhet"
     }
 }
