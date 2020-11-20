@@ -18,7 +18,7 @@ object Versions {
     const val tokenValidation = "1.3.1"
     const val jackson = "2.11.3"
     const val guava = "30.0-jre"
-    const val swagger = "2.9.2"
+    const val springfox = "3.0.0"
     const val abacAttributeConstants = "3.3.13"
     const val nettyCodec = "4.1.53.Final"
     const val logbackSyslog4j = "1.0.0"
@@ -112,9 +112,8 @@ dependencies {
     implementation("no.nav.security:token-validation-spring:${Versions.tokenValidation}")
     implementation("no.nav.security:token-client-spring:${Versions.tokenValidation}")
 
-//    Swagger
-    implementation("io.springfox:springfox-swagger2:${Versions.swagger}")
-    implementation("io.springfox:springfox-swagger-ui:${Versions.swagger}")
+//    Springfox/swagger
+    implementation("io.springfox:springfox-boot-starter:${Versions.springfox}")
 
 //    Abac-attributter
     implementation("no.nav.abac.policies:abac-attribute-constants:${Versions.abacAttributeConstants}")
