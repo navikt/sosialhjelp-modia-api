@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Profile
 
 @Profile("!(mock | mock-alt)")
 @Configuration
-@EnableJwtTokenValidation(ignore = ["org.springframework", "springfox.documentation.swagger.web.ApiResourceController"])
+@EnableJwtTokenValidation(ignore = ["org.springframework", "springfox.documentation.oas.web.OpenApiControllerWebMvc"])
 @EnableOAuth2Client(cacheEnabled = true)
 class SecurityConfig {
 
