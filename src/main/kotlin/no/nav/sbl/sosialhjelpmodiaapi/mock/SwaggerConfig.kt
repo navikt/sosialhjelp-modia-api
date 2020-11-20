@@ -9,7 +9,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi
 import springfox.documentation.spi.DocumentationType.OAS_30
 import springfox.documentation.spring.web.plugins.Docket
 
-@Profile("!prod-fss")
+@Profile("(dev-fss | mock | mock-alt | local)")
 @Configuration
 @EnableOpenApi
 class SwaggerConfig {
