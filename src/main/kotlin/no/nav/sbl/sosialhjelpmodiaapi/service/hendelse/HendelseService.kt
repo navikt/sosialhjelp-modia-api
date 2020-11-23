@@ -6,6 +6,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.InternalVedlegg
 import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import org.springframework.stereotype.Component
@@ -25,7 +26,7 @@ class HendelseService(
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
 
-        val vedlegg: List<VedleggService.InternalVedlegg> = vedleggService.hentEttersendteVedlegg(digisosSak, model)
+        val vedlegg: List<InternalVedlegg> = vedleggService.hentEttersendteVedlegg(digisosSak, model)
         digisosSak.originalSoknadNAV?.timestampSendt?.let { model.leggTilHendelserForOpplastinger(it, vedlegg) }
 
         model.leggTilHendelserForUtbetalinger()
@@ -37,7 +38,7 @@ class HendelseService(
         return responseList.sortedByDescending { it.tidspunkt }
     }
 
-    private fun InternalDigisosSoker.leggTilHendelserForOpplastinger(timestampSoknadSendt: Long, vedlegg: List<VedleggService.InternalVedlegg>) {
+    private fun InternalDigisosSoker.leggTilHendelserForOpplastinger(timestampSoknadSendt: Long, vedlegg: List<InternalVedlegg>) {
         vedlegg
                 .filter { it.datoLagtTil!!.isAfter(unixToLocalDateTime(timestampSoknadSendt)) }
                 .filter { it.antallFiler > 0 }

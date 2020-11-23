@@ -5,8 +5,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.OppgaveResponse
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.InternalVedlegg
 import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
-import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService.InternalVedlegg
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 

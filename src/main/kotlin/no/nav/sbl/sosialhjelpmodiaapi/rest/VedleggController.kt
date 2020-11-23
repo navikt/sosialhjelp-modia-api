@@ -4,7 +4,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.VedleggResponse
 import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
-import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService.InternalVedlegg
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.InternalVedlegg
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpStatus
