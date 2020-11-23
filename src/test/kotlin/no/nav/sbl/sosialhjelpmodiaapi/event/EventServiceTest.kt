@@ -13,6 +13,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SAK_FERDIGBEHANDLET
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_UNDER_BEHANDLING
 import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
 import no.nav.sbl.sosialhjelpmodiaapi.service.saksstatus.DEFAULT_TITTEL
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.SoknadVedleggService
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VEDLEGG_KREVES_STATUS
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
@@ -25,8 +27,9 @@ internal class EventServiceTest {
 
     private val innsynService: InnsynService = mockk()
     private val norgClient: NorgClient = mockk()
+    private val soknadVedleggService: SoknadVedleggService = mockk()
 
-    private val service = EventService(innsynService, norgClient)
+    private val service = EventService(innsynService, norgClient, soknadVedleggService)
 
     private val mockDigisosSak: DigisosSak = mockk()
 
@@ -40,6 +43,8 @@ internal class EventServiceTest {
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
         every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
+
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
         resetHendelser()
     }
@@ -119,7 +124,7 @@ internal class EventServiceTest {
             assertThat(sak.vedtak).isEmpty()
             assertThat(sak.utbetalinger).isEmpty()
 
-            val hendelse = model.historikk[model.historikk.size-2] //Second last
+            val hendelse = model.historikk[model.historikk.size - 2] //Second last
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
             assertThat(hendelse.tittel).isEqualTo(SOKNAD_UNDER_BEHANDLING)
             assertThat(hendelse.beskrivelse).isNull()
@@ -151,7 +156,7 @@ internal class EventServiceTest {
             assertThat(sak.vedtak).isEmpty()
             assertThat(sak.utbetalinger).isEmpty()
 
-            val hendelse = model.historikk[model.historikk.size-2] //Second last
+            val hendelse = model.historikk[model.historikk.size - 2] //Second last
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
             assertThat(hendelse.tittel).isEqualTo(SOKNAD_UNDER_BEHANDLING)
             assertThat(hendelse.beskrivelse).isNull()

@@ -5,18 +5,17 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
-import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
-import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.FORELOPIG_SVAR
 import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.InternalVedlegg
 import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.SoknadVedleggService
 import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VEDLEGG_KREVES_STATUS
-import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.LocalDateTime
 
-internal class ForelopigSvarTest {
+internal class SoknadDokumentasjonkravTest {
 
     private val innsynService: InnsynService = mockk()
     private val norgClient: NorgClient = mockk()
@@ -37,53 +36,33 @@ internal class ForelopigSvarTest {
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
         every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
 
-        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
-
         resetHendelser()
     }
 
     @Test
-    fun `ingen forelopigSvar`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
-                JsonDigisosSoker()
-                        .withAvsender(avsender)
-                        .withVersion("123")
-                        .withHendelser(listOf(
-                                SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
-                        ))
-
-        val model = service.createModel(mockDigisosSak)
-
-        assertThat(model).isNotNull
-        assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
-        assertThat(model.historikk).hasSize(2)
-        assertThat(model.forelopigSvar).isNull()
-    }
-
-    @Test
-    fun `forelopigSvar mottatt`() {
+    internal fun `skal legge til dokumentasjonkrav fra søknaden`() {
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
                 JsonDigisosSoker()
                         .withAvsender(avsender)
                         .withVersion("123")
                         .withHendelser(listOf(
                                 SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                                FORELOPIGSVAR.withHendelsestidspunkt(tidspunkt_2)
+                                SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                                SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3)
                         ))
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns listOf(
+                InternalVedlegg(
+                        type = "statsborgerskap",
+                        tilleggsinfo = "dokumentasjon",
+                        innsendelsesfrist = null,
+                        antallFiler = 1,
+                        datoLagtTil = LocalDateTime.now()
+                )
+        )
 
         val model = service.createModel(mockDigisosSak)
 
         assertThat(model).isNotNull
-        assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
-        assertThat(model.historikk).hasSize(3)
-        assertThat(model.forelopigSvar).isNotNull
-        assertThat(model.forelopigSvar?.hendelseTidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
-
-        val hendelse = model.historikk.last()
-        assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
-        assertThat(hendelse.tittel).isEqualTo(FORELOPIG_SVAR)
-        assertThat(hendelse.beskrivelse).contains("Du har fått et brev om saksbehandlingstiden for søknaden din")
+        assertThat(model.oppgaver).hasSize(1)
     }
-
-
 }

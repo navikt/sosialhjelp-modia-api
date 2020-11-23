@@ -8,6 +8,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.DOKUMENTASJONSKRAV
 import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.SoknadVedleggService
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VEDLEGG_KREVES_STATUS
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
@@ -19,8 +21,9 @@ internal class DokumentasjonEtterspurtTest {
 
     private val innsynService: InnsynService = mockk()
     private val norgClient: NorgClient = mockk()
+    private val soknadVedleggService: SoknadVedleggService = mockk()
 
-    private val service = EventService(innsynService, norgClient)
+    private val service = EventService(innsynService, norgClient, soknadVedleggService)
 
     private val mockDigisosSak: DigisosSak = mockk()
 
@@ -37,6 +40,8 @@ internal class DokumentasjonEtterspurtTest {
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
         every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
+
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
         resetHendelser()
     }
