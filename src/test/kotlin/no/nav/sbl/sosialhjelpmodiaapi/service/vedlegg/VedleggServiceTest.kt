@@ -26,8 +26,9 @@ internal class VedleggServiceTest {
 
     private val fiksClient: FiksClient = mockk()
     private val eventService: EventService = mockk()
+    private val soknadVedleggService: SoknadVedleggService = mockk()
 
-    private val service = VedleggService(fiksClient, eventService)
+    private val service = VedleggService(fiksClient, eventService, soknadVedleggService)
 
     private val mockDigisosSak: DigisosSak = mockk()
     private val mockJsonVedleggSpesifikasjon: JsonVedleggSpesifikasjon = mockk()
@@ -55,11 +56,12 @@ internal class VedleggServiceTest {
     }
 
     @Test
-    fun `skal returnere emptylist hvis soknad har nuvll vedlegg og ingen ettersendelser finnes`() {
+    fun `skal returnere emptylist hvis soknad har null vedlegg og ingen ettersendelser finnes`() {
         val model = InternalDigisosSoker()
 
         every { eventService.createModel(any()) } returns model
         every { fiksClient.hentDokument(any(), any(), vedleggMetadata_soknad_1, any()) } returns mockJsonVedleggSpesifikasjon
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns emptyList()
 
         every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns emptyList()
 
@@ -74,14 +76,15 @@ internal class VedleggServiceTest {
 
         every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns emptyList()
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns listOf(
+                InternalVedlegg(dokumenttype, null, null, 1, null)
+        )
 
         val list = service.hentAlleOpplastedeVedlegg(id)
 
-        assertThat(list).hasSize(2)
+        assertThat(list).hasSize(1)
         assertThat(list[0].type).isEqualTo(dokumenttype)
         assertThat(list[0].innsendelsesfrist).isNull()
-        assertThat(list[1].type).isEqualTo(dokumenttype_2)
-        assertThat(list[1].innsendelsesfrist).isNull()
     }
 
     @Test
@@ -90,6 +93,7 @@ internal class VedleggServiceTest {
 
         every { eventService.createModel(any()) } returns model
         every { fiksClient.hentDokument(any(), any(), vedleggMetadata_soknad_1, any()) } returns mockJsonVedleggSpesifikasjon
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns emptyList()
 
         every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns listOf(
                 Ettersendelse(
@@ -109,6 +113,8 @@ internal class VedleggServiceTest {
 
         every { eventService.createModel(any()) } returns model
         every { fiksClient.hentDokument(any(), any(), vedleggMetadata_soknad_1, any()) } returns mockJsonVedleggSpesifikasjon
+
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns emptyList()
 
         val list = service.hentAlleOpplastedeVedlegg(id)
 
@@ -131,6 +137,10 @@ internal class VedleggServiceTest {
         val model = InternalDigisosSoker()
 
         every { eventService.createModel(any()) } returns model
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns listOf(
+                InternalVedlegg(dokumenttype, null, null, 1, LocalDateTime.ofInstant(tid_soknad, zoneIdOslo)),
+                InternalVedlegg(dokumenttype_2, null, null, 1, LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
+        )
 
         val list = service.hentAlleOpplastedeVedlegg(id)
 
@@ -156,28 +166,6 @@ internal class VedleggServiceTest {
         assertThat(list[4].type).isEqualTo(dokumenttype_3)
         assertThat(list[4].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_2, zoneIdOslo))
         assertThat(list[4].antallFiler).isEqualTo(4)
-    }
-
-    @Test
-    fun `skal hente soknadsvedlegg filtrert pa status for digisosSak`() {
-        val model = InternalDigisosSoker()
-
-        every { eventService.createModel(any()) } returns model
-        every { mockDigisosSak.originalSoknadNAV } returns originalSoknadMedVedleggKrevesOgLastetOpp
-
-        val lastetOppList = service.hentSoknadVedleggMedStatus(mockDigisosSak, LASTET_OPP_STATUS)
-        val vedleggKrevesList = service.hentSoknadVedleggMedStatus(mockDigisosSak, VEDLEGG_KREVES_STATUS)
-
-        assertThat(lastetOppList).hasSize(1)
-        assertThat(vedleggKrevesList).hasSize(1)
-
-        // nano-presisjon lacking
-        val zoneIdOslo = ZoneId.of("Europe/Oslo")
-        assertThat(lastetOppList[0].type).isEqualTo(dokumenttype)
-        assertThat(lastetOppList[0].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
-
-        assertThat(vedleggKrevesList[0].type).isEqualTo(dokumenttype_2)
-        assertThat(vedleggKrevesList[0].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
     }
 
     @Test
@@ -212,6 +200,7 @@ internal class VedleggServiceTest {
                                 DokumentInfo(ettersendelse_filnavn_2, dokumentlagerId_3, 3), // samme filnavn
                                 DokumentInfo(ettersendelse_filnavn_4, dokumentlagerId_4, 4)),
                         timestampSendt = tid_1.toEpochMilli()))
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns emptyList()
 
         val list = service.hentAlleOpplastedeVedlegg(id)
 
@@ -230,7 +219,10 @@ internal class VedleggServiceTest {
         model.oppgaver.add(Oppgave(dokumenttype_4, null, frist2, datoLagtTil, true))
 
         every { eventService.createModel(any()) } returns model
-
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns listOf(
+                InternalVedlegg(dokumenttype, null, null, 1, LocalDateTime.ofInstant(tid_soknad, zoneIdOslo)),
+                InternalVedlegg(dokumenttype_2, null, null, 1, LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
+        )
         val list = service.hentAlleOpplastedeVedlegg(id)
 
         assertThat(list).hasSize(5)
@@ -273,6 +265,7 @@ internal class VedleggServiceTest {
                         vedlegg = listOf(DokumentInfo(ettersendelse_filnavn_1, dokumentlagerId_1, 42), DokumentInfo(ettersendelse_filnavn_2, dokumentlagerId_2, 42)),
                         timestampSendt = tid_1.toEpochMilli()))
         every { fiksClient.hentDokument(any(), any(), vedleggMetadata_soknad_1, any()) } returns mockJsonVedleggSpesifikasjon
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns emptyList()
 
         val list = service.hentAlleOpplastedeVedlegg(id)
 
@@ -358,15 +351,6 @@ private val originalSoknad = OriginalSoknadNAV(
         vedleggMetadata = vedleggMetadata_soknad_1,
         soknadDokument = mockk(),
         vedlegg = listOf(DokumentInfo(soknad_filnavn_1, dokumentlagerId_soknad_1, 1337), DokumentInfo(soknad_filnavn_2, dokumentlagerId_soknad_2, 1337)),
-        timestampSendt = tid_soknad.toEpochMilli()
-)
-
-private val originalSoknadMedVedleggKrevesOgLastetOpp = OriginalSoknadNAV(
-        navEksternRefId = "123",
-        metadata = "metadata",
-        vedleggMetadata = vedleggMetadata_soknad_2,
-        soknadDokument = mockk(),
-        vedlegg = listOf(DokumentInfo(soknad_filnavn_1, dokumentlagerId_soknad_1, 1337)),
         timestampSendt = tid_soknad.toEpochMilli()
 )
 

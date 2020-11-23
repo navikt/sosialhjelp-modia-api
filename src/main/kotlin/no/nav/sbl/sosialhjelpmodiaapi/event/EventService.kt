@@ -58,7 +58,7 @@ class EventService(
         return model
     }
 
-    fun getNavenhetsnavnOrDefault(enhetsnummer: String): String {
+    private fun getNavenhetsnavnOrDefault(enhetsnummer: String): String {
         if (enhetsnummer.isEmpty()) return DEFAULT_NAVENHETSNAVN
         val navn = norgClient.hentNavEnhet(enhetsnummer)?.navn
         return navenhetsnavnOrDefault(navn)
@@ -82,7 +82,7 @@ class EventService(
         return model
     }
 
-    fun InternalDigisosSoker.applyHendelse(hendelse: JsonHendelse) {
+    private fun InternalDigisosSoker.applyHendelse(hendelse: JsonHendelse) {
         when (hendelse) {
             is JsonSoknadsStatus -> apply(hendelse)
             is JsonTildeltNavKontor -> apply(hendelse, norgClient)
