@@ -4,6 +4,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatus
 import no.nav.sbl.sosialhjelpmodiaapi.service.saksstatus.DEFAULT_TITTEL
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
@@ -20,7 +21,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Date
 import kotlin.reflect.full.companionObject
 
 const val SOKNAD_DEFAULT_TITTEL = "Søknad om økonomisk sosialhjelp"
@@ -57,7 +58,9 @@ fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
 fun hentSoknadTittel(digisosSak: DigisosSak, model: InternalDigisosSoker): String {
     return when (digisosSak.digisosSoker) {
         null -> SOKNAD_DEFAULT_TITTEL
-        else -> model.saker.joinToString { it.tittel ?: DEFAULT_TITTEL }
+        else -> model.saker
+                .filter { SaksStatus.FEILREGISTRERT != it.saksStatus }
+                .joinToString { it.tittel ?: DEFAULT_TITTEL }
     }
 }
 

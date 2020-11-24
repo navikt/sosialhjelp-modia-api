@@ -1,18 +1,16 @@
 package no.nav.sbl.sosialhjelpmodiaapi.rest
 
-import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksDetaljerResponse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksListeResponse
-import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatus
-import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.hentSoknadTittel
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.service.oppgave.OppgaveService
-import no.nav.sbl.sosialhjelpmodiaapi.service.saksstatus.DEFAULT_TITTEL
+import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.unixTimestampToDate
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -68,18 +66,12 @@ class SoknadsoversiktController(
         val model = eventService.createSoknadsoversiktModel(sak)
         val saksDetaljerResponse = SaksDetaljerResponse(
                 fiksDigisosId = sak.fiksDigisosId,
-                soknadTittel = hentNavn(model),
+                soknadTittel = hentSoknadTittel(sak, model),
                 status = model.status!!,
                 harNyeOppgaver = harNyeOppgaver(model, sak.fiksDigisosId),
                 harVilkar = harVilkar(model)
         )
         return ResponseEntity.ok().body(saksDetaljerResponse)
-    }
-
-    private fun hentNavn(model: InternalDigisosSoker): String {
-        return model.saker.filter { SaksStatus.FEILREGISTRERT != it.saksStatus }.joinToString {
-            it.tittel ?: DEFAULT_TITTEL
-        }
     }
 
     private fun harNyeOppgaver(model: InternalDigisosSoker, fiksDigisosId: String): Boolean {
