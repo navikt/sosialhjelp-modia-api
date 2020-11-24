@@ -219,7 +219,7 @@ internal class VedleggServiceTest {
         model.oppgaver.add(Oppgave(dokumenttype_4, null, frist2, datoLagtTil, true))
 
         every { eventService.createModel(any()) } returns model
-        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns listOf(
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS)} returns listOf(
                 InternalVedlegg(dokumenttype, null, null, 1, LocalDateTime.ofInstant(tid_soknad, zoneIdOslo)),
                 InternalVedlegg(dokumenttype_2, null, null, 1, LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
         )
