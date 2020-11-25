@@ -145,3 +145,7 @@ data class KontorinfoResponse(
         val kontorinfo: String,
         val norgUrl: String,
 )
+
+data class LoginResponse(
+        val melding: String,
+)

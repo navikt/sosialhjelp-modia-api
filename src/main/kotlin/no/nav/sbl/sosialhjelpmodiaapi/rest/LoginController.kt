@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.rest
 
+import no.nav.sbl.sosialhjelpmodiaapi.domain.LoginResponse
 import no.nav.sbl.sosialhjelpmodiaapi.utils.MiljoUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.TokenUtils
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -19,7 +20,7 @@ class LoginController(
 ) {
 
     @GetMapping("/login")
-    fun login(response: HttpServletResponse): ResponseEntity<String> {
+    fun login(response: HttpServletResponse): ResponseEntity<LoginResponse> {
 
         val msgraphAccessToken = tokenUtils.hentTokenMedGraphScope()
         val msgraphCookie = Cookie(MSGRAPH_COOKIE_NAME, msgraphAccessToken)
@@ -27,7 +28,7 @@ class LoginController(
         msgraphCookie.secure = !miljoUtils.isProfileMockOrLocal()
         msgraphCookie.path = "/"
         response.addCookie(msgraphCookie)
-        return ResponseEntity.ok("login ok")
+        return ResponseEntity.ok(LoginResponse("ok"))
     }
 
     companion object {
