@@ -1,10 +1,10 @@
 package no.nav.sbl.sosialhjelpmodiaapi.rest
 
 
-import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingerResponse
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
+import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.service.utbetalinger.UtbetalingerService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.HttpHeaders.AUTHORIZATION
@@ -33,12 +33,18 @@ class UtbetalingerController(
             @RequestHeader(value = AUTHORIZATION) token: String,
             @RequestBody ident: Ident,
             @RequestParam(defaultValue = "3") month: Int,
-            @RequestParam(name = "fom") fom: String,
-            @RequestParam(name = "tom") tom: String
+            @RequestParam fom: String?,
+            @RequestParam tom: String?
     ): ResponseEntity<List<UtbetalingerResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
-        return ResponseEntity.ok().body(utbetalingerService.hentAlleUtbetalinger(ident.fnr, month, LocalDate.parse(fom, ISO_LOCAL_DATE), LocalDate.parse(tom, ISO_LOCAL_DATE)))
+        return ResponseEntity.ok().body(
+                utbetalingerService.hentAlleUtbetalinger(
+                        ident.fnr,
+                        month,
+                        fom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) },
+                        tom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) }
+                ))
     }
 
     @PostMapping("/{fiksDigisosId}/utbetalinger")
