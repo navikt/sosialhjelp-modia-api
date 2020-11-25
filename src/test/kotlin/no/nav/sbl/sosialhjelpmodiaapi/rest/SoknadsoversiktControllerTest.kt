@@ -141,7 +141,7 @@ internal class SoknadsoversiktControllerTest {
 
         assertThat(response1.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(digisosSak1).isNotNull
-        assertThat(digisosSak1?.soknadTittel).isEqualTo("")
+        assertThat(digisosSak1?.soknadTittel).isEqualTo("Søknad om økonomisk sosialhjelp")
         assertThat(digisosSak1?.harNyeOppgaver).isTrue()
         assertThat(digisosSak1?.harVilkar).isFalse()
 

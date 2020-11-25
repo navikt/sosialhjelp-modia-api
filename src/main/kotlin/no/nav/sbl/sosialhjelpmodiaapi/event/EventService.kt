@@ -22,6 +22,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Soknadsmottaker
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_SENDT
 import no.nav.sbl.sosialhjelpmodiaapi.service.innsyn.InnsynService
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.SoknadVedleggService
 import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import no.nav.sbl.sosialhjelpmodiaapi.utils.DEFAULT_NAVENHETSNAVN
 import no.nav.sbl.sosialhjelpmodiaapi.utils.navenhetsnavnOrDefault
@@ -31,7 +32,8 @@ import org.springframework.stereotype.Component
 @Component
 class EventService(
         private val innsynService: InnsynService,
-        private val norgClient: NorgClient
+        private val norgClient: NorgClient,
+        private val soknadVedleggService: SoknadVedleggService
 ) {
 
     fun createModel(digisosSak: DigisosSak): InternalDigisosSoker {
@@ -55,10 +57,14 @@ class EventService(
                 ?.sortedWith(hendelseComparator)
                 ?.forEach { model.applyHendelse(it) }
 
+        if (digisosSak.originalSoknadNAV != null && model.oppgaver.isEmpty()) {
+            model.applySoknadKrav(digisosSak, soknadVedleggService, timestampSendt!!)
+        }
+
         return model
     }
 
-    fun getNavenhetsnavnOrDefault(enhetsnummer: String): String {
+    private fun getNavenhetsnavnOrDefault(enhetsnummer: String): String {
         if (enhetsnummer.isEmpty()) return DEFAULT_NAVENHETSNAVN
         val navn = norgClient.hentNavEnhet(enhetsnummer)?.navn
         return navenhetsnavnOrDefault(navn)
@@ -82,7 +88,7 @@ class EventService(
         return model
     }
 
-    fun InternalDigisosSoker.applyHendelse(hendelse: JsonHendelse) {
+    private fun InternalDigisosSoker.applyHendelse(hendelse: JsonHendelse) {
         when (hendelse) {
             is JsonSoknadsStatus -> apply(hendelse)
             is JsonTildeltNavKontor -> apply(hendelse, norgClient)
