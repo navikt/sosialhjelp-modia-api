@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
 
 @ProtectedWithClaims(issuer = "azuread")
 @RestController
@@ -27,14 +29,24 @@ class UtbetalingerController(
 ) {
 
     @PostMapping("/utbetalinger")
-    fun hentUtbetalinger(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident, @RequestParam(defaultValue = "3") month: Int): ResponseEntity<List<UtbetalingerResponse>> {
+    fun hentUtbetalinger(
+            @RequestHeader(value = AUTHORIZATION) token: String,
+            @RequestBody ident: Ident,
+            @RequestParam(defaultValue = "3") month: Int,
+            @RequestParam(name = "fom") fom: String,
+            @RequestParam(name = "tom") tom: String
+    ): ResponseEntity<List<UtbetalingerResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
-        return ResponseEntity.ok().body(utbetalingerService.hentAlleUtbetalinger(ident.fnr, month))
+        return ResponseEntity.ok().body(utbetalingerService.hentAlleUtbetalinger(ident.fnr, month, LocalDate.parse(fom, ISO_LOCAL_DATE), LocalDate.parse(tom, ISO_LOCAL_DATE)))
     }
 
     @PostMapping("/{fiksDigisosId}/utbetalinger")
-    fun hentUtbetalingerForDigisosSak(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<UtbetalingerResponse>> {
+    fun hentUtbetalingerForDigisosSak(
+            @PathVariable fiksDigisosId: String,
+            @RequestHeader(value = AUTHORIZATION) token: String,
+            @RequestBody ident: Ident
+    ): ResponseEntity<List<UtbetalingerResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)

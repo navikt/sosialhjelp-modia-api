@@ -16,6 +16,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.Vilkar
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -59,7 +60,7 @@ internal class UtbetalingerServiceTest {
         coEvery { eventService.createModel(any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns emptyList()
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 12)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 12, null, null)
 
         assertThat(response).isEmpty()
     }
@@ -94,7 +95,7 @@ internal class UtbetalingerServiceTest {
         coEvery { eventService.createModel(any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
         assertThat(response).isNotEmpty
         assertThat(response).hasSize(1)
@@ -127,7 +128,7 @@ internal class UtbetalingerServiceTest {
         coEvery { eventService.createModel(any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(2)
@@ -157,7 +158,7 @@ internal class UtbetalingerServiceTest {
         coEvery { eventService.createModel(any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(2)
@@ -184,7 +185,7 @@ internal class UtbetalingerServiceTest {
         coEvery { eventService.createModel(any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
@@ -204,7 +205,7 @@ internal class UtbetalingerServiceTest {
         coEvery { eventService.createModel(any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
@@ -242,7 +243,7 @@ internal class UtbetalingerServiceTest {
         coEvery { eventService.createModel(mockDigisosSak2) } returns model2
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak, mockDigisosSak2)
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
         assertThat(response).isNotEmpty
         assertThat(response).hasSize(2)
@@ -324,7 +325,7 @@ internal class UtbetalingerServiceTest {
         coEvery { eventService.createModel(any()) } returns model
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
-        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3)
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(3)
@@ -339,5 +340,183 @@ internal class UtbetalingerServiceTest {
         assertThat(response[2].tittel).isEqualTo("Nødhjelp")
         assertThat(response[2].status).isEqualTo(UtbetalingsStatus.UTBETALT)
         assertThat(response[2].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato)
+    }
+
+    @Test
+    internal fun `bare fom er satt`() {
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
+        val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
+        val sistEndretFørFom = ZonedDateTime.of(fom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        val model = InternalDigisosSoker()
+        model.utbetalinger.addAll(
+                arrayOf(
+                        Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato, null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
+                )
+        )
+        model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
+
+        val modelFørFom = InternalDigisosSoker()
+        modelFørFom.utbetalinger.addAll(
+                arrayOf(
+                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato.plusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
+                )
+        )
+        modelFørFom.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
+
+        val digisosSak: DigisosSak = mockk()
+        val digisosSakFørFom: DigisosSak = mockk()
+
+        coEvery { digisosSak.fiksDigisosId } returns digisosId
+        coEvery { digisosSak.kommunenummer } returns "0001"
+        coEvery { digisosSak.sistEndret } returns ZonedDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli()
+
+        coEvery { digisosSakFørFom.fiksDigisosId } returns "annen id"
+        coEvery { digisosSakFørFom.kommunenummer } returns "0001"
+        coEvery { digisosSakFørFom.sistEndret } returns sistEndretFørFom
+
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakFørFom)
+
+        coEvery { eventService.createModel(digisosSak) } returns model
+        coEvery { eventService.createModel(digisosSakFørFom) } returns modelFørFom
+
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, fom, null)
+
+        assertThat(response).isNotEmpty
+        assertThat(response).hasSize(1)
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato)
+    }
+
+    @Test
+    internal fun `bare tom er satt`() {
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
+        val tom = LocalDate.now().withDayOfMonth(1).minusDays(1)
+        val sistEndretFørTom = ZonedDateTime.of(tom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val sistEndretEtterTom = ZonedDateTime.of(tom.plusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        val model = InternalDigisosSoker()
+        model.utbetalinger.addAll(
+                arrayOf(
+                        Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato, null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
+                )
+        )
+        model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
+
+        val modelEtterTom = InternalDigisosSoker()
+        modelEtterTom.utbetalinger.addAll(
+                arrayOf(
+                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato.plusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
+                )
+        )
+        modelEtterTom.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
+
+        val digisosSak: DigisosSak = mockk()
+        val digisosSakEtterTom: DigisosSak = mockk()
+
+        coEvery { digisosSak.fiksDigisosId } returns digisosId
+        coEvery { digisosSak.kommunenummer } returns "0001"
+        coEvery { digisosSak.sistEndret } returns sistEndretFørTom
+
+        coEvery { digisosSakEtterTom.fiksDigisosId } returns "annen id"
+        coEvery { digisosSakEtterTom.kommunenummer } returns "0001"
+        coEvery { digisosSakEtterTom.sistEndret } returns sistEndretEtterTom
+
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakEtterTom)
+
+        coEvery { eventService.createModel(digisosSak) } returns model
+        coEvery { eventService.createModel(digisosSakEtterTom) } returns modelEtterTom
+
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, tom)
+
+        assertThat(response).isNotEmpty
+        assertThat(response).hasSize(1)
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato)
+    }
+
+    @Test
+    internal fun `fom og tom er satt`() {
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
+        val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
+        val tom = LocalDate.now().withDayOfMonth(1).minusDays(1)
+        val sistEndretFørFom = ZonedDateTime.of(fom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val sistEndretMellomFomOgTom = ZonedDateTime.of(fom.plusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val sistEndretEtterTom = ZonedDateTime.of(tom.plusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        val model = InternalDigisosSoker()
+        model.utbetalinger.addAll(
+                arrayOf(
+                        Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato, null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
+                )
+        )
+        model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
+
+        val modelFørFom = InternalDigisosSoker()
+        modelFørFom.utbetalinger.addAll(
+                arrayOf(
+                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato.minusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
+                )
+        )
+        modelFørFom.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
+
+        val modelEtterTom = InternalDigisosSoker()
+        modelEtterTom.utbetalinger.addAll(
+                arrayOf(
+                        Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato.plusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
+                )
+        )
+        modelEtterTom.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
+
+        val digisosSak: DigisosSak = mockk()
+        val digisosSakEtterTom: DigisosSak = mockk()
+        val digisosSakFørFom: DigisosSak = mockk()
+
+        coEvery { digisosSak.fiksDigisosId } returns digisosId
+        coEvery { digisosSak.kommunenummer } returns "0001"
+        coEvery { digisosSak.sistEndret } returns sistEndretMellomFomOgTom
+
+        coEvery { digisosSakFørFom.fiksDigisosId } returns "annen id"
+        coEvery { digisosSakFørFom.kommunenummer } returns "0001"
+        coEvery { digisosSakFørFom.sistEndret } returns sistEndretFørFom
+
+        coEvery { digisosSakEtterTom.fiksDigisosId } returns "annen id 2"
+        coEvery { digisosSakEtterTom.kommunenummer } returns "0001"
+        coEvery { digisosSakEtterTom.sistEndret } returns sistEndretEtterTom
+
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakFørFom, digisosSakEtterTom)
+
+        coEvery { eventService.createModel(digisosSak) } returns model
+        coEvery { eventService.createModel(digisosSakFørFom) } returns modelFørFom
+        coEvery { eventService.createModel(digisosSakEtterTom) } returns modelEtterTom
+
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, fom, tom)
+
+        assertThat(response).isNotEmpty
+        assertThat(response).hasSize(1)
+        assertThat(response[0].utbetalingEllerForfallDigisosSoker).isEqualTo(utbetalingsdato)
+    }
+
+    @Test
+    internal fun `skal gi feil - fom er etter tom`() {
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
+        val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
+
+        val model = InternalDigisosSoker()
+        model.utbetalinger.addAll(
+                arrayOf(
+                        Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato, null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
+                )
+        )
+        model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
+
+        val digisosSak: DigisosSak = mockk()
+
+        coEvery { digisosSak.fiksDigisosId } returns digisosId
+        coEvery { digisosSak.kommunenummer } returns "0001"
+        coEvery { digisosSak.sistEndret } returns ZonedDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli()
+
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak)
+
+        assertThatThrownBy { service.hentAlleUtbetalinger(fnr, 3, fom, fom.minusDays(1)) }
+                .isInstanceOf(IllegalStateException::class.java)
     }
 }
