@@ -12,11 +12,13 @@ import no.nav.sbl.sosialhjelpmodiaapi.domain.UtbetalingsStatus
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
 import no.nav.sbl.sosialhjelpmodiaapi.flatMapParallel
 import no.nav.sbl.sosialhjelpmodiaapi.logger
+import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.joda.time.DateTime
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder.getRequestAttributes
 import org.springframework.web.context.request.RequestContextHolder.setRequestAttributes
+import java.time.LocalDate
 
 
 @Component
@@ -25,7 +27,7 @@ class UtbetalingerService(
         private val eventService: EventService
 ) {
 
-    fun hentAlleUtbetalinger(fnr: String, months: Int): List<UtbetalingerResponse> {
+    fun hentAlleUtbetalinger(fnr: String, months: Int, fom: LocalDate?, tom: LocalDate?): List<UtbetalingerResponse> {
         val digisosSaker = fiksClient.hentAlleDigisosSaker(fnr)
 
         if (digisosSaker.isEmpty()) {
@@ -33,6 +35,18 @@ class UtbetalingerService(
             return emptyList()
         }
 
+        return when {
+            fom == null && tom == null -> utbetalingerSisteManeder(digisosSaker, months)
+            else -> hentUtbetalingerForIntervall(digisosSaker, fom, tom)
+        }
+    }
+
+    fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
+        return getUtbetalinger(digisosSak)
+                .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
+    }
+
+    private fun utbetalingerSisteManeder(digisosSaker: List<DigisosSak>, months: Int): List<UtbetalingerResponse> {
         val requestAttributes = getRequestAttributes()
 
         return runBlocking(Dispatchers.IO + MDCContext()) {
@@ -46,13 +60,33 @@ class UtbetalingerService(
         }
     }
 
-    fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
-        return getUtbetalinger(digisosSak)
-                .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
+    private fun hentUtbetalingerForIntervall(digisosSaker: List<DigisosSak>, fom: LocalDate?, tom: LocalDate?): List<UtbetalingerResponse> {
+        val requestAttributes = getRequestAttributes()
+
+        return runBlocking(Dispatchers.IO + MDCContext()) {
+            digisosSaker
+                    .filter { isDigisosSakInnenforIntervall(it, fom, tom) }
+                    .flatMapParallel {
+                        setRequestAttributes(requestAttributes)
+                        getUtbetalinger(it)
+                    }
+                    .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
+        }
     }
 
-    fun isDigisosSakNewerThanMonths(digisosSak: DigisosSak, months: Int): Boolean {
+    private fun isDigisosSakNewerThanMonths(digisosSak: DigisosSak, months: Int): Boolean {
         return digisosSak.sistEndret >= DateTime.now().minusMonths(months).millis
+    }
+
+    private fun isDigisosSakInnenforIntervall(digisosSak: DigisosSak, fom: LocalDate?, tom: LocalDate?): Boolean {
+        val range = when {
+            fom != null && tom != null && fom.isBefore(tom) -> fom.rangeTo(tom)
+            fom != null && tom != null && fom.isAfter(tom) -> throw IllegalStateException("Fom kan ikke være etter tom")
+            fom != null && tom == null -> fom.rangeTo(LocalDate.now())
+            fom == null && tom != null -> LocalDate.now().minusYears(1).rangeTo(tom)
+            else -> throw IllegalStateException("Fom og tom kan ikke begge være null")
+        }
+        return range.contains(unixToLocalDateTime(digisosSak.sistEndret).toLocalDate())
     }
 
     private fun getUtbetalinger(digisosSak: DigisosSak): List<UtbetalingerResponse> {
