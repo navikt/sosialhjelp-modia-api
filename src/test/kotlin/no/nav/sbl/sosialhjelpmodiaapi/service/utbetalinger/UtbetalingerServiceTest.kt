@@ -362,23 +362,18 @@ internal class UtbetalingerServiceTest {
                         Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato.plusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
                 )
         )
-        modelFørFom.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
         val digisosSak: DigisosSak = mockk()
-        val digisosSakFørFom: DigisosSak = mockk()
-
         coEvery { digisosSak.fiksDigisosId } returns digisosId
         coEvery { digisosSak.kommunenummer } returns "0001"
         coEvery { digisosSak.sistEndret } returns ZonedDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli()
+        coEvery { eventService.createModel(digisosSak) } returns model
 
-        coEvery { digisosSakFørFom.fiksDigisosId } returns "annen id"
-        coEvery { digisosSakFørFom.kommunenummer } returns "0001"
+        val digisosSakFørFom: DigisosSak = mockk()
         coEvery { digisosSakFørFom.sistEndret } returns sistEndretFørFom
+        coEvery { eventService.createModel(digisosSakFørFom) } returns modelFørFom
 
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakFørFom)
-
-        coEvery { eventService.createModel(digisosSak) } returns model
-        coEvery { eventService.createModel(digisosSakFørFom) } returns modelFørFom
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, fom, null)
 
@@ -408,23 +403,18 @@ internal class UtbetalingerServiceTest {
                         Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato.plusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
                 )
         )
-        modelEtterTom.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
         val digisosSak: DigisosSak = mockk()
-        val digisosSakEtterTom: DigisosSak = mockk()
-
         coEvery { digisosSak.fiksDigisosId } returns digisosId
         coEvery { digisosSak.kommunenummer } returns "0001"
         coEvery { digisosSak.sistEndret } returns sistEndretFørTom
+        coEvery { eventService.createModel(digisosSak) } returns model
 
-        coEvery { digisosSakEtterTom.fiksDigisosId } returns "annen id"
-        coEvery { digisosSakEtterTom.kommunenummer } returns "0001"
+        val digisosSakEtterTom: DigisosSak = mockk()
         coEvery { digisosSakEtterTom.sistEndret } returns sistEndretEtterTom
+        coEvery { eventService.createModel(digisosSakEtterTom) } returns modelEtterTom
 
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakEtterTom)
-
-        coEvery { eventService.createModel(digisosSak) } returns model
-        coEvery { eventService.createModel(digisosSakEtterTom) } returns modelEtterTom
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, tom)
 
@@ -456,7 +446,6 @@ internal class UtbetalingerServiceTest {
                         Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato.minusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
                 )
         )
-        modelFørFom.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
         val modelEtterTom = InternalDigisosSoker()
         modelEtterTom.utbetalinger.addAll(
@@ -464,29 +453,22 @@ internal class UtbetalingerServiceTest {
                         Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato.plusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
                 )
         )
-        modelEtterTom.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
         val digisosSak: DigisosSak = mockk()
-        val digisosSakEtterTom: DigisosSak = mockk()
-        val digisosSakFørFom: DigisosSak = mockk()
-
         coEvery { digisosSak.fiksDigisosId } returns digisosId
         coEvery { digisosSak.kommunenummer } returns "0001"
         coEvery { digisosSak.sistEndret } returns sistEndretMellomFomOgTom
+        coEvery { eventService.createModel(digisosSak) } returns model
 
-        coEvery { digisosSakFørFom.fiksDigisosId } returns "annen id"
-        coEvery { digisosSakFørFom.kommunenummer } returns "0001"
+        val digisosSakFørFom: DigisosSak = mockk()
         coEvery { digisosSakFørFom.sistEndret } returns sistEndretFørFom
+        coEvery { eventService.createModel(digisosSakFørFom) } returns modelFørFom
 
-        coEvery { digisosSakEtterTom.fiksDigisosId } returns "annen id 2"
-        coEvery { digisosSakEtterTom.kommunenummer } returns "0001"
+        val digisosSakEtterTom: DigisosSak = mockk()
         coEvery { digisosSakEtterTom.sistEndret } returns sistEndretEtterTom
+        coEvery { eventService.createModel(digisosSakEtterTom) } returns modelEtterTom
 
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakFørFom, digisosSakEtterTom)
-
-        coEvery { eventService.createModel(digisosSak) } returns model
-        coEvery { eventService.createModel(digisosSakFørFom) } returns modelFørFom
-        coEvery { eventService.createModel(digisosSakEtterTom) } returns modelEtterTom
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, fom, tom)
 
