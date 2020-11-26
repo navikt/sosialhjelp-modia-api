@@ -64,6 +64,10 @@ Prosjektet bruker Github Actions for bygg og deploy
 - Lag PR til `vault-iac` slik at man kan lagre secrets på vault.
 - Denne må godkjennes og merges før man kan opprette secrets i din apps katalog `.../app/namespace`.
 
+## Redis
+Applikasjonen bruker Redis for caching. Endringer i `redis-config.yml` eller `redisexporter.yml` i andre brancher enn `master` gir autodeploy til dev-fss, og endringer på `master` gir autodeploy til prod-fss.
+Samtidig kan man manuelt deploy redis-instanser med eks `kubectl apply -f nais/redis-config.yml`.
+
 ## Lokal kjøring
 Bruk spring profile `local` eller `mock`.
 
