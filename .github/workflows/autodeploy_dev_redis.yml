@@ -1,4 +1,4 @@
-name: Auto-deploy sosialhjelp-modia-api-redis and sosialhjelp-modia-api-redisexporter to dev-fss
+name: Auto-deploy redis dev-fss
 on:
   push: # Deploys automatically to dev-fss if there is a change in any redis files.
     paths:
