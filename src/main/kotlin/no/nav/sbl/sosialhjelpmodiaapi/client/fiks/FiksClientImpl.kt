@@ -9,6 +9,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.feilmeldingUtenFnr
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
+import no.nav.sbl.sosialhjelpmodiaapi.redis.CacheProperties
 import no.nav.sbl.sosialhjelpmodiaapi.redis.RedisService
 import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.toFiksErrorMessage
@@ -37,17 +38,28 @@ class FiksClientImpl(
         private val idPortenService: IdPortenService,
         private val auditService: AuditService,
         private val redisService: RedisService,
-        private val tokenUtils: TokenUtils
+        private val tokenUtils: TokenUtils,
+        private val cacheProperties: CacheProperties
 ) : FiksClient {
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
 
     override fun hentDigisosSak(digisosId: String): DigisosSak {
-        return hentDigisosSakFraCache(digisosId) ?: hentDigisosSakFraFiks(digisosId)
+        return when {
+            skalBrukeCache() -> hentDigisosSakFraCache(digisosId) ?: hentDigisosSakFraFiks(digisosId)
+            else -> hentDigisosSakFraFiks(digisosId)
+        }
     }
 
     override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
-        return hentDokumentFraCache(dokumentlagerId, requestedClass) ?: hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
+        return when {
+            skalBrukeCache() -> hentDokumentFraCache(dokumentlagerId, requestedClass) ?: hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
+            else -> hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
+        }
+    }
+
+    private fun skalBrukeCache(): Boolean {
+        return cacheProperties.fiksCacheEnabled
     }
 
     private fun hentDigisosSakFraCache(digisosId: String): DigisosSak? {
@@ -55,6 +67,7 @@ class FiksClientImpl(
         return redisService.get(cacheKeyFor(digisosId), DigisosSak::class.java) as DigisosSak?
     }
 
+    // todo: endre fra navIdent til sessionId
     // cache key = "<NavIdent>_<digisosId>" eller "<NavIdent>_<dokumentlagerId>"
     private fun cacheKeyFor(id: String) = "${tokenUtils.hentNavIdentForInnloggetBruker()}_$id"
 
@@ -75,7 +88,7 @@ class FiksClientImpl(
             auditService.reportFiks(digisosSak.sokerFnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId", HttpMethod.GET, sporingsId)
 
             return digisosSak
-                    .also { lagreTilCache(cacheKeyFor(digisosId), it) }
+                    .also { if (skalBrukeCache()) lagreTilCache(digisosId, it) }
 
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
@@ -91,8 +104,8 @@ class FiksClientImpl(
         }
     }
 
-    private fun lagreTilCache(key: String, digisosSak: DigisosSak) {
-        redisService.set(key, objectMapper.writeValueAsBytes(digisosSak))
+    private fun lagreTilCache(id: String, any: Any) {
+        redisService.set(cacheKeyFor(id), objectMapper.writeValueAsBytes(any))
     }
 
     private fun hentDokumentFraCache(dokumentlagerId: String, requestedClass: Class<out Any>): Any? {
@@ -118,7 +131,7 @@ class FiksClientImpl(
 
             log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
             return response.body!!
-                    .also { lagreTilCache(cacheKeyFor(dokumentlagerId), it) }
+                    .also { if (skalBrukeCache()) lagreTilCache(dokumentlagerId, it) }
 
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
@@ -129,10 +142,6 @@ class FiksClientImpl(
             log.warn("Fiks - hentDokument feilet", e)
             throw FiksException(e.message, e)
         }
-    }
-
-    private fun lagreTilCache(dokumentlagerId: String, dokument: Any) {
-        redisService.set(cacheKeyFor(dokumentlagerId), objectMapper.writeValueAsBytes(dokument))
     }
 
     override fun hentAlleDigisosSaker(fnr: String): List<DigisosSak> {
