@@ -45,17 +45,15 @@ class FiksClientImpl(
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
 
     override fun hentDigisosSak(digisosId: String): DigisosSak {
-        return when {
-            skalBrukeCache() -> hentDigisosSakFraCache(digisosId) ?: hentDigisosSakFraFiks(digisosId)
-            else -> hentDigisosSakFraFiks(digisosId)
-        }
+        hentDigisosSakFraCache(digisosId)?.let { return it }
+
+        return hentDigisosSakFraFiks(digisosId)
     }
 
     override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
-        return when {
-            skalBrukeCache() -> hentDokumentFraCache(dokumentlagerId, requestedClass) ?: hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
-            else -> hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
-        }
+        hentDokumentFraCache(dokumentlagerId, requestedClass)?.let { return it }
+
+        return hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
     }
 
     private fun skalBrukeCache(): Boolean {
@@ -63,8 +61,11 @@ class FiksClientImpl(
     }
 
     private fun hentDigisosSakFraCache(digisosId: String): DigisosSak? {
-        log.debug("Forsøker å hente digisosSak fra cache")
-        return redisService.get(cacheKeyFor(digisosId), DigisosSak::class.java) as DigisosSak?
+        if (skalBrukeCache()) {
+            log.debug("Forsøker å hente digisosSak fra cache")
+            return redisService.get(cacheKeyFor(digisosId), DigisosSak::class.java) as DigisosSak?
+        }
+        return null
     }
 
     // todo: endre fra navIdent til sessionId
@@ -88,7 +89,7 @@ class FiksClientImpl(
             auditService.reportFiks(digisosSak.sokerFnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId", HttpMethod.GET, sporingsId)
 
             return digisosSak
-                    .also { if (skalBrukeCache()) lagreTilCache(digisosId, it) }
+                    .also { lagreTilCache(digisosId, it) }
 
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
@@ -105,12 +106,17 @@ class FiksClientImpl(
     }
 
     private fun lagreTilCache(id: String, any: Any) {
-        redisService.set(cacheKeyFor(id), objectMapper.writeValueAsBytes(any))
+        if (skalBrukeCache()) {
+            redisService.set(cacheKeyFor(id), objectMapper.writeValueAsBytes(any))
+        }
     }
 
     private fun hentDokumentFraCache(dokumentlagerId: String, requestedClass: Class<out Any>): Any? {
-        log.debug("Forsøker å hente dokument fra cache")
-        return redisService.get(cacheKeyFor(dokumentlagerId), requestedClass)
+        if (skalBrukeCache()) {
+            log.debug("Forsøker å hente dokument fra cache")
+            return redisService.get(cacheKeyFor(dokumentlagerId), requestedClass)
+        }
+        return null
     }
 
     private fun hentDokumentFraFiks(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
@@ -131,7 +137,7 @@ class FiksClientImpl(
 
             log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
             return response.body!!
-                    .also { if (skalBrukeCache()) lagreTilCache(dokumentlagerId, it) }
+                    .also { lagreTilCache(dokumentlagerId, it) }
 
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
