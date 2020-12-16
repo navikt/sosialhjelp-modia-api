@@ -126,18 +126,28 @@ dependencies {
 
 //    Redis
     implementation("io.lettuce:lettuce-core:${Versions.lettuce}")
+    constraints {
+        implementation("io.netty:netty-codec-http2:${Versions.nettyCodec}") {
+            because("Oppgradert etter ønske fra snyk")
+        }
+    }
     implementation("com.github.fppt:jedis-mock:${Versions.redisMock}")
-
-//    Spesifikke versjoner oppgradert etter ønske fra snyk
-    implementation("com.google.guava:guava:${Versions.guava}")
-    implementation("io.netty:netty-codec-http2:${Versions.nettyCodec}")
-    implementation("org.glassfish.jersey.media:jersey-media-jaxb:${Versions.jerseyMediaJaxb}")
+    constraints {
+        implementation("com.google.guava:guava:${Versions.guava}") {
+            because("Oppgradert etter ønske fra snyk")
+        }
+    }
 
 //    Test
     testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
     testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junitJupiter}")
     testImplementation("io.mockk:mockk:${Versions.mockk}")
     testImplementation("no.nav.security:token-validation-test-support:${Versions.tokenValidation}")
+    constraints {
+        implementation("org.glassfish.jersey.media:jersey-media-jaxb:${Versions.jerseyMediaJaxb}") {
+            because("Oppgradert etter ønske fra snyk")
+        }
+    }
     testImplementation("org.jetbrains.kotlin:kotlin-test:${Versions.kotlin}")
 }
 
