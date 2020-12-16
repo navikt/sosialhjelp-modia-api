@@ -1,19 +1,25 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.fiks
 
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.verify
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
+import no.nav.sbl.sosialhjelpmodiaapi.redis.CacheProperties
+import no.nav.sbl.sosialhjelpmodiaapi.redis.RedisService
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_digisossak_response_string
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_minimal_jsondigisossoker_response_string
 import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService
+import no.nav.sbl.sosialhjelpmodiaapi.utils.TokenUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
+import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -30,8 +36,11 @@ internal class FiksClientTest {
     private val restTemplate: RestTemplate = mockk()
     private val idPortenService: IdPortenService = mockk()
     private val auditService: AuditService = mockk()
+    private val redisService: RedisService = mockk()
+    private val tokenUtils: TokenUtils = mockk()
+    private val cacheProperties: CacheProperties = mockk(relaxed = true)
 
-    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenService, auditService)
+    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenService, auditService, redisService, tokenUtils, cacheProperties)
 
     private val id = "123"
 
@@ -41,13 +50,19 @@ internal class FiksClientTest {
 
         every { idPortenService.getToken().token } returns "token"
         every { auditService.reportFiks(any(), any(), any(), any()) } just Runs
+
+        every { redisService.get(any(), any()) } returns null
+        every { redisService.set(any(), any()) } just Runs
+
+        every { tokenUtils.hentNavIdentForInnloggetBruker() } returns "11111111111"
+        every { cacheProperties.fiksCacheEnabled } returns true
     }
 
     @Test
     fun `GET eksakt 1 DigisosSak`() {
         val mockResponse: ResponseEntity<DigisosSak> = mockk()
-        val ok_digisossak_response = objectMapper.readValue(ok_digisossak_response_string, DigisosSak::class.java)
-        every { mockResponse.body } returns ok_digisossak_response
+        val digisosSak = objectMapper.readValue(ok_digisossak_response_string, DigisosSak::class.java)
+        every { mockResponse.body } returns digisosSak
         every {
             restTemplate.exchange(
                     any(),
@@ -59,7 +74,7 @@ internal class FiksClientTest {
 
         val result = fiksClient.hentDigisosSak(id)
 
-        assertNotNull(result)
+        assertThat(result).isNotNull
     }
 
     @Test
@@ -69,7 +84,7 @@ internal class FiksClientTest {
                     any(),
                     any(),
                     any(),
-                    String::class.java,
+                    DigisosSak::class.java,
                     any())
         } throws HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "some error")
 
@@ -78,10 +93,80 @@ internal class FiksClientTest {
     }
 
     @Test
+    fun `GET digisosSak fra cache`() {
+        val digisosSak: DigisosSak = objectMapper.readValue(ok_digisossak_response_string)
+        every { redisService.get(any(), DigisosSak::class.java) } returns digisosSak
+
+        val result2 = fiksClient.hentDigisosSak(id)
+
+        assertThat(result2).isNotNull
+
+        verify(exactly = 0) { restTemplate.exchange(any(), any(), any(), DigisosSak::class.java, any()) }
+        verify(exactly = 0) { redisService.set(any(), any()) }
+    }
+
+    @Test
+    fun `GET digisosSak fra cache etter put`() {
+        val mockResponse: ResponseEntity<DigisosSak> = mockk()
+        val digisosSak = objectMapper.readValue(ok_digisossak_response_string, DigisosSak::class.java)
+        every { mockResponse.body } returns digisosSak
+        every {
+            restTemplate.exchange(
+                    any(),
+                    any(),
+                    any(),
+                    DigisosSak::class.java,
+                    any())
+        } returns mockResponse
+
+        val result1 = fiksClient.hentDigisosSak(id)
+
+        assertThat(result1).isNotNull
+        verify(exactly = 1) { redisService.get(any(), DigisosSak::class.java) }
+        verify(exactly = 1) { restTemplate.exchange(any(), any(), any(), DigisosSak::class.java, any()) }
+        verify(exactly = 1) { redisService.set(any(), any()) }
+
+        every { redisService.get(any(), DigisosSak::class.java) } returns digisosSak
+
+        val result = fiksClient.hentDigisosSak(id)
+
+        assertThat(result).isNotNull
+        verify(exactly = 2) { redisService.get(any(), any()) }
+        verify(exactly = 1) { restTemplate.exchange(any(), any(), any(), DigisosSak::class.java, any()) }
+        verify(exactly = 1) { redisService.set(any(), any()) }
+    }
+
+    @Test
+    fun `GET digisosSak fra annen saksbehandler`() {
+        val mockResponse: ResponseEntity<DigisosSak> = mockk()
+        val digisosSak = objectMapper.readValue(ok_digisossak_response_string, DigisosSak::class.java)
+        every { mockResponse.body } returns digisosSak
+        every {
+            restTemplate.exchange(
+                    any(),
+                    any(),
+                    any(),
+                    DigisosSak::class.java,
+                    any())
+        } returns mockResponse
+
+//        annen veileder har hentet digisosSak tidligere (og finnes i cache)
+        val annenSaksbehandler = "other"
+        every { redisService.get("${annenSaksbehandler}_$id", DigisosSak::class.java) } returns digisosSak
+
+        val result = fiksClient.hentDigisosSak(id)
+
+        assertThat(result).isNotNull
+        verify(exactly = 1) { redisService.get(any(), any()) }
+        verify(exactly = 1) { restTemplate.exchange(any(), any(), any(), DigisosSak::class.java, any()) }
+        verify(exactly = 1) { redisService.set(any(), any()) }
+    }
+
+    @Test
     fun `GET dokument`() {
         val mockResponse: ResponseEntity<JsonDigisosSoker> = mockk()
-        val ok_minimal_jsondigisossoker_response = objectMapper.readValue(ok_minimal_jsondigisossoker_response_string, JsonDigisosSoker::class.java)
-        every { mockResponse.body } returns ok_minimal_jsondigisossoker_response
+        val jsonDigisosSoker = objectMapper.readValue(ok_minimal_jsondigisossoker_response_string, JsonDigisosSoker::class.java)
+        every { mockResponse.body } returns jsonDigisosSoker
         every {
             restTemplate.exchange(
                     any(),
@@ -94,5 +179,17 @@ internal class FiksClientTest {
         val result = fiksClient.hentDokument("fnr", id, "dokumentlagerId", JsonDigisosSoker::class.java)
 
         assertNotNull(result)
+    }
+
+    @Test
+    fun `GET dokument fra cache`() {
+        val jsonDigisosSoker: JsonDigisosSoker = objectMapper.readValue(ok_minimal_jsondigisossoker_response_string)
+        every { redisService.get(any(), JsonDigisosSoker::class.java) } returns jsonDigisosSoker
+
+        val result = fiksClient.hentDokument("fnr", id, "dokumentlagerId", JsonDigisosSoker::class.java)
+
+        assertNotNull(result)
+        verify(exactly = 0) { restTemplate.exchange(any(), any(), any(), JsonDigisosSoker::class.java, any()) }
+        verify(exactly = 0) { redisService.set(any(), any()) }
     }
 }

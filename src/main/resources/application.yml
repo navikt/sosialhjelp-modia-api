@@ -1,5 +1,3 @@
-consumerid: srvsosialhjelp-mod
-
 spring:
   main:
     banner-mode: 'off'
@@ -14,6 +12,7 @@ modia:
   cache:
     redis_mocked: false
     time_to_live_seconds: ${CACHE_TIME_TO_LIVE_SECONDS}
+    fiks_cache_enabled: false
 
 server:
   port: 8383

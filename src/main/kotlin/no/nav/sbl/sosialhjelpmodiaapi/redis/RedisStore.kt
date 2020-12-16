@@ -16,7 +16,7 @@ class RedisStore(
         redisClient: RedisClient
 ) {
 
-    private final val connection: StatefulRedisConnection<String, ByteArray> = redisClient.connect(RedisCodec.of(StringCodec(), ByteArrayCodec()))
+    private val connection: StatefulRedisConnection<String, ByteArray> = redisClient.connect(RedisCodec.of(StringCodec.UTF8, ByteArrayCodec.INSTANCE))
     private val async: RedisAsyncCommands<String, ByteArray> = connection.async()!!
 
     fun get(key: String): ByteArray? {

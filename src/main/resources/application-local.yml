@@ -8,6 +8,7 @@ modia:
   cache:
     redis_mocked: true
     time_to_live_seconds: 5
+    fiks_cache_enabled: false
 
 no.nav.security.jwt:
   issuer.azuread:
