@@ -20,12 +20,12 @@ object Versions {
     const val guava = "30.0-jre"
     const val springfox = "3.0.0"
     const val abacAttributeConstants = "3.3.13"
-    const val nettyCodec = "4.1.53.Final"
     const val logbackSyslog4j = "1.0.0"
     const val syslog4j = "0.9.30"
     const val jerseyMediaJaxb = "2.31"
     const val redisMock = "0.1.16"
     const val lettuce = "5.3.5.RELEASE"
+    const val jetty = "9.4.35.v20201120"
 
     // Test only
     const val junitJupiter = "5.7.0"
@@ -122,17 +122,26 @@ dependencies {
     implementation("io.lettuce:lettuce-core:${Versions.lettuce}")
     implementation("com.github.fppt:jedis-mock:${Versions.redisMock}")
 
-//    Spesifikke versjoner oppgradert etter ønske fra snyk
-    implementation("com.google.guava:guava:${Versions.guava}")
-    implementation("io.netty:netty-codec-http2:${Versions.nettyCodec}")
-    implementation("org.glassfish.jersey.media:jersey-media-jaxb:${Versions.jerseyMediaJaxb}")
-
 //    Test
     testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
     testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junitJupiter}")
     testImplementation("io.mockk:mockk:${Versions.mockk}")
     testImplementation("no.nav.security:token-validation-test-support:${Versions.tokenValidation}")
     testImplementation("org.jetbrains.kotlin:kotlin-test:${Versions.kotlin}")
+
+    constraints {
+        implementation("com.google.guava:guava:${Versions.guava}") {
+            because("Transitiv avhengighet dratt inn av jedis-mock@0.1.16 har sårbarhet. Constraintsen kan fjernes når jedis-mock bruker guava@30.0-jre eller nyere")
+        }
+        implementation("org.eclipse.jetty:jetty-security:${Versions.jetty}") {
+            because("Transitiv avhengighet dratt inn av springBoot@2.3.5.RELEASE har sårbarhet. Constraintsen kan fjernes når springBoot bruker jetty-security@9.4.35.v20201120 eller nyere")
+        }
+
+        //  Test
+        testImplementation("org.glassfish.jersey.media:jersey-media-jaxb:${Versions.jerseyMediaJaxb}") {
+            because("Transitiv avhengighet dratt inn av token-validation-test-support@1.3.1 har sårbarhet. Constraintsen kan fjernes når token-validation-test-support bruker jersey-media-jaxb@2.31 eller nyere")
+        }
+    }
 }
 
 val githubUser: String by project
