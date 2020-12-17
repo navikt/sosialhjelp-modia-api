@@ -20,7 +20,6 @@ object Versions {
     const val guava = "30.0-jre"
     const val springfox = "3.0.0"
     const val abacAttributeConstants = "3.3.13"
-    const val nettyCodec = "4.1.53.Final"
     const val logbackSyslog4j = "1.0.0"
     const val syslog4j = "0.9.30"
     const val jerseyMediaJaxb = "2.31"
@@ -78,11 +77,6 @@ dependencies {
 //    Spring
     implementation("org.springframework.boot:spring-boot-starter-web:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-jetty:${Versions.springBoot}")
-    constraints {
-        implementation("org.eclipse.jetty:jetty-security:${Versions.jetty}") {
-            because("Pga. jetty-security dratt inn via springBoot:2.3.5.RELEASE har sårbarhet. Denne kan fjernees når springBoot bruker jetty-security: 9.4.35.v20201120 eller nyere")
-        }
-    }
     implementation("org.springframework.boot:spring-boot-starter-actuator:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-logging:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.springBoot}")
@@ -126,29 +120,28 @@ dependencies {
 
 //    Redis
     implementation("io.lettuce:lettuce-core:${Versions.lettuce}")
-    constraints {
-        implementation("io.netty:netty-codec-http2:${Versions.nettyCodec}") {
-            because("Oppgradert etter ønske fra snyk")
-        }
-    }
     implementation("com.github.fppt:jedis-mock:${Versions.redisMock}")
-    constraints {
-        implementation("com.google.guava:guava:${Versions.guava}") {
-            because("Oppgradert etter ønske fra snyk")
-        }
-    }
 
 //    Test
     testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
     testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junitJupiter}")
     testImplementation("io.mockk:mockk:${Versions.mockk}")
     testImplementation("no.nav.security:token-validation-test-support:${Versions.tokenValidation}")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:${Versions.kotlin}")
+
     constraints {
-        implementation("org.glassfish.jersey.media:jersey-media-jaxb:${Versions.jerseyMediaJaxb}") {
-            because("Oppgradert etter ønske fra snyk")
+        implementation("com.google.guava:guava:${Versions.guava}") {
+            because("Transitiv avhengighet dratt inn av jedis-mock@0.1.16 har sårbarhet. Constraintsen kan fjernes når jedis-mock bruker guava@30.0-jre eller nyere")
+        }
+        implementation("org.eclipse.jetty:jetty-security:${Versions.jetty}") {
+            because("Transitiv avhengighet dratt inn av springBoot@2.3.5.RELEASE har sårbarhet. Constraintsen kan fjernes når springBoot bruker jetty-security@9.4.35.v20201120 eller nyere")
+        }
+
+        //  Test
+        testImplementation("org.glassfish.jersey.media:jersey-media-jaxb:${Versions.jerseyMediaJaxb}") {
+            because("Transitiv avhengighet dratt inn av token-validation-test-support@1.3.1 har sårbarhet. Constraintsen kan fjernes når token-validation-test-support bruker jersey-media-jaxb@2.31 eller nyere")
         }
     }
-    testImplementation("org.jetbrains.kotlin:kotlin-test:${Versions.kotlin}")
 }
 
 val githubUser: String by project
