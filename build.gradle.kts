@@ -6,18 +6,18 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav.sbl"
 
 object Versions {
-    const val kotlin = "1.4.10"
-    const val coroutines = "1.3.9"
-    const val springBoot = "2.3.5.RELEASE"
+    const val kotlin = "1.4.21"
+    const val coroutines = "1.4.2"
+    const val springBoot = "2.3.7.RELEASE"
     const val logback = "1.2.3"
-    const val logstash = "6.3"
-    const val sosialhjelpCommon = "1.b216764"
-    const val filformat = "1.2020.09.24-14.10-d988f0b7a321"
-    const val micrometerRegistry = "1.5.6"
+    const val logstash = "6.5"
+    const val sosialhjelpCommon = "1.4ef74b4"
+    const val filformat = "1.2020.11.05-09.32-14af05dea965"
+    const val micrometerRegistry = "1.6.2"
     const val prometheus = "0.9.0"
-    const val tokenValidation = "1.3.1"
-    const val jackson = "2.11.3"
-    const val guava = "30.0-jre"
+    const val tokenValidation = "1.3.2"
+    const val jackson = "2.12.0"
+    const val guava = "30.1-jre"
     const val springfox = "3.0.0"
     const val abacAttributeConstants = "3.3.13"
     const val logbackSyslog4j = "1.0.0"
@@ -25,20 +25,19 @@ object Versions {
     const val jerseyMediaJaxb = "2.31"
     const val redisMock = "0.1.16"
     const val lettuce = "5.3.5.RELEASE"
-    const val jetty = "9.4.35.v20201120"
 
     // Test only
     const val junitJupiter = "5.7.0"
-    const val mockk = "1.10.0"
+    const val mockk = "1.10.3"
 }
 
 val applicationKt = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
 
 plugins {
     application
-    kotlin("jvm") version "1.4.10"
+    kotlin("jvm") version "1.4.21"
 //    id("org.jmailen.kotlinter") version "2.3.1" // TODO - burde tas i bruk
-    id("org.jetbrains.kotlin.plugin.spring") version "1.4.10"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.4.21"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("com.github.ben-manes.versions") version "0.28.0"
 }
@@ -129,12 +128,10 @@ dependencies {
     testImplementation("no.nav.security:token-validation-test-support:${Versions.tokenValidation}")
     testImplementation("org.jetbrains.kotlin:kotlin-test:${Versions.kotlin}")
 
+//    Spesifikke versjoner oppgradert etter ønske fra snyk
     constraints {
         implementation("com.google.guava:guava:${Versions.guava}") {
             because("Transitiv avhengighet dratt inn av jedis-mock@0.1.16 har sårbarhet. Constraintsen kan fjernes når jedis-mock bruker guava@30.0-jre eller nyere")
-        }
-        implementation("org.eclipse.jetty:jetty-security:${Versions.jetty}") {
-            because("Transitiv avhengighet dratt inn av springBoot@2.3.5.RELEASE har sårbarhet. Constraintsen kan fjernes når springBoot bruker jetty-security@9.4.35.v20201120 eller nyere")
         }
 
         //  Test
