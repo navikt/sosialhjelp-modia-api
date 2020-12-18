@@ -83,8 +83,8 @@ internal class SoknadsoversiktControllerTest {
         every { model1.status } returns SoknadsStatus.MOTTATT
         every { model2.status } returns SoknadsStatus.UNDER_BEHANDLING
 
-        every { model1.oppgaver.isEmpty() } returns false
-        every { model2.oppgaver.isEmpty() } returns false
+        every { model1.oppgaver } returns mutableListOf(mockk())
+        every { model2.oppgaver } returns mutableListOf(mockk())
 
         every { sak1.tittel } returns "Livsopphold"
         every { sak2.tittel } returns "Strøm"
@@ -120,8 +120,8 @@ internal class SoknadsoversiktControllerTest {
         every { model1.status } returns SoknadsStatus.MOTTATT
         every { model2.status } returns SoknadsStatus.UNDER_BEHANDLING
 
-        every { model1.oppgaver.isEmpty() } returns false
-        every { model2.oppgaver.isEmpty() } returns false
+        every { model1.oppgaver } returns mutableListOf(mockk())
+        every { model2.oppgaver } returns mutableListOf(mockk())
 
         every { sak1.tittel } returns "Livsopphold"
         every { sak1.saksStatus } returns SaksStatus.UNDER_BEHANDLING
@@ -142,8 +142,8 @@ internal class SoknadsoversiktControllerTest {
         assertThat(response1.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(digisosSak1).isNotNull
         assertThat(digisosSak1?.soknadTittel).isEqualTo("Søknad om økonomisk sosialhjelp")
-        assertThat(digisosSak1?.harNyeOppgaver).isTrue()
-        assertThat(digisosSak1?.harVilkar).isFalse()
+        assertThat(digisosSak1?.harNyeOppgaver).isTrue
+        assertThat(digisosSak1?.harVilkar).isFalse
 
         val response2 = controller.hentSaksDetaljer(id_2, "token", Ident(fnr))
         val digisosSak2 = response2.body
@@ -152,8 +152,8 @@ internal class SoknadsoversiktControllerTest {
         assertThat(digisosSak2).isNotNull
         assertThat(digisosSak2?.soknadTittel).contains("Livsopphold", "Strøm")
         assertThat(digisosSak2?.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
-        assertThat(digisosSak2?.harNyeOppgaver).isTrue()
-        assertThat(digisosSak2?.harVilkar).isTrue()
+        assertThat(digisosSak2?.harNyeOppgaver).isTrue
+        assertThat(digisosSak2?.harVilkar).isTrue
     }
 
     @Test
@@ -162,7 +162,7 @@ internal class SoknadsoversiktControllerTest {
         every { eventService.createSoknadsoversiktModel(digisosSak1) } returns model1
 
         every { model1.status } returns SoknadsStatus.MOTTATT
-        every { model1.oppgaver.isEmpty() } returns true
+        every { model1.oppgaver } returns mutableListOf()
         every { model1.saker } returns mutableListOf()
 
         val response = controller.hentSaksDetaljer(id_1, "token", Ident(fnr))
@@ -173,6 +173,6 @@ internal class SoknadsoversiktControllerTest {
 
         verify { oppgaveService wasNot Called }
 
-        assertThat(sak?.harNyeOppgaver).isFalse()
+        assertThat(sak?.harNyeOppgaver).isFalse
     }
 }
