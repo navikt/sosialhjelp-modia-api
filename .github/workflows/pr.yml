@@ -9,7 +9,7 @@ jobs:
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/gradle-jdk11@master
         with:
-          args: --org=teamdigisos
+          args: --org=teamdigisos --project-name=${{ github.event.repository.name }} --remote-repo-url=${{ github.event.repository.name }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           ORG_GRADLE_PROJECT_githubUser: x-access-token
