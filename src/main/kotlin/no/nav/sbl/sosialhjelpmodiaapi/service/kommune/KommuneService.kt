@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.kommune
 
-import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.redis.RedisService
 import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
@@ -46,9 +45,5 @@ class KommuneService(
 
     private fun hentFraCache(kommunenummer: String): KommuneInfo? {
         return redisService.get(kommunenummer, KommuneInfo::class.java) as KommuneInfo?
-    }
-
-    companion object {
-        private val log by logger()
     }
 }

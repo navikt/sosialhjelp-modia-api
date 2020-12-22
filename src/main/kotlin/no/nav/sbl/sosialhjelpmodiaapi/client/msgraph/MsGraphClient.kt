@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.msgraph
 
 import no.nav.sbl.sosialhjelpmodiaapi.common.MsGraphException
-import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.forwardHeaders
 import org.springframework.http.HttpEntity
@@ -38,8 +37,6 @@ class MsGraphClient(
 
     companion object {
         private const val ON_PREMISES_SAM_ACCOUNT_NAME_FIELD = "onPremisesSamAccountName"
-
-        private val log by logger()
     }
 }
 

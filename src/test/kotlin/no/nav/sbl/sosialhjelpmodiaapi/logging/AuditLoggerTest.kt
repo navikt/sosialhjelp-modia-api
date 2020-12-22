@@ -50,7 +50,7 @@ internal class AuditLoggerTest {
     internal fun `should info log`() {
         logger.report(values)
 
-        assertThat(cefString.isCaptured).isTrue()
+        assertThat(cefString.isCaptured).isTrue
         assertThat(cefString.captured)
                 // headers
                 .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|INFO|")
@@ -68,7 +68,7 @@ internal class AuditLoggerTest {
 
         logger.report(values)
 
-        assertThat(cefString.isCaptured).isTrue()
+        assertThat(cefString.isCaptured).isTrue
         assertThat(cefString.captured)
                 // headers
                 .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|WARN|")
@@ -88,7 +88,7 @@ internal class AuditLoggerTest {
 
         logger.report(values)
 
-        assertThat(cefString.isCaptured).isTrue()
+        assertThat(cefString.isCaptured).isTrue
         assertThat(cefString.captured)
                 // headers
                 .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|INFO|")
@@ -104,7 +104,7 @@ internal class AuditLoggerTest {
 
         logger.report(values)
 
-        assertThat(cefString.isCaptured).isTrue()
+        assertThat(cefString.isCaptured).isTrue
         assertThat(cefString.captured)
                 // headers
                 .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|INFO|")

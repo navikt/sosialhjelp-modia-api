@@ -19,7 +19,6 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.abac.manglerTilgangSosialhjelp
 import no.nav.sbl.sosialhjelpmodiaapi.common.AbacException
 import no.nav.sbl.sosialhjelpmodiaapi.common.ManglendeModiaSosialhjelpTilgangException
 import no.nav.sbl.sosialhjelpmodiaapi.common.ManglendeTilgangException
-import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.Miljo.SRVSOSIALHJELP_MOD
 import org.springframework.stereotype.Component
@@ -96,7 +95,5 @@ class AbacService(
 
     companion object {
         private const val ENVIRONMENT_FELLES_AZURE_JWT_TOKEN_BODY = "no.nav.abac.attributter.environment.felles.azure_jwt_token_body"
-
-        private val log by logger()
     }
 }

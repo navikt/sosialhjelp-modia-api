@@ -15,12 +15,12 @@ internal fun matchDokumentInfoOgJsonFiler(dokumentInfoList: List<DokumentInfo>, 
 internal fun kombinerAlleLikeVedlegg(alleVedlegg: List<InternalVedlegg>): List<InternalVedlegg> {
     val kombinertListe = ArrayList<InternalVedlegg>()
     alleVedlegg.forEach {
-        val funnet = kombinertListe.filter { kombinert ->
+        val funnet = kombinertListe.firstOrNull { kombinert ->
             (areDatesEqual(it.datoLagtTil, kombinert.datoLagtTil) &&
                     kombinert.type == it.type &&
                     kombinert.tilleggsinfo == it.tilleggsinfo &&
                     areDatesEqual(it.innsendelsesfrist, kombinert.innsendelsesfrist))
-        }.firstOrNull()
+        }
         if (funnet != null) {
             funnet.antallFiler += it.antallFiler
         } else {

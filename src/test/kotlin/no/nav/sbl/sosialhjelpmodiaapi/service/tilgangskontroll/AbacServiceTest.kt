@@ -5,7 +5,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.unmockkAll
-import no.nav.abac.xacml.NavAttributter
 import no.nav.abac.xacml.NavAttributter.ADVICEOROBLIGATION_DENY_POLICY
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacClient
 import no.nav.sbl.sosialhjelpmodiaapi.client.abac.AbacConstants.DENY_REASON
@@ -55,7 +54,7 @@ internal class AbacServiceTest {
     internal fun `harTilgang - abacClient gir Permit - kaster ingen exception`() {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Permit, null)
 
-        assertThatCode{ service.harTilgang(fnr, "token") }
+        assertThatCode { service.harTilgang(fnr, "token") }
                 .doesNotThrowAnyException()
     }
 
@@ -103,7 +102,7 @@ internal class AbacServiceTest {
 
         service.harTilgang(fnr, "$BEARER part1.part2.part3")
 
-        assertThat(request.isCaptured).isTrue()
+        assertThat(request.isCaptured).isTrue
         assertThat(request.captured.environment?.attributes?.first { it.attributeId.endsWith(".felles.azure_jwt_token_body") }?.value)
                 .doesNotContain(BEARER)
                 .isEqualTo("part2")

@@ -21,7 +21,7 @@ internal class KommunenavnServiceTest {
 
     private val kommuneNr = "1234"
     private val kommunenavn = "Oslo"
-    val osloContainedItem = ContainedItem(
+    private val osloContainedItem = ContainedItem(
             "",
             "",
             kommuneNr,
@@ -46,7 +46,7 @@ internal class KommunenavnServiceTest {
 
     @Test
     fun `Skal returnere kommunenavn nar kommunenummer er kjent`() {
-        var containedItems: List<ContainedItem> = listOf(osloContainedItem)
+        val containedItems: List<ContainedItem> = listOf(osloContainedItem)
         every { kommunenavnProperties.containeditems } returns containedItems
         every { kommunenavnClient.getAll() } returns kommunenavnProperties
 
@@ -68,7 +68,7 @@ internal class KommunenavnServiceTest {
 
     @Test
     fun `Skal brukce cache på andre oppslag`() {
-        var containedItems: List<ContainedItem> = listOf(osloContainedItem)
+        val containedItems: List<ContainedItem> = listOf(osloContainedItem)
         every { kommunenavnProperties.containeditems } returns containedItems
         every { kommunenavnClient.getAll() } returns kommunenavnProperties
 

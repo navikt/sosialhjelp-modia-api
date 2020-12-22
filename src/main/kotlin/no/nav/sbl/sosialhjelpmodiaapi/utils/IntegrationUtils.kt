@@ -2,7 +2,6 @@ package no.nav.sbl.sosialhjelpmodiaapi.utils
 
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import org.slf4j.MDC
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 

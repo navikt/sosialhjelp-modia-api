@@ -72,7 +72,7 @@ fun <T : HttpStatusCodeException> T.toFiksErrorMessage(): ErrorMessage? {
     }
 }
 
-val String.feilmeldingUtenFnr: String?
+val String.feilmeldingUtenFnr: String
     get() {
         return this.replace(Regex("""\b[0-9]{11}\b"""), "[FNR]")
     }

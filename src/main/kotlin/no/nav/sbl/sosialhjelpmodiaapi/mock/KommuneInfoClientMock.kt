@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 class KommuneInfoClientMock : KommuneInfoClient {
 
     override fun get(kommunenummer: String, token: String): KommuneInfo {
-        if (kommunenummer.equals("0301")) {
+        if (kommunenummer == "0301") {
             return KommuneInfo(kommunenummer, true, true, false, false, null, true, "Nabo")
         }
         return KommuneInfo(kommunenummer, true, true, false, false, null, true, null)
