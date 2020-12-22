@@ -24,7 +24,7 @@ class FiksClientMock : FiksClient {
         initialInnsynMap[defaultDigisosSak.fiksDigisosId] = defaultDigisosSak
         initialInnsynMap[minimalPapirsoknad.fiksDigisosId] = minimalPapirsoknad
         initialInnsynMap[minimalDigitalsoknad.fiksDigisosId] = minimalDigitalsoknad
-        return initialInnsynMap;
+        return initialInnsynMap
     }
 
     override fun hentDigisosSak(digisosId: String): DigisosSak {
