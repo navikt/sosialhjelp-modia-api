@@ -3,8 +3,6 @@ package no.nav.sbl.sosialhjelpmodiaapi.client.fiks
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_ALLE_DIGISOSSAKER
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_DIGISOSSAK
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_DOKUMENT
-import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
-import no.nav.sbl.sosialhjelpmodiaapi.common.FiksNotFoundException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.feilmeldingUtenFnr
 import no.nav.sbl.sosialhjelpmodiaapi.logger
@@ -19,6 +17,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.fiksHeaders
 import no.nav.sbl.sosialhjelpmodiaapi.utils.TokenUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
+import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
@@ -95,7 +95,7 @@ class FiksClientImpl(
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
             val message = e.message?.feilmeldingUtenFnr
             if (e.statusCode == HttpStatus.NOT_FOUND) {
-                throw FiksNotFoundException(e.message, e, digisosId)
+                throw FiksNotFoundException(e.message, e)
             }
             log.warn("Fiks - hentDigisosSak feilet for id $digisosId - ${e.statusCode} $message - $fiksErrorMessage", e)
             throw FiksException(e.message, e)

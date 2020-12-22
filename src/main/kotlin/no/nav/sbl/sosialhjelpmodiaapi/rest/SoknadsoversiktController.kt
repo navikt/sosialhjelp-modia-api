@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.rest
 
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
-import no.nav.sbl.sosialhjelpmodiaapi.common.FiksException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksDetaljerResponse
@@ -14,6 +13,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.unixTimestampToDate
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable

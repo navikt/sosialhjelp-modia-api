@@ -5,6 +5,8 @@ import no.nav.security.token.support.core.exceptions.IssuerConfigurationExceptio
 import no.nav.security.token.support.core.exceptions.JwtTokenMissingException
 import no.nav.security.token.support.core.exceptions.MetaDataNotAvailableException
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
+import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
+import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -37,7 +39,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(FiksNotFoundException::class)
     fun handleFiksNotFoundError(e: FiksNotFoundException): ResponseEntity<FrontendErrorMessage> {
-        log.error("DigisosSak id: \"${e.digisosId}\" finnes ikke i FIKS: ${e.message}")
+        log.error("DigisosSak finnes ikke i FIKS: ${e.message}")
         val error = FrontendErrorMessage(FIKS_ERROR, "DigisosSak finnes ikke")
         return ResponseEntity(error, HttpStatus.NOT_FOUND)
     }
