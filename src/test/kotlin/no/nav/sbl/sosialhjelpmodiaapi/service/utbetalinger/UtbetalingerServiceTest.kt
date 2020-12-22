@@ -300,7 +300,7 @@ internal class UtbetalingerServiceTest {
         assertThat(response[0].fom).isEqualTo(fom)
         assertThat(response[0].tom).isEqualTo(tom)
         assertThat(response[0].mottaker).isEqualTo("utleier")
-        assertThat(response[0].annenMottaker).isTrue()
+        assertThat(response[0].annenMottaker).isTrue
         assertThat(response[0].kontonummer).isEqualTo("kontonr")
         assertThat(response[0].utbetalingsmetode).isEqualTo("utbetalingsmetode")
     }

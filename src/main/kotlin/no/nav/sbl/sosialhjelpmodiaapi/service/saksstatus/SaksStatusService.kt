@@ -46,7 +46,7 @@ class SaksStatusService(
         return responseList
     }
 
-    private fun hentStatusNavn(sak: Sak): SaksStatus? {
+    private fun hentStatusNavn(sak: Sak): SaksStatus {
         return when {
             sak.vedtak.isEmpty() -> sak.saksStatus ?: SaksStatus.UNDER_BEHANDLING
             else -> SaksStatus.FERDIGBEHANDLET
