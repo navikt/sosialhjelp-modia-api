@@ -21,7 +21,9 @@
     "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.adeo.no/rest/v1/sts",
     "SPRING_PROFILES_ACTIVE": "prod-fss,log-kibana,log-audit",
     "CACHE_TIME_TO_LIVE_SECONDS": "180",
-    "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local"
+    "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local",
+    "UNLEASH_API_URL": "https://unleash.nais.io/api",
+    "UNLEASH_INSTANCE_ID": "prod-fss"
   },
   "minReplicas": "2",
   "maxReplicas": "4",
