@@ -27,6 +27,8 @@ client:
   norg_oppslag_url: norgurl2
   pdl_endpoint_url: pdlurl
   sts_token_endpoint_url: stsurl
+  unleash_url: unleashurl
+  unleash_instance_id: local
 
 no.nav.sosialhjelp.idporten:
   token_url: tokenurl

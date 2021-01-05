@@ -25,6 +25,7 @@ object Versions {
     const val jerseyMediaJaxb = "2.31"
     const val redisMock = "0.1.16"
     const val lettuce = "5.3.5.RELEASE"
+    const val unleash = "3.3.4"
 
     // Test only
     const val junitJupiter = "5.7.0"
@@ -119,6 +120,9 @@ dependencies {
 
 //    Abac-attributter
     implementation("no.nav.abac.policies:abac-attribute-constants:${Versions.abacAttributeConstants}")
+
+//    Unleash
+    implementation("no.finn.unleash:unleash-client-java:${Versions.unleash}")
 
 //    Redis
     implementation("io.lettuce:lettuce-core:${Versions.lettuce}")

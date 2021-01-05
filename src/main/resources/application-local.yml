@@ -27,6 +27,8 @@ client:
   norg_oppslag_url: ${NORG_OPPSLAG_URL:https://norg2-frontend.nais.adeo.no/#/startsok?enhetNr=}
   pdl_endpoint_url: ${PDL_ENDPOINT_URL:pdl_endpoint_url}
   sts_token_endpoint_url: ${STS_TOKEN_ENDPOINT_URL:sts_token_endpoint_url}
+  unleash_url: ${UNLEASH_API_URL:https://unleash.nais.io/api}
+  unleash_instance_id: ${UNLEASH_INSTANCE_ID:local}
 
 no.nav.sosialhjelp.idporten:
   token_url: ${ID_PORTEN_TOKEN_URL:https://oidc-ver2.difi.no/idporten-oidc-provider/token}
