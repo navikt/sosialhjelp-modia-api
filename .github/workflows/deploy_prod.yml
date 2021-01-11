@@ -30,6 +30,6 @@ jobs:
           RESOURCE: nais.yaml
           CLUSTER: prod-fss
           VARS: nais/prod/prod-fss.json
-          REF: ${{ github.event.client_payload.TAG }}
+          REF: ${{ steps.artifact-version.outputs.version }}
           PRINT_PAYLOAD: true
           IMAGE: ${{ env.IMAGE }}
