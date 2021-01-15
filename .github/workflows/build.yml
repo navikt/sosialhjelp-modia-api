@@ -2,7 +2,9 @@ name: Build image
 on:
   push:
     branches:
-      - "master"
+      - '**'      # Build all branches
+    tags-ignore:
+      - '**'      # Don't build any tags
   workflow_dispatch:
 
 jobs:
