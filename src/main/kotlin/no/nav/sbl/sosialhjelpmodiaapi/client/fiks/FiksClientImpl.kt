@@ -1,13 +1,14 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.fiks
 
+import no.finn.unleash.Unleash
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_ALLE_DIGISOSSAKER
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_DIGISOSSAK
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_DOKUMENT
+import no.nav.sbl.sosialhjelpmodiaapi.client.unleash.FIKS_CACHE_ENABLED
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.feilmeldingUtenFnr
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
-import no.nav.sbl.sosialhjelpmodiaapi.redis.CacheProperties
 import no.nav.sbl.sosialhjelpmodiaapi.redis.RedisService
 import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService
 import no.nav.sbl.sosialhjelpmodiaapi.toFiksErrorMessage
@@ -39,7 +40,7 @@ class FiksClientImpl(
         private val auditService: AuditService,
         private val redisService: RedisService,
         private val tokenUtils: TokenUtils,
-        private val cacheProperties: CacheProperties
+        private val unleash: Unleash,
 ) : FiksClient {
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
@@ -57,7 +58,7 @@ class FiksClientImpl(
     }
 
     private fun skalBrukeCache(): Boolean {
-        return cacheProperties.fiksCacheEnabled
+        return unleash.isEnabled(FIKS_CACHE_ENABLED, false)
     }
 
     private fun hentDigisosSakFraCache(digisosId: String): DigisosSak? {
