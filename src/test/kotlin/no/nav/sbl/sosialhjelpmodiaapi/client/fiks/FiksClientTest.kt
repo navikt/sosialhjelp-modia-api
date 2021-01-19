@@ -7,10 +7,11 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import no.finn.unleash.Unleash
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.client.unleash.FIKS_CACHE_ENABLED
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logging.AuditService
-import no.nav.sbl.sosialhjelpmodiaapi.redis.CacheProperties
 import no.nav.sbl.sosialhjelpmodiaapi.redis.RedisService
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_digisossak_response_string
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_minimal_jsondigisossoker_response_string
@@ -38,9 +39,9 @@ internal class FiksClientTest {
     private val auditService: AuditService = mockk()
     private val redisService: RedisService = mockk()
     private val tokenUtils: TokenUtils = mockk()
-    private val cacheProperties: CacheProperties = mockk(relaxed = true)
+    private val unleash: Unleash = mockk()
 
-    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenService, auditService, redisService, tokenUtils, cacheProperties)
+    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenService, auditService, redisService, tokenUtils, unleash)
 
     private val id = "123"
 
@@ -55,7 +56,7 @@ internal class FiksClientTest {
         every { redisService.set(any(), any()) } just Runs
 
         every { tokenUtils.hentNavIdentForInnloggetBruker() } returns "11111111111"
-        every { cacheProperties.fiksCacheEnabled } returns true
+        every { unleash.isEnabled(FIKS_CACHE_ENABLED, false) } returns true
     }
 
     @Test
