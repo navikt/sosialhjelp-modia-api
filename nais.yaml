@@ -44,6 +44,7 @@ spec:
         - host: "oidc-ver2.difi.no"
         - host: "register.geonorge.no"
         - host: "login.microsoftonline.com"
+        - host: "unleash.nais.io"
       rules:
         - application: sosialhjelp-mock-alt-api
 {{#if isGcp}}
