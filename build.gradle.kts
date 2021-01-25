@@ -45,7 +45,7 @@ plugins {
 
 application {
     applicationName = "sosialhjelp-modia-api"
-    mainClassName = applicationKt
+    mainClass.set(applicationKt)
 }
 
 java {
