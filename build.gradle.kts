@@ -45,7 +45,7 @@ plugins {
 
 application {
     applicationName = "sosialhjelp-modia-api"
-    mainClass.set(applicationKt)
+    mainClassName = applicationKt // TODO: erstatt med "mainClass.set(applicationKt)" når denne merges https://github.com/johnrengelman/shadow/pull/612
 }
 
 java {
