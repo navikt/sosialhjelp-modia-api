@@ -16,7 +16,7 @@ internal class RedisServiceTest {
     private val cacheProperties: CacheProperties = mockk(relaxed = true)
     private val tokenUtils: TokenUtils = mockk()
 
-    private val service = RedisService(redisStore, cacheProperties, tokenUtils)
+    private val service = RedisServiceImpl(redisStore, cacheProperties, tokenUtils)
 
     @BeforeEach
     internal fun setUp() {

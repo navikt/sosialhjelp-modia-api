@@ -7,10 +7,11 @@ import io.lettuce.core.api.async.RedisAsyncCommands
 import io.lettuce.core.codec.ByteArrayCodec
 import io.lettuce.core.codec.RedisCodec
 import io.lettuce.core.codec.StringCodec
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.util.concurrent.TimeUnit
 
-
+@Profile("redis-cache")
 @Component
 class RedisStore(
         redisClient: RedisClient

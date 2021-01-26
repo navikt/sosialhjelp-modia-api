@@ -1,13 +1,6 @@
 spring:
-  redis:
-    host: ${REDIS_HOST:localhost}
-    port: 1313
-    password: ${REDIS_PASSWORD:foobar}
-
-modia:
-  cache:
-    redis_mocked: true
-    time_to_live_seconds: 5
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 
 no.nav.security.jwt:
   issuer.azuread:

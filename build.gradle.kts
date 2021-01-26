@@ -23,7 +23,6 @@ object Versions {
     const val logbackSyslog4j = "1.0.0"
     const val syslog4j = "0.9.30"
     const val jerseyMediaJaxb = "2.31"
-    const val redisMock = "0.1.16"
     const val lettuce = "5.3.5.RELEASE"
     const val unleash = "3.3.4"
 
@@ -126,7 +125,6 @@ dependencies {
 
 //    Redis
     implementation("io.lettuce:lettuce-core:${Versions.lettuce}")
-    implementation("com.github.fppt:jedis-mock:${Versions.redisMock}")
 
 //    Test
     testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")

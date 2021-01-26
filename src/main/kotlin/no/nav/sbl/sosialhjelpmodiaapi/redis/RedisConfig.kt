@@ -6,17 +6,15 @@ import org.springframework.boot.autoconfigure.data.redis.RedisProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 
+@Profile("redis-cache")
 @Configuration
 @EnableConfigurationProperties(RedisProperties::class)
-class RedisConfig(
-        private val cacheProperties: CacheProperties
-) {
+class RedisConfig {
 
     @Bean
     fun redisClient(properties: RedisProperties): RedisClient {
-        cacheProperties.startInMemoryRedisIfMocked()
-
         val redisUri = RedisURI.create(properties.host, properties.port)
         redisUri.setPassword(properties.password)
 
