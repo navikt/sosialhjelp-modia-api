@@ -141,6 +141,11 @@ dependencies {
             because("Transitiv avhengighet dratt inn av jedis-mock@0.1.16 har sårbarhet. Constraintsen kan fjernes når jedis-mock bruker guava@30.0-jre eller nyere")
         }
 
+        implementation("io.lettuce:lettuce-core:${Versions.lettuce}") {
+            version {strictly(Versions.lettuce)}
+            because("Spring-boot-data-redis drar inn 6.0.2, men denne versjonen fungerer ikke med jedis-mock. Workaround -> kanskje embedded redis lokalt og sette opp redis på GCP")
+        }
+
         //  Test
         testImplementation("org.glassfish.jersey.media:jersey-media-jaxb:${Versions.jerseyMediaJaxb}") {
             because("Transitiv avhengighet dratt inn av token-validation-test-support@1.3.1 har sårbarhet. Constraintsen kan fjernes når token-validation-test-support bruker jersey-media-jaxb@2.31 eller nyere")
