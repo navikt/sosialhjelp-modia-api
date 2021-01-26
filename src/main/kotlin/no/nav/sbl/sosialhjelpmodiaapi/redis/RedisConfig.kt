@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 
-@Profile("redis-cache")
+@Profile("!no-redis")
 @Configuration
 @EnableConfigurationProperties(RedisProperties::class)
 class RedisConfig {

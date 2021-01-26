@@ -67,6 +67,7 @@ Prosjektet bruker Github Actions for bygg og deploy
 ## Redis
 Applikasjonen bruker Redis for caching. Endringer i `redis-config.yml` eller `redisexporter.yml` i andre brancher enn `master` gir autodeploy til dev-fss, og endringer på `master` gir autodeploy til prod-fss.
 Samtidig kan man manuelt deploy redis-instanser med eks `kubectl apply -f nais/redis-config.yml`.
+Legg til spring-profil `no-redis` for å disable redis.
 
 ## Lokal kjøring
 Bruk spring profile `local` eller `mock`.

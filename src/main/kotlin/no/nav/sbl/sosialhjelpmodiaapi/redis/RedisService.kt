@@ -20,7 +20,7 @@ interface RedisService {
     fun getAlleNavEnheter(): List<NavEnhet>?
 }
 
-@Profile("redis-cache")
+@Profile("!no-redis")
 @Component
 class RedisServiceImpl(
         private val redisStore: RedisStore,
@@ -88,7 +88,7 @@ class RedisServiceImpl(
     }
 }
 
-@Profile("!redis-cache")
+@Profile("no-redis")
 @Component
 class RedisServiceMock : RedisService {
 
