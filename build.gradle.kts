@@ -8,7 +8,7 @@ group = "no.nav.sbl"
 object Versions {
     const val kotlin = "1.4.21"
     const val coroutines = "1.4.2"
-    const val springBoot = "2.3.7.RELEASE"
+    const val springBoot = "2.4.2"
     const val logback = "1.2.3"
     const val logstash = "6.5"
     const val sosialhjelpCommon = "1.4ef74b4"
