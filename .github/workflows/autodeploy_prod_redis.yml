@@ -1,4 +1,4 @@
-name: Auto-deploy redise prod-fss
+name: Auto-deploy redis prod-fss
 on:
   push: # Deploys automatically to prod-fss if there is a change in any redis files.
     paths:
