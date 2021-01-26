@@ -24,7 +24,7 @@ object Versions {
     const val syslog4j = "0.9.30"
     const val jerseyMediaJaxb = "2.31"
     const val redisMock = "0.1.16"
-    const val lettuce = "5.3.5.RELEASE"
+    const val lettuce = "5.3.6.RELEASE"
     const val unleash = "3.3.4"
 
     // Test only
