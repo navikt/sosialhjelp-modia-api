@@ -10,7 +10,7 @@ spring:
 
 modia:
   cache:
-    time_to_live_seconds: ${CACHE_TIME_TO_LIVE_SECONDS:5}
+    time_to_live_seconds: ${CACHE_TIME_TO_LIVE_SECONDS:100}
 
 server:
   port: 8383

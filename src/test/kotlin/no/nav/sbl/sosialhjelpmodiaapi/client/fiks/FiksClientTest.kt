@@ -16,7 +16,6 @@ import no.nav.sbl.sosialhjelpmodiaapi.redis.RedisService
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_digisossak_response_string
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_minimal_jsondigisossoker_response_string
 import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService
-import no.nav.sbl.sosialhjelpmodiaapi.utils.TokenUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
@@ -38,10 +37,9 @@ internal class FiksClientTest {
     private val idPortenService: IdPortenService = mockk()
     private val auditService: AuditService = mockk()
     private val redisService: RedisService = mockk()
-    private val tokenUtils: TokenUtils = mockk()
     private val unleash: Unleash = mockk()
 
-    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenService, auditService, redisService, tokenUtils, unleash)
+    private val fiksClient = FiksClientImpl(clientProperties, restTemplate, idPortenService, auditService, redisService, unleash)
 
     private val id = "123"
 
@@ -56,7 +54,6 @@ internal class FiksClientTest {
         every { redisService.set(any(), any(), any()) } just Runs
         every { redisService.defaultTimeToLiveSeconds } returns 1
 
-        every { tokenUtils.hentNavIdentForInnloggetBruker() } returns "11111111111"
         every { unleash.isEnabled(FIKS_CACHE_ENABLED, false) } returns true
     }
 
