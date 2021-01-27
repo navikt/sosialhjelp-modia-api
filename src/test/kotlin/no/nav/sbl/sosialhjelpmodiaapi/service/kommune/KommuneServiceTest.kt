@@ -38,7 +38,8 @@ internal class KommuneServiceTest {
         every { mockDigisosSak.kommunenummer } returns kommuneNr
         every { idPortenService.getToken().token } returns "tokentoken"
         every { redisService.get(any(), any()) } returns null
-        every { redisService.set(any(), any()) } just Runs
+        every { redisService.set(any(), any(), any()) } just Runs
+        every { redisService.defaultTimeToLiveSeconds } returns 1
     }
 
     @Test
@@ -51,7 +52,7 @@ internal class KommuneServiceTest {
         assertThat(result).isNotNull
         verify(exactly = 1) { redisService.get(any(), any()) }
         verify(exactly = 0) { kommuneInfoClient.get(any(), any()) }
-        verify(exactly = 0) { redisService.set(any(), any()) }
+        verify(exactly = 0) { redisService.set(any(), any(), any()) }
     }
 
     @Test
@@ -63,7 +64,7 @@ internal class KommuneServiceTest {
         assertThat(result).isNotNull
         verify(exactly = 1) { redisService.get(any(), any()) }
         verify(exactly = 1) { kommuneInfoClient.get(any(), any()) }
-        verify(exactly = 1) { redisService.set(any(), any()) }
+        verify(exactly = 1) { redisService.set(any(), any(), any()) }
     }
 
     @Test

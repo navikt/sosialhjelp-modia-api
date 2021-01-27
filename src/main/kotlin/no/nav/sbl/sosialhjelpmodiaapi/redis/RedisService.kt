@@ -9,19 +9,28 @@ import no.nav.sbl.sosialhjelpmodiaapi.logger
 import no.nav.sbl.sosialhjelpmodiaapi.utils.TokenUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.io.IOException
 
+interface RedisService {
+    val defaultTimeToLiveSeconds: Long
+    fun get(key: String, requestedClass: Class<out Any>): Any?
+    fun set(key: String, value: ByteArray, timeToLive: Long = defaultTimeToLiveSeconds)
+    fun getAlleNavEnheter(): List<NavEnhet>?
+}
+
+@Profile("!no-redis")
 @Component
-class RedisService(
+class RedisServiceImpl(
         private val redisStore: RedisStore,
         cacheProperties: CacheProperties,
         private val tokenUtils: TokenUtils
-) {
+) : RedisService {
 
-    private val defaultTimeToLiveSeconds = cacheProperties.timeToLiveSeconds
+    override val defaultTimeToLiveSeconds = cacheProperties.timeToLiveSeconds
 
-    fun get(key: String, requestedClass: Class<out Any>): Any? {
+    override fun get(key: String, requestedClass: Class<out Any>): Any? {
         val bytes: ByteArray? = redisStore.get(key) // Redis har konfigurert timout for disse.
         return if (bytes != null) {
             try {
@@ -41,7 +50,7 @@ class RedisService(
         }
     }
 
-    fun set(key: String, value: ByteArray, timeToLive: Long = defaultTimeToLiveSeconds) {
+    override fun set(key: String, value: ByteArray, timeToLive: Long) {
         val result = redisStore.set(key, value, timeToLive)
         if (result == null) {
             log.warn("Cache put feilet eller fikk timeout")
@@ -50,7 +59,7 @@ class RedisService(
         }
     }
 
-    fun getAlleNavEnheter(): List<NavEnhet>? {
+    override fun getAlleNavEnheter(): List<NavEnhet>? {
         val bytes: ByteArray? = redisStore.get(ALLE_NAVENHETER_CACHE_KEY)
         return if (bytes != null) {
             try {
@@ -76,5 +85,24 @@ class RedisService(
 
     companion object {
         private val log by logger()
+    }
+}
+
+@Profile("no-redis")
+@Component
+class RedisServiceMock : RedisService {
+
+    override val defaultTimeToLiveSeconds: Long = 1L
+
+    override fun get(key: String, requestedClass: Class<out Any>): Any? {
+        return null
+    }
+
+    override fun set(key: String, value: ByteArray, timeToLive: Long) {
+
+    }
+
+    override fun getAlleNavEnheter(): List<NavEnhet>? {
+        return null
     }
 }

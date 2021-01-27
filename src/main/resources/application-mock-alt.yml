@@ -1,13 +1,3 @@
-spring:
-  redis:
-    host: ${REDIS_HOST:localhost}
-    port: 1313
-
-modia:
-  cache:
-    redis_mocked: true
-    time_to_live_seconds: 2
-
 no.nav.security.jwt:
   issuer.azuread:
     discoveryurl: http://metadata

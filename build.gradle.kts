@@ -23,8 +23,7 @@ object Versions {
     const val logbackSyslog4j = "1.0.0"
     const val syslog4j = "0.9.30"
     const val jerseyMediaJaxb = "2.31"
-    const val redisMock = "0.1.16"
-    const val lettuce = "5.3.6.RELEASE"
+    const val lettuce = "6.0.2.RELEASE"
     const val unleash = "3.3.4"
 
     // Test only
@@ -126,7 +125,6 @@ dependencies {
 
 //    Redis
     implementation("io.lettuce:lettuce-core:${Versions.lettuce}")
-    implementation("com.github.fppt:jedis-mock:${Versions.redisMock}")
 
 //    Test
     testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
@@ -139,11 +137,6 @@ dependencies {
     constraints {
         implementation("com.google.guava:guava:${Versions.guava}") {
             because("Transitiv avhengighet dratt inn av jedis-mock@0.1.16 har sårbarhet. Constraintsen kan fjernes når jedis-mock bruker guava@30.0-jre eller nyere")
-        }
-
-        implementation("io.lettuce:lettuce-core:${Versions.lettuce}") {
-            version {strictly(Versions.lettuce)}
-            because("Spring-boot-data-redis drar inn 6.0.2, men denne versjonen fungerer ikke med jedis-mock. Workaround -> kanskje embedded redis lokalt og sette opp redis på GCP")
         }
 
         //  Test

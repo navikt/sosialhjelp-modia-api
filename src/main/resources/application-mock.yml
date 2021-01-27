@@ -1,13 +1,8 @@
-spring:
-  redis:
-    host: ${REDIS_HOST:localhost}
-    port: 1313
-    password: ${REDIS_PASSWORD:foobar}
-
-modia:
-  cache:
-    redis_mocked: true
-    time_to_live_seconds: 2
+management:
+  endpoints:
+    web:
+      exposure:
+        exclude: '*'
 
 no.nav.security.jwt:
   issuer.azuread:
@@ -36,11 +31,5 @@ no.nav.sosialhjelp.idporten:
   config_url: configurl
   truststore_type: truststoretype
   truststore_filepath: truststorefilepath
-
-management:
-  endpoints:
-    web:
-      exposure:
-        exclude: '*'
 
 loginurl: ${LOGINURL:http://localhost:8383/sosialhjelp/modia-api/local/cookie}
