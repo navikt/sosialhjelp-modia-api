@@ -36,7 +36,7 @@ class RedisServiceImpl(
             try {
                 val obj = objectMapper.readValue(bytes, requestedClass)
                 valider(obj)
-                log.debug("Hentet ${requestedClass.simpleName}} fra cache, key=$key")
+                log.debug("Hentet ${requestedClass.simpleName} fra cache, key=$key")
                 obj
             } catch (e: IOException) {
                 log.warn("Fant key=$key i cache, men value var ikke ${requestedClass.simpleName}")
