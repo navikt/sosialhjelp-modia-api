@@ -15,7 +15,7 @@ import no.nav.sbl.sosialhjelpmodiaapi.toFiksErrorMessage
 import no.nav.sbl.sosialhjelpmodiaapi.typeRef
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.fiksHeaders
-import no.nav.sbl.sosialhjelpmodiaapi.utils.TokenUtils
+import no.nav.sbl.sosialhjelpmodiaapi.utils.RequestUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
@@ -39,7 +39,6 @@ class FiksClientImpl(
         private val idPortenService: IdPortenService,
         private val auditService: AuditService,
         private val redisService: RedisService,
-        private val tokenUtils: TokenUtils,
         private val unleash: Unleash,
 ) : FiksClient {
 
@@ -69,9 +68,8 @@ class FiksClientImpl(
         return null
     }
 
-    // todo: endre fra navIdent til sessionId
-    // cache key = "<NavIdent>_<digisosId>" eller "<NavIdent>_<dokumentlagerId>"
-    private fun cacheKeyFor(id: String) = "${tokenUtils.hentNavIdentForInnloggetBruker()}_$id"
+    // cache key = "<sessionId>_<digisosId>" eller "<sessionId>_<dokumentlagerId>"
+    private fun cacheKeyFor(id: String) = "${RequestUtils.getSosialhjelpModiaSessionId()}_$id"
 
     private fun hentDigisosSakFraFiks(digisosId: String): DigisosSak {
         val virksomhetsToken = idPortenService.getToken()
