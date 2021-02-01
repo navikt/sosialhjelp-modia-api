@@ -6,6 +6,8 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
 import io.mockk.verify
 import no.finn.unleash.Unleash
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
@@ -16,11 +18,13 @@ import no.nav.sbl.sosialhjelpmodiaapi.redis.RedisService
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_digisossak_response_string
 import no.nav.sbl.sosialhjelpmodiaapi.responses.ok_minimal_jsondigisossoker_response_string
 import no.nav.sbl.sosialhjelpmodiaapi.service.idporten.IdPortenService
+import no.nav.sbl.sosialhjelpmodiaapi.utils.RequestUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -47,6 +51,9 @@ internal class FiksClientTest {
     fun init() {
         clearAllMocks()
 
+        mockkObject(RequestUtils)
+        every { RequestUtils.getSosialhjelpModiaSessionId() } returns "abcdefghijkl"
+
         every { idPortenService.getToken().token } returns "token"
         every { auditService.reportFiks(any(), any(), any(), any()) } just Runs
 
@@ -55,6 +62,11 @@ internal class FiksClientTest {
         every { redisService.defaultTimeToLiveSeconds } returns 1
 
         every { unleash.isEnabled(FIKS_CACHE_ENABLED, false) } returns true
+    }
+
+    @AfterEach
+    internal fun tearDown() {
+        unmockkObject(RequestUtils)
     }
 
     @Test
@@ -159,6 +171,29 @@ internal class FiksClientTest {
         verify(exactly = 1) { redisService.get(any(), any()) }
         verify(exactly = 1) { restTemplate.exchange(any(), any(), any(), DigisosSak::class.java, any()) }
         verify(exactly = 1) { redisService.set(any(), any(), any()) }
+    }
+
+    @Test
+    fun `skal ikke bruke cache hvis sessionId er null`() {
+        every { RequestUtils.getSosialhjelpModiaSessionId() } returns null
+
+        val mockResponse: ResponseEntity<DigisosSak> = mockk()
+        val digisosSak = objectMapper.readValue(ok_digisossak_response_string, DigisosSak::class.java)
+        every { mockResponse.body } returns digisosSak
+        every {
+            restTemplate.exchange(
+                    any(),
+                    any(),
+                    any(),
+                    DigisosSak::class.java,
+                    any())
+        } returns mockResponse
+
+        val result = fiksClient.hentDigisosSak(id)
+
+        assertThat(result).isNotNull
+
+        verify(exactly = 0) { redisService.get(any(), any()) }
     }
 
     @Test
