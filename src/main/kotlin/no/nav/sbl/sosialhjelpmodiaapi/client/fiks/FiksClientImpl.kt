@@ -57,7 +57,7 @@ class FiksClientImpl(
     }
 
     private fun skalBrukeCache(): Boolean {
-        return unleash.isEnabled(FIKS_CACHE_ENABLED, false)
+        return unleash.isEnabled(FIKS_CACHE_ENABLED, false) && RequestUtils.getSosialhjelpModiaSessionId() != null
     }
 
     private fun hentDigisosSakFraCache(digisosId: String): DigisosSak? {
