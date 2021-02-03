@@ -18,11 +18,13 @@ spec:
     requests:
       cpu: 100m
       memory: 128Mi
-  accessPolicy:
+  accessPolicy: # for GCP
     inbound:
       rules:
         - application: sosialhjelp-modia-api
+        - application: sosialhjelp-modia-api-redisexporter
   service:
     port: 6379
+    protocol: redis
   envFrom:
     - secret: redis-password-modia-api
