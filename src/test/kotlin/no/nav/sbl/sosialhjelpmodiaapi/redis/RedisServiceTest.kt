@@ -39,13 +39,4 @@ internal class RedisServiceTest {
         val digisosSak = service.get("key", DigisosSak::class.java)
         assertThat(digisosSak).isNull()
     }
-
-    @Test
-    internal fun `digisosSak tilhorer annen bruker gir null`() {
-        every { redisStore.get(any()) } returns ok_digisossak_response_string.toByteArray()
-
-        val digisosSak = service.get("key", DigisosSak::class.java)
-
-        assertThat(digisosSak).isNull()
-    }
 }
