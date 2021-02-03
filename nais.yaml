@@ -31,10 +31,8 @@ spec:
     min: {{minReplicas}}
     max: {{maxReplicas}}
   webproxy: {{webProxyEnabled}}
-{{#unless isGcp}}
   envFrom:
     - secret: redis-password-modia-api
-{{/unless}}
   accessPolicy:
     inbound:
       rules:
@@ -47,6 +45,7 @@ spec:
         - host: "unleash.nais.io"
       rules:
         - application: sosialhjelp-mock-alt-api
+        - application: sosialhjelp-modia-api-redis
 {{#if isGcp}}
   filesFrom:
     - secret: virksomhetssertifikat
