@@ -6,9 +6,7 @@ import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelpmodiaapi.common.DigisosSakTilhorerAnnenBrukerException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
 import no.nav.sbl.sosialhjelpmodiaapi.logger
-import no.nav.sbl.sosialhjelpmodiaapi.utils.TokenUtils
 import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
-import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.io.IOException
@@ -25,7 +23,6 @@ interface RedisService {
 class RedisServiceImpl(
         private val redisStore: RedisStore,
         cacheProperties: CacheProperties,
-        private val tokenUtils: TokenUtils
 ) : RedisService {
 
     override val defaultTimeToLiveSeconds = cacheProperties.timeToLiveSeconds
@@ -77,7 +74,6 @@ class RedisServiceImpl(
      */
     private fun valider(obj: Any?) {
         when {
-            obj is DigisosSak && obj.sokerFnr != tokenUtils.hentNavIdentForInnloggetBruker() -> throw DigisosSakTilhorerAnnenBrukerException("DigisosSak tilhører annen bruker")
             obj is JsonDigisosSoker && obj.additionalProperties.isNotEmpty() -> throw IOException("JsonDigisosSoker har ukjente properties - må tilhøre ett annet objekt. Cache-value tas ikke i bruk")
             obj is JsonVedleggSpesifikasjon && obj.additionalProperties.isNotEmpty() -> throw IOException("JsonVedleggSpesifikasjon har ukjente properties - må tilhøre ett annet objekt. Cache-value tas ikke i bruk")
         }
