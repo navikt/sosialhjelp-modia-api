@@ -15,7 +15,8 @@
     "STS_TOKEN_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api/sosialhjelp/mock-alt-api/sts_token_endpoint_url",
     "VIRKSERT_STI": "/var/run/secrets",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
-    "UNLEASH_INSTANCE_ID": "dev-gcp"
+    "UNLEASH_INSTANCE_ID": "dev-gcp",
+    "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.cluster.local"
   },
   "minReplicas": "1",
   "maxReplicas": "1",

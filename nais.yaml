@@ -47,6 +47,7 @@ spec:
         - host: "unleash.nais.io"
       rules:
         - application: sosialhjelp-mock-alt-api
+        - application: sosialhjelp-modia-api-redis
 {{#if isGcp}}
   filesFrom:
     - secret: virksomhetssertifikat

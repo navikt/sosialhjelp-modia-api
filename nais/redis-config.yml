@@ -18,6 +18,10 @@ spec:
     requests:
       cpu: 100m
       memory: 128Mi
+  accessPolicy:
+    inbound:
+      rules:
+        - application: sosialhjelp-modia-api
   service:
     port: 6379
   envFrom:
