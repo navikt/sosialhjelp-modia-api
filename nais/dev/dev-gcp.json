@@ -23,6 +23,7 @@
   "prometheusEnabled": true,
   "webProxyEnabled": false,
   "isGcp": true,
+  "isLabsGcp": false,
   "vaultEnabled": false,
   "dev": true,
   "azureEnabled": true
