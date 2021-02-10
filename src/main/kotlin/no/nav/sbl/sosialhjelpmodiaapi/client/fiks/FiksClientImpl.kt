@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.fiks
 
+import kotlinx.coroutines.runBlocking
 import no.finn.unleash.Unleash
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_ALLE_DIGISOSSAKER
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksPaths.PATH_DIGISOSSAK
@@ -20,11 +21,14 @@ import no.nav.sbl.sosialhjelpmodiaapi.utils.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
+import no.nav.sosialhjelp.kotlin.utils.retry
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
@@ -80,7 +84,9 @@ class FiksClientImpl(
             val uriComponents = urlWithSporingsId(baseUrl + PATH_DIGISOSSAK)
             val vars = mapOf(DIGISOSID to digisosId, SPORINGSID to sporingsId)
 
-            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), DigisosSak::class.java, vars)
+            val response = withRetry {
+                restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), DigisosSak::class.java, vars)
+            }
 
             log.info("Hentet DigisosSak $digisosId fra Fiks")
             val digisosSak = response.body!!
@@ -130,7 +136,9 @@ class FiksClientImpl(
                     DOKUMENTLAGERID to dokumentlagerId,
                     SPORINGSID to sporingsId)
 
-            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), requestedClass, vars)
+            val response = withRetry {
+                restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), requestedClass, vars)
+            }
 
             auditService.reportFiks(fnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId", HttpMethod.GET, sporingsId)
 
@@ -159,7 +167,9 @@ class FiksClientImpl(
             val vars = mapOf(SPORINGSID to sporingsId)
             val body = Fnr(fnr)
 
-            val response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.POST, HttpEntity(body, headers), typeRef<List<DigisosSak>>(), vars)
+            val response = withRetry {
+                restTemplate.exchange(uriComponents.toUriString(), HttpMethod.POST, HttpEntity(body, headers), typeRef<List<DigisosSak>>(), vars)
+            }
 
             auditService.reportFiks(fnr, urlTemplate, HttpMethod.POST, sporingsId)
 
@@ -183,6 +193,19 @@ class FiksClientImpl(
     private fun urlWithSporingsId(urlTemplate: String) =
             UriComponentsBuilder.fromUriString(urlTemplate).queryParam(SPORINGSID, "{$SPORINGSID}").build()
 
+    private fun <T> withRetry(block: () -> ResponseEntity<T>): ResponseEntity<T> {
+        return runBlocking {
+            retry(
+                    attempts = retryAttempts,
+                    initialDelay = initialDelayMillis,
+                    maxDelay = maxDelayMillis,
+                    retryableExceptions = arrayOf(HttpServerErrorException::class)
+            ) {
+                block()
+            }
+        }
+    }
+
     companion object {
         private val log by logger()
 
@@ -190,6 +213,10 @@ class FiksClientImpl(
         private const val SPORINGSID = "sporingsId"
         private const val DIGISOSID = "digisosId"
         private const val DOKUMENTLAGERID = "dokumentlagerId"
+
+        private const val retryAttempts: Int = 5
+        private const val initialDelayMillis: Long = 100
+        private const val maxDelayMillis: Long = 10000
     }
 
     private data class Fnr(
