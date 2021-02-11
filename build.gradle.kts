@@ -11,7 +11,7 @@ object Versions {
     const val springBoot = "2.4.2"
     const val logback = "1.2.3"
     const val logstash = "6.5"
-    const val sosialhjelpCommon = "1.4ef74b4"
+    const val sosialhjelpCommon = "1.14b3a11"
     const val filformat = "1.2020.11.05-09.32-14af05dea965"
     const val micrometerRegistry = "1.6.2"
     const val prometheus = "0.9.0"

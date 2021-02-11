@@ -1,8 +1,6 @@
 package no.nav.sbl.sosialhjelpmodiaapi.health
 
-import no.nav.sbl.sosialhjelpmodiaapi.utils.Miljo
 import no.nav.security.token.support.core.api.Unprotected
-import no.nav.sosialhjelp.selftest.DependencyCheck
 import no.nav.sosialhjelp.selftest.SelftestResult
 import no.nav.sosialhjelp.selftest.SelftestService
 import org.springframework.http.MediaType
@@ -18,20 +16,16 @@ const val APPLICATION_READY = "Application is ready!"
 @RestController
 @RequestMapping(value = ["/internal"])
 class HealthController(
-        private val dependencyChecks: List<DependencyCheck>
+        private val selftestService: SelftestService
 ) {
 
-    val selftestService = SelftestService("sosialhjelp-modia-api", Miljo.getAppImage(), dependencyChecks)
+    @ResponseBody
+    @GetMapping(value = ["/isAlive"], produces = [MediaType.TEXT_PLAIN_VALUE])
+    fun isAlive(): String = APPLICATION_LIVENESS
 
-    val isAlive: String
-        @ResponseBody
-        @GetMapping(value = ["/isAlive"], produces = [MediaType.TEXT_PLAIN_VALUE])
-        get() = APPLICATION_LIVENESS
-
-    val isReady: String
-        @ResponseBody
-        @GetMapping(value = ["/isReady"], produces = [MediaType.TEXT_PLAIN_VALUE])
-        get() = APPLICATION_READY
+    @ResponseBody
+    @GetMapping(value = ["/isReady"], produces = [MediaType.TEXT_PLAIN_VALUE])
+    fun isReady(): String = APPLICATION_READY
 
     @ResponseBody
     @GetMapping("/selftest")
