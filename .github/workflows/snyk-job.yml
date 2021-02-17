@@ -19,5 +19,5 @@ jobs:
           ORG_GRADLE_PROJECT_githubUser: x-access-token
           ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: --org=teamdigisos
+          args: --org=teamdigisos --project-name=${{ github.event.repository.name }} --remote-repo-url=${{ github.event.repository.name }}
           command: monitor
