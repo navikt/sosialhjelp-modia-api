@@ -27,7 +27,7 @@ jobs:
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          RESOURCE: nais.yaml
+          RESOURCE: nais/nais.yaml
           CLUSTER: prod-fss
           VARS: nais/prod/prod-fss.json
           REF: ${{ steps.artifact-version.outputs.version }}
