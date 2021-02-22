@@ -202,6 +202,6 @@ tasks {
     }
 
     check {
-        dependsOn("installKotlinterPreCommitHook")
+        dependsOn("formatKotlin")
     }
 }
