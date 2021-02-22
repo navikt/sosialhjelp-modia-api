@@ -32,7 +32,7 @@ import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
-import java.util.*
+import java.util.UUID
 
 
 @Profile("!mock")

@@ -20,7 +20,7 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
-import java.util.*
+import java.util.Collections
 
 
 @Profile("!(prod-fss|mock)")

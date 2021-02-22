@@ -3,7 +3,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.domain
 import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Date
 
 data class SoknadsStatusResponse(
         val status: SoknadsStatus

@@ -20,7 +20,7 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtaksfil
 import org.joda.time.DateTime
 import java.text.DateFormatSymbols
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale
 
 private fun toStringWithTimezone(dateTime: DateTime): String? {
     val zonedDateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SS'Z'")
