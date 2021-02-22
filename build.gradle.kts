@@ -36,7 +36,7 @@ val applicationKt = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
 plugins {
     application
     kotlin("jvm") version "1.4.21"
-//    id("org.jmailen.kotlinter") version "2.3.1" // TODO - burde tas i bruk
+    id("org.jmailen.kotlinter") version "3.3.0"
     id("org.jetbrains.kotlin.plugin.spring") version "1.4.21"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("com.github.ben-manes.versions") version "0.28.0"
@@ -163,6 +163,14 @@ repositories {
     }
 }
 
+kotlinter {
+    ignoreFailures = false
+    indentSize = 4
+    reporters = arrayOf("checkstyle", "plain")
+    experimentalRules = false
+    disabledRules = emptyArray<String>()
+}
+
 tasks {
     withType<KotlinCompile> {
         kotlinOptions {
@@ -191,5 +199,9 @@ tasks {
             mergeStrategy = "append"
         }
         mergeServiceFiles()
+    }
+
+    check {
+        dependsOn("installKotlinterPrePushHook")
     }
 }
