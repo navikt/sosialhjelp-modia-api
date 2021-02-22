@@ -168,7 +168,7 @@ kotlinter {
     indentSize = 4
     reporters = arrayOf("checkstyle", "plain")
     experimentalRules = false
-    disabledRules = emptyArray<String>()
+    disabledRules = arrayOf("comment-spacing-rule")
 }
 
 tasks {
