@@ -172,9 +172,9 @@ kotlinter {
 }
 
 tasks {
-    
+
     check {
-        dependsOn("formatKotlin")
+        dependsOn("installKotlinterPrePushHook")
     }
 
     withType<KotlinCompile> {
