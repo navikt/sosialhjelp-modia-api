@@ -13,8 +13,8 @@ import org.springframework.web.client.RestClientException
 @Profile("!mock")
 @Component
 class PdlCheck(
-        clientProperties: ClientProperties,
-        private val pdlClient: PdlClient
+    clientProperties: ClientProperties,
+    private val pdlClient: PdlClient
 ) : DependencyCheck {
 
     override val type = DependencyType.REST

@@ -20,11 +20,10 @@ import org.springframework.web.context.request.RequestContextHolder.getRequestAt
 import org.springframework.web.context.request.RequestContextHolder.setRequestAttributes
 import java.time.LocalDate
 
-
 @Component
 class UtbetalingerService(
-        private val fiksClient: FiksClient,
-        private val eventService: EventService
+    private val fiksClient: FiksClient,
+    private val eventService: EventService
 ) {
 
     fun hentAlleUtbetalinger(fnr: String, months: Int, fom: LocalDate?, tom: LocalDate?): List<UtbetalingerResponse> {
@@ -43,7 +42,7 @@ class UtbetalingerService(
 
     fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
         return getUtbetalinger(digisosSak)
-                .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
+            .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
     }
 
     private fun utbetalingerSisteManeder(digisosSaker: List<DigisosSak>, months: Int): List<UtbetalingerResponse> {
@@ -51,12 +50,12 @@ class UtbetalingerService(
 
         return runBlocking(Dispatchers.IO + MDCContext()) {
             digisosSaker
-                    .filter { isDigisosSakNewerThanMonths(it, months) }
-                    .flatMapParallel {
-                        setRequestAttributes(requestAttributes)
-                        getUtbetalinger(it)
-                    }
-                    .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
+                .filter { isDigisosSakNewerThanMonths(it, months) }
+                .flatMapParallel {
+                    setRequestAttributes(requestAttributes)
+                    getUtbetalinger(it)
+                }
+                .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         }
     }
 
@@ -65,12 +64,12 @@ class UtbetalingerService(
 
         return runBlocking(Dispatchers.IO + MDCContext()) {
             digisosSaker
-                    .filter { isDigisosSakInnenforIntervall(it, fom, tom) }
-                    .flatMapParallel {
-                        setRequestAttributes(requestAttributes)
-                        getUtbetalinger(it)
-                    }
-                    .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
+                .filter { isDigisosSakInnenforIntervall(it, fom, tom) }
+                .flatMapParallel {
+                    setRequestAttributes(requestAttributes)
+                    getUtbetalinger(it)
+                }
+                .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         }
     }
 
@@ -94,29 +93,29 @@ class UtbetalingerService(
         val behandlendeNavKontor = model.navKontorHistorikk.lastOrNull()
 
         return model.utbetalinger
-                .filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
-                .map { utbetaling ->
-                    utbetaling.infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(digisosSak.kommunenummer)
-                    toUtbetalingResponse(utbetaling, digisosSak.fiksDigisosId, behandlendeNavKontor)
-                }
+            .filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
+            .map { utbetaling ->
+                utbetaling.infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(digisosSak.kommunenummer)
+                toUtbetalingResponse(utbetaling, digisosSak.fiksDigisosId, behandlendeNavKontor)
+            }
     }
 
     private fun toUtbetalingResponse(utbetaling: Utbetaling, fiksDigisosId: String, behandlendeNavKontor: NavKontorInformasjon?): UtbetalingerResponse {
         return UtbetalingerResponse(
-                tittel = utbetaling.beskrivelse,
-                belop = utbetaling.belop.toDouble(),
-                utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato
-                        ?: utbetaling.forfallsDato,
-                status = utbetaling.status,
-                fiksDigisosId = fiksDigisosId,
-                fom = utbetaling.fom,
-                tom = utbetaling.tom,
-                mottaker = utbetaling.mottaker,
-                annenMottaker = utbetaling.annenMottaker,
-                kontonummer = utbetaling.kontonummer,
-                utbetalingsmetode = utbetaling.utbetalingsmetode,
-                harVilkar = !utbetaling.vilkar.isNullOrEmpty(),
-                navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }
+            tittel = utbetaling.beskrivelse,
+            belop = utbetaling.belop.toDouble(),
+            utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato
+                ?: utbetaling.forfallsDato,
+            status = utbetaling.status,
+            fiksDigisosId = fiksDigisosId,
+            fom = utbetaling.fom,
+            tom = utbetaling.tom,
+            mottaker = utbetaling.mottaker,
+            annenMottaker = utbetaling.annenMottaker,
+            kontonummer = utbetaling.kontonummer,
+            utbetalingsmetode = utbetaling.utbetalingsmetode,
+            harVilkar = !utbetaling.vilkar.isNullOrEmpty(),
+            navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }
         )
     }
 

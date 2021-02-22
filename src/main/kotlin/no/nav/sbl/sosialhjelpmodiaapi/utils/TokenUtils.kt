@@ -14,9 +14,9 @@ interface TokenUtils {
 @Profile("!(mock | mock-alt | local)")
 @Component
 class TokenUtilsImpl(
-        private val clientConfigurationProperties: ClientConfigurationProperties,
-        private val oAuth2AccessTokenService: OAuth2AccessTokenService,
-        private val msGraphClient: MsGraphClient
+    private val clientConfigurationProperties: ClientConfigurationProperties,
+    private val oAuth2AccessTokenService: OAuth2AccessTokenService,
+    private val msGraphClient: MsGraphClient
 ) : TokenUtils {
 
     override fun hentTokenMedGraphScope(): String {

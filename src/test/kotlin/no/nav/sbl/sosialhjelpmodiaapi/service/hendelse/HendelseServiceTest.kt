@@ -61,10 +61,13 @@ internal class HendelseServiceTest {
     @Test
     fun `Skal returnere respons med flere hendelser`() {
         val model = InternalDigisosSoker()
-        model.historikk.addAll(listOf(
+        model.historikk.addAll(
+            listOf(
                 Hendelse(SOKNAD_SENDT, tittel_sendt, tidspunkt_sendt),
                 Hendelse(SOKNAD_MOTTATT, tittel_mottatt, tidspunkt_mottatt),
-                Hendelse(SOKNAD_UNDER_BEHANDLING, tittel3, tidspunkt3)))
+                Hendelse(SOKNAD_UNDER_BEHANDLING, tittel3, tidspunkt3)
+            )
+        )
 
         every { eventService.createModel(any()) } returns model
 

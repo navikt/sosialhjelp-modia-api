@@ -3,7 +3,7 @@ package no.nav.sbl.sosialhjelpmodiaapi.client.unleash.strategy
 import no.finn.unleash.strategy.Strategy
 
 class ByInstanceIdStrategy(
-        private val currentInstanceId: String
+    private val currentInstanceId: String
 ) : Strategy {
     override fun getName(): String = "byInstanceId"
 
@@ -13,5 +13,4 @@ class ByInstanceIdStrategy(
 
         return instanceIds.any { it == currentInstanceId }
     }
-
 }

@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"])
 class LoginController(
-        private val tokenUtils: TokenUtils,
-        private val miljoUtils: MiljoUtils
+    private val tokenUtils: TokenUtils,
+    private val miljoUtils: MiljoUtils
 ) {
 
     @GetMapping("/login")

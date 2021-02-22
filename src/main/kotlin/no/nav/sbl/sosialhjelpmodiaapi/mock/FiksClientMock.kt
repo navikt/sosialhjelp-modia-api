@@ -3,14 +3,21 @@ package no.nav.sbl.sosialhjelpmodiaapi.mock
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
-import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.*
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.defaultDigisosSak
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.digisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.jsonVedleggSpesifikasjonEttersendelse
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.jsonVedleggSpesifikasjonEttersendelse_2
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.jsonVedleggSpesifikasjonSoknad
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.minimalDigisosSoker
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.minimalDigitalsoknad
+import no.nav.sbl.sosialhjelpmodiaapi.mock.responses.minimalPapirsoknad
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.EttersendtInfoNAV
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.util.*
+import java.util.UUID
 
 @Profile("mock")
 @Component

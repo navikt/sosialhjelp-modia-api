@@ -18,28 +18,37 @@ fun InternalDigisosSoker.apply(hendelse: JsonSaksStatus) {
         if (hendelse.status != null) {
             val prevStatus = sakForReferanse.saksStatus
 
-            sakForReferanse.saksStatus = SaksStatus.valueOf(hendelse.status?.name
-                    ?: JsonSaksStatus.Status.UNDER_BEHANDLING.name)
+            sakForReferanse.saksStatus = SaksStatus.valueOf(
+                hendelse.status?.name
+                    ?: JsonSaksStatus.Status.UNDER_BEHANDLING.name
+            )
 
-            if (prevStatus != sakForReferanse.saksStatus
-                    && (sakForReferanse.saksStatus == SaksStatus.IKKE_INNSYN || sakForReferanse.saksStatus == SaksStatus.BEHANDLES_IKKE)) {
+            if (prevStatus != sakForReferanse.saksStatus &&
+                (sakForReferanse.saksStatus == SaksStatus.IKKE_INNSYN || sakForReferanse.saksStatus == SaksStatus.BEHANDLES_IKKE)
+            ) {
                 val tittel = sakForReferanse.tittel ?: "saken din"
-                historikk.add(Hendelse(tittel,
+                historikk.add(
+                    Hendelse(
+                        tittel,
                         "Vi kan ikke vise behandlingsstatus for $tittel digitalt.",
-                        hendelse.hendelsestidspunkt.toLocalDateTime()))
+                        hendelse.hendelsestidspunkt.toLocalDateTime()
+                    )
+                )
             }
         }
     } else {
         // Opprett ny Sak
         val status = SaksStatus.valueOf(hendelse.status?.name ?: JsonSaksStatus.Status.UNDER_BEHANDLING.name)
-        saker.add(Sak(
+        saker.add(
+            Sak(
                 referanse = hendelse.referanse,
                 saksStatus = status,
                 tittel = hendelse.tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(),
                 datoOpprettet = hendelse.hendelsestidspunkt.toLocalDateTime().toLocalDate()
-        ))
+            )
+        )
         val tittel = hendelse.tittel ?: "saken din"
         val beskrivelse: String? = when (status) {
             SaksStatus.UNDER_BEHANDLING -> "${tittel.capitalize()} er under behandling"

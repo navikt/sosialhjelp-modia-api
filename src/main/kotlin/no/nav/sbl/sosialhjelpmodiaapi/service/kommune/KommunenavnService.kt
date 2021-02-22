@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class KommunenavnService(
-        private val kommunenavnClient: KommunenavnClient
+    private val kommunenavnClient: KommunenavnClient
 ) {
     private var kommunenavnMap: Map<String, String> = HashMap()
     private var sistOppdatert = DateTime.now().minusDays(2)

@@ -14,12 +14,13 @@ import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeParseException
-import java.util.*
+import java.util.Collections
+import java.util.UUID
 
 @Profile("mock")
 @Component
 class DigisosApiClientMock(
-        private val fiksClientMock: FiksClientMock
+    private val fiksClientMock: FiksClientMock
 ) : DigisosApiClient {
 
     override fun oppdaterDigisosSak(fiksDigisosId: String?, digisosApiWrapper: DigisosApiWrapper): String? {
@@ -30,18 +31,22 @@ class DigisosApiClientMock(
             id = UUID.randomUUID().toString()
         }
 
-        fiksClientMock.postDigisosSak(DigisosSak(
+        fiksClientMock.postDigisosSak(
+            DigisosSak(
                 fiksDigisosId = id,
                 sokerFnr = "01234567890",
                 fiksOrgId = "11415cd1-e26d-499a-8421-751457dfcbd5",
                 kommunenummer = "1",
                 sistEndret = System.currentTimeMillis(),
-                originalSoknadNAV = OriginalSoknadNAV("110000000", "", "mock-soknad-vedlegg-metadata", DokumentInfo("", "", 0L), Collections.emptyList(),
-                        femMinutterForMottattSoknad(digisosApiWrapper)),
+                originalSoknadNAV = OriginalSoknadNAV(
+                    "110000000", "", "mock-soknad-vedlegg-metadata", DokumentInfo("", "", 0L), Collections.emptyList(),
+                    femMinutterForMottattSoknad(digisosApiWrapper)
+                ),
                 ettersendtInfoNAV = EttersendtInfoNAV(Collections.emptyList()),
                 digisosSoker = DigisosSoker(dokumentlagerId, Collections.emptyList(), System.currentTimeMillis()),
                 tilleggsinformasjon = Tilleggsinformasjon("1234")
-        ))
+            )
+        )
         return id
     }
 

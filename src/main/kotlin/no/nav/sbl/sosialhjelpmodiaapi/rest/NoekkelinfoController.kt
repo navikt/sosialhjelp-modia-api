@@ -1,9 +1,9 @@
 package no.nav.sbl.sosialhjelpmodiaapi.rest
 
-import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadNoekkelinfoResponse
 import no.nav.sbl.sosialhjelpmodiaapi.service.noekkelinfo.NoekkelinfoService
+import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController
 @ProtectedWithClaims(issuer = "azuread")
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class NoekkelinfoController(
-        private val noekkelinfoService: NoekkelinfoService,
-        private val abacService: AbacService
+    private val noekkelinfoService: NoekkelinfoService,
+    private val abacService: AbacService
 ) {
 
     @PostMapping("/{fiksDigisosId}/noekkelinfo")

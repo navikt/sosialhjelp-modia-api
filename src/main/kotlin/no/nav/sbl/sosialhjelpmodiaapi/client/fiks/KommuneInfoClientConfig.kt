@@ -16,18 +16,17 @@ class KommuneInfoClientConfig {
     @Bean
     fun kommuneInfoClient(restTemplate: RestTemplate, clientProperties: ClientProperties): KommuneInfoClient {
         return KommuneInfoClientImpl(
-                restTemplate,
-                toFiksProperties(clientProperties)
+            restTemplate,
+            toFiksProperties(clientProperties)
         )
     }
 
     private fun toFiksProperties(clientProperties: ClientProperties): FiksProperties {
         return FiksProperties(
-                clientProperties.fiksDigisosEndpointUrl + FiksPaths.PATH_KOMMUNEINFO,
-                clientProperties.fiksDigisosEndpointUrl + FiksPaths.PATH_ALLE_KOMMUNEINFO,
-                clientProperties.fiksIntegrasjonId,
-                clientProperties.fiksIntegrasjonpassord
+            clientProperties.fiksDigisosEndpointUrl + FiksPaths.PATH_KOMMUNEINFO,
+            clientProperties.fiksDigisosEndpointUrl + FiksPaths.PATH_ALLE_KOMMUNEINFO,
+            clientProperties.fiksIntegrasjonId,
+            clientProperties.fiksIntegrasjonpassord
         )
     }
-
 }

@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelpmodiaapi
 
-
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

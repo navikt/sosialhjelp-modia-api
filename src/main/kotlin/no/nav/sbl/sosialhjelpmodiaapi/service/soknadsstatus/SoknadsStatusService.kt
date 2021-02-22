@@ -1,16 +1,15 @@
 package no.nav.sbl.sosialhjelpmodiaapi.service.soknadsstatus
 
+import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SoknadsStatusResponse
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.logger
 import org.springframework.stereotype.Component
 
-
 @Component
 class SoknadsStatusService(
-        private val fiksClient: FiksClient,
-        private val eventService: EventService
+    private val fiksClient: FiksClient,
+    private val eventService: EventService
 ) {
 
     fun hentSoknadsStatus(fiksDigisosId: String): SoknadsStatusResponse {

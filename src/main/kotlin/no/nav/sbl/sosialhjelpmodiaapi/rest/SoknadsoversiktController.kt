@@ -27,10 +27,10 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class SoknadsoversiktController(
-        private val fiksClient: FiksClient,
-        private val eventService: EventService,
-        private val oppgaveService: OppgaveService,
-        private val abacService: AbacService
+    private val fiksClient: FiksClient,
+    private val eventService: EventService,
+    private val oppgaveService: OppgaveService,
+    private val abacService: AbacService
 ) {
 
     @PostMapping("/saker")
@@ -44,15 +44,15 @@ class SoknadsoversiktController(
         }
 
         val responselist = saker
-                .map { sak ->
-                    SaksListeResponse(
-                            fiksDigisosId = sak.fiksDigisosId,
-                            soknadTittel = "Søknad om økonomisk sosialhjelp",
-                            sistOppdatert = unixTimestampToDate(sak.sistEndret),
-                            sendt = sak.originalSoknadNAV?.timestampSendt?.let { unixTimestampToDate(it) },
-                            kilde = IntegrationUtils.KILDE_INNSYN_API
-                    )
-                }
+            .map { sak ->
+                SaksListeResponse(
+                    fiksDigisosId = sak.fiksDigisosId,
+                    soknadTittel = "Søknad om økonomisk sosialhjelp",
+                    sistOppdatert = unixTimestampToDate(sak.sistEndret),
+                    sendt = sak.originalSoknadNAV?.timestampSendt?.let { unixTimestampToDate(it) },
+                    kilde = IntegrationUtils.KILDE_INNSYN_API
+                )
+            }
         log.info("Hentet alle (${responselist.size}) DigisosSaker for bruker.")
 
         return ResponseEntity.ok().body(responselist.sortedByDescending { it.sistOppdatert })
@@ -65,11 +65,11 @@ class SoknadsoversiktController(
         val sak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createSoknadsoversiktModel(sak)
         val saksDetaljerResponse = SaksDetaljerResponse(
-                fiksDigisosId = sak.fiksDigisosId,
-                soknadTittel = hentSoknadTittel(sak, model),
-                status = model.status!!,
-                harNyeOppgaver = harNyeOppgaver(model, sak.fiksDigisosId),
-                harVilkar = harVilkar(model)
+            fiksDigisosId = sak.fiksDigisosId,
+            soknadTittel = hentSoknadTittel(sak, model),
+            status = model.status!!,
+            harNyeOppgaver = harNyeOppgaver(model, sak.fiksDigisosId),
+            harVilkar = harVilkar(model)
         )
         return ResponseEntity.ok().body(saksDetaljerResponse)
     }
@@ -84,11 +84,11 @@ class SoknadsoversiktController(
     private fun harVilkar(model: InternalDigisosSoker): Boolean {
         // forenkle?
         return model.saker
-                .any { sak ->
-                    sak.utbetalinger
-                            .flatMap { utbetaling -> utbetaling.vilkar }
-                            .any { vilkar -> !vilkar.oppfyllt }
-                }
+            .any { sak ->
+                sak.utbetalinger
+                    .flatMap { utbetaling -> utbetaling.vilkar }
+                    .any { vilkar -> !vilkar.oppfyllt }
+            }
     }
 
     companion object {

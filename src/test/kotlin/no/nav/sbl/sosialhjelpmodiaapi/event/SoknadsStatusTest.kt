@@ -65,12 +65,14 @@ internal class SoknadsStatusTest {
     @Test
     fun `soknadsStatus MOTTATT`() {
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
-                JsonDigisosSoker()
-                        .withAvsender(avsender)
-                        .withVersion("123")
-                        .withHendelser(listOf(
-                                SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
-                        ))
+            JsonDigisosSoker()
+                .withAvsender(avsender)
+                .withVersion("123")
+                .withHendelser(
+                    listOf(
+                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
+                    )
+                )
 
         val model = service.createModel(mockDigisosSak)
 
@@ -89,12 +91,14 @@ internal class SoknadsStatusTest {
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns null
         every { mockDigisosSak.originalSoknadNAV } returns null
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
-                JsonDigisosSoker()
-                        .withAvsender(avsender)
-                        .withVersion("123")
-                        .withHendelser(listOf(
-                                SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
-                        ))
+            JsonDigisosSoker()
+                .withAvsender(avsender)
+                .withVersion("123")
+                .withHendelser(
+                    listOf(
+                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
+                    )
+                )
 
         val model = service.createModel(mockDigisosSak)
 
@@ -111,13 +115,15 @@ internal class SoknadsStatusTest {
     @Test
     fun `soknadsStatus UNDER_BEHANDLING`() {
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
-                JsonDigisosSoker()
-                        .withAvsender(avsender)
-                        .withVersion("123")
-                        .withHendelser(listOf(
-                                SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                                SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2)
-                        ))
+            JsonDigisosSoker()
+                .withAvsender(avsender)
+                .withVersion("123")
+                .withHendelser(
+                    listOf(
+                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2)
+                    )
+                )
 
         val model = service.createModel(mockDigisosSak)
 
@@ -135,14 +141,16 @@ internal class SoknadsStatusTest {
     @Test
     fun `soknadsStatus FERDIGBEHANDLET`() {
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
-                JsonDigisosSoker()
-                        .withAvsender(avsender)
-                        .withVersion("123")
-                        .withHendelser(listOf(
-                                SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                                SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                                SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_3)
-                        ))
+            JsonDigisosSoker()
+                .withAvsender(avsender)
+                .withVersion("123")
+                .withHendelser(
+                    listOf(
+                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                        SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_3)
+                    )
+                )
 
         val model = service.createModel(mockDigisosSak)
 

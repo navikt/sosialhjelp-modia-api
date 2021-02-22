@@ -60,7 +60,7 @@ internal class NoekkelinfoServiceTest {
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
         model.navKontorHistorikk = mutableListOf(
-                NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1)
+            NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1)
         )
 
         every { eventService.createModel(any()) } returns model
@@ -71,7 +71,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789).toLocalDate())
-        assertThat(noekkelinfo.saksId).isNull() //fix
+        assertThat(noekkelinfo.saksId).isNull() // fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor?.enhetsNavn).isEqualTo(enhetNavn1)
         assertThat(noekkelinfo.navKontor?.enhetsNr).isEqualTo(enhetsnr1)
@@ -88,7 +88,7 @@ internal class NoekkelinfoServiceTest {
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
         model.navKontorHistorikk = mutableListOf(
-                NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1)
+            NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1)
         )
         model.forelopigSvar = ForelopigSvar(tidspunkt)
 
@@ -100,7 +100,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789).toLocalDate())
-        assertThat(noekkelinfo.saksId).isNull() //fix
+        assertThat(noekkelinfo.saksId).isNull() // fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor?.enhetsNavn).isEqualTo(enhetNavn1)
         assertThat(noekkelinfo.navKontor?.enhetsNr).isEqualTo(enhetsnr1)
@@ -117,8 +117,8 @@ internal class NoekkelinfoServiceTest {
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
         model.navKontorHistorikk = mutableListOf(
-                NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
-                NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2)
+            NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
+            NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2)
         )
 
         every { eventService.createModel(any()) } returns model
@@ -129,7 +129,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789).toLocalDate())
-        assertThat(noekkelinfo.saksId).isNull() //fix
+        assertThat(noekkelinfo.saksId).isNull() // fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor?.enhetsNavn).isEqualTo(enhetNavn2)
         assertThat(noekkelinfo.navKontor?.enhetsNr).isEqualTo(enhetsnr2)
@@ -146,8 +146,8 @@ internal class NoekkelinfoServiceTest {
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
         model.navKontorHistorikk = mutableListOf(
-                NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
-                NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2)
+            NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
+            NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2)
         )
 
         every { eventService.createModel(any()) } returns model
@@ -158,7 +158,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789).toLocalDate())
-        assertThat(noekkelinfo.saksId).isNull() //fix
+        assertThat(noekkelinfo.saksId).isNull() // fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor?.enhetsNavn).isEqualTo(enhetNavn2)
         assertThat(noekkelinfo.navKontor?.enhetsNr).isEqualTo(enhetsnr2)
@@ -183,7 +183,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789).toLocalDate())
-        assertThat(noekkelinfo.saksId).isNull() //fix
+        assertThat(noekkelinfo.saksId).isNull() // fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor).isNull()
         assertThat(noekkelinfo.kommunenavn).isEqualTo(kommunenavn)

@@ -25,7 +25,7 @@ object MDCUtils {
         val randomNr = getRandomNumber()
         val systemTime = getSystemTime()
 
-        return "CallId_${systemTime}_${randomNr}"
+        return "CallId_${systemTime}_$randomNr"
     }
 
     private fun getRandomNumber(): Int {

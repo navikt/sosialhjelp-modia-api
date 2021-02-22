@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestTemplate
 
-
 internal class DigisosApiClientTest {
     private val clientProperties: ClientProperties = mockk(relaxed = true)
 
@@ -30,10 +29,11 @@ internal class DigisosApiClientTest {
         every { idPortenService.getToken() } returns AccessToken("Token", 999)
         every {
             restTemplate.exchange(
-                    any<String>(),
-                    any(),
-                    any(),
-                    String::class.java)
+                any<String>(),
+                any(),
+                any(),
+                String::class.java
+            )
         } returns mockResponse
 
         digisosApiClient.oppdaterDigisosSak("123123", DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), ""))

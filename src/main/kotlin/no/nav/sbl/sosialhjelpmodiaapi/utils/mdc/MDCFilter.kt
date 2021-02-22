@@ -16,8 +16,8 @@ class MDCFilter : OncePerRequestFilter() {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         request.getHeader(HEADER_CALL_ID)
-                ?.let { setCallId(it) }
-                ?: setCallId(generateCallId())
+            ?.let { setCallId(it) }
+            ?: setCallId(generateCallId())
 
         try {
             filterChain.doFilter(request, response)
@@ -29,5 +29,4 @@ class MDCFilter : OncePerRequestFilter() {
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
         return HttpMethod.valueOf(request.method) == HttpMethod.OPTIONS
     }
-
 }

@@ -42,22 +42,24 @@ internal class SoknadDokumentasjonkravTest {
     @Test
     internal fun `skal legge til dokumentasjonkrav fra søknaden`() {
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
-                JsonDigisosSoker()
-                        .withAvsender(avsender)
-                        .withVersion("123")
-                        .withHendelser(listOf(
-                                SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                                SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                                SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3)
-                        ))
-        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns listOf(
-                InternalVedlegg(
-                        type = "statsborgerskap",
-                        tilleggsinfo = "dokumentasjon",
-                        innsendelsesfrist = null,
-                        antallFiler = 1,
-                        datoLagtTil = LocalDateTime.now()
+            JsonDigisosSoker()
+                .withAvsender(avsender)
+                .withVersion("123")
+                .withHendelser(
+                    listOf(
+                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                        SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3)
+                    )
                 )
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns listOf(
+            InternalVedlegg(
+                type = "statsborgerskap",
+                tilleggsinfo = "dokumentasjon",
+                innsendelsesfrist = null,
+                antallFiler = 1,
+                datoLagtTil = LocalDateTime.now()
+            )
         )
 
         val model = service.createModel(mockDigisosSak)

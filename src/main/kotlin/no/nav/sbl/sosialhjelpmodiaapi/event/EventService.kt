@@ -31,9 +31,9 @@ import org.springframework.stereotype.Component
 
 @Component
 class EventService(
-        private val innsynService: InnsynService,
-        private val norgClient: NorgClient,
-        private val soknadVedleggService: SoknadVedleggService
+    private val innsynService: InnsynService,
+    private val norgClient: NorgClient,
+    private val soknadVedleggService: SoknadVedleggService
 ) {
 
     fun createModel(digisosSak: DigisosSak): InternalDigisosSoker {
@@ -54,8 +54,8 @@ class EventService(
         }
 
         jsonDigisosSoker?.hendelser
-                ?.sortedWith(hendelseComparator)
-                ?.forEach { model.applyHendelse(it) }
+            ?.sortedWith(hendelseComparator)
+            ?.forEach { model.applyHendelse(it) }
 
         if (digisosSak.originalSoknadNAV != null && model.oppgaver.isEmpty()) {
             model.applySoknadKrav(digisosSak, soknadVedleggService, timestampSendt!!)
@@ -82,8 +82,8 @@ class EventService(
             return model
         }
         jsonDigisosSoker.hendelser
-                .sortedWith(hendelseComparator)
-                .forEach { model.applyHendelse(it) }
+            .sortedWith(hendelseComparator)
+            .forEach { model.applyHendelse(it) }
 
         return model
     }
@@ -112,7 +112,7 @@ class EventService(
          * Dette gjør at vi kan knytte Vilkår/Dokumentasjonkrav til Utbetalingen.
          */
         private val hendelseComparator = compareBy<JsonHendelse> { it.hendelsestidspunkt }
-                .thenComparator { a, b -> compareHendelseByType(a.type, b.type) }
+            .thenComparator { a, b -> compareHendelseByType(a.type, b.type) }
 
         private fun compareHendelseByType(a: JsonHendelse.Type, b: JsonHendelse.Type): Int {
             if (a == JsonHendelse.Type.UTBETALING && (b == JsonHendelse.Type.VILKAR || b == JsonHendelse.Type.DOKUMENTASJONKRAV)) {
@@ -122,6 +122,5 @@ class EventService(
             }
             return 0
         }
-
     }
 }

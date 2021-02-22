@@ -12,5 +12,4 @@ class IdPortenServiceMock : IdPortenService {
     override fun getToken(): AccessToken {
         return AccessToken("something something token here", 1234)
     }
-
 }

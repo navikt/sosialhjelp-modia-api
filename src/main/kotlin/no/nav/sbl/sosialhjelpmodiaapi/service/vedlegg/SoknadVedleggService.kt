@@ -11,7 +11,7 @@ const val VEDLEGG_KREVES_STATUS = "VedleggKreves"
 
 @Component
 class SoknadVedleggService(
-        private val fiksClient: FiksClient,
+    private val fiksClient: FiksClient,
 ) {
 
     fun hentSoknadVedleggMedStatus(digisosSak: DigisosSak, status: String): List<InternalVedlegg> {
@@ -24,21 +24,20 @@ class SoknadVedleggService(
         }
 
         val alleVedlegg = jsonVedleggSpesifikasjon.vedlegg
-                .filter { vedlegg -> vedlegg.status == status }
-                .map { vedlegg ->
-                    InternalVedlegg(
-                            type = vedlegg.type,
-                            tilleggsinfo = vedlegg.tilleggsinfo,
-                            innsendelsesfrist = null,
-                            antallFiler = matchDokumentInfoOgJsonFiler(originalSoknadNAV.vedlegg, vedlegg.filer),
-                            datoLagtTil = unixToLocalDateTime(originalSoknadNAV.timestampSendt)
-                    )
-                }
+            .filter { vedlegg -> vedlegg.status == status }
+            .map { vedlegg ->
+                InternalVedlegg(
+                    type = vedlegg.type,
+                    tilleggsinfo = vedlegg.tilleggsinfo,
+                    innsendelsesfrist = null,
+                    antallFiler = matchDokumentInfoOgJsonFiler(originalSoknadNAV.vedlegg, vedlegg.filer),
+                    datoLagtTil = unixToLocalDateTime(originalSoknadNAV.timestampSendt)
+                )
+            }
         return kombinerAlleLikeVedlegg(alleVedlegg)
     }
 
     private fun hentVedleggSpesifikasjon(fnr: String, fiksDigisosId: String, dokumentlagerId: String): JsonVedleggSpesifikasjon {
         return fiksClient.hentDokument(fnr, fiksDigisosId, dokumentlagerId, JsonVedleggSpesifikasjon::class.java) as JsonVedleggSpesifikasjon
     }
-
 }
