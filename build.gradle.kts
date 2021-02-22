@@ -173,9 +173,9 @@ kotlinter {
 
 tasks {
 
-    check {
-        dependsOn("installKotlinterPrePushHook")
-    }
+//    check {
+//        dependsOn("installKotlinterPrePushHook")
+//    }
 
     withType<KotlinCompile> {
         kotlinOptions {
