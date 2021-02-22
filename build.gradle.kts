@@ -172,6 +172,11 @@ kotlinter {
 }
 
 tasks {
+    
+    check {
+        dependsOn("formatKotlin")
+    }
+
     withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "11"
@@ -199,9 +204,5 @@ tasks {
             mergeStrategy = "append"
         }
         mergeServiceFiles()
-    }
-
-    check {
-        dependsOn("formatKotlin")
     }
 }
