@@ -33,10 +33,11 @@ internal class STSClientTest {
         every { response.body } returns token
         every {
             restTemplate.exchange(
-                    any<String>(),
-                    HttpMethod.POST,
-                    any(),
-                    STSToken::class.java)
+                any<String>(),
+                HttpMethod.POST,
+                any(),
+                STSToken::class.java
+            )
         } returns response
 
         val accessToken = stsClient.token()
@@ -53,10 +54,11 @@ internal class STSClientTest {
         every { response.body } returns token
         every {
             restTemplate.exchange(
-                    any<String>(),
-                    HttpMethod.POST,
-                    any(),
-                    STSToken::class.java)
+                any<String>(),
+                HttpMethod.POST,
+                any(),
+                STSToken::class.java
+            )
         } returns response
 
         val firstToken = stsClient.token()
@@ -79,10 +81,11 @@ internal class STSClientTest {
         every { response.body } returns token
         every {
             restTemplate.exchange(
-                    any<String>(),
-                    HttpMethod.POST,
-                    any(),
-                    STSToken::class.java)
+                any<String>(),
+                HttpMethod.POST,
+                any(),
+                STSToken::class.java
+            )
         } returns response
 
         val firstToken = stsClient.token()

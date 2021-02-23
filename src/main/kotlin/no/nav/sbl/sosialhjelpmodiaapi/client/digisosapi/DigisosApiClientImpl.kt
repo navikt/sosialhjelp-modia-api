@@ -22,13 +22,12 @@ import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
 import java.util.Collections
 
-
 @Profile("!(prod-fss|mock)")
 @Component
 class DigisosApiClientImpl(
-        clientProperties: ClientProperties,
-        private val restTemplate: RestTemplate,
-        private val idPortenService: IdPortenService
+    clientProperties: ClientProperties,
+    private val restTemplate: RestTemplate,
+    private val idPortenService: IdPortenService
 ) : DigisosApiClient {
 
     private val testbrukerNatalie = getTestbrukerNatalie()

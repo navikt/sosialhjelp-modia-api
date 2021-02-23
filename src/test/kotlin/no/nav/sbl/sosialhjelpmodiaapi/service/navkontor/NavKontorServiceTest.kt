@@ -92,5 +92,4 @@ internal class NavKontorServiceTest {
         assertThat(response).hasSize(1)
         assertThat(response[0].enhetsnr).isEqualTo(enhetsnr)
     }
-
 }

@@ -25,16 +25,16 @@ internal class AuditLoggerTest {
     private val logger = AuditLogger()
 
     private val values = mutableMapOf<String, Any>(
-            TITLE to "title",
-            RESOURCE to RESOURCE_AUDIT_ACCESS,
-            NAVIDENT to "Z999888",
-            BRUKER_FNR to "11111122222",
-            CALL_ID to "callid",
-            CONSUMER_ID to "consumerId",
-            URL to "http://test",
-            HTTP_METHOD to HttpMethod.GET,
-            SEVERITY to Severity.INFO,
-            LOG to SPORINGSLOGG
+        TITLE to "title",
+        RESOURCE to RESOURCE_AUDIT_ACCESS,
+        NAVIDENT to "Z999888",
+        BRUKER_FNR to "11111122222",
+        CALL_ID to "callid",
+        CONSUMER_ID to "consumerId",
+        URL to "http://test",
+        HTTP_METHOD to HttpMethod.GET,
+        SEVERITY to Severity.INFO,
+        LOG to SPORINGSLOGG
     )
 
     @BeforeEach
@@ -52,11 +52,11 @@ internal class AuditLoggerTest {
 
         assertThat(cefString.isCaptured).isTrue
         assertThat(cefString.captured)
-                // headers
-                .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|INFO|")
-                // extension
-                .contains("suid=Z999888")
-                .contains("duid=11111122222")
+            // headers
+            .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|INFO|")
+            // extension
+            .contains("suid=Z999888")
+            .contains("duid=11111122222")
     }
 
     @Test
@@ -70,13 +70,13 @@ internal class AuditLoggerTest {
 
         assertThat(cefString.isCaptured).isTrue
         assertThat(cefString.captured)
-                // headers
-                .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|WARN|")
-                // extension
-                .contains("suid=Z999888")
-                .contains("duid=11111122222")
-                .contains("flexString1=Deny flexString1Label=Decision")
-                .contains("flexString2=[cause=1_cause,2_cause,policy=1_denyPolicy,2_denyPolicy,rule=1_rule,2_rule] flexString2Label=abac_deny_response")
+            // headers
+            .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|WARN|")
+            // extension
+            .contains("suid=Z999888")
+            .contains("duid=11111122222")
+            .contains("flexString1=Deny flexString1Label=Decision")
+            .contains("flexString2=[cause=1_cause,2_cause,policy=1_denyPolicy,2_denyPolicy,rule=1_rule,2_rule] flexString2Label=abac_deny_response")
     }
 
     @Test
@@ -90,12 +90,12 @@ internal class AuditLoggerTest {
 
         assertThat(cefString.isCaptured).isTrue
         assertThat(cefString.captured)
-                // headers
-                .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|INFO|")
-                // extension
-                .contains("suid=Z999888")
-                .contains("duid=11111122222")
-                .contains("flexString1=Permit flexString1Label=Decision")
+            // headers
+            .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|INFO|")
+            // extension
+            .contains("suid=Z999888")
+            .contains("duid=11111122222")
+            .contains("flexString1=Permit flexString1Label=Decision")
     }
 
     @Test
@@ -106,27 +106,36 @@ internal class AuditLoggerTest {
 
         assertThat(cefString.isCaptured).isTrue
         assertThat(cefString.captured)
-                // headers
-                .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|INFO|")
-                // extension
-                .contains("suid=Z999888")
-                .contains("duid=11111122222")
-                .contains("cs5=123123 cs5Label=fiksRequestId")
+            // headers
+            .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|INFO|")
+            // extension
+            .contains("suid=Z999888")
+            .contains("duid=11111122222")
+            .contains("cs5=123123 cs5Label=fiksRequestId")
     }
 
     private fun createAbacDeny(): AbacResponse {
-        return AbacResponse(Decision.Deny, listOf(
-                Advice("id", listOf(
+        return AbacResponse(
+            Decision.Deny,
+            listOf(
+                Advice(
+                    "id",
+                    listOf(
                         Attribute(NavAttributter.ADVICEOROBLIGATION_DENY_POLICY, "1_denyPolicy"),
                         Attribute(NavAttributter.ADVICEOROBLIGATION_CAUSE, "1_cause"),
-                        Attribute(NavAttributter.ADVICEOROBLIGATION_DENY_RULE, "1_rule"))
+                        Attribute(NavAttributter.ADVICEOROBLIGATION_DENY_RULE, "1_rule")
+                    )
                 ),
-                Advice("id2", listOf(
+                Advice(
+                    "id2",
+                    listOf(
                         Attribute(NavAttributter.ADVICEOROBLIGATION_DENY_POLICY, "2_denyPolicy"),
                         Attribute(NavAttributter.ADVICEOROBLIGATION_CAUSE, "2_cause"),
-                        Attribute(NavAttributter.ADVICEOROBLIGATION_DENY_RULE, "2_rule"))
+                        Attribute(NavAttributter.ADVICEOROBLIGATION_DENY_RULE, "2_rule")
+                    )
                 )
-        ))
+            )
+        )
     }
 
     private fun createAbacPermit(): AbacResponse {

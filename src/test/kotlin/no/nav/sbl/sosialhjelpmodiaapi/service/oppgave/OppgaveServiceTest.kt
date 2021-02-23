@@ -7,8 +7,8 @@ import no.nav.sbl.sosialhjelpmodiaapi.client.fiks.FiksClient
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Oppgave
 import no.nav.sbl.sosialhjelpmodiaapi.event.EventService
-import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
 import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.InternalVedlegg
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.EttersendtInfoNAV
 import org.assertj.core.api.Assertions.assertThat
@@ -96,11 +96,14 @@ internal class OppgaveServiceTest {
     @Test
     fun `Should return list of oppgaver sorted by frist`() {
         val model = InternalDigisosSoker()
-        model.oppgaver.addAll(listOf(
+        model.oppgaver.addAll(
+            listOf(
                 Oppgave(type, tillegg, frist, tidspunktForKrav, true),
                 Oppgave(type3, tillegg3, frist3, tidspunktForKrav, true),
                 Oppgave(type4, tillegg4, frist4, tidspunktForKrav, true),
-                Oppgave(type2, tillegg2, frist2, tidspunktForKrav, true)))
+                Oppgave(type2, tillegg2, frist2, tidspunktForKrav, true)
+            )
+        )
 
         every { eventService.createModel(any()) } returns model
         every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
@@ -129,17 +132,21 @@ internal class OppgaveServiceTest {
     @Test
     fun `skal vise info om oppgaver hvor bruker ikke har lastet opp tilknyttet en oppgave`() {
         val model = InternalDigisosSoker()
-        model.oppgaver.addAll(listOf(
+        model.oppgaver.addAll(
+            listOf(
                 Oppgave(type, tillegg, frist, tidspunktForKrav, true),
                 Oppgave(type2, null, frist2, tidspunktForKrav, true),
-                Oppgave(type3, tillegg3, frist3, tidspunktForKrav, true)))
+                Oppgave(type3, tillegg3, frist3, tidspunktForKrav, true)
+            )
+        )
 
         every { eventService.createModel(any()) } returns model
         every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns listOf(
-                InternalVedlegg(type, tillegg, frist, 1, tidspunktEtterKrav),
-                InternalVedlegg(type2, null, frist2, 1, tidspunktEtterKrav),
-                InternalVedlegg(type3, tillegg3, frist3, 1, tidspunktFoerKrav), //Filtreres bort pga. tidspunkt
-                InternalVedlegg(type3, null, frist3, 1, tidspunktEtterKrav)) //Filtreres bort pga tillegsinfo
+            InternalVedlegg(type, tillegg, frist, 1, tidspunktEtterKrav),
+            InternalVedlegg(type2, null, frist2, 1, tidspunktEtterKrav),
+            InternalVedlegg(type3, tillegg3, frist3, 1, tidspunktFoerKrav), // Filtreres bort pga. tidspunkt
+            InternalVedlegg(type3, null, frist3, 1, tidspunktEtterKrav)
+        ) // Filtreres bort pga tillegsinfo
         // Så type3 er den eneste oppgaven uten vedlegg
 
         val oppgaver = service.hentOppgaver("123")
@@ -161,17 +168,21 @@ internal class OppgaveServiceTest {
     @Test
     internal fun `2 oppgaver med samme type og tillegg - hva skjer med vedlegg som matcher begge`() {
         val model = InternalDigisosSoker()
-        model.oppgaver.addAll(listOf(
+        model.oppgaver.addAll(
+            listOf(
                 Oppgave(type, tillegg, frist, tidspunktForKrav, true),
-                Oppgave(type, tillegg, frist2, tidspunktForKrav.plusDays(1), true)))
+                Oppgave(type, tillegg, frist2, tidspunktForKrav.plusDays(1), true)
+            )
+        )
 
         every { eventService.createModel(any()) } returns model
         every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns listOf(
-                InternalVedlegg(type, tillegg, frist, 2, tidspunktEtterKrav))
+            InternalVedlegg(type, tillegg, frist, 2, tidspunktEtterKrav)
+        )
 
         val oppgaver = service.hentOppgaver("123")
 
         assertThat(oppgaver).isNotNull
-        assertThat(oppgaver).hasSize(0) //Begge blir registrert med vedlegg og dermed filtrert bort.
+        assertThat(oppgaver).hasSize(0) // Begge blir registrert med vedlegg og dermed filtrert bort.
     }
 }

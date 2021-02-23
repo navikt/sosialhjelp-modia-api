@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"])
 class NavKontorinfoController(
-        private val navKontorService: NavKontorService
+    private val navKontorService: NavKontorService
 ) {
 
     @GetMapping("/kontorinfo")
@@ -32,5 +32,4 @@ class NavKontorinfoController(
         }
         return ResponseEntity.ok(alleEnheter)
     }
-
 }

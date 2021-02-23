@@ -34,16 +34,15 @@ import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import java.util.UUID
 
-
 @Profile("!mock")
 @Component
 class FiksClientImpl(
-        private val clientProperties: ClientProperties,
-        private val restTemplate: RestTemplate,
-        private val idPortenService: IdPortenService,
-        private val auditService: AuditService,
-        private val redisService: RedisService,
-        private val unleash: Unleash,
+    private val clientProperties: ClientProperties,
+    private val restTemplate: RestTemplate,
+    private val idPortenService: IdPortenService,
+    private val auditService: AuditService,
+    private val redisService: RedisService,
+    private val unleash: Unleash,
 ) : FiksClient {
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
@@ -94,8 +93,7 @@ class FiksClientImpl(
             auditService.reportFiks(digisosSak.sokerFnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId", HttpMethod.GET, sporingsId)
 
             return digisosSak
-                    .also { lagreTilCache(digisosId, it) }
-
+                .also { lagreTilCache(digisosId, it) }
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
             val message = e.message?.feilmeldingUtenFnr
@@ -132,9 +130,10 @@ class FiksClientImpl(
             val headers = fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)
             val uriComponents = urlWithSporingsId(baseUrl + PATH_DOKUMENT)
             val vars = mapOf(
-                    DIGISOSID to digisosId,
-                    DOKUMENTLAGERID to dokumentlagerId,
-                    SPORINGSID to sporingsId)
+                DIGISOSID to digisosId,
+                DOKUMENTLAGERID to dokumentlagerId,
+                SPORINGSID to sporingsId
+            )
 
             val response = withRetry {
                 restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, HttpEntity<Nothing>(headers), requestedClass, vars)
@@ -144,8 +143,7 @@ class FiksClientImpl(
 
             log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
             return response.body!!
-                    .also { lagreTilCache(dokumentlagerId, it) }
-
+                .also { lagreTilCache(dokumentlagerId, it) }
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
             val message = e.message?.feilmeldingUtenFnr
@@ -174,7 +172,6 @@ class FiksClientImpl(
             auditService.reportFiks(fnr, urlTemplate, HttpMethod.POST, sporingsId)
 
             return response.body!!
-
         } catch (e: HttpStatusCodeException) {
             val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
             val message = e.message?.feilmeldingUtenFnr
@@ -191,15 +188,15 @@ class FiksClientImpl(
     }
 
     private fun urlWithSporingsId(urlTemplate: String) =
-            UriComponentsBuilder.fromUriString(urlTemplate).queryParam(SPORINGSID, "{$SPORINGSID}").build()
+        UriComponentsBuilder.fromUriString(urlTemplate).queryParam(SPORINGSID, "{$SPORINGSID}").build()
 
     private fun <T> withRetry(block: () -> ResponseEntity<T>): ResponseEntity<T> {
         return runBlocking {
             retry(
-                    attempts = retryAttempts,
-                    initialDelay = initialDelayMillis,
-                    maxDelay = maxDelayMillis,
-                    retryableExceptions = arrayOf(HttpServerErrorException::class)
+                attempts = retryAttempts,
+                initialDelay = initialDelayMillis,
+                maxDelay = maxDelayMillis,
+                retryableExceptions = arrayOf(HttpServerErrorException::class)
             ) {
                 block()
             }
@@ -220,6 +217,6 @@ class FiksClientImpl(
     }
 
     private data class Fnr(
-            val fnr: String
+        val fnr: String
     )
 }

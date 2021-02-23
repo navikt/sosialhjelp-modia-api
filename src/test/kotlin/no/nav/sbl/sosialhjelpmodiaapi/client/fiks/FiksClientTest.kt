@@ -33,7 +33,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestTemplate
 
-
 internal class FiksClientTest {
 
     private val clientProperties: ClientProperties = mockk(relaxed = true)
@@ -76,11 +75,12 @@ internal class FiksClientTest {
         every { mockResponse.body } returns digisosSak
         every {
             restTemplate.exchange(
-                    any(),
-                    any(),
-                    any(),
-                    DigisosSak::class.java,
-                    any())
+                any(),
+                any(),
+                any(),
+                DigisosSak::class.java,
+                any()
+            )
         } returns mockResponse
 
         val result = fiksClient.hentDigisosSak(id)
@@ -92,15 +92,16 @@ internal class FiksClientTest {
     fun `GET DigisosSak feiler hvis Fiks gir 500`() {
         every {
             restTemplate.exchange(
-                    any(),
-                    any(),
-                    any(),
-                    DigisosSak::class.java,
-                    any())
+                any(),
+                any(),
+                any(),
+                DigisosSak::class.java,
+                any()
+            )
         } throws HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "some error")
 
         assertThatExceptionOfType(FiksException::class.java)
-                .isThrownBy { fiksClient.hentDigisosSak(id) }
+            .isThrownBy { fiksClient.hentDigisosSak(id) }
     }
 
     @Test
@@ -123,11 +124,12 @@ internal class FiksClientTest {
         every { mockResponse.body } returns digisosSak
         every {
             restTemplate.exchange(
-                    any(),
-                    any(),
-                    any(),
-                    DigisosSak::class.java,
-                    any())
+                any(),
+                any(),
+                any(),
+                DigisosSak::class.java,
+                any()
+            )
         } returns mockResponse
 
         val result1 = fiksClient.hentDigisosSak(id)
@@ -154,11 +156,12 @@ internal class FiksClientTest {
         every { mockResponse.body } returns digisosSak
         every {
             restTemplate.exchange(
-                    any(),
-                    any(),
-                    any(),
-                    DigisosSak::class.java,
-                    any())
+                any(),
+                any(),
+                any(),
+                DigisosSak::class.java,
+                any()
+            )
         } returns mockResponse
 
 //        annen veileder har hentet digisosSak tidligere (og finnes i cache)
@@ -182,11 +185,12 @@ internal class FiksClientTest {
         every { mockResponse.body } returns digisosSak
         every {
             restTemplate.exchange(
-                    any(),
-                    any(),
-                    any(),
-                    DigisosSak::class.java,
-                    any())
+                any(),
+                any(),
+                any(),
+                DigisosSak::class.java,
+                any()
+            )
         } returns mockResponse
 
         val result = fiksClient.hentDigisosSak(id)
@@ -203,11 +207,12 @@ internal class FiksClientTest {
         every { mockResponse.body } returns jsonDigisosSoker
         every {
             restTemplate.exchange(
-                    any(),
-                    any(),
-                    any(),
-                    JsonDigisosSoker::class.java,
-                    any())
+                any(),
+                any(),
+                any(),
+                JsonDigisosSoker::class.java,
+                any()
+            )
         } returns mockResponse
 
         val result = fiksClient.hentDokument("fnr", id, "dokumentlagerId", JsonDigisosSoker::class.java)

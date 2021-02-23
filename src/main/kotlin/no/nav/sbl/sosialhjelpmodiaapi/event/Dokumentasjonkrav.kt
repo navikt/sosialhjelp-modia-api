@@ -35,9 +35,9 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonkrav) {
     }
 
     val dokumentasjonkrav = Dokumentasjonkrav(
-            referanse = hendelse.dokumentasjonkravreferanse,
-            beskrivelse = hendelse.beskrivelse,
-            oppfyllt = hendelse.status == JsonDokumentasjonkrav.Status.OPPFYLT
+        referanse = hendelse.dokumentasjonkravreferanse,
+        beskrivelse = hendelse.beskrivelse,
+        oppfyllt = hendelse.status == JsonDokumentasjonkrav.Status.OPPFYLT
     )
 
     val union = utbetalingerMedSakKnytning.union(utbetalingerUtenSakKnytning)
@@ -52,7 +52,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonkrav) {
 private fun MutableList<Dokumentasjonkrav>.oppdaterEllerLeggTilDokumentasjonkrav(hendelse: JsonDokumentasjonkrav, dokumentasjonkrav: Dokumentasjonkrav) {
     if (any { it.referanse == hendelse.dokumentasjonkravreferanse }) {
         filter { it.referanse == hendelse.dokumentasjonkravreferanse }
-                .forEach { it.oppdaterFelter(hendelse) }
+            .forEach { it.oppdaterFelter(hendelse) }
     } else {
         this.add(dokumentasjonkrav)
     }

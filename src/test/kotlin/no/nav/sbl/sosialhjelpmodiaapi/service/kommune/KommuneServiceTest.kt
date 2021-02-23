@@ -69,7 +69,7 @@ internal class KommuneServiceTest {
 
     @Test
     fun `behandlingsansvarlig returneres med kommune i kommunenavnet det ikke finnes fra før satt`() {
-        val kommuneInfo = KommuneInfo("", true, true,false, false, null, true, kommunenavnUtenKommuneINavnet)
+        val kommuneInfo = KommuneInfo("", true, true, false, false, null, true, kommunenavnUtenKommuneINavnet)
         every { kommuneInfoClient.get(kommuneNr, any()) } returns kommuneInfo
 
         val behandlingsansvarlig = service.getBehandlingsanvarligKommune(kommuneNr)
@@ -78,7 +78,7 @@ internal class KommuneServiceTest {
 
     @Test
     fun `behandlingsansvarlig med kommune i kommunenavnet returneres med kommune i navnet`() {
-        val kommuneInfo = KommuneInfo("", true, true,false, false, null, true, kommunenavnMedKommuneINavnet)
+        val kommuneInfo = KommuneInfo("", true, true, false, false, null, true, kommunenavnMedKommuneINavnet)
         every { kommuneInfoClient.get(kommuneNr, any()) } returns kommuneInfo
 
         val behandlingsansvarlig = service.getBehandlingsanvarligKommune(kommuneNr)
@@ -87,7 +87,7 @@ internal class KommuneServiceTest {
 
     @Test
     fun `ingen behandlinsansvarlig satt returnerer null`() {
-        val kommuneInfo = KommuneInfo("", true, true,false, false, null, true, null)
+        val kommuneInfo = KommuneInfo("", true, true, false, false, null, true, null)
         every { kommuneInfoClient.get(kommuneNr, any()) } returns kommuneInfo
 
         val behandlingsansvarlig = service.getBehandlingsanvarligKommune(kommuneNr)

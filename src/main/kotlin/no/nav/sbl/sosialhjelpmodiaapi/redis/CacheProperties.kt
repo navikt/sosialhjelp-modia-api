@@ -9,5 +9,4 @@ import kotlin.properties.Delegates
 class CacheProperties {
 
     var timeToLiveSeconds: Long by Delegates.notNull()
-
 }

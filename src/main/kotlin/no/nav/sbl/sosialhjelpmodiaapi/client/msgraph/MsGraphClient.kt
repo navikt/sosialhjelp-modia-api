@@ -11,10 +11,9 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 
-
 @Component
 class MsGraphClient(
-        private val restTemplate: RestTemplate
+    private val restTemplate: RestTemplate
 ) {
 
     fun hentOnPremisesSamAccountName(accessToken: String): OnPremisesSamAccountName {
@@ -41,5 +40,5 @@ class MsGraphClient(
 }
 
 data class OnPremisesSamAccountName(
-        val onPremisesSamAccountName: String // NavIdent
+    val onPremisesSamAccountName: String // NavIdent
 )

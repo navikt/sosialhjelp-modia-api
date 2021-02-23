@@ -1,19 +1,19 @@
 package no.nav.sbl.sosialhjelpmodiaapi.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonTildeltNavKontor
+import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.common.NorgException
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Hendelse
 import no.nav.sbl.sosialhjelpmodiaapi.domain.InternalDigisosSoker
 import no.nav.sbl.sosialhjelpmodiaapi.domain.NavKontorInformasjon
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SendingType
 import no.nav.sbl.sosialhjelpmodiaapi.event.Titler.SOKNAD_VIDERESENDT
-import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
 import no.nav.sbl.sosialhjelpmodiaapi.toLocalDateTime
 import no.nav.sbl.sosialhjelpmodiaapi.utils.navenhetsnavnOrDefault
 
 fun InternalDigisosSoker.apply(
-        hendelse: JsonTildeltNavKontor,
-        norgClient: NorgClient
+    hendelse: JsonTildeltNavKontor,
+    norgClient: NorgClient
 ) {
 
     val behandlendeNavKontor = navKontorHistorikk.lastOrNull()

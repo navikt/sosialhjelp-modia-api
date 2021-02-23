@@ -30,11 +30,11 @@ inline fun <reified T : Any> typeRef(): ParameterizedTypeReference<T> = object :
 
 fun String.toLocalDateTime(): LocalDateTime {
     return ZonedDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
-            .withZoneSameInstant(ZoneId.of("Europe/Oslo")).toLocalDateTime()
+        .withZoneSameInstant(ZoneId.of("Europe/Oslo")).toLocalDateTime()
 }
 
 fun String.toLocalDate(): LocalDate =
-        LocalDate.parse(this, DateTimeFormatter.ISO_LOCAL_DATE)
+    LocalDate.parse(this, DateTimeFormatter.ISO_LOCAL_DATE)
 
 fun unixToLocalDateTime(tidspunkt: Long): LocalDateTime {
     return LocalDateTime.ofInstant(Instant.ofEpochMilli(tidspunkt), ZoneId.of("Europe/Oslo"))
@@ -58,7 +58,8 @@ fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
 fun hentSoknadTittel(digisosSak: DigisosSak, model: InternalDigisosSoker): String {
     return when (digisosSak.digisosSoker) {
         null -> SOKNAD_DEFAULT_TITTEL
-        else -> model.saker
+        else ->
+            model.saker
                 .filter { SaksStatus.FEILREGISTRERT != it.saksStatus }
                 .joinToString { it.tittel ?: DEFAULT_TITTEL }
     }

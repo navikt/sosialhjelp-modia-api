@@ -19,8 +19,8 @@ import java.util.Date
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class KommuneController(
-        private val kommuneService: KommuneService,
-        private val abacService: AbacService
+    private val kommuneService: KommuneService,
+    private val abacService: AbacService
 ) {
 
     @PostMapping("/kommuner/{kommunenummer}")
@@ -29,14 +29,15 @@ class KommuneController(
 
         val kommuneInfo = kommuneService.get(kommunenummer)
         return ResponseEntity.ok(
-                KommuneResponse(
-                        erInnsynDeaktivert = !kommuneInfo.kanOppdatereStatus,
-                        erInnsynMidlertidigDeaktivert = kommuneInfo.harMidlertidigDeaktivertOppdateringer,
-                        erInnsendingEttersendelseDeaktivert = !kommuneInfo.kanMottaSoknader,
-                        erInnsendingEttersendelseMidlertidigDeaktivert = kommuneInfo.harMidlertidigDeaktivertMottak,
-                        tidspunkt = Date(),
-                        harNksTilgang = kommuneInfo.harNksTilgang,
-                        behandlingsansvarlig = kommuneInfo.behandlingsansvarlig
-                ))
+            KommuneResponse(
+                erInnsynDeaktivert = !kommuneInfo.kanOppdatereStatus,
+                erInnsynMidlertidigDeaktivert = kommuneInfo.harMidlertidigDeaktivertOppdateringer,
+                erInnsendingEttersendelseDeaktivert = !kommuneInfo.kanMottaSoknader,
+                erInnsendingEttersendelseMidlertidigDeaktivert = kommuneInfo.harMidlertidigDeaktivertMottak,
+                tidspunkt = Date(),
+                harNksTilgang = kommuneInfo.harNksTilgang,
+                behandlingsansvarlig = kommuneInfo.behandlingsansvarlig
+            )
+        )
     }
 }

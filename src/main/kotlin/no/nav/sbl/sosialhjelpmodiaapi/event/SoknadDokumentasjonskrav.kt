@@ -8,14 +8,14 @@ import no.nav.sbl.sosialhjelpmodiaapi.unixToLocalDateTime
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 
 fun InternalDigisosSoker.applySoknadKrav(
-        digisosSak: DigisosSak,
-        soknadVedleggService: SoknadVedleggService,
-        timestampSendt: Long
+    digisosSak: DigisosSak,
+    soknadVedleggService: SoknadVedleggService,
+    timestampSendt: Long
 ) {
     val vedleggKreves = soknadVedleggService.hentSoknadVedleggMedStatus(digisosSak, VEDLEGG_KREVES_STATUS)
 
     oppgaver = vedleggKreves
-            .filterNot { it.type == "annet" && it.tilleggsinfo == "annet" }
-            .map { Oppgave(it.type, it.tilleggsinfo, null, unixToLocalDateTime(timestampSendt), false) }
-            .toMutableList()
+        .filterNot { it.type == "annet" && it.tilleggsinfo == "annet" }
+        .map { Oppgave(it.type, it.tilleggsinfo, null, unixToLocalDateTime(timestampSendt), false) }
+        .toMutableList()
 }

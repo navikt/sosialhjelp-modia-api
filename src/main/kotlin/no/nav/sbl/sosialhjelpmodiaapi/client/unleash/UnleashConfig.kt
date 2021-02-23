@@ -13,22 +13,22 @@ import org.springframework.context.annotation.Profile
 @Profile("!mock")
 @Configuration
 class UnleashConfig(
-        private val clientProperties: ClientProperties
+    private val clientProperties: ClientProperties
 ) {
 
     @Bean
     fun unleashClient(): Unleash {
         return DefaultUnleash(
-                config(),
-                ByInstanceIdStrategy(clientProperties.unleashInstanceId)
+            config(),
+            ByInstanceIdStrategy(clientProperties.unleashInstanceId)
         )
     }
 
     private fun config() = UnleashConfig.builder()
-            .appName("sosialhjelp-modia-api")
-            .instanceId(clientProperties.unleashInstanceId)
-            .unleashAPI(clientProperties.unleashUrl)
-            .build()
+        .appName("sosialhjelp-modia-api")
+        .instanceId(clientProperties.unleashInstanceId)
+        .unleashAPI(clientProperties.unleashUrl)
+        .build()
 }
 
 @Profile("mock")
@@ -39,5 +39,4 @@ class UnleashMockConfig {
     fun unleashClient(): Unleash {
         return FakeUnleash()
     }
-
 }

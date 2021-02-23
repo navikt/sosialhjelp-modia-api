@@ -45,12 +45,14 @@ internal class ForelopigSvarTest {
     @Test
     fun `ingen forelopigSvar`() {
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
-                JsonDigisosSoker()
-                        .withAvsender(avsender)
-                        .withVersion("123")
-                        .withHendelser(listOf(
-                                SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
-                        ))
+            JsonDigisosSoker()
+                .withAvsender(avsender)
+                .withVersion("123")
+                .withHendelser(
+                    listOf(
+                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
+                    )
+                )
 
         val model = service.createModel(mockDigisosSak)
 
@@ -63,13 +65,15 @@ internal class ForelopigSvarTest {
     @Test
     fun `forelopigSvar mottatt`() {
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
-                JsonDigisosSoker()
-                        .withAvsender(avsender)
-                        .withVersion("123")
-                        .withHendelser(listOf(
-                                SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                                FORELOPIGSVAR.withHendelsestidspunkt(tidspunkt_2)
-                        ))
+            JsonDigisosSoker()
+                .withAvsender(avsender)
+                .withVersion("123")
+                .withHendelser(
+                    listOf(
+                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                        FORELOPIGSVAR.withHendelsestidspunkt(tidspunkt_2)
+                    )
+                )
 
         val model = service.createModel(mockDigisosSak)
 
@@ -84,6 +88,4 @@ internal class ForelopigSvarTest {
         assertThat(hendelse.tittel).isEqualTo(FORELOPIG_SVAR)
         assertThat(hendelse.beskrivelse).contains("Du har fått et brev om saksbehandlingstiden for søknaden din")
     }
-
-
 }

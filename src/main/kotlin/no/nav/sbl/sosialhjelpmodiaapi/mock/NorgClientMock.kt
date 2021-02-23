@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelpmodiaapi.mock
 
-import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
 import no.nav.sbl.sosialhjelpmodiaapi.client.norg.NorgClient
+import no.nav.sbl.sosialhjelpmodiaapi.domain.NavEnhet
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
@@ -17,32 +17,32 @@ class NorgClientMock : NorgClient {
 
     override fun hentAlleNavEnheter(): List<NavEnhet> {
         return listOf(
-                NavEnhet(enhetId = 1, navn = "NAV Longyearbyen", enhetNr = "1001", antallRessurser = 1, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-                NavEnhet(enhetId = 2, navn = "NAV Ny-Ålesund", enhetNr = "1002", antallRessurser = 2, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-                NavEnhet(enhetId = 3, navn = "NAV Spitsbergen", enhetNr = "1003", antallRessurser = 3, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-                NavEnhet(enhetId = 4, navn = "NAV Jan Mayen", enhetNr = "1004", antallRessurser = 4, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-                NavEnhet(enhetId = 5, navn = "NAV Bjørnøya", enhetNr = "1005", antallRessurser = 5, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-                NavEnhet(enhetId = 6, navn = "NAV Dronning Maud land", enhetNr = "1006", antallRessurser = 6, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-                NavEnhet(enhetId = 7, navn = "NAV Bouvetøya", enhetNr = "1007", antallRessurser = 7, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "Noe annet"),
-                NavEnhet(enhetId = 8, navn = "NAV Oslo", enhetNr = "2002", antallRessurser = 8, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-                NavEnhet(enhetId = 9, navn = "NAV Bergen", enhetNr = "3002", antallRessurser = 9, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-                NavEnhet(enhetId = 10, navn = "NAV Trondheim", enhetNr = "4002", antallRessurser = 10, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-                NavEnhet(enhetId = 11, navn = "NAV Stavanger", enhetNr = "5002", antallRessurser = 11, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-                NavEnhet(enhetId = 12, navn = "NAV Tromsø", enhetNr = "6002", antallRessurser = 12, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
+            NavEnhet(enhetId = 1, navn = "NAV Longyearbyen", enhetNr = "1001", antallRessurser = 1, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
+            NavEnhet(enhetId = 2, navn = "NAV Ny-Ålesund", enhetNr = "1002", antallRessurser = 2, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
+            NavEnhet(enhetId = 3, navn = "NAV Spitsbergen", enhetNr = "1003", antallRessurser = 3, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
+            NavEnhet(enhetId = 4, navn = "NAV Jan Mayen", enhetNr = "1004", antallRessurser = 4, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
+            NavEnhet(enhetId = 5, navn = "NAV Bjørnøya", enhetNr = "1005", antallRessurser = 5, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
+            NavEnhet(enhetId = 6, navn = "NAV Dronning Maud land", enhetNr = "1006", antallRessurser = 6, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
+            NavEnhet(enhetId = 7, navn = "NAV Bouvetøya", enhetNr = "1007", antallRessurser = 7, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "Noe annet"),
+            NavEnhet(enhetId = 8, navn = "NAV Oslo", enhetNr = "2002", antallRessurser = 8, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
+            NavEnhet(enhetId = 9, navn = "NAV Bergen", enhetNr = "3002", antallRessurser = 9, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
+            NavEnhet(enhetId = 10, navn = "NAV Trondheim", enhetNr = "4002", antallRessurser = 10, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
+            NavEnhet(enhetId = 11, navn = "NAV Stavanger", enhetNr = "5002", antallRessurser = 11, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
+            NavEnhet(enhetId = 12, navn = "NAV Tromsø", enhetNr = "6002", antallRessurser = 12, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
         )
     }
 
     private fun defaultNavEnhet(enhetsnr: String): NavEnhet {
         return NavEnhet(
-                enhetId = 100000367,
-                navn = "NAV Longyearbyen",
-                enhetNr = enhetsnr,
-                antallRessurser = 20,
-                status = "AKTIV",
-                aktiveringsdato = "1982-04-21",
-                nedleggelsesdato = "null",
-                sosialeTjenester = sosialetjenesterInfo,
-                type = "LOKAL"
+            enhetId = 100000367,
+            navn = "NAV Longyearbyen",
+            enhetNr = enhetsnr,
+            antallRessurser = 20,
+            status = "AKTIV",
+            aktiveringsdato = "1982-04-21",
+            nedleggelsesdato = "null",
+            sosialeTjenester = sosialetjenesterInfo,
+            type = "LOKAL"
         )
     }
 

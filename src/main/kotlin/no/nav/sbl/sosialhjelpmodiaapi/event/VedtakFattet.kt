@@ -24,12 +24,12 @@ fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
     if (sakForReferanse == null) {
         // Opprett ny Sak
         sakForReferanse = Sak(
-                hendelse.saksreferanse ?: "default",
-                SaksStatus.UNDER_BEHANDLING,
-                DEFAULT_TITTEL,
-                mutableListOf(),
-                mutableListOf(),
-                hendelse.hendelsestidspunkt.toLocalDateTime().toLocalDate()
+            hendelse.saksreferanse ?: "default",
+            SaksStatus.UNDER_BEHANDLING,
+            DEFAULT_TITTEL,
+            mutableListOf(),
+            mutableListOf(),
+            hendelse.hendelsestidspunkt.toLocalDateTime().toLocalDate()
         )
         saker.add(sakForReferanse)
     }

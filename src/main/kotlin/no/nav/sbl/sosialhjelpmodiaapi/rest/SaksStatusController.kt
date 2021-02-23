@@ -1,9 +1,9 @@
 package no.nav.sbl.sosialhjelpmodiaapi.rest
 
-import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.SaksStatusResponse
 import no.nav.sbl.sosialhjelpmodiaapi.service.saksstatus.SaksStatusService
+import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpStatus
@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class SaksStatusController(
-        private val saksStatusService: SaksStatusService,
-        private val abacService: AbacService
+    private val saksStatusService: SaksStatusService,
+    private val abacService: AbacService
 ) {
 
     @PostMapping("/{fiksDigisosId}/saksStatus")

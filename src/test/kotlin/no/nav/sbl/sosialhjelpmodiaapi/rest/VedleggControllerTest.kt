@@ -5,11 +5,11 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.domain.Ident
 import no.nav.sbl.sosialhjelpmodiaapi.domain.VedleggResponse
-import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
+import no.nav.sbl.sosialhjelpmodiaapi.service.tilgangskontroll.AbacService
 import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.InternalVedlegg
+import no.nav.sbl.sosialhjelpmodiaapi.service.vedlegg.VedleggService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -43,7 +43,7 @@ internal class VedleggControllerTest {
         val datoLagtTil = LocalDateTime.now()
 
         every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns listOf(
-                InternalVedlegg(dokumenttype, tilleggsinfo, frist, 1, datoLagtTil)
+            InternalVedlegg(dokumenttype, tilleggsinfo, frist, 1, datoLagtTil)
         )
 
         val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
@@ -67,8 +67,8 @@ internal class VedleggControllerTest {
         val datoLagtTil = LocalDateTime.now()
 
         every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns listOf(
-                InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
-                InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil)
+            InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
+            InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil)
         )
 
         val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
@@ -87,11 +87,11 @@ internal class VedleggControllerTest {
         val datoLagtTil = LocalDateTime.now()
 
         every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns listOf(
-                InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
-                InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
-                InternalVedlegg(dokumenttype, null, frist, 0, datoLagtTil),
-                InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
-                InternalVedlegg(dokumenttype, null, frist, 0, datoLagtTil)
+            InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
+            InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
+            InternalVedlegg(dokumenttype, null, frist, 0, datoLagtTil),
+            InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
+            InternalVedlegg(dokumenttype, null, frist, 0, datoLagtTil)
         )
 
         val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
@@ -112,11 +112,11 @@ internal class VedleggControllerTest {
         val datoLagtTil_2 = LocalDateTime.now()
 
         every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns listOf(
-                InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
-                InternalVedlegg(dokumenttype, tilleggsinfo, frist_2, 1, datoLagtTil_2),
-                InternalVedlegg(dokumenttype, tilleggsinfo, frist_2, 1, datoLagtTil),
-                InternalVedlegg(dokumenttype_2, null, null, 1, datoLagtTil_2),
-                InternalVedlegg(dokumenttype_2, tilleggsinfo, frist, 1, datoLagtTil_2)
+            InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil),
+            InternalVedlegg(dokumenttype, tilleggsinfo, frist_2, 1, datoLagtTil_2),
+            InternalVedlegg(dokumenttype, tilleggsinfo, frist_2, 1, datoLagtTil),
+            InternalVedlegg(dokumenttype_2, null, null, 1, datoLagtTil_2),
+            InternalVedlegg(dokumenttype_2, tilleggsinfo, frist, 1, datoLagtTil_2)
         )
 
         val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
@@ -149,7 +149,7 @@ internal class VedleggControllerTest {
         val frist = LocalDateTime.now().plusDays(7)
 
         every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns listOf(
-                InternalVedlegg(dokumenttype, null, frist, 0, null)
+            InternalVedlegg(dokumenttype, null, frist, 0, null)
         )
 
         val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
@@ -166,5 +166,4 @@ internal class VedleggControllerTest {
             assertThat(body[0].datoLagtTil).isNull()
         }
     }
-
 }

@@ -1,9 +1,9 @@
 package no.nav.sbl.sosialhjelpmodiaapi.client.pdl
 
+import no.nav.sbl.sosialhjelpmodiaapi.client.sts.STSClient
 import no.nav.sbl.sosialhjelpmodiaapi.common.PdlException
 import no.nav.sbl.sosialhjelpmodiaapi.config.ClientProperties
 import no.nav.sbl.sosialhjelpmodiaapi.logger
-import no.nav.sbl.sosialhjelpmodiaapi.client.sts.STSClient
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.BEARER
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CALL_ID
 import no.nav.sbl.sosialhjelpmodiaapi.utils.IntegrationUtils.HEADER_CONSUMER_TOKEN
@@ -25,9 +25,9 @@ import org.springframework.web.client.RestTemplate
 @Profile("!(mock | local)")
 @Component
 class PdlClientImpl(
-        clientProperties: ClientProperties,
-        private val restTemplate: RestTemplate,
-        private val stsClient: STSClient
+    clientProperties: ClientProperties,
+    private val restTemplate: RestTemplate,
+    private val stsClient: STSClient
 ) : PdlClient {
 
     private val baseurl = clientProperties.pdlEndpointUrl
@@ -41,10 +41,11 @@ class PdlClientImpl(
             val pdlPersonResponse: PdlPersonResponse = response.body!!
             if (pdlPersonResponse.errors != null && pdlPersonResponse.errors.isNotEmpty()) {
                 pdlPersonResponse.errors
-                        .forEach { log.error("PDL - noe feilet. Message=${it.message}, path=${it.path}, code=${it.extensions.code}, classification=${it.extensions.classification}") }
+                    .forEach { log.error("PDL - noe feilet. Message=${it.message}, path=${it.path}, code=${it.extensions.code}, classification=${it.extensions.classification}") }
                 val firstError = pdlPersonResponse.errors[0]
                 val statusCode = firstError.extensions.code?.toUpperCase()?.let { HttpStatus.valueOf(it) }
-                throw PdlException("StatusCode: $statusCode, Message: ${firstError.message}, Classification: ${firstError.extensions.classification}"
+                throw PdlException(
+                    "StatusCode: $statusCode, Message: ${firstError.message}, Classification: ${firstError.extensions.classification}"
                 )
             }
             return pdlPersonResponse.data
