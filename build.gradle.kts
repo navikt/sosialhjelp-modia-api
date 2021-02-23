@@ -168,14 +168,13 @@ kotlinter {
     indentSize = 4
     reporters = arrayOf("checkstyle", "plain")
     experimentalRules = false
-    disabledRules = arrayOf("comment-spacing")
+    disabledRules = emptyArray<String>()
 }
 
 tasks {
-
-//    check {
-//        dependsOn("installKotlinterPrePushHook")
-//    }
+    check {
+        dependsOn("installKotlinterPrePushHook")
+    }
 
     withType<KotlinCompile> {
         kotlinOptions {
