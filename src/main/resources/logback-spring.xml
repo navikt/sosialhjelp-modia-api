@@ -6,7 +6,7 @@
             <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
         </appender>
 
-        <logger name="no.nav.sbl.sosialhjelpmodiaapi" level="INFO"/>
+        <logger name="import no.nav.sosialhjelp.modia" level="INFO"/>
 
         <root level="INFO">
             <appender-ref ref="stdout_json"/>
@@ -26,7 +26,7 @@
             <appender-ref ref="console"/>
         </logger>
 
-        <logger name="no.nav.sbl.sosialhjelpmodiaapi" level="DEBUG"/>
+        <logger name="import no.nav.sosialhjelp.modia" level="DEBUG"/>
 
         <logger name="org.springframework" level="INFO"/>
         <logger name="org.springframework.security" level="INFO"/>
