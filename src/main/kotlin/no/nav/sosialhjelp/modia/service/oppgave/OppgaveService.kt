@@ -1,10 +1,10 @@
 package no.nav.sosialhjelp.modia.service.oppgave
 
-import no.nav.sosialhjelp.modia.domain.Oppgave
-import no.nav.sosialhjelp.modia.domain.OppgaveResponse
-import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
+import no.nav.sosialhjelp.modia.domain.Oppgave
+import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.logger
+import no.nav.sosialhjelp.modia.rest.OppgaveController.OppgaveResponse
 import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
 import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
 import org.springframework.stereotype.Component
@@ -32,12 +32,13 @@ class OppgaveService(
                 .sortedBy { it.innsendelsesfrist }
                 .map {
                     OppgaveResponse(
-                            dokumenttype = it.tittel,
-                            tilleggsinformasjon = it.tilleggsinfo,
-                            innsendelsesfrist = it.innsendelsesfrist?.toLocalDate(),
-                            vedleggDatoLagtTil = hentVedleggDatoLagtTil(it, ettersendteVedlegg),
-                            antallVedlegg = hentAntallOpplastedeVedlegg(it, ettersendteVedlegg),
-                            erFraInnsyn = it.erFraInnsyn)
+                        dokumenttype = it.tittel,
+                        tilleggsinformasjon = it.tilleggsinfo,
+                        innsendelsesfrist = it.innsendelsesfrist?.toLocalDate(),
+                        vedleggDatoLagtTil = hentVedleggDatoLagtTil(it, ettersendteVedlegg),
+                        antallVedlegg = hentAntallOpplastedeVedlegg(it, ettersendteVedlegg),
+                        erFraInnsyn = it.erFraInnsyn
+                    )
                 }
                 .filter { it.antallVedlegg < 1 }
         log.info("Hentet ${oppgaveResponseList.size} oppgaver for fiksDigisosId=$fiksDigisosId")

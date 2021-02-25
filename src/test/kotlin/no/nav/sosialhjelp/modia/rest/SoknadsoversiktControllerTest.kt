@@ -7,10 +7,9 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
-import no.nav.sosialhjelp.modia.domain.Ident
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
-import no.nav.sosialhjelp.modia.domain.OppgaveResponse
 import no.nav.sosialhjelp.modia.domain.Sak
 import no.nav.sosialhjelp.modia.domain.SaksStatus
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus
@@ -20,7 +19,6 @@ import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.service.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.KILDE_INNSYN_API
-import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -50,7 +48,7 @@ internal class SoknadsoversiktControllerTest {
     private val utbetaling1: Utbetaling = mockk()
     private val utbetaling2: Utbetaling = mockk()
 
-    private val oppgaveResponseMock: OppgaveResponse = mockk()
+    private val oppgaveResponseMock: OppgaveController.OppgaveResponse = mockk()
 
     private val fnr = "11111111111"
     private val id_1 = "123"
@@ -77,7 +75,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    fun `hentAlleSaker - skal mappe fra DigisosSak til SakResponse`() {
+    fun `getSoknader - skal mappe fra DigisosSak til SoknadResponse`() {
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1, digisosSak2)
 
         every { model1.status } returns SoknadsStatus.MOTTATT
@@ -91,7 +89,7 @@ internal class SoknadsoversiktControllerTest {
 
         every { model2.saker } returns mutableListOf(sak1, sak2)
 
-        val response = controller.hentAlleSaker("token", Ident(fnr))
+        val response = controller.getSoknader("token", Ident(fnr))
 
         val saker = response.body
         assertThat(saker).isNotNull
@@ -111,7 +109,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    fun `hentSaksDetaljer - skal mappe fra DigisosSak til SakResponse for detaljer`() {
+    fun `getSoknadDetaljer - skal mappe fra DigisosSak til SoknadDetaljerResponse`() {
         every { fiksClient.hentDigisosSak(id_1) } returns digisosSak1
         every { fiksClient.hentDigisosSak(id_2) } returns digisosSak2
         every { eventService.createSoknadsoversiktModel(digisosSak1) } returns model1
@@ -136,7 +134,7 @@ internal class SoknadsoversiktControllerTest {
         every { model1.saker } returns mutableListOf()
         every { model2.saker } returns mutableListOf(sak1, sak2)
 
-        val response1 = controller.hentSaksDetaljer(id_1, "token", Ident(fnr))
+        val response1 = controller.getSoknadDetaljer(id_1, "token", Ident(fnr))
         val digisosSak1 = response1.body
 
         assertThat(response1.statusCode).isEqualTo(HttpStatus.OK)
@@ -145,7 +143,7 @@ internal class SoknadsoversiktControllerTest {
         assertThat(digisosSak1?.harNyeOppgaver).isTrue
         assertThat(digisosSak1?.harVilkar).isFalse
 
-        val response2 = controller.hentSaksDetaljer(id_2, "token", Ident(fnr))
+        val response2 = controller.getSoknadDetaljer(id_2, "token", Ident(fnr))
         val digisosSak2 = response2.body
 
         assertThat(response2.statusCode).isEqualTo(HttpStatus.OK)
@@ -157,7 +155,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    fun `hentSaksDetaljer - hvis model ikke har noen oppgaver, skal ikke oppgaveService kalles`() {
+    fun `getSoknadDetaljer - hvis model ikke har noen oppgaver, skal ikke oppgaveService kalles`() {
         every { fiksClient.hentDigisosSak(id_1) } returns digisosSak1
         every { eventService.createSoknadsoversiktModel(digisosSak1) } returns model1
 
@@ -165,7 +163,7 @@ internal class SoknadsoversiktControllerTest {
         every { model1.oppgaver } returns mutableListOf()
         every { model1.saker } returns mutableListOf()
 
-        val response = controller.hentSaksDetaljer(id_1, "token", Ident(fnr))
+        val response = controller.getSoknadDetaljer(id_1, "token", Ident(fnr))
         val sak = response.body
 
         assertThat(sak).isNotNull

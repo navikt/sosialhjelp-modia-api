@@ -1,9 +1,9 @@
 package no.nav.sosialhjelp.modia.service.navkontor
 
 import no.nav.sosialhjelp.modia.client.norg.NorgClient
-import no.nav.sosialhjelp.modia.domain.KontorinfoResponse
-import no.nav.sosialhjelp.modia.domain.NavEnhet
+import no.nav.sosialhjelp.modia.client.norg.NavEnhet
 import no.nav.sosialhjelp.modia.redis.RedisService
+import no.nav.sosialhjelp.modia.rest.NavKontorinfoController.KontorinfoResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 

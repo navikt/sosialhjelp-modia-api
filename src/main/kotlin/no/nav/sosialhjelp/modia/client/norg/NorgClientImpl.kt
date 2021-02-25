@@ -2,7 +2,6 @@ package no.nav.sosialhjelp.modia.client.norg
 
 import no.nav.sosialhjelp.modia.common.NorgException
 import no.nav.sosialhjelp.modia.config.ClientProperties
-import no.nav.sosialhjelp.modia.domain.NavEnhet
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.redis.ALLE_NAVENHETER_CACHE_KEY
 import no.nav.sosialhjelp.modia.redis.ALLE_NAVENHETER_CACHE_TIME_TO_LIVE_SECONDS

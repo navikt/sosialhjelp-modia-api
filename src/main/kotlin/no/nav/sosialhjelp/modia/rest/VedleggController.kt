@@ -1,8 +1,7 @@
 package no.nav.sosialhjelp.modia.rest
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
-import no.nav.sosialhjelp.modia.domain.Ident
-import no.nav.sosialhjelp.modia.domain.VedleggResponse
 import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
 import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDateTime
 
 @ProtectedWithClaims(issuer = "azuread")
 @RestController
@@ -47,4 +47,15 @@ class VedleggController(
                 .sortedWith(compareByDescending<VedleggResponse> { it.innsendelsesfrist }.thenByDescending { it.datoLagtTil })
         return ResponseEntity.ok(vedleggResponses)
     }
+
+    data class VedleggResponse(
+        val type: String,
+        val tilleggsinfo: String?,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val innsendelsesfrist: LocalDateTime?,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val datoLagtTil: LocalDateTime?,
+        val antallVedlegg: Int
+    )
+
 }

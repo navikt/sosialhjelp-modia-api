@@ -1,7 +1,6 @@
 package no.nav.sosialhjelp.modia.rest
 
-import no.nav.sosialhjelp.modia.domain.Ident
-import no.nav.sosialhjelp.modia.domain.KommuneResponse
+import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.sosialhjelp.modia.service.kommune.KommuneService
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -39,4 +38,16 @@ class KommuneController(
                         behandlingsansvarlig = kommuneInfo.behandlingsansvarlig
                 ))
     }
+
+    data class KommuneResponse(
+        val erInnsynDeaktivert: Boolean,
+        val erInnsynMidlertidigDeaktivert: Boolean,
+        val erInnsendingEttersendelseDeaktivert: Boolean,
+        val erInnsendingEttersendelseMidlertidigDeaktivert: Boolean,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val tidspunkt: Date,
+        val harNksTilgang: Boolean,
+        val behandlingsansvarlig: String?
+    )
+
 }

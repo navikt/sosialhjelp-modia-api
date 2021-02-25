@@ -1,12 +1,11 @@
 package no.nav.sosialhjelp.modia.service.saksstatus
 
+import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.Sak
 import no.nav.sosialhjelp.modia.domain.SaksStatus
-import no.nav.sosialhjelp.modia.domain.SaksStatusResponse
-import no.nav.sosialhjelp.modia.domain.VedtakResponse
 import no.nav.sosialhjelp.modia.event.EventService
-import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.logger
+import no.nav.sosialhjelp.modia.rest.SaksStatusController.SaksStatusResponse
 import org.springframework.stereotype.Component
 
 const val DEFAULT_TITTEL: String = "Økonomisk sosialhjelp"
@@ -33,9 +32,9 @@ class SaksStatusService(
                             tittel = sak.tittel ?: DEFAULT_TITTEL,
                             status = hentStatusNavn(sak),
                             vedtak = sak.vedtak.map {
-                                VedtakResponse(
-                                        vedtakDato = it.datoFattet,
-                                        utfall = it.utfall
+                                SaksStatusResponse.Vedtak(
+                                    vedtakDato = it.datoFattet,
+                                    utfall = it.utfall
                                 )
                             },
                             datoOpprettet = sak.datoOpprettet,

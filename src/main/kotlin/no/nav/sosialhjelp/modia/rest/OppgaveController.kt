@@ -1,10 +1,9 @@
 package no.nav.sosialhjelp.modia.rest
 
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
-import no.nav.sosialhjelp.modia.domain.Ident
-import no.nav.sosialhjelp.modia.domain.OppgaveResponse
-import no.nav.sosialhjelp.modia.service.oppgave.OppgaveService
+import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.sosialhjelp.modia.service.oppgave.OppgaveService
+import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDate
 
 @ProtectedWithClaims(issuer = "azuread")
 @RestController
@@ -33,4 +33,15 @@ class OppgaveController(
         }
         return ResponseEntity.ok(oppgaver)
     }
+
+    data class OppgaveResponse(
+        val dokumenttype: String,
+        val tilleggsinformasjon: String?,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val innsendelsesfrist: LocalDate?,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val vedleggDatoLagtTil: LocalDate?,
+        val antallVedlegg: Int,
+        val erFraInnsyn: Boolean
+    )
 }

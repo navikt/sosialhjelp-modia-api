@@ -1,9 +1,8 @@
 package no.nav.sosialhjelp.modia.rest
 
-import no.nav.sosialhjelp.modia.domain.LoginResponse
+import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.utils.MiljoUtils
 import no.nav.sosialhjelp.modia.utils.TokenUtils
-import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -34,4 +33,8 @@ class LoginController(
     companion object {
         const val MSGRAPH_COOKIE_NAME = "isso-accesstoken" // NB: Navnet "isso-accesstoken" kreves av modiacontextholder.
     }
+
+    data class LoginResponse(
+        val melding: String,
+    )
 }

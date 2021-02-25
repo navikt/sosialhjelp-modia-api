@@ -4,7 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import no.nav.sosialhjelp.modia.client.norg.NorgClient
-import no.nav.sosialhjelp.modia.domain.NavEnhet
+import no.nav.sosialhjelp.modia.client.norg.NavEnhet
 import no.nav.sosialhjelp.modia.redis.RedisService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

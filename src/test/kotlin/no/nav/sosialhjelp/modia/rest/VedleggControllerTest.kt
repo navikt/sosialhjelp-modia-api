@@ -5,11 +5,10 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import no.nav.sosialhjelp.modia.rest.VedleggController.VedleggResponse
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
-import no.nav.sosialhjelp.modia.domain.Ident
-import no.nav.sosialhjelp.modia.domain.VedleggResponse
-import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
 import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
+import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
