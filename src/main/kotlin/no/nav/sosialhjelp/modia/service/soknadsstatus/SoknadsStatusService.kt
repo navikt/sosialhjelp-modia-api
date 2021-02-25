@@ -1,9 +1,9 @@
 package no.nav.sosialhjelp.modia.service.soknadsstatus
 
-import no.nav.sosialhjelp.modia.domain.SoknadsStatusResponse
-import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
+import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.logger
+import no.nav.sosialhjelp.modia.rest.SoknadsStatusController.SoknadsStatusResponse
 import org.springframework.stereotype.Component
 
 

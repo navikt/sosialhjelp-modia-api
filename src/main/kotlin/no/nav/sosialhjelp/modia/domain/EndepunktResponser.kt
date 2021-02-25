@@ -5,9 +5,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
-data class SoknadsStatusResponse(
-        val status: SoknadsStatus
-)
 
 data class SoknadNoekkelinfoResponse(
         val tittel: String,
