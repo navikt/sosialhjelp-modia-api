@@ -24,6 +24,3 @@ data class KontorinfoResponse(
         val norgUrl: String,
 )
 
-data class LoginResponse(
-        val melding: String,
-)
