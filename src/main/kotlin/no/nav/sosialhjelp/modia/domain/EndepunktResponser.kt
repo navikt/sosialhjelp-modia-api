@@ -16,17 +16,6 @@ data class HendelseResponse(
         val filbeskrivelse: String?
 )
 
-data class OppgaveResponse(
-        val dokumenttype: String,
-        val tilleggsinformasjon: String?,
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        val innsendelsesfrist: LocalDate?,
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        val vedleggDatoLagtTil: LocalDate?,
-        val antallVedlegg: Int,
-        val erFraInnsyn: Boolean
-)
-
 data class UtbetalingerResponse(
         val tittel: String?,
         val belop: Double,
