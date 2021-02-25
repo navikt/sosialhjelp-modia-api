@@ -1,11 +1,11 @@
 package no.nav.sosialhjelp.modia.service.hendelse
 
-import no.nav.sosialhjelp.modia.domain.HendelseResponse
-import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.Hendelse
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.logger
+import no.nav.sosialhjelp.modia.rest.HendelseController.HendelseResponse
 import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
 import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
 import no.nav.sosialhjelp.modia.unixToLocalDateTime

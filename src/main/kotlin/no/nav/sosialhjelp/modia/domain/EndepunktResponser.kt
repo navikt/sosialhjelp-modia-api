@@ -9,13 +9,6 @@ data class SoknadsStatusResponse(
         val status: SoknadsStatus
 )
 
-data class HendelseResponse(
-        val tittel: String,
-        val tidspunkt: String,
-        val beskrivelse: String?,
-        val filbeskrivelse: String?
-)
-
 data class UtbetalingerResponse(
         val tittel: String?,
         val belop: Double,

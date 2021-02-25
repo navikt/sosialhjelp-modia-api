@@ -1,10 +1,9 @@
 package no.nav.sosialhjelp.modia.rest
 
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
-import no.nav.sosialhjelp.modia.domain.HendelseResponse
+import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.domain.Ident
 import no.nav.sosialhjelp.modia.service.hendelse.HendelseService
-import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -29,4 +28,11 @@ class HendelseController(
         val hendelser = hendelseService.hentHendelser(fiksDigisosId)
         return ResponseEntity.ok(hendelser)
     }
+
+    data class HendelseResponse(
+        val tittel: String,
+        val tidspunkt: String,
+        val beskrivelse: String?,
+        val filbeskrivelse: String?
+    )
 }
