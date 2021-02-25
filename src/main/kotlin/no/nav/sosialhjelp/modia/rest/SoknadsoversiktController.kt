@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.Ident
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
-import no.nav.sosialhjelp.modia.domain.SaksDetaljerResponse
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.hentSoknadTittel
 import no.nav.sosialhjelp.modia.logger
@@ -14,6 +13,7 @@ import no.nav.sosialhjelp.modia.unixTimestampToDate
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
+import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -60,12 +60,12 @@ class SoknadsoversiktController(
     }
 
     @PostMapping("/{fiksDigisosId}/saksDetaljer")
-    fun hentSaksDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SaksDetaljerResponse> {
+    fun hentSaksDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadDetaljerResponse> {
         abacService.harTilgang(ident.fnr, token)
 
         val sak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createSoknadsoversiktModel(sak)
-        val saksDetaljerResponse = SaksDetaljerResponse(
+        val saksDetaljerResponse = SoknadDetaljerResponse(
                 fiksDigisosId = sak.fiksDigisosId,
                 soknadTittel = hentSoknadTittel(sak, model),
                 status = model.status!!,
@@ -103,6 +103,14 @@ class SoknadsoversiktController(
             @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
             val sendt: Date?,
             val kilde: String
+        )
+
+        data class SoknadDetaljerResponse(
+            val fiksDigisosId: String,
+            val soknadTittel: String,
+            val status: SoknadsStatus,
+            val harNyeOppgaver: Boolean,
+            val harVilkar: Boolean
         )
     }
 }

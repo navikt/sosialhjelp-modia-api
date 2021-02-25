@@ -6,18 +6,6 @@ import java.time.LocalDateTime
 import java.util.*
 
 
-
-
-
-
-data class SaksDetaljerResponse(
-        val fiksDigisosId: String,
-        val soknadTittel: String,
-        val status: SoknadsStatus,
-        val harNyeOppgaver: Boolean,
-        val harVilkar: Boolean
-)
-
 data class PersoninfoResponse(
         val sammensattNavn: String?,
         val alder: Int?,

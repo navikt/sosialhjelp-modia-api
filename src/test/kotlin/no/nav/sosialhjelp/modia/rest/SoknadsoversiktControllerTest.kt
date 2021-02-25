@@ -76,7 +76,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    fun `hentAlleSaker - skal mappe fra DigisosSak til SakResponse`() {
+    fun `hentAlleSaker - skal mappe fra DigisosSak til SoknadResponse`() {
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1, digisosSak2)
 
         every { model1.status } returns SoknadsStatus.MOTTATT
@@ -110,7 +110,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    fun `hentSaksDetaljer - skal mappe fra DigisosSak til SakResponse for detaljer`() {
+    fun `hentSaksDetaljer - skal mappe fra DigisosSak til SoknadDetaljerResponse`() {
         every { fiksClient.hentDigisosSak(id_1) } returns digisosSak1
         every { fiksClient.hentDigisosSak(id_2) } returns digisosSak2
         every { eventService.createSoknadsoversiktModel(digisosSak1) } returns model1
