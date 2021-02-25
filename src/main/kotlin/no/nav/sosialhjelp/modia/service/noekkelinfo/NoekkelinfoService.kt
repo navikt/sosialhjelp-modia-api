@@ -32,7 +32,6 @@ class NoekkelinfoService(
                 tittel = hentSoknadTittel(digisosSak, model),
                 status = model.status!!,
                 sistOppdatert = unixToLocalDateTime(digisosSak.sistEndret).toLocalDate(),
-                saksId = null, // TODO: saksreferanse eller behandlingsid?
                 sendtEllerMottattTidspunkt = model.historikk[0].tidspunkt.toLocalDate(), // Første hendelse i historikk er alltid SENDT eller MOTTATT (hvis papirsøknad)
                 navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }, // null hvis papirsøknad og ikke enda mottatt
                 kommunenavn = kommunenavn,

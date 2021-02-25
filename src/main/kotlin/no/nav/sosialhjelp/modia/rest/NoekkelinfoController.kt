@@ -38,7 +38,6 @@ class NoekkelinfoController(
         val status: SoknadsStatus,
         @JsonFormat(pattern = "yyyy-MM-dd")
         val sistOppdatert: LocalDate,
-        val saksId: String?,
         @JsonFormat(pattern = "yyyy-MM-dd")
         val sendtEllerMottattTidspunkt: LocalDate,
         val navKontor: NavKontor?,
