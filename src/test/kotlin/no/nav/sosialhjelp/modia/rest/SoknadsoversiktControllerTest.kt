@@ -7,10 +7,10 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.Ident
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
-import no.nav.sosialhjelp.modia.domain.OppgaveResponse
 import no.nav.sosialhjelp.modia.domain.Sak
 import no.nav.sosialhjelp.modia.domain.SaksStatus
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus
@@ -20,7 +20,6 @@ import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.service.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.KILDE_INNSYN_API
-import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -50,7 +49,7 @@ internal class SoknadsoversiktControllerTest {
     private val utbetaling1: Utbetaling = mockk()
     private val utbetaling2: Utbetaling = mockk()
 
-    private val oppgaveResponseMock: OppgaveResponse = mockk()
+    private val oppgaveResponseMock: OppgaveController.OppgaveResponse = mockk()
 
     private val fnr = "11111111111"
     private val id_1 = "123"
