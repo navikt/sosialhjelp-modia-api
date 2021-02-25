@@ -76,7 +76,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    fun `hentAlleSaker - skal mappe fra DigisosSak til SoknadResponse`() {
+    fun `getSoknader - skal mappe fra DigisosSak til SoknadResponse`() {
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1, digisosSak2)
 
         every { model1.status } returns SoknadsStatus.MOTTATT
@@ -90,7 +90,7 @@ internal class SoknadsoversiktControllerTest {
 
         every { model2.saker } returns mutableListOf(sak1, sak2)
 
-        val response = controller.hentAlleSaker("token", Ident(fnr))
+        val response = controller.getSoknader("token", Ident(fnr))
 
         val saker = response.body
         assertThat(saker).isNotNull
@@ -110,7 +110,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    fun `hentSaksDetaljer - skal mappe fra DigisosSak til SoknadDetaljerResponse`() {
+    fun `getSoknadDetaljer - skal mappe fra DigisosSak til SoknadDetaljerResponse`() {
         every { fiksClient.hentDigisosSak(id_1) } returns digisosSak1
         every { fiksClient.hentDigisosSak(id_2) } returns digisosSak2
         every { eventService.createSoknadsoversiktModel(digisosSak1) } returns model1
@@ -135,7 +135,7 @@ internal class SoknadsoversiktControllerTest {
         every { model1.saker } returns mutableListOf()
         every { model2.saker } returns mutableListOf(sak1, sak2)
 
-        val response1 = controller.hentSaksDetaljer(id_1, "token", Ident(fnr))
+        val response1 = controller.getSoknadDetaljer(id_1, "token", Ident(fnr))
         val digisosSak1 = response1.body
 
         assertThat(response1.statusCode).isEqualTo(HttpStatus.OK)
@@ -144,7 +144,7 @@ internal class SoknadsoversiktControllerTest {
         assertThat(digisosSak1?.harNyeOppgaver).isTrue
         assertThat(digisosSak1?.harVilkar).isFalse
 
-        val response2 = controller.hentSaksDetaljer(id_2, "token", Ident(fnr))
+        val response2 = controller.getSoknadDetaljer(id_2, "token", Ident(fnr))
         val digisosSak2 = response2.body
 
         assertThat(response2.statusCode).isEqualTo(HttpStatus.OK)
@@ -156,7 +156,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    fun `hentSaksDetaljer - hvis model ikke har noen oppgaver, skal ikke oppgaveService kalles`() {
+    fun `getSoknadDetaljer - hvis model ikke har noen oppgaver, skal ikke oppgaveService kalles`() {
         every { fiksClient.hentDigisosSak(id_1) } returns digisosSak1
         every { eventService.createSoknadsoversiktModel(digisosSak1) } returns model1
 
@@ -164,7 +164,7 @@ internal class SoknadsoversiktControllerTest {
         every { model1.oppgaver } returns mutableListOf()
         every { model1.saker } returns mutableListOf()
 
-        val response = controller.hentSaksDetaljer(id_1, "token", Ident(fnr))
+        val response = controller.getSoknadDetaljer(id_1, "token", Ident(fnr))
         val sak = response.body
 
         assertThat(sak).isNotNull

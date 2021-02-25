@@ -35,7 +35,7 @@ class SoknadsoversiktController(
 ) {
 
     @PostMapping("/saker")
-    fun hentAlleSaker(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SoknadResponse>> {
+    fun getSoknader(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SoknadResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
         val saker = try {
@@ -60,7 +60,7 @@ class SoknadsoversiktController(
     }
 
     @PostMapping("/{fiksDigisosId}/saksDetaljer")
-    fun hentSaksDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadDetaljerResponse> {
+    fun getSoknadDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadDetaljerResponse> {
         abacService.harTilgang(ident.fnr, token)
 
         val sak = fiksClient.hentDigisosSak(fiksDigisosId)
