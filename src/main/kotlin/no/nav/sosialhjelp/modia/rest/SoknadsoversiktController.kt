@@ -2,7 +2,6 @@ package no.nav.sosialhjelp.modia.rest
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
-import no.nav.sosialhjelp.modia.domain.Ident
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.hentSoknadTittel

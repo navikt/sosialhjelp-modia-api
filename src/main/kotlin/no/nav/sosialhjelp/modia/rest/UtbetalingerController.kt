@@ -3,7 +3,6 @@ package no.nav.sosialhjelp.modia.rest
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
-import no.nav.sosialhjelp.modia.domain.Ident
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import no.nav.sosialhjelp.modia.service.utbetalinger.UtbetalingerService
 import no.nav.security.token.support.core.api.ProtectedWithClaims

@@ -5,7 +5,6 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import no.nav.sosialhjelp.modia.domain.Ident
 import no.nav.sosialhjelp.modia.rest.VedleggController.VedleggResponse
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg

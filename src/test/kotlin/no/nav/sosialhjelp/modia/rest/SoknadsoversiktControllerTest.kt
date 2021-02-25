@@ -9,7 +9,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
-import no.nav.sosialhjelp.modia.domain.Ident
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.domain.Sak
 import no.nav.sosialhjelp.modia.domain.SaksStatus

@@ -1,7 +1,6 @@
 package no.nav.sosialhjelp.modia.rest
 
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
-import no.nav.sosialhjelp.modia.domain.Ident
 import no.nav.sosialhjelp.modia.service.soknadsstatus.SoknadsStatusService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus

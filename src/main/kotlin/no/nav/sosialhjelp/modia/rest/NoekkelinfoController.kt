@@ -2,7 +2,6 @@ package no.nav.sosialhjelp.modia.rest
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.sosialhjelp.modia.domain.Ident
 import no.nav.sosialhjelp.modia.domain.SendingType
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.service.noekkelinfo.NoekkelinfoService
