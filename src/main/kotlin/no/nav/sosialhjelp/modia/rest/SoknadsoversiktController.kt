@@ -1,10 +1,10 @@
 package no.nav.sosialhjelp.modia.rest
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.Ident
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.domain.SaksDetaljerResponse
-import no.nav.sosialhjelp.modia.domain.SaksListeResponse
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.hentSoknadTittel
 import no.nav.sosialhjelp.modia.logger
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.Date
 
 @ProtectedWithClaims(issuer = "azuread")
 @RestController
@@ -34,7 +35,7 @@ class SoknadsoversiktController(
 ) {
 
     @PostMapping("/saker")
-    fun hentAlleSaker(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SaksListeResponse>> {
+    fun hentAlleSaker(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SoknadResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
         val saker = try {
@@ -45,7 +46,7 @@ class SoknadsoversiktController(
 
         val responselist = saker
                 .map { sak ->
-                    SaksListeResponse(
+                    SoknadResponse(
                             fiksDigisosId = sak.fiksDigisosId,
                             soknadTittel = "Søknad om økonomisk sosialhjelp",
                             sistOppdatert = unixTimestampToDate(sak.sistEndret),
@@ -93,5 +94,15 @@ class SoknadsoversiktController(
 
     companion object {
         private val log by logger()
+
+        data class SoknadResponse(
+            val fiksDigisosId: String,
+            val soknadTittel: String,
+            @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+            val sistOppdatert: Date,
+            @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+            val sendt: Date?,
+            val kilde: String
+        )
     }
 }

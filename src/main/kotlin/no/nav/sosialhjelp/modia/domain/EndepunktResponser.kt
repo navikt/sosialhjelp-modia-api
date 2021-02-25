@@ -8,15 +8,7 @@ import java.util.*
 
 
 
-data class SaksListeResponse(
-        val fiksDigisosId: String,
-        val soknadTittel: String,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val sistOppdatert: Date,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val sendt: Date?,
-        val kilde: String
-)
+
 
 data class SaksDetaljerResponse(
         val fiksDigisosId: String,
