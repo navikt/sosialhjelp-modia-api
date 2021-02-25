@@ -1,10 +1,20 @@
 package no.nav.sosialhjelp.modia.client.norg
 
-import no.nav.sosialhjelp.modia.domain.NavEnhet
-
 interface NorgClient {
 
     fun hentNavEnhet(enhetsnr: String): NavEnhet?
 
     fun hentAlleNavEnheter(): List<NavEnhet>
 }
+
+data class NavEnhet(
+    val enhetId: Int,
+    val navn: String,
+    val enhetNr: String,
+    val status: String,
+    val antallRessurser: Int,
+    val aktiveringsdato: String,
+    val nedleggelsesdato: String?,
+    val sosialeTjenester: String?,
+    val type: String?
+)
