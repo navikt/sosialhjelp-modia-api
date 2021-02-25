@@ -33,7 +33,7 @@ class SoknadsoversiktController(
         private val abacService: AbacService
 ) {
 
-    @PostMapping("/saker")
+    @PostMapping("/soknader")
     fun getSoknader(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SoknadResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
@@ -58,7 +58,7 @@ class SoknadsoversiktController(
         return ResponseEntity.ok().body(responselist.sortedByDescending { it.sistOppdatert })
     }
 
-    @PostMapping("/{fiksDigisosId}/saksDetaljer")
+    @PostMapping("/{fiksDigisosId}/soknadDetaljer")
     fun getSoknadDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadDetaljerResponse> {
         abacService.harTilgang(ident.fnr, token)
 
