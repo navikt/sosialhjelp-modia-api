@@ -71,7 +71,6 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789).toLocalDate())
-        assertThat(noekkelinfo.saksId).isNull() //fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor?.enhetsNavn).isEqualTo(enhetNavn1)
         assertThat(noekkelinfo.navKontor?.enhetsNr).isEqualTo(enhetsnr1)
@@ -100,7 +99,6 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789).toLocalDate())
-        assertThat(noekkelinfo.saksId).isNull() //fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor?.enhetsNavn).isEqualTo(enhetNavn1)
         assertThat(noekkelinfo.navKontor?.enhetsNr).isEqualTo(enhetsnr1)
@@ -129,7 +127,6 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789).toLocalDate())
-        assertThat(noekkelinfo.saksId).isNull() //fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor?.enhetsNavn).isEqualTo(enhetNavn2)
         assertThat(noekkelinfo.navKontor?.enhetsNr).isEqualTo(enhetsnr2)
@@ -158,7 +155,6 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789).toLocalDate())
-        assertThat(noekkelinfo.saksId).isNull() //fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor?.enhetsNavn).isEqualTo(enhetNavn2)
         assertThat(noekkelinfo.navKontor?.enhetsNr).isEqualTo(enhetsnr2)
@@ -183,7 +179,6 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.status).isEqualTo(MOTTATT)
         assertThat(noekkelinfo.tittel).isEqualTo(SOKNAD_DEFAULT_TITTEL)
         assertThat(noekkelinfo.sistOppdatert).isEqualTo(unixToLocalDateTime(123456789).toLocalDate())
-        assertThat(noekkelinfo.saksId).isNull() //fix
         assertThat(noekkelinfo.sendtEllerMottattTidspunkt).isEqualTo(tidspunkt.toLocalDate())
         assertThat(noekkelinfo.navKontor).isNull()
         assertThat(noekkelinfo.kommunenavn).isEqualTo(kommunenavn)
