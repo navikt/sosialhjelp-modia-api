@@ -1,13 +1,13 @@
 package no.nav.sosialhjelp.modia.service.noekkelinfo
 
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
-import no.nav.sosialhjelp.modia.domain.NavKontor
 import no.nav.sosialhjelp.modia.domain.NavKontorInformasjon
-import no.nav.sosialhjelp.modia.domain.SoknadNoekkelinfoResponse
-import no.nav.sosialhjelp.modia.domain.VideresendtInfo
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.hentSoknadTittel
+import no.nav.sosialhjelp.modia.rest.NoekkelinfoController.NavKontor
+import no.nav.sosialhjelp.modia.rest.NoekkelinfoController.SoknadNoekkelinfoResponse
+import no.nav.sosialhjelp.modia.rest.NoekkelinfoController.VideresendtInfo
 import no.nav.sosialhjelp.modia.service.kommune.KommuneService
 import no.nav.sosialhjelp.modia.service.kommune.KommunenavnService
 import no.nav.sosialhjelp.modia.unixToLocalDateTime

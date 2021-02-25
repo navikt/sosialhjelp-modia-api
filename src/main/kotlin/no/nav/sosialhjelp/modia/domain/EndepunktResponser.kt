@@ -6,32 +6,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 
-data class SoknadNoekkelinfoResponse(
-        val tittel: String,
-        val status: SoknadsStatus,
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        val sistOppdatert: LocalDate,
-        val saksId: String?,
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        val sendtEllerMottattTidspunkt: LocalDate,
-        val navKontor: NavKontor?,
-        val kommunenavn: String,
-        val videresendtHistorikk: List<VideresendtInfo>?,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val tidspunktForelopigSvar: LocalDateTime?
-)
 
-data class VideresendtInfo(
-        val type: SendingType,
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        val tidspunkt: LocalDate,
-        val navKontor: NavKontor
-)
-
-data class NavKontor(
-        val enhetsNavn: String,
-        val enhetsNr: String
-)
 
 data class SaksListeResponse(
         val fiksDigisosId: String,
