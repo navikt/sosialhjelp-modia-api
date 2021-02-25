@@ -7,11 +7,12 @@ import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.domain.Sak
 import no.nav.sosialhjelp.modia.domain.SaksStatus
-import no.nav.sosialhjelp.modia.domain.SaksStatusResponse
 import no.nav.sosialhjelp.modia.domain.UtfallVedtak
 import no.nav.sosialhjelp.modia.domain.Vedtak
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.modia.rest.SaksStatusController
+import no.nav.sosialhjelp.modia.rest.SaksStatusController.SaksStatusResponse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

@@ -9,22 +9,6 @@ data class SoknadsStatusResponse(
         val status: SoknadsStatus
 )
 
-data class SaksStatusResponse(
-        val tittel: String,
-        val status: SaksStatus?,
-        val vedtak: List<VedtakResponse>?,
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        val datoOpprettet: LocalDate,
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        val datoAvsluttet: LocalDate?
-)
-
-data class VedtakResponse(
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        val vedtakDato: LocalDate,
-        val utfall: UtfallVedtak?
-)
-
 data class HendelseResponse(
         val tittel: String,
         val tidspunkt: String,
