@@ -94,23 +94,23 @@ class SoknadsoversiktController(
 
     companion object {
         private val log by logger()
-
-        data class SoknadResponse(
-            val fiksDigisosId: String,
-            val soknadTittel: String,
-            @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-            val sistOppdatert: Date,
-            @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-            val sendt: Date?,
-            val kilde: String
-        )
-
-        data class SoknadDetaljerResponse(
-            val fiksDigisosId: String,
-            val soknadTittel: String,
-            val status: SoknadsStatus,
-            val harNyeOppgaver: Boolean,
-            val harVilkar: Boolean
-        )
     }
+
+    data class SoknadResponse(
+        val fiksDigisosId: String,
+        val soknadTittel: String,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val sistOppdatert: Date,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val sendt: Date?,
+        val kilde: String
+    )
+
+    data class SoknadDetaljerResponse(
+        val fiksDigisosId: String,
+        val soknadTittel: String,
+        val status: SoknadsStatus,
+        val harNyeOppgaver: Boolean,
+        val harVilkar: Boolean
+    )
 }
