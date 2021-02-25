@@ -1,12 +1,14 @@
 package no.nav.sosialhjelp.modia.rest
 
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.Ident
-import no.nav.sosialhjelp.modia.domain.UtbetalingerResponse
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import no.nav.sosialhjelp.modia.service.utbetalinger.UtbetalingerService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.sosialhjelp.modia.domain.NavKontor
+import no.nav.sosialhjelp.modia.domain.UtbetalingsStatus
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -58,5 +60,24 @@ class UtbetalingerController(
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         return ResponseEntity.ok().body(utbetalingerService.hentUtbetalingerForDigisosSak(digisosSak))
     }
+
+    data class UtbetalingerResponse(
+        val tittel: String?,
+        val belop: Double,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val utbetalingEllerForfallDigisosSoker: LocalDate?,
+        val status: UtbetalingsStatus,
+        val fiksDigisosId: String,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val fom: LocalDate?,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        val tom: LocalDate?,
+        val mottaker: String?,
+        val annenMottaker: Boolean,
+        val kontonummer: String?,
+        val utbetalingsmetode: String?,
+        val harVilkar: Boolean,
+        val navKontor: NavKontor?
+    )
 
 }
