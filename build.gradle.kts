@@ -3,7 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTra
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-group = "no.nav.sbl"
+group = "no.nav.sosialhjelp"
 
 object Versions {
     const val kotlin = "1.4.21"
@@ -31,7 +31,7 @@ object Versions {
     const val mockk = "1.10.3"
 }
 
-val applicationKt = "no.nav.sbl.sosialhjelpmodiaapi.ApplicationKt"
+val applicationKt = "no.nav.sosialhjelp.modia.ApplicationKt"
 
 plugins {
     application
