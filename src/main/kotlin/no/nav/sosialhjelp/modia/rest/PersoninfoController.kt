@@ -1,10 +1,9 @@
 package no.nav.sosialhjelp.modia.rest
 
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
-import no.nav.sosialhjelp.modia.domain.Ident
-import no.nav.sosialhjelp.modia.domain.PersoninfoResponse
-import no.nav.sosialhjelp.modia.service.personinfo.PersoninfoService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.sosialhjelp.modia.domain.Ident
+import no.nav.sosialhjelp.modia.service.personinfo.PersoninfoService
+import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -28,4 +27,11 @@ class PersoninfoController(
         val personinfoResponse = personinfoService.hentPersoninfo(ident.fnr)
         return ResponseEntity.ok(personinfoResponse)
     }
+
+    data class PersoninfoResponse(
+        val sammensattNavn: String?,
+        val alder: Int?,
+        val kjoenn: String?,
+        val tlfnr: String?
+    )
 }
