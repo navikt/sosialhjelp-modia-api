@@ -7,7 +7,6 @@ import no.nav.sosialhjelp.modia.domain.Ident
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import no.nav.sosialhjelp.modia.service.utbetalinger.UtbetalingerService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.sosialhjelp.modia.domain.NavKontor
 import no.nav.sosialhjelp.modia.domain.UtbetalingsStatus
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity
@@ -78,6 +77,11 @@ class UtbetalingerController(
         val utbetalingsmetode: String?,
         val harVilkar: Boolean,
         val navKontor: NavKontor?
+    )
+
+    data class NavKontor(
+        val enhetsNavn: String,
+        val enhetsNr: String
     )
 
 }
