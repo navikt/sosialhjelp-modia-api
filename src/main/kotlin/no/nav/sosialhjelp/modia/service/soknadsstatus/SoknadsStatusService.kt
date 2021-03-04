@@ -16,13 +16,8 @@ class SoknadsStatusService(
     fun hentSoknadsStatus(fiksDigisosId: String): SoknadsStatusResponse {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
-        val status = model.status
-        if (status == null) {
-            log.warn("SoknadsStatus kan ikke være null")
-            throw RuntimeException("SoknadsStatus kan ikke være null")
-        }
-        log.info("Hentet nåværende søknadsstatus=${status.name} for $fiksDigisosId")
-        return SoknadsStatusResponse(status)
+        log.info("Hentet nåværende søknadsstatus=${model.status.name} for $fiksDigisosId")
+        return SoknadsStatusResponse(model.status)
     }
 
     companion object {

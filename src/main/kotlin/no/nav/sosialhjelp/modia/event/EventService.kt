@@ -41,8 +41,6 @@ class EventService(
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
 
         val model = InternalDigisosSoker()
-        // Default status == SENDT. Gjelder også for papirsøknader hvor timestampSendt == null
-        model.status = SoknadsStatus.SENDT
 
         if (timestampSendt != null) {
             val enhetsnummer: String = digisosSak.tilleggsinformasjon?.enhetsnummer ?: ""
