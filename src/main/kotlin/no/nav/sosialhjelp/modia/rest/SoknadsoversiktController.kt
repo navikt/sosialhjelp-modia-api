@@ -67,7 +67,7 @@ class SoknadsoversiktController(
         val saksDetaljerResponse = SoknadDetaljerResponse(
                 fiksDigisosId = sak.fiksDigisosId,
                 soknadTittel = hentSoknadTittel(sak, model),
-                status = model.status!!,
+                status = model.status,
                 harNyeOppgaver = harNyeOppgaver(model, sak.fiksDigisosId),
                 harVilkar = harVilkar(model)
         )
