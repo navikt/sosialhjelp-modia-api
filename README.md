@@ -46,7 +46,7 @@ Alternativt kan variablene kan også konfigureres som miljøvariabler, eller bru
 
 ### Ktlint
 Hvordan kjøre Ktlint:
-* Fra IDEA: Kjør Gradle Task: sosialhjelp-mock-alt-api -> Tasks -> formatting -> ktlintFormat
+* Fra IDEA: Kjør Gradle Task: sosialhjelp-modia-api -> Tasks -> formatting -> ktlintFormat
 * Fra terminal:
     * Kun formater: `./gradlew ktlintFormat`
     * Formater og bygg: `./gradlew ktlintFormat build`
