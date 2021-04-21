@@ -1,8 +1,8 @@
 package no.nav.sosialhjelp.modia.client.sts
 
+import no.nav.sosialhjelp.modia.client.sts.STSToken.Companion.shouldRenewToken
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
-import no.nav.sosialhjelp.modia.client.sts.STSToken.Companion.shouldRenewToken
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -18,8 +18,8 @@ import java.time.LocalDateTime
 @Profile("!(mock | local)")
 @Component
 class STSClient(
-        private val serviceuserBasicAuthRestTemplate: RestTemplate,
-        clientProperties: ClientProperties
+    private val serviceuserBasicAuthRestTemplate: RestTemplate,
+    clientProperties: ClientProperties
 ) {
 
     private val baseUrl = clientProperties.stsTokenEndpointUrl
@@ -66,9 +66,9 @@ class STSClient(
 }
 
 data class STSToken(
-        val access_token: String,
-        val token_type: String,
-        val expires_in: Long
+    val access_token: String,
+    val token_type: String,
+    val expires_in: Long
 ) {
 
     val expirationTime: LocalDateTime = LocalDateTime.now().plusSeconds(expires_in - 10L)

@@ -20,5 +20,4 @@ class RedisConfig {
 
         return RedisClient.create(redisUri)
     }
-
 }

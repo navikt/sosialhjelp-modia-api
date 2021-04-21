@@ -1,5 +1,6 @@
 package no.nav.sosialhjelp.modia.client.digisosapi
 
+import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.service.idporten.IdPortenService
@@ -10,7 +11,6 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_INTEGRASJON_PASSOR
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.forwardHeaders
 import no.nav.sosialhjelp.modia.utils.Miljo.getTestbrukerNatalie
 import no.nav.sosialhjelp.modia.utils.objectMapper
-import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -20,15 +20,14 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
-import java.util.*
-
+import java.util.Collections
 
 @Profile("!(prod-fss|mock)")
 @Component
 class DigisosApiClientImpl(
-        clientProperties: ClientProperties,
-        private val restTemplate: RestTemplate,
-        private val idPortenService: IdPortenService
+    clientProperties: ClientProperties,
+    private val restTemplate: RestTemplate,
+    private val idPortenService: IdPortenService
 ) : DigisosApiClient {
 
     private val testbrukerNatalie = getTestbrukerNatalie()

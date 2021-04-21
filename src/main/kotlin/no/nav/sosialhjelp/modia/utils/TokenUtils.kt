@@ -1,8 +1,8 @@
 package no.nav.sosialhjelp.modia.utils
 
-import no.nav.sosialhjelp.modia.client.msgraph.MsGraphClient
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
+import no.nav.sosialhjelp.modia.client.msgraph.MsGraphClient
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
@@ -14,9 +14,9 @@ interface TokenUtils {
 @Profile("!(mock | mock-alt | local)")
 @Component
 class TokenUtilsImpl(
-        private val clientConfigurationProperties: ClientConfigurationProperties,
-        private val oAuth2AccessTokenService: OAuth2AccessTokenService,
-        private val msGraphClient: MsGraphClient
+    private val clientConfigurationProperties: ClientConfigurationProperties,
+    private val oAuth2AccessTokenService: OAuth2AccessTokenService,
+    private val msGraphClient: MsGraphClient
 ) : TokenUtils {
 
     override fun hentTokenMedGraphScope(): String {

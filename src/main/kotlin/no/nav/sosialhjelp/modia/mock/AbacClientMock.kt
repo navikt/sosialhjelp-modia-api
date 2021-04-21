@@ -14,5 +14,4 @@ class AbacClientMock : AbacClient {
     override fun sjekkTilgang(request: Request): AbacResponse {
         return AbacResponse(Decision.Permit, emptyList())
     }
-
 }

@@ -1,7 +1,7 @@
 package no.nav.sosialhjelp.modia.rest
 
-import no.nav.sosialhjelp.modia.service.navkontor.NavKontorService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.sosialhjelp.modia.service.navkontor.NavKontorService
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"])
 class NavKontorinfoController(
-        private val navKontorService: NavKontorService
+    private val navKontorService: NavKontorService
 ) {
 
     @GetMapping("/kontorinfo")

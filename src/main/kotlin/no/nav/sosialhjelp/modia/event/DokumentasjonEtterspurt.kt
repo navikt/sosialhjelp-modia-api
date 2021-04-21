@@ -13,8 +13,8 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonEtterspurt) {
     val prevSize = oppgaver.size
 
     oppgaver = hendelse.dokumenter
-            .map { Oppgave(it.dokumenttype, it.tilleggsinformasjon, it.innsendelsesfrist.toLocalDateTime(), hendelse.hendelsestidspunkt.toLocalDateTime(), true) }
-            .toMutableList()
+        .map { Oppgave(it.dokumenttype, it.tilleggsinformasjon, it.innsendelsesfrist.toLocalDateTime(), hendelse.hendelsestidspunkt.toLocalDateTime(), true) }
+        .toMutableList()
 
     if (hendelse.dokumenter.isNotEmpty() && hendelse.forvaltningsbrev != null) {
         val beskrivelse = "Du må sende dokumentasjon."

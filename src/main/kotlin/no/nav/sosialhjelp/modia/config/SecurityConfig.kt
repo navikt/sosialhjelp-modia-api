@@ -12,5 +12,4 @@ import org.springframework.context.annotation.Profile
 class SecurityConfig {
 
     // JwtTokenValidation er enabled så lenge appen kjører med profil != mock(-alt)
-
 }

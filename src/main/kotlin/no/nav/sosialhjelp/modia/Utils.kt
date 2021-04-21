@@ -3,12 +3,12 @@ package no.nav.sosialhjelp.modia
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.api.fiks.ErrorMessage
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.domain.SaksStatus
 import no.nav.sosialhjelp.modia.service.saksstatus.DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.utils.objectMapper
-import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.api.fiks.ErrorMessage
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.ParameterizedTypeReference
@@ -30,11 +30,11 @@ inline fun <reified T : Any> typeRef(): ParameterizedTypeReference<T> = object :
 
 fun String.toLocalDateTime(): LocalDateTime {
     return ZonedDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
-            .withZoneSameInstant(ZoneId.of("Europe/Oslo")).toLocalDateTime()
+        .withZoneSameInstant(ZoneId.of("Europe/Oslo")).toLocalDateTime()
 }
 
 fun String.toLocalDate(): LocalDate =
-        LocalDate.parse(this, DateTimeFormatter.ISO_LOCAL_DATE)
+    LocalDate.parse(this, DateTimeFormatter.ISO_LOCAL_DATE)
 
 fun unixToLocalDateTime(tidspunkt: Long): LocalDateTime {
     return LocalDateTime.ofInstant(Instant.ofEpochMilli(tidspunkt), ZoneId.of("Europe/Oslo"))
@@ -58,7 +58,8 @@ fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
 fun hentSoknadTittel(digisosSak: DigisosSak, model: InternalDigisosSoker): String {
     return when (digisosSak.digisosSoker) {
         null -> SOKNAD_DEFAULT_TITTEL
-        else -> model.saker
+        else ->
+            model.saker
                 .filter { SaksStatus.FEILREGISTRERT != it.saksStatus }
                 .joinToString { it.tittel ?: DEFAULT_TITTEL }
     }

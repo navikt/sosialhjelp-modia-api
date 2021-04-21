@@ -18,13 +18,12 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
 
-
 @Profile("!mock & !local")
 @Component
 class NorgClientImpl(
-        clientProperties: ClientProperties,
-        private val restTemplate: RestTemplate,
-        private val redisService: RedisService
+    clientProperties: ClientProperties,
+    private val restTemplate: RestTemplate,
+    private val redisService: RedisService
 ) : NorgClient {
 
     private val baseUrl = clientProperties.norgEndpointUrl
@@ -40,7 +39,6 @@ class NorgClientImpl(
 
             log.debug("Norg2 - GET enhet $enhetsnr OK")
             return response.body!!
-
         } catch (e: HttpStatusCodeException) {
             log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
             throw NorgException(e.message, e)
@@ -57,7 +55,7 @@ class NorgClientImpl(
             val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, requestEntity, typeRef<List<NavEnhet>>())
 
             return response.body!!
-                    .also { lagreTilCache(it) }
+                .also { lagreTilCache(it) }
         } catch (e: HttpStatusCodeException) {
             log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
             throw NorgException(e.message, e)

@@ -3,16 +3,15 @@ package no.nav.sosialhjelp.modia.client.digisosapi
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
+import no.nav.sosialhjelp.idporten.client.AccessToken
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.responses.ok_komplett_jsondigisossoker_response
 import no.nav.sosialhjelp.modia.service.idporten.IdPortenService
 import no.nav.sosialhjelp.modia.utils.DigisosApiWrapper
 import no.nav.sosialhjelp.modia.utils.SakWrapper
-import no.nav.sosialhjelp.idporten.client.AccessToken
 import org.junit.jupiter.api.Test
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestTemplate
-
 
 internal class DigisosApiClientTest {
     private val clientProperties: ClientProperties = mockk(relaxed = true)
@@ -30,10 +29,11 @@ internal class DigisosApiClientTest {
         every { idPortenService.getToken() } returns AccessToken("Token", 999)
         every {
             restTemplate.exchange(
-                    any<String>(),
-                    any(),
-                    any(),
-                    String::class.java)
+                any<String>(),
+                any(),
+                any(),
+                String::class.java
+            )
         } returns mockResponse
 
         digisosApiClient.oppdaterDigisosSak("123123", DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), ""))

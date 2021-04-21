@@ -8,15 +8,15 @@ import no.nav.sosialhjelp.modia.client.abac.AbacConstants.FP3_EGEN_ANSATT
 import no.nav.sosialhjelp.modia.client.abac.AbacConstants.SOSIALHJELP_AD_ROLLE
 
 data class Attributes(
-        @JsonProperty("Attribute")
-        var attributes: MutableList<Attribute>
+    @JsonProperty("Attribute")
+    var attributes: MutableList<Attribute>
 )
 
 data class Attribute(
-        @JsonProperty("AttributeId")
-        val attributeId: String,
-        @JsonProperty("Value")
-        val value: String
+    @JsonProperty("AttributeId")
+    val attributeId: String,
+    @JsonProperty("Value")
+    val value: String
 )
 
 fun Attribute.manglerTilgangSosialhjelp(): Boolean {

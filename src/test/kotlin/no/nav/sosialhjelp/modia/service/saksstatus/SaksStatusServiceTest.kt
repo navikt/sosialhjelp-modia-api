@@ -3,6 +3,7 @@ package no.nav.sosialhjelp.modia.service.saksstatus
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.domain.Sak
@@ -10,8 +11,6 @@ import no.nav.sosialhjelp.modia.domain.SaksStatus
 import no.nav.sosialhjelp.modia.domain.UtfallVedtak
 import no.nav.sosialhjelp.modia.domain.Vedtak
 import no.nav.sosialhjelp.modia.event.EventService
-import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.modia.rest.SaksStatusController
 import no.nav.sosialhjelp.modia.rest.SaksStatusController.SaksStatusResponse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -50,14 +49,16 @@ internal class SaksStatusServiceTest {
     fun `Skal returnere response med status = UNDER_BEHANDLING`() {
         val now = LocalDate.now()
         val model = InternalDigisosSoker()
-        model.saker.add(Sak(
+        model.saker.add(
+            Sak(
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING,
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(),
                 datoOpprettet = now
-        ))
+            )
+        )
 
         every { eventService.createModel(any()) } returns model
 
@@ -76,16 +77,21 @@ internal class SaksStatusServiceTest {
     fun `Skal returnere response med status = FERDIGBEHANDLET ved vedtakFattet uavhengig av utfallet til vedtakFattet`() {
         val now = LocalDate.now()
         val model = InternalDigisosSoker()
-        model.saker.add(Sak(
+        model.saker.add(
+            Sak(
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING, // overstyres når vedtak finnes
                 tittel = tittel,
-                vedtak = mutableListOf(Vedtak(
+                vedtak = mutableListOf(
+                    Vedtak(
                         utfall = UtfallVedtak.INNVILGET,
-                        datoFattet = now)),
+                        datoFattet = now
+                    )
+                ),
                 utbetalinger = mutableListOf(),
                 datoOpprettet = now
-        ))
+            )
+        )
 
         every { eventService.createModel(any()) } returns model
 
@@ -106,16 +112,21 @@ internal class SaksStatusServiceTest {
     fun `Skal returnere response med status = FERDIGBEHANDLET og vedtaksfilUrl og DEFAULT_TITTEL`() {
         val now = LocalDate.now()
         val model = InternalDigisosSoker()
-        model.saker.add(Sak(
+        model.saker.add(
+            Sak(
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING, // overstyres når vedtak finnes
                 tittel = DEFAULT_TITTEL,
-                vedtak = mutableListOf(Vedtak(
+                vedtak = mutableListOf(
+                    Vedtak(
                         utfall = UtfallVedtak.DELVIS_INNVILGET,
-                        datoFattet = now)),
+                        datoFattet = now
+                    )
+                ),
                 utbetalinger = mutableListOf(),
                 datoOpprettet = now
-        ))
+            )
+        )
 
         every { eventService.createModel(any()) } returns model
 
@@ -136,29 +147,35 @@ internal class SaksStatusServiceTest {
     fun `Skal returnere response med 2 elementer ved 2 Saker`() {
         val now = LocalDate.now()
         val model = InternalDigisosSoker()
-        model.saker.addAll(listOf(
+        model.saker.addAll(
+            listOf(
                 Sak(
-                        referanse = referanse,
-                        saksStatus = SaksStatus.UNDER_BEHANDLING,
-                        tittel = tittel,
-                        vedtak = mutableListOf(
-                                Vedtak(
-                                        utfall = UtfallVedtak.INNVILGET,
-                                        datoFattet = now.minusDays(2)),
-                                Vedtak(
-                                        utfall = UtfallVedtak.DELVIS_INNVILGET,
-                                        datoFattet = now.plusDays(2))),
-                        utbetalinger = mutableListOf(),
-                        datoOpprettet = now),
+                    referanse = referanse,
+                    saksStatus = SaksStatus.UNDER_BEHANDLING,
+                    tittel = tittel,
+                    vedtak = mutableListOf(
+                        Vedtak(
+                            utfall = UtfallVedtak.INNVILGET,
+                            datoFattet = now.minusDays(2)
+                        ),
+                        Vedtak(
+                            utfall = UtfallVedtak.DELVIS_INNVILGET,
+                            datoFattet = now.plusDays(2)
+                        )
+                    ),
+                    utbetalinger = mutableListOf(),
+                    datoOpprettet = now
+                ),
                 Sak(
-                        referanse = referanse,
-                        saksStatus = SaksStatus.IKKE_INNSYN,
-                        tittel = DEFAULT_TITTEL,
-                        vedtak = mutableListOf(),
-                        utbetalinger = mutableListOf(),
-                        datoOpprettet = now
+                    referanse = referanse,
+                    saksStatus = SaksStatus.IKKE_INNSYN,
+                    tittel = DEFAULT_TITTEL,
+                    vedtak = mutableListOf(),
+                    utbetalinger = mutableListOf(),
+                    datoOpprettet = now
                 )
-        ))
+            )
+        )
 
         every { eventService.createModel(any()) } returns model
 

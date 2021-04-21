@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class HendelseController(
-        private val hendelseService: HendelseService,
-        private val abacService: AbacService
+    private val hendelseService: HendelseService,
+    private val abacService: AbacService
 ) {
 
     @PostMapping("/{fiksDigisosId}/hendelser")

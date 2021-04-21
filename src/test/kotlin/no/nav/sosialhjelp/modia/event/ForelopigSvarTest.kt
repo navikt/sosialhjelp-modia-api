@@ -4,6 +4,7 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.client.norg.NorgClient
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.event.Titler.FORELOPIG_SVAR
@@ -11,7 +12,6 @@ import no.nav.sosialhjelp.modia.service.innsyn.InnsynService
 import no.nav.sosialhjelp.modia.service.vedlegg.SoknadVedleggService
 import no.nav.sosialhjelp.modia.service.vedlegg.VEDLEGG_KREVES_STATUS
 import no.nav.sosialhjelp.modia.toLocalDateTime
-import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -45,12 +45,14 @@ internal class ForelopigSvarTest {
     @Test
     fun `ingen forelopigSvar`() {
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
-                JsonDigisosSoker()
-                        .withAvsender(avsender)
-                        .withVersion("123")
-                        .withHendelser(listOf(
-                                SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
-                        ))
+            JsonDigisosSoker()
+                .withAvsender(avsender)
+                .withVersion("123")
+                .withHendelser(
+                    listOf(
+                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
+                    )
+                )
 
         val model = service.createModel(mockDigisosSak)
 
@@ -63,13 +65,15 @@ internal class ForelopigSvarTest {
     @Test
     fun `forelopigSvar mottatt`() {
         every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
-                JsonDigisosSoker()
-                        .withAvsender(avsender)
-                        .withVersion("123")
-                        .withHendelser(listOf(
-                                SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                                FORELOPIGSVAR.withHendelsestidspunkt(tidspunkt_2)
-                        ))
+            JsonDigisosSoker()
+                .withAvsender(avsender)
+                .withVersion("123")
+                .withHendelser(
+                    listOf(
+                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                        FORELOPIGSVAR.withHendelsestidspunkt(tidspunkt_2)
+                    )
+                )
 
         val model = service.createModel(mockDigisosSak)
 
@@ -84,6 +88,4 @@ internal class ForelopigSvarTest {
         assertThat(hendelse.tittel).isEqualTo(FORELOPIG_SVAR)
         assertThat(hendelse.beskrivelse).contains("Du har fått et brev om saksbehandlingstiden for søknaden din")
     }
-
-
 }

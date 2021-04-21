@@ -12,8 +12,8 @@ const val DEFAULT_TITTEL: String = "Økonomisk sosialhjelp"
 
 @Component
 class SaksStatusService(
-        private val fiksClient: FiksClient,
-        private val eventService: EventService
+    private val fiksClient: FiksClient,
+    private val eventService: EventService
 ) {
 
     fun hentSaksStatuser(fiksDigisosId: String): List<SaksStatusResponse> {
@@ -26,21 +26,21 @@ class SaksStatusService(
         }
 
         val responseList = model.saker
-                .filter { it.saksStatus != SaksStatus.FEILREGISTRERT }
-                .map { sak ->
-                    SaksStatusResponse(
-                            tittel = sak.tittel ?: DEFAULT_TITTEL,
-                            status = hentStatusNavn(sak),
-                            vedtak = sak.vedtak.map {
-                                SaksStatusResponse.Vedtak(
-                                    vedtakDato = it.datoFattet,
-                                    utfall = it.utfall
-                                )
-                            },
-                            datoOpprettet = sak.datoOpprettet,
-                            datoAvsluttet = sak.vedtak.maxByOrNull { it.datoFattet }?.datoFattet
-                    )
-                }
+            .filter { it.saksStatus != SaksStatus.FEILREGISTRERT }
+            .map { sak ->
+                SaksStatusResponse(
+                    tittel = sak.tittel ?: DEFAULT_TITTEL,
+                    status = hentStatusNavn(sak),
+                    vedtak = sak.vedtak.map {
+                        SaksStatusResponse.Vedtak(
+                            vedtakDato = it.datoFattet,
+                            utfall = it.utfall
+                        )
+                    },
+                    datoOpprettet = sak.datoOpprettet,
+                    datoAvsluttet = sak.vedtak.maxByOrNull { it.datoFattet }?.datoFattet
+                )
+            }
         log.info("Hentet ${responseList.size} sak(er) for $fiksDigisosId")
         return responseList
     }

@@ -21,8 +21,8 @@ import java.time.LocalDateTime
 @ProtectedWithClaims(issuer = "azuread")
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class NoekkelinfoController(
-        private val noekkelinfoService: NoekkelinfoService,
-        private val abacService: AbacService
+    private val noekkelinfoService: NoekkelinfoService,
+    private val abacService: AbacService
 ) {
 
     @PostMapping("/{fiksDigisosId}/noekkelinfo")
@@ -58,5 +58,4 @@ class NoekkelinfoController(
         val enhetsNavn: String,
         val enhetsNr: String
     )
-
 }

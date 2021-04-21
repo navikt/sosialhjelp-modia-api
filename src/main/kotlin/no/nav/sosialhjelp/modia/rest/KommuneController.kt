@@ -1,9 +1,9 @@
 package no.nav.sosialhjelp.modia.rest
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.service.kommune.KommuneService
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
-import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
+import java.util.Date
 
 @ProtectedWithClaims(issuer = "azuread")
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class KommuneController(
-        private val kommuneService: KommuneService,
-        private val abacService: AbacService
+    private val kommuneService: KommuneService,
+    private val abacService: AbacService
 ) {
 
     @PostMapping("/kommuner/{kommunenummer}")
@@ -28,15 +28,16 @@ class KommuneController(
 
         val kommuneInfo = kommuneService.get(kommunenummer)
         return ResponseEntity.ok(
-                KommuneResponse(
-                        erInnsynDeaktivert = !kommuneInfo.kanOppdatereStatus,
-                        erInnsynMidlertidigDeaktivert = kommuneInfo.harMidlertidigDeaktivertOppdateringer,
-                        erInnsendingEttersendelseDeaktivert = !kommuneInfo.kanMottaSoknader,
-                        erInnsendingEttersendelseMidlertidigDeaktivert = kommuneInfo.harMidlertidigDeaktivertMottak,
-                        tidspunkt = Date(),
-                        harNksTilgang = kommuneInfo.harNksTilgang,
-                        behandlingsansvarlig = kommuneInfo.behandlingsansvarlig
-                ))
+            KommuneResponse(
+                erInnsynDeaktivert = !kommuneInfo.kanOppdatereStatus,
+                erInnsynMidlertidigDeaktivert = kommuneInfo.harMidlertidigDeaktivertOppdateringer,
+                erInnsendingEttersendelseDeaktivert = !kommuneInfo.kanMottaSoknader,
+                erInnsendingEttersendelseMidlertidigDeaktivert = kommuneInfo.harMidlertidigDeaktivertMottak,
+                tidspunkt = Date(),
+                harNksTilgang = kommuneInfo.harNksTilgang,
+                behandlingsansvarlig = kommuneInfo.behandlingsansvarlig
+            )
+        )
     }
 
     data class KommuneResponse(
@@ -49,5 +50,4 @@ class KommuneController(
         val harNksTilgang: Boolean,
         val behandlingsansvarlig: String?
     )
-
 }

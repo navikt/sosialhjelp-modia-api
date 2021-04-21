@@ -3,8 +3,8 @@ package no.nav.sosialhjelp.modia.redis
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
-import no.nav.sosialhjelp.modia.common.DigisosSakTilhorerAnnenBrukerException
 import no.nav.sosialhjelp.modia.client.norg.NavEnhet
+import no.nav.sosialhjelp.modia.common.DigisosSakTilhorerAnnenBrukerException
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.springframework.context.annotation.Profile
@@ -21,8 +21,8 @@ interface RedisService {
 @Profile("!no-redis")
 @Component
 class RedisServiceImpl(
-        private val redisStore: RedisStore,
-        cacheProperties: CacheProperties,
+    private val redisStore: RedisStore,
+    cacheProperties: CacheProperties,
 ) : RedisService {
 
     override val defaultTimeToLiveSeconds = cacheProperties.timeToLiveSeconds
@@ -95,7 +95,6 @@ class RedisServiceMock : RedisService {
     }
 
     override fun set(key: String, value: ByteArray, timeToLive: Long) {
-
     }
 
     override fun getAlleNavEnheter(): List<NavEnhet>? {

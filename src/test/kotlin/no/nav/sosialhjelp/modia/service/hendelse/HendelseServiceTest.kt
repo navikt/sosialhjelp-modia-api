@@ -3,6 +3,7 @@ package no.nav.sosialhjelp.modia.service.hendelse
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.Hendelse
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
@@ -11,7 +12,6 @@ import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_MOTTATT
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_SENDT
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_UNDER_BEHANDLING
 import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
-import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -61,10 +61,13 @@ internal class HendelseServiceTest {
     @Test
     fun `Skal returnere respons med flere hendelser`() {
         val model = InternalDigisosSoker()
-        model.historikk.addAll(listOf(
+        model.historikk.addAll(
+            listOf(
                 Hendelse(SOKNAD_SENDT, tittel_sendt, tidspunkt_sendt),
                 Hendelse(SOKNAD_MOTTATT, tittel_mottatt, tidspunkt_mottatt),
-                Hendelse(SOKNAD_UNDER_BEHANDLING, tittel3, tidspunkt3)))
+                Hendelse(SOKNAD_UNDER_BEHANDLING, tittel3, tidspunkt3)
+            )
+        )
 
         every { eventService.createModel(any()) } returns model
 

@@ -17,10 +17,9 @@ class SwaggerConfig {
     @Bean
     fun api(): Docket {
         return Docket(OAS_30)
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.regex(".*/api/.*"))
-                .build()
+            .select()
+            .apis(RequestHandlerSelectors.any())
+            .paths(PathSelectors.regex(".*/api/.*"))
+            .build()
     }
-
 }

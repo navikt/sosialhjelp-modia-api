@@ -1,10 +1,10 @@
 package no.nav.sosialhjelp.modia.rest
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
-import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
-import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
+import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
+import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -20,8 +20,8 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class VedleggController(
-        private val vedleggService: VedleggService,
-        private val abacService: AbacService
+    private val vedleggService: VedleggService,
+    private val abacService: AbacService
 ) {
 
     @PostMapping("/{fiksDigisosId}/vedlegg")
@@ -34,17 +34,17 @@ class VedleggController(
         }
 
         val vedleggResponses = internalVedleggList
-                .map { vedlegg ->
-                    VedleggResponse(
-                            type = vedlegg.type,
-                            tilleggsinfo = vedlegg.tilleggsinfo,
-                            innsendelsesfrist = vedlegg.innsendelsesfrist,
-                            datoLagtTil = vedlegg.datoLagtTil,
-                            antallVedlegg = vedlegg.antallFiler
-                    )
-                }
-                .filter { it.antallVedlegg > 0 }
-                .sortedWith(compareByDescending<VedleggResponse> { it.innsendelsesfrist }.thenByDescending { it.datoLagtTil })
+            .map { vedlegg ->
+                VedleggResponse(
+                    type = vedlegg.type,
+                    tilleggsinfo = vedlegg.tilleggsinfo,
+                    innsendelsesfrist = vedlegg.innsendelsesfrist,
+                    datoLagtTil = vedlegg.datoLagtTil,
+                    antallVedlegg = vedlegg.antallFiler
+                )
+            }
+            .filter { it.antallVedlegg > 0 }
+            .sortedWith(compareByDescending<VedleggResponse> { it.innsendelsesfrist }.thenByDescending { it.datoLagtTil })
         return ResponseEntity.ok(vedleggResponses)
     }
 
@@ -57,5 +57,4 @@ class VedleggController(
         val datoLagtTil: LocalDateTime?,
         val antallVedlegg: Int
     )
-
 }

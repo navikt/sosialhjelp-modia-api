@@ -3,8 +3,8 @@ package no.nav.sosialhjelp.modia.service.navkontor
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import no.nav.sosialhjelp.modia.client.norg.NorgClient
 import no.nav.sosialhjelp.modia.client.norg.NavEnhet
+import no.nav.sosialhjelp.modia.client.norg.NorgClient
 import no.nav.sosialhjelp.modia.redis.RedisService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -92,5 +92,4 @@ internal class NavKontorServiceTest {
         assertThat(response).hasSize(1)
         assertThat(response[0].enhetsnr).isEqualTo(enhetsnr)
     }
-
 }

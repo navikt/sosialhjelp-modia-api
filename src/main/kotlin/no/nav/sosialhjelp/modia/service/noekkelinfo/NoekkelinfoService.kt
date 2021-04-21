@@ -1,9 +1,9 @@
 package no.nav.sosialhjelp.modia.service.noekkelinfo
 
+import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.domain.NavKontorInformasjon
 import no.nav.sosialhjelp.modia.event.EventService
-import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.hentSoknadTittel
 import no.nav.sosialhjelp.modia.rest.NoekkelinfoController.NavKontor
 import no.nav.sosialhjelp.modia.rest.NoekkelinfoController.SoknadNoekkelinfoResponse
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component
 
 @Component
 class NoekkelinfoService(
-        private val fiksClient: FiksClient,
-        private val eventService: EventService,
-        private val kommunenavnService: KommunenavnService,
-        private val kommuneService: KommuneService
+    private val fiksClient: FiksClient,
+    private val eventService: EventService,
+    private val kommunenavnService: KommunenavnService,
+    private val kommuneService: KommuneService
 ) {
 
     fun hentNoekkelInfo(fiksDigisosId: String): SoknadNoekkelinfoResponse {
@@ -29,14 +29,14 @@ class NoekkelinfoService(
         val behandlendeNavKontor: NavKontorInformasjon? = model.navKontorHistorikk.lastOrNull()
 
         return SoknadNoekkelinfoResponse(
-                tittel = hentSoknadTittel(digisosSak, model),
-                status = model.status,
-                sistOppdatert = unixToLocalDateTime(digisosSak.sistEndret).toLocalDate(),
-                sendtEllerMottattTidspunkt = model.historikk[0].tidspunkt.toLocalDate(), // Første hendelse i historikk er alltid SENDT eller MOTTATT (hvis papirsøknad)
-                navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }, // null hvis papirsøknad og ikke enda mottatt
-                kommunenavn = kommunenavn,
-                videresendtHistorikk = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
-                tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt
+            tittel = hentSoknadTittel(digisosSak, model),
+            status = model.status,
+            sistOppdatert = unixToLocalDateTime(digisosSak.sistEndret).toLocalDate(),
+            sendtEllerMottattTidspunkt = model.historikk[0].tidspunkt.toLocalDate(), // Første hendelse i historikk er alltid SENDT eller MOTTATT (hvis papirsøknad)
+            navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }, // null hvis papirsøknad og ikke enda mottatt
+            kommunenavn = kommunenavn,
+            videresendtHistorikk = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
+            tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt
         )
     }
 
@@ -49,9 +49,9 @@ class NoekkelinfoService(
             model.navKontorHistorikk
                 .map {
                     VideresendtInfo(
-                            type = it.type,
-                            tidspunkt = it.tidspunkt.toLocalDate(),
-                            navKontor = NavKontor(it.navEnhetsnavn, it.navEnhetsnummer)
+                        type = it.type,
+                        tidspunkt = it.tidspunkt.toLocalDate(),
+                        navKontor = NavKontor(it.navEnhetsnavn, it.navEnhetsnummer)
                     )
                 }
         else null

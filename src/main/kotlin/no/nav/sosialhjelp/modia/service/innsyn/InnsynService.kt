@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class InnsynService(
-        private val fiksClient: FiksClient
+    private val fiksClient: FiksClient
 ) {
 
     fun hentJsonDigisosSoker(fnr: String, digisosId: String, digisosSokerMetadata: String?): JsonDigisosSoker? {

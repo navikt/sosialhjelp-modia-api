@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 @Profile("!no-redis")
 @Component
 class RedisStore(
-        redisClient: RedisClient
+    redisClient: RedisClient
 ) {
 
     private val connection: StatefulRedisConnection<String, ByteArray> = redisClient.connect(RedisCodec.of(StringCodec.UTF8, ByteArrayCodec.INSTANCE))
@@ -34,5 +34,4 @@ class RedisStore(
             redisFuture.get()
         } else null
     }
-
 }
