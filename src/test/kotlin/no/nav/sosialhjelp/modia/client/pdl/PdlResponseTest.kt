@@ -90,8 +90,8 @@ internal class PdlResponseTest {
     @Test
     internal fun `telefonnummer - returnerer brukers prioriterte telefonnummer`() {
         every { pdlHentPerson.hentPerson?.telefonnummer } returns listOf(
-                PdlTelefonnummer("+1", "12345678", 2),
-                PdlTelefonnummer("+2", "98765432", 1)
+            PdlTelefonnummer("+1", "12345678", 2),
+            PdlTelefonnummer("+2", "98765432", 1)
         )
 
         assertThat(pdlHentPerson.telefonnummer).isEqualTo("+298765432")

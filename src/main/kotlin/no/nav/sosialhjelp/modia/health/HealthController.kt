@@ -16,7 +16,7 @@ const val APPLICATION_READY = "Application is ready!"
 @RestController
 @RequestMapping(value = ["/internal"])
 class HealthController(
-        private val selftestService: SelftestService
+    private val selftestService: SelftestService
 ) {
 
     @ResponseBody
@@ -32,5 +32,4 @@ class HealthController(
     fun selftest(): SelftestResult {
         return selftestService.getSelftest()
     }
-
 }

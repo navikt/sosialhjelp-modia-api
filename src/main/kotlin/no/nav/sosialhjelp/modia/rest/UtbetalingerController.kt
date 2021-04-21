@@ -1,12 +1,11 @@
 package no.nav.sosialhjelp.modia.rest
 
-
 import com.fasterxml.jackson.annotation.JsonFormat
+import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
+import no.nav.sosialhjelp.modia.domain.UtbetalingsStatus
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import no.nav.sosialhjelp.modia.service.utbetalinger.UtbetalingerService
-import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.sosialhjelp.modia.domain.UtbetalingsStatus
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -23,35 +22,36 @@ import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class UtbetalingerController(
-        private val utbetalingerService: UtbetalingerService,
-        private val fiksClient: FiksClient,
-        private val abacService: AbacService
+    private val utbetalingerService: UtbetalingerService,
+    private val fiksClient: FiksClient,
+    private val abacService: AbacService
 ) {
 
     @PostMapping("/utbetalinger")
     fun hentUtbetalinger(
-            @RequestHeader(value = AUTHORIZATION) token: String,
-            @RequestBody ident: Ident,
-            @RequestParam(defaultValue = "3") month: Int,
-            @RequestParam fom: String?,
-            @RequestParam tom: String?
+        @RequestHeader(value = AUTHORIZATION) token: String,
+        @RequestBody ident: Ident,
+        @RequestParam(defaultValue = "3") month: Int,
+        @RequestParam fom: String?,
+        @RequestParam tom: String?
     ): ResponseEntity<List<UtbetalingerResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
         return ResponseEntity.ok().body(
-                utbetalingerService.hentAlleUtbetalinger(
-                        ident.fnr,
-                        month,
-                        fom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) },
-                        tom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) }
-                ))
+            utbetalingerService.hentAlleUtbetalinger(
+                ident.fnr,
+                month,
+                fom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) },
+                tom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) }
+            )
+        )
     }
 
     @PostMapping("/{fiksDigisosId}/utbetalinger")
     fun hentUtbetalingerForDigisosSak(
-            @PathVariable fiksDigisosId: String,
-            @RequestHeader(value = AUTHORIZATION) token: String,
-            @RequestBody ident: Ident
+        @PathVariable fiksDigisosId: String,
+        @RequestHeader(value = AUTHORIZATION) token: String,
+        @RequestBody ident: Ident
     ): ResponseEntity<List<UtbetalingerResponse>> {
         abacService.harTilgang(ident.fnr, token)
 
@@ -82,5 +82,4 @@ class UtbetalingerController(
         val enhetsNavn: String,
         val enhetsNr: String
     )
-
 }

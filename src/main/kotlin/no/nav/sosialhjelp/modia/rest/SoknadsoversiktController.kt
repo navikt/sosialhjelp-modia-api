@@ -1,8 +1,11 @@
 package no.nav.sosialhjelp.modia.rest
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.hentSoknadTittel
 import no.nav.sosialhjelp.modia.logger
@@ -10,9 +13,6 @@ import no.nav.sosialhjelp.modia.service.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import no.nav.sosialhjelp.modia.unixTimestampToDate
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils
-import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
-import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -27,10 +27,10 @@ import java.util.Date
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class SoknadsoversiktController(
-        private val fiksClient: FiksClient,
-        private val eventService: EventService,
-        private val oppgaveService: OppgaveService,
-        private val abacService: AbacService
+    private val fiksClient: FiksClient,
+    private val eventService: EventService,
+    private val oppgaveService: OppgaveService,
+    private val abacService: AbacService
 ) {
 
     @PostMapping("/soknader")
@@ -44,15 +44,15 @@ class SoknadsoversiktController(
         }
 
         val responselist = saker
-                .map { sak ->
-                    SoknadResponse(
-                            fiksDigisosId = sak.fiksDigisosId,
-                            soknadTittel = "Søknad om økonomisk sosialhjelp",
-                            sistOppdatert = unixTimestampToDate(sak.sistEndret),
-                            sendt = sak.originalSoknadNAV?.timestampSendt?.let { unixTimestampToDate(it) },
-                            kilde = IntegrationUtils.KILDE_INNSYN_API
-                    )
-                }
+            .map { sak ->
+                SoknadResponse(
+                    fiksDigisosId = sak.fiksDigisosId,
+                    soknadTittel = "Søknad om økonomisk sosialhjelp",
+                    sistOppdatert = unixTimestampToDate(sak.sistEndret),
+                    sendt = sak.originalSoknadNAV?.timestampSendt?.let { unixTimestampToDate(it) },
+                    kilde = IntegrationUtils.KILDE_INNSYN_API
+                )
+            }
         log.info("Hentet alle (${responselist.size}) DigisosSaker for bruker.")
 
         return ResponseEntity.ok().body(responselist.sortedByDescending { it.sistOppdatert })
@@ -65,11 +65,11 @@ class SoknadsoversiktController(
         val sak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createSoknadsoversiktModel(sak)
         val saksDetaljerResponse = SoknadDetaljerResponse(
-                fiksDigisosId = sak.fiksDigisosId,
-                soknadTittel = hentSoknadTittel(sak, model),
-                status = model.status,
-                harNyeOppgaver = harNyeOppgaver(model, sak.fiksDigisosId),
-                harVilkar = harVilkar(model)
+            fiksDigisosId = sak.fiksDigisosId,
+            soknadTittel = hentSoknadTittel(sak, model),
+            status = model.status,
+            harNyeOppgaver = harNyeOppgaver(model, sak.fiksDigisosId),
+            harVilkar = harVilkar(model)
         )
         return ResponseEntity.ok().body(saksDetaljerResponse)
     }
@@ -84,11 +84,11 @@ class SoknadsoversiktController(
     private fun harVilkar(model: InternalDigisosSoker): Boolean {
         // forenkle?
         return model.saker
-                .any { sak ->
-                    sak.utbetalinger
-                            .flatMap { utbetaling -> utbetaling.vilkar }
-                            .any { vilkar -> !vilkar.oppfyllt }
-                }
+            .any { sak ->
+                sak.utbetalinger
+                    .flatMap { utbetaling -> utbetaling.vilkar }
+                    .any { vilkar -> !vilkar.oppfyllt }
+            }
     }
 
     companion object {

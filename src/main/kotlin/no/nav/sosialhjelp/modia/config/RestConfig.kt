@@ -16,13 +16,13 @@ class RestConfig {
     @Bean
     fun restTemplate(builder: RestTemplateBuilder): RestTemplate {
         val restTemplate = builder
-                .build()
+            .build()
 
         restTemplate.messageConverters
-                .removeIf { httpMessageConverter -> httpMessageConverter.javaClass == MappingJackson2HttpMessageConverter::class.java }
+            .removeIf { httpMessageConverter -> httpMessageConverter.javaClass == MappingJackson2HttpMessageConverter::class.java }
 
         restTemplate.messageConverters
-                .add(MappingJackson2HttpMessageConverter(objectMapper))
+            .add(MappingJackson2HttpMessageConverter(objectMapper))
 
         return restTemplate
     }
@@ -30,9 +30,9 @@ class RestConfig {
     @Bean
     @Profile("!(mock | local)")
     fun serviceuserBasicAuthRestTemplate(builder: RestTemplateBuilder): RestTemplate =
-            builder
-                    .basicAuthentication(System.getenv(SRVSOSIALHJELP_MODIA_API_USERNAME), System.getenv(SRVSOSIALHJELP_MODIA_API_PASSWORD), StandardCharsets.UTF_8)
-                    .build()
+        builder
+            .basicAuthentication(System.getenv(SRVSOSIALHJELP_MODIA_API_USERNAME), System.getenv(SRVSOSIALHJELP_MODIA_API_PASSWORD), StandardCharsets.UTF_8)
+            .build()
 
     @Bean
     fun objectMapperCustomizer(): Jackson2ObjectMapperBuilderCustomizer {

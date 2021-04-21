@@ -30,24 +30,24 @@ class AuditLogger {
 
     private fun createCef(values: Map<String, Any>): CommonEventFormat {
         val extension = Extension(
-                navIdent = values[NAVIDENT] as String,
-                brukerFnr = values[BRUKER_FNR] as String,
-                callId = values[CALL_ID] as String,
-                consumerId = values[CONSUMER_ID] as String,
-                url = values[URL] as String,
-                httpMethod = values[HTTP_METHOD] as HttpMethod,
-                abac = populateAbacIfPresent(values),
-                fiks = populateFiksIfPresent(values)
+            navIdent = values[NAVIDENT] as String,
+            brukerFnr = values[BRUKER_FNR] as String,
+            callId = values[CALL_ID] as String,
+            consumerId = values[CONSUMER_ID] as String,
+            url = values[URL] as String,
+            httpMethod = values[HTTP_METHOD] as HttpMethod,
+            abac = populateAbacIfPresent(values),
+            fiks = populateFiksIfPresent(values)
         )
 
         return CommonEventFormat(
-                headers = Headers(
-                        log = SPORINGSLOGG,
-                        resource = values.getOrDefault(RESOURCE, "") as String,
-                        title = values.getOrDefault(TITLE, "") as String,
-                        severity = getSeverity(values, extension)
-                ),
-                extension = extension
+            headers = Headers(
+                log = SPORINGSLOGG,
+                resource = values.getOrDefault(RESOURCE, "") as String,
+                title = values.getOrDefault(TITLE, "") as String,
+                severity = getSeverity(values, extension)
+            ),
+            extension = extension
         )
     }
 
@@ -55,10 +55,10 @@ class AuditLogger {
         return if (values.containsKey(ABAC_RESPONSE)) {
             val abacResponse = values[ABAC_RESPONSE] as AbacResponse
             Abac(
-                    decision = abacResponse.decision,
-                    denyPolicy = getAdvice(abacResponse, ADVICEOROBLIGATION_DENY_POLICY),
-                    denyCause = getAdvice(abacResponse, ADVICEOROBLIGATION_CAUSE),
-                    denyRule = getAdvice(abacResponse, ADVICEOROBLIGATION_DENY_RULE)
+                decision = abacResponse.decision,
+                denyPolicy = getAdvice(abacResponse, ADVICEOROBLIGATION_DENY_POLICY),
+                denyCause = getAdvice(abacResponse, ADVICEOROBLIGATION_CAUSE),
+                denyRule = getAdvice(abacResponse, ADVICEOROBLIGATION_DENY_RULE)
             )
         } else {
             null
@@ -67,12 +67,12 @@ class AuditLogger {
 
     private fun getAdvice(abacResponse: AbacResponse, abacAttributeConstant: String): String? {
         return abacResponse.associatedAdvice
-                ?.flatMap { advice ->
-                    advice.attributeAssignment
-                            ?.filter { it.attributeId.equals(abacAttributeConstant, true) }
-                            .orEmpty()
-                }
-                ?.joinToString(separator = ",") { it.value } // potensielt flere denypolicies eller denycauses separeres med komma
+            ?.flatMap { advice ->
+                advice.attributeAssignment
+                    ?.filter { it.attributeId.equals(abacAttributeConstant, true) }
+                    .orEmpty()
+            }
+            ?.joinToString(separator = ",") { it.value } // potensielt flere denypolicies eller denycauses separeres med komma
     }
 
     private fun populateFiksIfPresent(values: Map<String, Any>): Fiks? {

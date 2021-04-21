@@ -16,8 +16,8 @@ import org.springframework.web.client.RestTemplate
 @Profile("!mock")
 @Component
 class STSCheck(
-        clientProperties: ClientProperties,
-        private val restTemplate: RestTemplate
+    clientProperties: ClientProperties,
+    private val restTemplate: RestTemplate
 ) : DependencyCheck {
 
     override val type = DependencyType.REST

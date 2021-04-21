@@ -8,12 +8,11 @@ import no.nav.sosialhjelp.selftest.Importance
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
-
 @Profile("!(mock | mock-alt)")
 @Component
 class AbacCheck(
-        private val abacService: AbacService,
-        clientProperties: ClientProperties
+    private val abacService: AbacService,
+    clientProperties: ClientProperties
 ) : DependencyCheck {
 
     override val type = DependencyType.REST
@@ -24,5 +23,4 @@ class AbacCheck(
     override fun doCheck() {
         abacService.ping()
     }
-
 }

@@ -9,15 +9,15 @@ import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 
 class KommunenavnClient(
-        private val restTemplate: RestTemplate
+    private val restTemplate: RestTemplate
 ) {
     fun getAll(): KommunenavnProperties {
         try {
             val response = restTemplate.exchange(
-                    "https://register.geonorge.no/api/subregister/sosi-kodelister/kartverket/kommunenummer-alle.json",
-                    HttpMethod.GET,
-                    HttpEntity<Nothing>(forwardHeaders()),
-                    typeRef<KommunenavnProperties>()
+                "https://register.geonorge.no/api/subregister/sosi-kodelister/kartverket/kommunenummer-alle.json",
+                HttpMethod.GET,
+                HttpEntity<Nothing>(forwardHeaders()),
+                typeRef<KommunenavnProperties>()
             )
             return response.body!!
         } catch (e: HttpClientErrorException) {

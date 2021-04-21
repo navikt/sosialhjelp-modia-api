@@ -55,7 +55,7 @@ internal class AbacServiceTest {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Permit, null)
 
         assertThatCode { service.harTilgang(fnr, "token") }
-                .doesNotThrowAnyException()
+            .doesNotThrowAnyException()
     }
 
     @Test
@@ -63,8 +63,8 @@ internal class AbacServiceTest {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Deny, null)
 
         assertThatThrownBy { service.harTilgang(fnr, "token") }
-                .isInstanceOf(AbacException::class.java)
-                .hasMessageContaining("${Decision.Deny}")
+            .isInstanceOf(AbacException::class.java)
+            .hasMessageContaining("${Decision.Deny}")
     }
 
     @Test
@@ -72,8 +72,8 @@ internal class AbacServiceTest {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Deny, listOf(Advice("id", null)))
 
         assertThatThrownBy { service.harTilgang(fnr, "token") }
-                .isInstanceOf(AbacException::class.java)
-                .hasMessageContaining("${Decision.Deny}")
+            .isInstanceOf(AbacException::class.java)
+            .hasMessageContaining("${Decision.Deny}")
     }
 
     @Test
@@ -81,8 +81,8 @@ internal class AbacServiceTest {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.NotApplicable, null)
 
         assertThatThrownBy { service.harTilgang(fnr, "token") }
-                .isInstanceOf(AbacException::class.java)
-                .hasMessageContaining("${Decision.NotApplicable}")
+            .isInstanceOf(AbacException::class.java)
+            .hasMessageContaining("${Decision.NotApplicable}")
     }
 
     @Test
@@ -90,8 +90,8 @@ internal class AbacServiceTest {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Indeterminate, null)
 
         assertThatThrownBy { service.harTilgang(fnr, "token") }
-                .isInstanceOf(AbacException::class.java)
-                .hasMessageContaining("${Decision.Indeterminate}")
+            .isInstanceOf(AbacException::class.java)
+            .hasMessageContaining("${Decision.Indeterminate}")
     }
 
     @Test
@@ -104,8 +104,8 @@ internal class AbacServiceTest {
 
         assertThat(request.isCaptured).isTrue
         assertThat(request.captured.environment?.attributes?.first { it.attributeId.endsWith(".felles.azure_jwt_token_body") }?.value)
-                .doesNotContain(BEARER)
-                .isEqualTo("part2")
+            .doesNotContain(BEARER)
+            .isEqualTo("part2")
     }
 
     @Test
@@ -113,8 +113,8 @@ internal class AbacServiceTest {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Deny, listOf(Advice(DENY_REASON, listOf(sosialhjelp))))
 
         assertThatThrownBy { service.harTilgang(fnr, "token") }
-                .isInstanceOf(ManglendeModiaSosialhjelpTilgangException::class.java)
-                .hasMessageContaining("deny")
+            .isInstanceOf(ManglendeModiaSosialhjelpTilgangException::class.java)
+            .hasMessageContaining("deny")
     }
 
     @Test
@@ -122,8 +122,8 @@ internal class AbacServiceTest {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Deny, listOf(Advice(DENY_REASON, listOf(kode6))))
 
         assertThatThrownBy { service.harTilgang(fnr, "token") }
-                .isInstanceOf(ManglendeTilgangException::class.java)
-                .hasMessageContaining("deny")
+            .isInstanceOf(ManglendeTilgangException::class.java)
+            .hasMessageContaining("deny")
     }
 
     @Test
@@ -131,8 +131,8 @@ internal class AbacServiceTest {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Deny, listOf(Advice(DENY_REASON, listOf(kode7))))
 
         assertThatThrownBy { service.harTilgang(fnr, "token") }
-                .isInstanceOf(ManglendeTilgangException::class.java)
-                .hasMessageContaining("deny")
+            .isInstanceOf(ManglendeTilgangException::class.java)
+            .hasMessageContaining("deny")
     }
 
     @Test
@@ -140,7 +140,7 @@ internal class AbacServiceTest {
         every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Deny, listOf(Advice(DENY_REASON, listOf(egenAnsatt))))
 
         assertThatThrownBy { service.harTilgang(fnr, "token") }
-                .isInstanceOf(ManglendeTilgangException::class.java)
-                .hasMessageContaining("deny")
+            .isInstanceOf(ManglendeTilgangException::class.java)
+            .hasMessageContaining("deny")
     }
 }

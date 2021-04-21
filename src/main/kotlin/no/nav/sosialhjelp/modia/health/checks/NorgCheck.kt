@@ -19,8 +19,8 @@ import org.springframework.web.client.RestTemplate
 @Profile("!mock")
 @Component
 class NorgCheck(
-        private val restTemplate: RestTemplate,
-        clientProperties: ClientProperties
+    private val restTemplate: RestTemplate,
+    clientProperties: ClientProperties
 ) : DependencyCheck {
 
     override val type = DependencyType.REST

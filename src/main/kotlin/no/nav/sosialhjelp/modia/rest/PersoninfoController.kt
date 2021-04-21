@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class PersoninfoController(
-        private val personinfoService: PersoninfoService,
-        private val abacService: AbacService
+    private val personinfoService: PersoninfoService,
+    private val abacService: AbacService
 ) {
 
     @PostMapping("/personinfo")

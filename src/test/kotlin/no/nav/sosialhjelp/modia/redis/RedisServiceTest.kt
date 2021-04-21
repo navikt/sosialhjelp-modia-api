@@ -2,9 +2,9 @@ package no.nav.sosialhjelp.modia.redis
 
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.responses.ok_digisossak_response_string
 import no.nav.sosialhjelp.modia.responses.ok_kommuneinfo_response_string
-import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

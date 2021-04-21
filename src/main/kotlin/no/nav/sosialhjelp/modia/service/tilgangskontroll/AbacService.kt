@@ -25,20 +25,27 @@ import org.springframework.stereotype.Component
 
 @Component
 class AbacService(
-        private val abacClient: AbacClient
+    private val abacClient: AbacClient
 ) {
 
     fun harTilgang(fnr: String, token: String) {
         val request = Request(
-                environment = Attributes(mutableListOf(
-                        Attribute(ENVIRONMENT_FELLES_PEP_ID, SRVSOSIALHJELP_MOD),
-                        Attribute(ENVIRONMENT_FELLES_AZURE_JWT_TOKEN_BODY, tokenBody(token)))),
-                action = null,
-                resource = Attributes(mutableListOf(
-                        Attribute(RESOURCE_FELLES_DOMENE, SOSIALHJELP_DOMENE),
-                        Attribute(RESOURCE_FELLES_RESOURCE_TYPE, SOSIALHJELP_RESOURCE_TYPE),
-                        Attribute(RESOURCE_FELLES_PERSON_FNR, fnr))),
-                accessSubject = null)
+            environment = Attributes(
+                mutableListOf(
+                    Attribute(ENVIRONMENT_FELLES_PEP_ID, SRVSOSIALHJELP_MOD),
+                    Attribute(ENVIRONMENT_FELLES_AZURE_JWT_TOKEN_BODY, tokenBody(token))
+                )
+            ),
+            action = null,
+            resource = Attributes(
+                mutableListOf(
+                    Attribute(RESOURCE_FELLES_DOMENE, SOSIALHJELP_DOMENE),
+                    Attribute(RESOURCE_FELLES_RESOURCE_TYPE, SOSIALHJELP_RESOURCE_TYPE),
+                    Attribute(RESOURCE_FELLES_PERSON_FNR, fnr)
+                )
+            ),
+            accessSubject = null
+        )
 
         val abacResponse = abacClient.sjekkTilgang(request)
 
@@ -51,13 +58,23 @@ class AbacService(
 
     fun ping() {
         val request = Request(
-                environment = Attributes(mutableListOf(
-                        Attribute(ENVIRONMENT_FELLES_PEP_ID, SRVSOSIALHJELP_MOD))),
-                action = Attributes(mutableListOf(
-                        Attribute(ACTION_ID, "ping"))),
-                resource = Attributes(mutableListOf(
-                        Attribute(RESOURCE_FELLES_DOMENE, SOSIALHJELP_DOMENE))),
-                accessSubject = null)
+            environment = Attributes(
+                mutableListOf(
+                    Attribute(ENVIRONMENT_FELLES_PEP_ID, SRVSOSIALHJELP_MOD)
+                )
+            ),
+            action = Attributes(
+                mutableListOf(
+                    Attribute(ACTION_ID, "ping")
+                )
+            ),
+            resource = Attributes(
+                mutableListOf(
+                    Attribute(RESOURCE_FELLES_DOMENE, SOSIALHJELP_DOMENE)
+                )
+            ),
+            accessSubject = null
+        )
 
         val abacResponse = abacClient.sjekkTilgang(request)
         if (abacResponse.decision != Decision.Permit) {
@@ -80,7 +97,7 @@ class AbacService(
 
     private fun handleDenyAdvices(advices: List<Advice>?) {
         val attributes: List<Attribute>? = advices
-                ?.firstOrNull { it.id == DENY_REASON }?.attributeAssignment
+            ?.firstOrNull { it.id == DENY_REASON }?.attributeAssignment
 
         attributes?.let { handleDenyReasons(it) } ?: throw AbacException("Abac - fikk Deny, men ingen advices/attributes med forklaring.")
     }

@@ -16,15 +16,14 @@ import org.springframework.web.client.RestTemplate
 interface AbacClient {
 
     fun sjekkTilgang(request: Request): AbacResponse
-
 }
 
 @Profile("!(mock | local)")
 @Component
 class AbacClientImpl(
-        clientProperties: ClientProperties,
-        private val serviceuserBasicAuthRestTemplate: RestTemplate,
-        private val auditService: AuditService
+    clientProperties: ClientProperties,
+    private val serviceuserBasicAuthRestTemplate: RestTemplate,
+    private val auditService: AuditService
 ) : AbacClient {
 
     private val url = clientProperties.abacPdpEndpointUrl

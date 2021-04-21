@@ -6,10 +6,10 @@ import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
-import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
 import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
+import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -37,7 +37,6 @@ internal class SoknadVedleggServiceTest {
         every { mockJsonVedleggSpesifikasjon.vedlegg } returns emptyList()
 
         every { fiksClient.hentDokument(any(), any(), vedleggMetadata_soknad_2, any()) } returns soknadVedleggSpesifikasjonMedStatusKrevesOgLastetOpp
-
     }
 
     @Test
@@ -58,11 +57,9 @@ internal class SoknadVedleggServiceTest {
         assertThat(vedleggKrevesList[0].type).isEqualTo(dokumenttype_2)
         assertThat(vedleggKrevesList[0].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
     }
-
 }
 
 private const val id = "123"
-
 
 private const val soknad_filnavn_1 = "originalSoknadVedlegg.png"
 
@@ -77,23 +74,28 @@ private const val vedleggMetadata_soknad_1 = "vedlegg metadata soknad"
 private const val vedleggMetadata_soknad_2 = "vedlegg metadata soknad med vedlegg kreves og lastet opp"
 
 private val originalSoknadMedVedleggKrevesOgLastetOpp = OriginalSoknadNAV(
-        navEksternRefId = "123",
-        metadata = "metadata",
-        vedleggMetadata = vedleggMetadata_soknad_2,
-        soknadDokument = mockk(),
-        vedlegg = listOf(DokumentInfo(soknad_filnavn_1, dokumentlagerId_soknad_1, 1337)),
-        timestampSendt = tid_soknad.toEpochMilli()
+    navEksternRefId = "123",
+    metadata = "metadata",
+    vedleggMetadata = vedleggMetadata_soknad_2,
+    soknadDokument = mockk(),
+    vedlegg = listOf(DokumentInfo(soknad_filnavn_1, dokumentlagerId_soknad_1, 1337)),
+    timestampSendt = tid_soknad.toEpochMilli()
 )
 
 private val soknadVedleggSpesifikasjonMedStatusKrevesOgLastetOpp = JsonVedleggSpesifikasjon()
-        .withVedlegg(listOf(
-                JsonVedlegg()
-                        .withFiler(listOf(
-                                JsonFiler().withFilnavn(soknad_filnavn_1).withSha512("1234fasd")))
-                        .withStatus(LASTET_OPP_STATUS)
-                        .withType(dokumenttype),
-                JsonVedlegg()
-                        .withFiler(listOf())
-                        .withStatus("VedleggKreves")
-                        .withType(dokumenttype_2)
-        ))
+    .withVedlegg(
+        listOf(
+            JsonVedlegg()
+                .withFiler(
+                    listOf(
+                        JsonFiler().withFilnavn(soknad_filnavn_1).withSha512("1234fasd")
+                    )
+                )
+                .withStatus(LASTET_OPP_STATUS)
+                .withType(dokumenttype),
+            JsonVedlegg()
+                .withFiler(listOf())
+                .withStatus("VedleggKreves")
+                .withType(dokumenttype_2)
+        )
+    )

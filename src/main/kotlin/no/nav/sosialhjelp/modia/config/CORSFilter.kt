@@ -1,6 +1,5 @@
 package no.nav.sosialhjelp.modia.config
 
-
 import no.nav.sosialhjelp.modia.utils.MiljoUtils
 import org.springframework.stereotype.Component
 import java.io.IOException
@@ -15,7 +14,7 @@ import javax.servlet.http.HttpServletResponse
 
 @Component
 class CORSFilter(
-        private val miljoUtils: MiljoUtils
+    private val miljoUtils: MiljoUtils
 ) : Filter {
 
     @Throws(ServletException::class)
@@ -40,8 +39,8 @@ class CORSFilter(
 
     companion object {
         private val ALLOWED_ORIGINS = listOf(
-                "https://sosialhjelp-modia-api.prod-fss.nais.io",
-                "https://sosialhjelp-modia-api.nais.adeo.no"
+            "https://sosialhjelp-modia-api.prod-fss.nais.io",
+            "https://sosialhjelp-modia-api.nais.adeo.no"
         )
     }
 }

@@ -10,17 +10,17 @@ import org.springframework.stereotype.Component
 
 @Component
 class PersoninfoService(
-        private val pdlClient: PdlClient
+    private val pdlClient: PdlClient
 ) {
 
     fun hentPersoninfo(ident: String): PersoninfoResponse {
         val hentPerson = pdlClient.hentPerson(ident)
 
         return PersoninfoResponse(
-                hentPerson?.navn,
-                hentPerson?.alder,
-                hentPerson?.kjoenn,
-                hentPerson?.telefonnummer
+            hentPerson?.navn,
+            hentPerson?.alder,
+            hentPerson?.kjoenn,
+            hentPerson?.telefonnummer
         )
     }
 }

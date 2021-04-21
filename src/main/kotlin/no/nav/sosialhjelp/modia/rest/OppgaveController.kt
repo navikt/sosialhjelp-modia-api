@@ -19,8 +19,8 @@ import java.time.LocalDate
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class OppgaveController(
-        private val oppgaveService: OppgaveService,
-        private val abacService: AbacService
+    private val oppgaveService: OppgaveService,
+    private val abacService: AbacService
 ) {
 
     @PostMapping("/{fiksDigisosId}/oppgaver")

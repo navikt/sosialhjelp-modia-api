@@ -2,12 +2,12 @@ package no.nav.sosialhjelp.modia.mock
 
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.client.norg.NorgClient
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.mock.responses.digisosSoker
 import no.nav.sosialhjelp.modia.service.innsyn.InnsynService
 import no.nav.sosialhjelp.modia.service.vedlegg.SoknadVedleggService
-import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.Test
 

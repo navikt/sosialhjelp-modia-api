@@ -6,11 +6,10 @@ import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.rest.SoknadsStatusController.SoknadsStatusResponse
 import org.springframework.stereotype.Component
 
-
 @Component
 class SoknadsStatusService(
-        private val fiksClient: FiksClient,
-        private val eventService: EventService
+    private val fiksClient: FiksClient,
+    private val eventService: EventService
 ) {
 
     fun hentSoknadsStatus(fiksDigisosId: String): SoknadsStatusResponse {
