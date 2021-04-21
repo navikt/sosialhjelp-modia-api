@@ -44,6 +44,21 @@ Alternativt kan variablene kan også konfigureres som miljøvariabler, eller bru
 ./gradlew -PgithubUser=x-access-token -PgithubPassword=[token]
 ```
 
+### Ktlint
+Hvordan kjøre Ktlint:
+* Fra IDEA: Kjør Gradle Task: sosialhjelp-mock-alt-api -> Tasks -> formatting -> ktlintFormat
+* Fra terminal:
+    * Kun formater: `./gradlew ktlintFormat`
+    * Formater og bygg: `./gradlew ktlintFormat build`
+    * Hvis IntelliJ begynner å hikke, kan en kjøre `./gradlew clean ktlintFormat build`
+
+Endre IntelliJ autoformateringskonfigurasjon for dette prosjektet:
+* `./gradlew ktlintApplyToIdea`
+
+Legg til pre-commit check/format hooks:
+* `./gradlew addKtlintCheckGitPreCommitHook`
+* `./gradlew addKtlintFormatGitPreCommitHook`
+
 ## Oppsett av nytt prosjekt
 Prosjektet bruker Github Actions for bygg og deploy
 
@@ -52,9 +67,8 @@ Prosjektet bruker Github Actions for bygg og deploy
 
 ### Github Actions
 - Docker image bygges ved push => `.github/workflows/build.yml`
-- Deploy til dev-fss => `.github/workflows/deploy-miljo.yml`
-- Deploy til prod-fss => `.github/workflows/deploy-prod.yml`
-- For å deploye til dev-fss eller prod-fss brukes av cli-verktøyet [sosialhjelp-ci](https://github.com/navikt/sosialhjelp-ci).
+- Deploy til dev => `.github/workflows/deploy_dev.yml`
+- Deploy til prod => `.github/workflows/deploy_prod.yml`
 
 ### Github deployment
 - Github deployments - registrer ditt github-repo [her](https://deployment.prod-sbs.nais.io/auth/form)
