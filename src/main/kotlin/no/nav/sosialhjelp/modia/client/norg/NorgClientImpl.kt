@@ -8,11 +8,11 @@ import no.nav.sosialhjelp.modia.redis.ALLE_NAVENHETER_CACHE_TIME_TO_LIVE_SECONDS
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.typeRef
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
-import no.nav.sosialhjelp.modia.utils.IntegrationUtils.forwardHeaders
 import no.nav.sosialhjelp.modia.utils.mdc.MDCUtils.getCallId
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpStatusCodeException
@@ -66,7 +66,7 @@ class NorgClientImpl(
     }
 
     private fun createRequestEntity(): HttpEntity<Nothing> {
-        val headers = forwardHeaders()
+        val headers = HttpHeaders()
         headers.set(HEADER_CALL_ID, getCallId())
         return HttpEntity(headers)
     }

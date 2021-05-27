@@ -2,7 +2,6 @@ package no.nav.sosialhjelp.modia.client.msgraph
 
 import no.nav.sosialhjelp.modia.common.MsGraphException
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
-import no.nav.sosialhjelp.modia.utils.IntegrationUtils.forwardHeaders
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -28,7 +27,7 @@ class MsGraphClient(
     }
 
     private fun createRequestEntity(accessToken: String): HttpEntity<Nothing> {
-        val headers = forwardHeaders()
+        val headers = HttpHeaders()
         headers.set(HttpHeaders.ACCEPT, APPLICATION_JSON_VALUE)
         headers.set(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
         return HttpEntity(headers)
