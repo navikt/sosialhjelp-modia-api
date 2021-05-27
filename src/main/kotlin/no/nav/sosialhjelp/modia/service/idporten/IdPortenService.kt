@@ -5,7 +5,6 @@ import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.idporten.client.AccessToken
 import no.nav.sosialhjelp.idporten.client.IdPortenClient
 import no.nav.sosialhjelp.modia.service.idporten.IdPortenServiceImpl.CachedToken.Companion.shouldRenewToken
-import no.nav.sosialhjelp.modia.utils.IntegrationUtils.forwardHeaders
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
@@ -26,7 +25,7 @@ class IdPortenServiceImpl(
     override fun getToken(): AccessToken {
         if (shouldRenewToken(cachedToken)) {
             val tidspunktForHenting: LocalDateTime = LocalDateTime.now()
-            return runBlocking(Dispatchers.IO) { idPortenClient.requestToken(headers = forwardHeaders()) }
+            return runBlocking(Dispatchers.IO) { idPortenClient.requestToken() }
                 .also { cachedToken = CachedToken(it, tidspunktForHenting) }
         }
 

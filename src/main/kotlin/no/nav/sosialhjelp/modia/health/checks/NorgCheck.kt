@@ -4,13 +4,13 @@ import no.nav.sosialhjelp.modia.common.NorgException
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
-import no.nav.sosialhjelp.modia.utils.IntegrationUtils.forwardHeaders
 import no.nav.sosialhjelp.modia.utils.mdc.MDCUtils.getCallId
 import no.nav.sosialhjelp.selftest.DependencyCheck
 import no.nav.sosialhjelp.selftest.DependencyType
 import no.nav.sosialhjelp.selftest.Importance
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpStatusCodeException
@@ -30,7 +30,7 @@ class NorgCheck(
 
     override fun doCheck() {
         try {
-            val headers = forwardHeaders()
+            val headers = HttpHeaders()
             headers.set(HEADER_CALL_ID, getCallId())
 
             // samme kall som selftest i soknad-api
