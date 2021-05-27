@@ -43,7 +43,7 @@ class PdlClientImpl(
                 pdlPersonResponse.errors
                     .forEach { log.error("PDL - noe feilet. Message=${it.message}, path=${it.path}, code=${it.extensions.code}, classification=${it.extensions.classification}") }
                 val firstError = pdlPersonResponse.errors[0]
-                val statusCode = firstError.extensions.code?.toUpperCase()?.let { HttpStatus.valueOf(it) }
+                val statusCode = firstError.extensions.code?.uppercase()?.let { HttpStatus.valueOf(it) }
                 throw PdlException(
                     "StatusCode: $statusCode, Message: ${firstError.message}, Classification: ${firstError.extensions.classification}"
                 )

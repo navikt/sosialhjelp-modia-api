@@ -2,6 +2,7 @@ package no.nav.sosialhjelp.modia.client.pdl
 
 import java.time.LocalDate
 import java.time.Period
+import java.util.Locale
 
 data class PdlPersonResponse(
     val errors: List<PdlError>?,
@@ -78,8 +79,7 @@ val PdlHentPerson.navn: String?
     }
 
 private fun String.capitalizeEachWord(): String {
-    return this.split(" ").toList()
-        .joinToString(separator = " ") { it.toLowerCase().capitalize() }
+    return this.split(" ").joinToString(separator = " ") { s -> s.lowercase().replaceFirstChar { it.titlecase(Locale.getDefault()) } }
 }
 
 val PdlHentPerson.alder: Int?
