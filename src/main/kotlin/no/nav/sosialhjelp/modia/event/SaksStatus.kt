@@ -6,6 +6,7 @@ import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.domain.Sak
 import no.nav.sosialhjelp.modia.domain.SaksStatus
 import no.nav.sosialhjelp.modia.toLocalDateTime
+import java.util.Locale
 
 fun InternalDigisosSoker.apply(hendelse: JsonSaksStatus) {
 
@@ -51,7 +52,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonSaksStatus) {
         )
         val tittel = hendelse.tittel ?: "saken din"
         val beskrivelse: String? = when (status) {
-            SaksStatus.UNDER_BEHANDLING -> "${tittel.capitalize()} er under behandling"
+            SaksStatus.UNDER_BEHANDLING -> "${tittel.replaceFirstChar { it.titlecase(Locale.getDefault()) }} er under behandling"
             SaksStatus.BEHANDLES_IKKE, SaksStatus.IKKE_INNSYN -> "Vi kan ikke vise behandlingsstatus for $tittel digitalt."
             else -> null
         }

@@ -32,7 +32,7 @@ class KommuneService(
     }
 
     private fun leggTilKommuneINavnet(kommunenavn: String): String {
-        return if (kommunenavn.toLowerCase().endsWith(" kommune")) kommunenavn else "$kommunenavn kommune"
+        return if (kommunenavn.lowercase().endsWith(" kommune")) kommunenavn else "$kommunenavn kommune"
     }
 
     fun getAll(): List<KommuneInfo> {

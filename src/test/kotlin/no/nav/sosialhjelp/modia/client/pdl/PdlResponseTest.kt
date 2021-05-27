@@ -41,7 +41,7 @@ internal class PdlResponseTest {
 
     @Test
     internal fun `navn - skal gi stor forbokstav`() {
-        every { pdlHentPerson.hentPerson?.navn } returns listOf(PdlPersonNavn(fornavn.toLowerCase(), null, etternavn.toLowerCase()))
+        every { pdlHentPerson.hentPerson?.navn } returns listOf(PdlPersonNavn(fornavn.lowercase(), null, etternavn.lowercase()))
 
         val navn = pdlHentPerson.navn
 
@@ -50,7 +50,7 @@ internal class PdlResponseTest {
 
     @Test
     internal fun `navn - skal gi stor forbokstav - med dobbelt navn`() {
-        every { pdlHentPerson.hentPerson?.navn } returns listOf(PdlPersonNavn(fornavn.toLowerCase(), dobbeltmellomnavn.toLowerCase(), etternavn.toLowerCase()))
+        every { pdlHentPerson.hentPerson?.navn } returns listOf(PdlPersonNavn(fornavn.lowercase(), dobbeltmellomnavn.lowercase(), etternavn.lowercase()))
 
         val navn = pdlHentPerson.navn
 
