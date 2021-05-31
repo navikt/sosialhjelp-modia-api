@@ -1,12 +1,12 @@
 package no.nav.sosialhjelp.modia
 
-import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
+import no.nav.security.token.support.spring.test.MockOAuth2ServerAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Import
 
 @SpringBootApplication
-@Import(TokenGeneratorConfiguration::class)
+@Import(MockOAuth2ServerAutoConfiguration::class)
 class TestApplication
 
 fun main(args: Array<String>) {

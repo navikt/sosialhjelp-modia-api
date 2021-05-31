@@ -1,7 +1,7 @@
 no.nav.security.jwt:
   issuer.azuread:
-    discoveryurl: http://metadata
-    accepted_audience: aud-localhost
+    discoveryurl: http://localhost:${mock-oauth2-server.port}/azuread/.well-known/openid-configuration
+    accepted_audience: someaudience
     cookie_name: localhost-idtoken
 
 client:

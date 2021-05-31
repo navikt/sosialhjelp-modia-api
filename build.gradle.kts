@@ -67,7 +67,6 @@ configurations {
     }
     "testImplementation" {
         exclude(group = "org.springframework.boot", module = "spring-boot-starter-tomcat")
-        exclude(group = "junit", module = "junit")
         exclude(group = "org.hamcrest", module = "hamcrest-library")
         exclude(group = "org.hamcrest", module = "hamcrest-core")
         exclude(group = "org.mockito", module = "mockito-core")
@@ -137,7 +136,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
     testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junitJupiter}")
     testImplementation("io.mockk:mockk:${Versions.mockk}")
-    testImplementation("no.nav.security:token-validation-test-support:${Versions.tokenValidation}")
+    testImplementation("no.nav.security:token-validation-spring-test:${Versions.tokenValidation}")
     testImplementation("org.jetbrains.kotlin:kotlin-test:${Versions.kotlin}")
 
 //    Spesifikke versjoner oppgradert etter ønske fra snyk
