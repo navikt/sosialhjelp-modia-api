@@ -5,6 +5,7 @@
   ],
   "env": {
     "SPRING_PROFILES_ACTIVE": "mock-alt,log-console,no-redis",
+    "METADATA_URL": "https://digisos.labs.nais.io/sosialhjelp/mock-alt-api/login/metadata/azuread",
     "ABAC_PDP_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/abac/application/authorize",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/fiks",
     "ID_PORTEN_TOKEN_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/token",

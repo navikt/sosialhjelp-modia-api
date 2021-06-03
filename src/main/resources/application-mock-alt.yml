@@ -1,6 +1,6 @@
 no.nav.security.jwt:
   issuer.azuread:
-    discoveryurl: http://localhost:${mock-oauth2-server.port}/azuread/.well-known/openid-configuration
+    discoveryurl: ${METADATA_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/login/metadata/azuread}
     accepted_audience: someaudience
     cookie_name: localhost-idtoken
 
