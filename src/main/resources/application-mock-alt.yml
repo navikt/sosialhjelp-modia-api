@@ -1,7 +1,7 @@
 no.nav.security.jwt:
   issuer.azuread:
-    discoveryurl: http://metadata
-    accepted_audience: aud-localhost
+    discoveryurl: ${METADATA_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/login/metadata/azuread}
+    accepted_audience: someaudience
     cookie_name: localhost-idtoken
 
 client:
