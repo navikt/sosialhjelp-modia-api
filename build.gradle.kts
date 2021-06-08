@@ -31,22 +31,20 @@ object Versions {
     const val mockk = "1.11.0"
 }
 
-val applicationKt = "no.nav.sosialhjelp.modia.ApplicationKt"
-
 plugins {
     application
     kotlin("jvm") version "1.5.10"
 
     id("org.jetbrains.kotlin.plugin.spring") version "1.5.10"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
     id("com.github.ben-manes.versions") version "0.38.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
 
 application {
     applicationName = "sosialhjelp-modia-api"
-    mainClassName = applicationKt // TODO: erstatt med "mainClass.set(applicationKt)" når denne merges https://github.com/johnrengelman/shadow/pull/612
+    mainClass.set("no.nav.sosialhjelp.modia.ApplicationKt")
 }
 
 java {
@@ -157,7 +155,6 @@ val githubPassword: String by project
 
 repositories {
     mavenCentral()
-    jcenter()
     maven("https://plugins.gradle.org/m2/")
     maven {
         url = uri("https://maven.pkg.github.com/navikt/sosialhjelp-common")
@@ -186,7 +183,7 @@ tasks {
     }
 
     withType<ShadowJar> {
-        classifier = ""
+        archiveClassifier.set("")
         transform(ServiceFileTransformer::class.java) {
             setPath("META-INF/cxf")
             include("bus-extensions.txt")
