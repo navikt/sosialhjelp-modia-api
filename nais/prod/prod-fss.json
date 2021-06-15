@@ -18,7 +18,7 @@
     "NORG_ENDPOINT_URL": "https://norg2.nais.adeo.no/norg2/api/v1",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.nais.adeo.no/#/startsok?enhetNr=",
     "PDL_ENDPOINT_URL": "https://pdl-api.nais.adeo.no/graphql",
-    "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.adeo.no/rest/v1/sts",
+    "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.adeo.no/rest/v1/sts/token",
     "SPRING_PROFILES_ACTIVE": "prod-fss,log-kibana,log-audit",
     "CACHE_TIME_TO_LIVE_SECONDS": "180",
     "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local",

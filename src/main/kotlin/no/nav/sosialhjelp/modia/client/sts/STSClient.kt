@@ -6,6 +6,7 @@ import no.nav.sosialhjelp.modia.logger
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod.OPTIONS
 import org.springframework.http.HttpMethod.POST
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -22,7 +23,7 @@ class STSClient(
     clientProperties: ClientProperties
 ) {
 
-    private val baseUrl = clientProperties.stsTokenEndpointUrl
+    private val tokenEndpointUrl = clientProperties.stsTokenEndpointUrl
 
     private var cachedToken: STSToken? = null
 
@@ -30,8 +31,7 @@ class STSClient(
         if (shouldRenewToken(cachedToken)) {
             try {
                 log.info("Henter nytt token fra STS")
-                val requestUrl = "$baseUrl/token"
-                val response = serviceuserBasicAuthRestTemplate.exchange(requestUrl, POST, requestEntity(), STSToken::class.java)
+                val response = serviceuserBasicAuthRestTemplate.exchange(tokenEndpointUrl, POST, requestEntity(), STSToken::class.java)
 
                 cachedToken = response.body
                 return response.body!!.access_token
@@ -42,6 +42,15 @@ class STSClient(
         }
         log.info("Hentet token fra cache")
         return cachedToken!!.access_token
+    }
+
+    fun ping() {
+        try {
+            serviceuserBasicAuthRestTemplate.exchange(tokenEndpointUrl, OPTIONS, null, String::class.java)
+        } catch (e: RestClientException) {
+            log.warn("Selftest - STS - ping feilet", e)
+            throw e
+        }
     }
 
     private fun requestEntity(): HttpEntity<MultiValueMap<String, String>> {
