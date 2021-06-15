@@ -13,7 +13,7 @@
     "NORG_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/norg_endpoint_url",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.adeo.no/#/startsok?enhetNr=",
     "PDL_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/pdl_endpoint_url",
-    "STS_TOKEN_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/sts_token_endpoint_url",
+    "STS_TOKEN_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/sts_token_endpoint_url/token",
     "VIRKSERT_STI": "/var/run/secrets",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
     "UNLEASH_INSTANCE_ID": "labs-gcp"

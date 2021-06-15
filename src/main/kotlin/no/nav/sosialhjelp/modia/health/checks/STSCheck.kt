@@ -25,8 +25,7 @@ class STSCheck(
 
     override fun doCheck() {
         try {
-            val requestUrl = "$address/.well-known/openid-configuration"
-            restTemplate.exchange(requestUrl, HttpMethod.GET, null, String::class.java)
+            restTemplate.exchange(address, HttpMethod.OPTIONS, null, String::class.java)
         } catch (e: RestClientException) {
             log.warn("Selftest - STS - noe feilet", e)
             throw e
