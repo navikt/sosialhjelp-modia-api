@@ -6,6 +6,7 @@ import no.nav.sosialhjelp.modia.logger
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod.OPTIONS
 import org.springframework.http.HttpMethod.POST
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -41,6 +42,15 @@ class STSClient(
         }
         log.info("Hentet token fra cache")
         return cachedToken!!.access_token
+    }
+
+    fun ping() {
+        try {
+            serviceuserBasicAuthRestTemplate.exchange(tokenEndpointUrl, OPTIONS, null, String::class.java)
+        } catch (e: RestClientException) {
+            log.warn("Selftest - STS - ping feilet", e)
+            throw e
+        }
     }
 
     private fun requestEntity(): HttpEntity<MultiValueMap<String, String>> {
