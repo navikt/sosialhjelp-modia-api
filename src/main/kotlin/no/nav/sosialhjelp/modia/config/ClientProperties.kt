@@ -22,7 +22,6 @@ class ClientProperties {
     lateinit var pdlEndpointUrl: String
 
     lateinit var stsTokenEndpointUrl: String
-    lateinit var stsConfigEndpointUrl: String
 
     lateinit var unleashUrl: String
     lateinit var unleashInstanceId: String

@@ -22,7 +22,7 @@ class STSClient(
     clientProperties: ClientProperties
 ) {
 
-    private val tokenEndpointUrl = clientProperties.stsTokenEndpointUrl
+    private val baseUrl = clientProperties.stsTokenEndpointUrl
 
     private var cachedToken: STSToken? = null
 
@@ -30,7 +30,8 @@ class STSClient(
         if (shouldRenewToken(cachedToken)) {
             try {
                 log.info("Henter nytt token fra STS")
-                val response = serviceuserBasicAuthRestTemplate.exchange(tokenEndpointUrl, POST, requestEntity(), STSToken::class.java)
+                val requestUrl = "$baseUrl/token"
+                val response = serviceuserBasicAuthRestTemplate.exchange(requestUrl, POST, requestEntity(), STSToken::class.java)
 
                 cachedToken = response.body
                 return response.body!!.access_token
