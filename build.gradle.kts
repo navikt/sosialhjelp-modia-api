@@ -18,13 +18,13 @@ object Versions {
     const val tokenValidation = "1.3.7"
     const val jackson = "2.12.3"
     const val guava = "30.1.1-jre"
-    const val springfox = "3.0.0"
     const val abacAttributeConstants = "3.3.13"
     const val logbackSyslog4j = "1.0.0"
     const val syslog4j = "0.9.30"
     const val jerseyMediaJaxb = "2.31"
     const val lettuce = "6.0.5.RELEASE"
     const val unleash = "3.3.4"
+    const val springdoc = "1.5.9"
 
     // Test only
     const val junitJupiter = "5.7.0"
@@ -118,8 +118,8 @@ dependencies {
     implementation("no.nav.security:token-validation-spring:${Versions.tokenValidation}")
     implementation("no.nav.security:token-client-spring:${Versions.tokenValidation}")
 
-//    Springfox/swagger
-    implementation("io.springfox:springfox-boot-starter:${Versions.springfox}")
+//    Springdoc
+    implementation("org.springdoc:springdoc-openapi-ui:${Versions.springdoc}")
 
 //    Abac-attributter
     implementation("no.nav.abac.policies:abac-attribute-constants:${Versions.abacAttributeConstants}")

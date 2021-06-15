@@ -17,7 +17,8 @@
     "VIRKSERT_STI": "/var/run/secrets",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
     "UNLEASH_INSTANCE_ID": "dev-gcp",
-    "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.cluster.local"
+    "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.cluster.local",
+    "SWAGGER_ENABLED": "true"
   },
   "minReplicas": "1",
   "maxReplicas": "1",
