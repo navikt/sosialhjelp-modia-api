@@ -20,13 +20,12 @@ class STSCheck(
 
     override val type = DependencyType.REST
     override val name = "STS"
-    override val address = clientProperties.stsTokenEndpointUrl
+    override val address = clientProperties.stsConfigEndpointUrl
     override val importance = Importance.WARNING
 
     override fun doCheck() {
         try {
-            val requestUrl = "$address/.well-known/openid-configuration"
-            restTemplate.exchange(requestUrl, HttpMethod.GET, null, String::class.java)
+            restTemplate.exchange(address, HttpMethod.GET, null, String::class.java)
         } catch (e: RestClientException) {
             log.warn("Selftest - STS - noe feilet", e)
             throw e

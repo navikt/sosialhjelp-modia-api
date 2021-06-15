@@ -16,6 +16,7 @@ client:
   fiks_integrasjonpassord_kommune: "pwdcom"
   pdl_endpoint_url: 'http://localhost:56666'
   sts_token_endpoint_url: 'http://localhost:57777'
+  sts_config_endpoint_url: 'http://localhost:57778'
   unleash_url: "http://localhost:58888"
   unleash_instance_id: "local"
 

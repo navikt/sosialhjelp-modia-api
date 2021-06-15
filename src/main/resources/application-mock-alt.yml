@@ -15,6 +15,7 @@ client:
   norg_oppslag_url: ${NORG_OPPSLAG_URL:https://norg2-frontend.nais.adeo.no/#/startsok?enhetNr=}
   pdl_endpoint_url: ${PDL_ENDPOINT_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/pdl_endpoint_url}
   sts_token_endpoint_url: ${STS_TOKEN_ENDPOINT_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/sts_token_endpoint_url}
+  sts_config_endpoint_url: ${STS_CONFIG_ENDPOINT_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/well-known/sts}
   unleash_url: ${UNLEASH_API_URL:https://unleash.nais.io/api}
   unleash_instance_id: ${UNLEASH_INSTANCE_ID:local}
 

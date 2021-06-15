@@ -26,7 +26,8 @@ client:
   norg_endpoint_url: norgurl
   norg_oppslag_url: norgurl2
   pdl_endpoint_url: pdlurl
-  sts_token_endpoint_url: stsurl
+  sts_token_endpoint_url: stsTokenurl
+  sts_config_endpoint_url: stsConfigurl
   unleash_url: unleashurl
   unleash_instance_id: local
 
