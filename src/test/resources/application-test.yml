@@ -6,6 +6,10 @@ spring:
   profiles:
     active: test
 
+springdoc:
+  api-docs:
+    enabled: true
+
 client:
   abac_pdp_endpoint_url: "abacurl"
   fiks_digisos_endpoint_url: 'fiks-digisos.com'

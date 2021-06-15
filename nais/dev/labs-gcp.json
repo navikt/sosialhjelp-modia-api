@@ -16,7 +16,8 @@
     "STS_TOKEN_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/sts_token_endpoint_url/token",
     "VIRKSERT_STI": "/var/run/secrets",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
-    "UNLEASH_INSTANCE_ID": "labs-gcp"
+    "UNLEASH_INSTANCE_ID": "labs-gcp",
+    "SWAGGER_ENABLED": "true"
   },
   "minReplicas": "1",
   "maxReplicas": "1",

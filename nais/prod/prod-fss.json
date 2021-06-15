@@ -23,7 +23,8 @@
     "CACHE_TIME_TO_LIVE_SECONDS": "180",
     "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
-    "UNLEASH_INSTANCE_ID": "prod-fss"
+    "UNLEASH_INSTANCE_ID": "prod-fss",
+    "SWAGGER_ENABLED": "false"
   },
   "minReplicas": "2",
   "maxReplicas": "4",

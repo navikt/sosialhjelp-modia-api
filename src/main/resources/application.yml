@@ -25,6 +25,13 @@ management:
       exposure:
         include: info, health, metrics, prometheus
 
+springdoc:
+  api-docs:
+    enabled: ${SWAGGER_ENABLED}
+  swagger-ui:
+    path: swagger-ui.html
+  pathsToMatch: /**/api/**
+
 #Environment-variabler som settes av NAIS
 client:
   abac_pdp_endpoint_url: ${ABAC_PDP_ENDPOINT_URL}

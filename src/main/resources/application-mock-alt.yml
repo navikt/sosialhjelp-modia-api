@@ -4,6 +4,10 @@ no.nav.security.jwt:
     accepted_audience: someaudience
     cookie_name: localhost-idtoken
 
+springdoc:
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:true}
+
 client:
   abac_pdp_endpoint_url: ${ABAC_PDP_ENDPOINT_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/abac/application/authorize}
   fiks_digisos_endpoint_url: ${FIKS_DIGISOS_ENDPOINT_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/fiks}
