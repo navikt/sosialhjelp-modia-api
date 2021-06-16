@@ -71,7 +71,7 @@ class FiksClientImpl(
 
     private fun hentDigisosSakFraCache(digisosId: String): DigisosSak? {
         if (skalBrukeCache()) {
-            log.debug("Forsøker å hente digisosSak fra cache")
+            log.info("Forsøker å hente digisosSak=$digisosId fra cache")
             return redisService.get(cacheKeyFor(digisosId), DigisosSak::class.java) as DigisosSak?
         }
         return null
