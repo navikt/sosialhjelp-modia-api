@@ -13,6 +13,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.web.client.HttpStatusCodeException
+import org.springframework.web.reactive.function.client.WebClientResponseException
 import java.io.IOException
 import java.sql.Timestamp
 import java.time.Instant
@@ -82,6 +83,20 @@ val ErrorMessage.feilmeldingUtenFnr: String?
     get() {
         return this.message?.feilmeldingUtenFnr
     }
+
+fun messageUtenFnr(e: WebClientResponseException): String {
+    val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
+    val message = e.message?.feilmeldingUtenFnr
+    return "$message - $fiksErrorMessage"
+}
+
+private fun <T : WebClientResponseException> T.toFiksErrorMessage(): ErrorMessage? {
+    return try {
+        objectMapper.readValue(this.responseBodyAsByteArray, ErrorMessage::class.java)
+    } catch (e: IOException) {
+        null
+    }
+}
 
 suspend fun <A, B> Iterable<A>.flatMapParallel(f: suspend (A) -> List<B>): List<B> = coroutineScope {
     map {

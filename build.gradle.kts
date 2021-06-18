@@ -29,6 +29,7 @@ object Versions {
     // Test only
     const val junitJupiter = "5.7.0"
     const val mockk = "1.11.0"
+    const val mockwebserver = "5.0.0-alpha.2"
 }
 
 plugins {
@@ -78,9 +79,11 @@ dependencies {
 //    Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:${Versions.coroutines}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${Versions.coroutines}")
 
 //    Spring
     implementation("org.springframework.boot:spring-boot-starter-web:${Versions.springBoot}")
+    implementation("org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-jetty:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-actuator:${Versions.springBoot}")
     implementation("org.springframework.boot:spring-boot-starter-logging:${Versions.springBoot}")
@@ -136,6 +139,7 @@ dependencies {
     testImplementation("io.mockk:mockk:${Versions.mockk}")
     testImplementation("no.nav.security:token-validation-spring-test:${Versions.tokenValidation}")
     testImplementation("org.jetbrains.kotlin:kotlin-test:${Versions.kotlin}")
+    testImplementation("com.squareup.okhttp3:mockwebserver3-junit5:${Versions.mockwebserver}")
 
 //    Spesifikke versjoner oppgradert etter ønske fra snyk
     constraints {
