@@ -135,7 +135,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junitJupiter}")
     testImplementation("io.mockk:mockk:${Versions.mockk}")
     testImplementation("no.nav.security:token-validation-spring-test:${Versions.tokenValidation}")
-//    testImplementation("org.jetbrains.kotlin:kotlin-test:${Versions.kotlin}")
 
 //    Spesifikke versjoner oppgradert etter ønske fra snyk
     constraints {
