@@ -14,5 +14,8 @@ class NorgConfig(
     @Bean
     fun norgWebClient(): WebClient = webClient.mutate()
         .baseUrl(clientProperties.norgEndpointUrl)
+        .codecs {
+            it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+        }
         .build()
 }
