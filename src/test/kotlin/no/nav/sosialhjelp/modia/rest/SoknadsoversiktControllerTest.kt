@@ -24,8 +24,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import java.time.LocalDateTime
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 internal class SoknadsoversiktControllerTest {
 
@@ -99,12 +97,12 @@ internal class SoknadsoversiktControllerTest {
             val first = saker[0]
             assertThat(first.soknadTittel).isEqualTo("Søknad om økonomisk sosialhjelp")
             assertThat(first.kilde).isEqualTo(KILDE_INNSYN_API)
-            assertNotNull(first.sendt)
+            assertThat(first.sendt).isNotNull
 
             val second = saker[1]
             assertThat(second.soknadTittel).isEqualTo("Søknad om økonomisk sosialhjelp")
             assertThat(second.kilde).isEqualTo(KILDE_INNSYN_API)
-            assertNull(second.sendt)
+            assertThat(second.sendt).isNull()
         }
     }
 

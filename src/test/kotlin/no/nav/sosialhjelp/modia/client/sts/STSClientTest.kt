@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestTemplate
-import kotlin.test.assertNotNull
 
 internal class STSClientTest {
 
@@ -42,7 +41,7 @@ internal class STSClientTest {
 
         val accessToken = stsClient.token()
 
-        assertNotNull(accessToken)
+        assertThat(accessToken).isNotNull
         assertThat(accessToken).isEqualTo(token.access_token)
     }
 
@@ -63,7 +62,7 @@ internal class STSClientTest {
 
         val firstToken = stsClient.token()
 
-        assertNotNull(firstToken)
+        assertThat(firstToken).isNotNull
         assertThat(firstToken).isEqualTo(token.access_token)
         verify(exactly = 1) { restTemplate.exchange(any<String>(), HttpMethod.POST, any(), STSToken::class.java) }
 
@@ -90,12 +89,12 @@ internal class STSClientTest {
 
         val firstToken = stsClient.token()
 
-        assertNotNull(firstToken)
+        assertThat(firstToken).isNotNull
         verify(exactly = 1) { restTemplate.exchange(any<String>(), HttpMethod.POST, any(), STSToken::class.java) }
 
         val secondToken = stsClient.token()
 
-        assertNotNull(secondToken)
+        assertThat(secondToken).isNotNull
         verify(exactly = 2) { restTemplate.exchange(any<String>(), HttpMethod.POST, any(), STSToken::class.java) }
     }
 }

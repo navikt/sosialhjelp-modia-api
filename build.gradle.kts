@@ -21,10 +21,10 @@ object Versions {
     const val abacAttributeConstants = "3.3.13"
     const val logbackSyslog4j = "1.0.0"
     const val syslog4j = "0.9.30"
-    const val jerseyMediaJaxb = "2.31"
     const val lettuce = "6.0.5.RELEASE"
     const val unleash = "3.3.4"
     const val springdoc = "1.5.9"
+    const val jsonSmart = "2.4.7"
 
     // Test only
     const val junitJupiter = "5.7.0"
@@ -135,17 +135,14 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junitJupiter}")
     testImplementation("io.mockk:mockk:${Versions.mockk}")
     testImplementation("no.nav.security:token-validation-spring-test:${Versions.tokenValidation}")
-    testImplementation("org.jetbrains.kotlin:kotlin-test:${Versions.kotlin}")
 
 //    Spesifikke versjoner oppgradert etter ønske fra snyk
     constraints {
         implementation("com.google.guava:guava:${Versions.guava}") {
             because("Transitiv avhengighet dratt inn av jedis-mock@0.1.16 har sårbarhet. Constraintsen kan fjernes når jedis-mock bruker guava@30.0-jre eller nyere")
         }
-
-        //  Test
-        testImplementation("org.glassfish.jersey.media:jersey-media-jaxb:${Versions.jerseyMediaJaxb}") {
-            because("Transitiv avhengighet dratt inn av token-validation-test-support@1.3.1 har sårbarhet. Constraintsen kan fjernes når token-validation-test-support bruker jersey-media-jaxb@2.31 eller nyere")
+        implementation("net.minidev:json-smart:${Versions.jsonSmart}") {
+            because("Snyk ønsker 2.4.5 eller høyere. Transitiv avhengighet dratt inn av com.nimbusds:oauth2-oidc-sdk@9.3.3 har sårbarhet.")
         }
     }
 }
