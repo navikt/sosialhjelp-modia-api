@@ -1,43 +1,45 @@
 package no.nav.sosialhjelp.modia.client.sts
 
 import io.mockk.clearAllMocks
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
-import no.nav.sosialhjelp.modia.config.ClientProperties
+import mockwebserver3.MockResponse
+import mockwebserver3.MockWebServer
+import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.http.HttpMethod
-import org.springframework.http.ResponseEntity
-import org.springframework.web.client.RestTemplate
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.web.reactive.function.client.WebClient
 
 internal class STSClientTest {
 
-    private val clientProperties: ClientProperties = mockk(relaxed = true)
-    private val restTemplate: RestTemplate = mockk()
+    private val mockWebServer = MockWebServer()
+    private val stsWebClient: WebClient = WebClient.create(mockWebServer.url("/").toString())
 
-    private val stsClient = STSClient(restTemplate, clientProperties)
+    private val stsClient = STSClient(stsWebClient)
 
     @BeforeEach
     fun init() {
         clearAllMocks()
+        mockWebServer.start()
+    }
+
+    @AfterEach
+    internal fun tearDown() {
+        mockWebServer.shutdown()
     }
 
     @Test
     fun `GET STSToken`() {
-        val response: ResponseEntity<STSToken> = mockk()
         val token = STSToken("access_token", "type", 1234L)
 
-        every { response.body } returns token
-        every {
-            restTemplate.exchange(
-                any<String>(),
-                HttpMethod.POST,
-                any(),
-                STSToken::class.java
-            )
-        } returns response
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(objectMapper.writeValueAsString(token))
+        )
 
         val accessToken = stsClient.token()
 
@@ -47,54 +49,61 @@ internal class STSClientTest {
 
     @Test
     fun `GET STSToken - skal bruke cache hvis cachedToken er satt og fortsatt gyldig`() {
-        val response: ResponseEntity<STSToken> = mockk()
         val token = STSToken("access_token", "type", 3600L)
 
-        every { response.body } returns token
-        every {
-            restTemplate.exchange(
-                any<String>(),
-                HttpMethod.POST,
-                any(),
-                STSToken::class.java
-            )
-        } returns response
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(objectMapper.writeValueAsString(token))
+        )
+
+        val firstResponse = stsClient.token()
+
+        assertThat(firstResponse).isNotNull
+        assertThat(firstResponse).isEqualTo(token.access_token)
+
+        val token2 = STSToken("access_token2", "type2", 2000L)
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(objectMapper.writeValueAsString(token2))
+        )
+
+        val secondResponse = stsClient.token()
+
+        assertThat(secondResponse).isEqualTo(token.access_token)
+    }
+
+    @Test
+    fun `GET STSToken - skal ikke bruke cache hvis cachedToken er satt men utgaatt`() {
+        // sett cachedToken til et token med under 10s levetid:
+        val token = STSToken("access_token1", "type", 5L)
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(objectMapper.writeValueAsString(token))
+        )
 
         val firstToken = stsClient.token()
 
         assertThat(firstToken).isNotNull
         assertThat(firstToken).isEqualTo(token.access_token)
-        verify(exactly = 1) { restTemplate.exchange(any<String>(), HttpMethod.POST, any(), STSToken::class.java) }
 
-        val secondToken = stsClient.token()
+        val token2 = STSToken("access_token2", "type", 3600L) // under grensen på 10s for utgått token
 
-        assertThat(secondToken).isEqualTo(token.access_token)
-        verify(exactly = 1) { restTemplate.exchange(any<String>(), HttpMethod.POST, any(), STSToken::class.java) }
-    }
-
-    @Test
-    fun `GET STSToken - skal ikke bruke cache hvis cachedToken er satt men utgaatt`() {
-        val response: ResponseEntity<STSToken> = mockk()
-        val token = STSToken("access_token", "type", 5L) // under grensen på 10s for utgått token
-
-        every { response.body } returns token
-        every {
-            restTemplate.exchange(
-                any<String>(),
-                HttpMethod.POST,
-                any(),
-                STSToken::class.java
-            )
-        } returns response
-
-        val firstToken = stsClient.token()
-
-        assertThat(firstToken).isNotNull
-        verify(exactly = 1) { restTemplate.exchange(any<String>(), HttpMethod.POST, any(), STSToken::class.java) }
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(objectMapper.writeValueAsString(token2))
+        )
 
         val secondToken = stsClient.token()
 
         assertThat(secondToken).isNotNull
-        verify(exactly = 2) { restTemplate.exchange(any<String>(), HttpMethod.POST, any(), STSToken::class.java) }
+        assertThat(secondToken).isEqualTo(token2.access_token)
     }
 }

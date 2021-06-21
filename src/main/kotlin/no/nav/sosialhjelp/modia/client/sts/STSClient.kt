@@ -1,67 +1,52 @@
 package no.nav.sosialhjelp.modia.client.sts
 
 import no.nav.sosialhjelp.modia.client.sts.STSToken.Companion.shouldRenewToken
-import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
 import org.springframework.context.annotation.Profile
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod.OPTIONS
-import org.springframework.http.HttpMethod.POST
-import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
-import org.springframework.util.LinkedMultiValueMap
-import org.springframework.util.MultiValueMap
-import org.springframework.web.client.RestClientException
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.bodyToMono
 import java.time.LocalDateTime
 
 @Profile("!(mock | local)")
 @Component
 class STSClient(
-    private val serviceuserBasicAuthRestTemplate: RestTemplate,
-    clientProperties: ClientProperties
+    private val stsWebClient: WebClient
 ) {
-
-    private val tokenEndpointUrl = clientProperties.stsTokenEndpointUrl
 
     private var cachedToken: STSToken? = null
 
     fun token(): String {
         if (shouldRenewToken(cachedToken)) {
-            try {
-                log.info("Henter nytt token fra STS")
-                val response = serviceuserBasicAuthRestTemplate.exchange(tokenEndpointUrl, POST, requestEntity(), STSToken::class.java)
-
-                cachedToken = response.body
-                return response.body!!.access_token
-            } catch (e: RestClientException) {
-                log.error("STS - Noe feilet, message: ${e.message}", e)
-                throw e
-            }
+            log.info("Henter nytt token fra STS")
+            return stsWebClient.post()
+                .uri {
+                    it
+                        .queryParam(GRANT_TYPE, CLIENT_CREDENTIALS)
+                        .queryParam(SCOPE, OPENID)
+                        .build()
+                }
+                .retrieve()
+                .bodyToMono<STSToken>()
+                .doOnError {
+                    log.error("STS - Noe feilet, message: ${it.message}", it)
+                }
+                .block()!!
+                .also { cachedToken = it }
+                .access_token
         }
         log.info("Hentet token fra cache")
         return cachedToken!!.access_token
     }
 
     fun ping() {
-        try {
-            serviceuserBasicAuthRestTemplate.exchange(tokenEndpointUrl, OPTIONS, null, String::class.java)
-        } catch (e: RestClientException) {
-            log.warn("Selftest - STS - ping feilet", e)
-            throw e
-        }
-    }
-
-    private fun requestEntity(): HttpEntity<MultiValueMap<String, String>> {
-        val headers = HttpHeaders()
-        headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-
-        val map = LinkedMultiValueMap<String, String>()
-        map.add(GRANT_TYPE, CLIENT_CREDENTIALS)
-        map.add(SCOPE, OPENID)
-
-        return HttpEntity(map, headers)
+        stsWebClient.options()
+            .retrieve()
+            .bodyToMono<String>()
+            .doOnError {
+                log.warn("STS - Ping feilet, message: ${it.message}", it)
+            }
+            .block()
     }
 
     companion object {
