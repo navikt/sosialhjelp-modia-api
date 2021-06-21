@@ -29,7 +29,7 @@ class NorgClientImpl(
             .uri {
                 it
                     .path("/enhet/{enhetsnr}")
-                    .build("enhetsnr" to enhetsnr)
+                    .build(mapOf("enhetsnr" to enhetsnr))
             }
             .header(HEADER_CALL_ID, getCallId())
             .retrieve()
