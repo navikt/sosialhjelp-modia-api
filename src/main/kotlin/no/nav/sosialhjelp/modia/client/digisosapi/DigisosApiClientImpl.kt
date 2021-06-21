@@ -1,6 +1,7 @@
 package no.nav.sosialhjelp.modia.client.digisosapi
 
-import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
+import no.nav.sosialhjelp.api.fiks.exceptions.FiksClientException
+import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.service.idporten.IdPortenService
@@ -11,29 +12,25 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_INTEGRASJON_PASSOR
 import no.nav.sosialhjelp.modia.utils.Miljo.getTestbrukerNatalie
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.springframework.context.annotation.Profile
-import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.AUTHORIZATION
-import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
-import org.springframework.web.client.HttpStatusCodeException
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.WebClientResponseException
+import org.springframework.web.reactive.function.client.bodyToMono
 import java.util.Collections
 
 @Profile("!(prod-fss|mock)")
 @Component
 class DigisosApiClientImpl(
-    clientProperties: ClientProperties,
-    private val restTemplate: RestTemplate,
+    private val clientProperties: ClientProperties,
+    private val fiksWebClient: WebClient,
     private val idPortenService: IdPortenService
 ) : DigisosApiClient {
 
     private val testbrukerNatalie = getTestbrukerNatalie()
-
-    private val baseUrl = clientProperties.fiksDigisosEndpointUrl
-    private val fiksIntegrasjonIdKommune = clientProperties.fiksIntegrasjonIdKommune
-    private val fiksIntegrasjonPassordKommune = clientProperties.fiksIntegrasjonPassordKommune
 
     override fun oppdaterDigisosSak(fiksDigisosId: String?, digisosApiWrapper: DigisosApiWrapper): String? {
         var id = fiksDigisosId
@@ -41,41 +38,48 @@ class DigisosApiClientImpl(
             id = opprettDigisosSak()
             log.info("Laget ny digisossak: $id")
         }
-        val httpEntity = HttpEntity(objectMapper.writeValueAsString(digisosApiWrapper), headers())
-        try {
-            restTemplate.exchange("$baseUrl/digisos/api/v1/11415cd1-e26d-499a-8421-751457dfcbd5/$id", HttpMethod.POST, httpEntity, String::class.java)
-            log.info("Postet DigisosSak til Fiks")
-            return id
-        } catch (e: HttpStatusCodeException) {
-            log.warn("Fiks - oppdaterDigisosSak feilet - ${e.statusCode} ${e.statusText}", e)
-            throw FiksException(e.message, e)
-        } catch (e: Exception) {
-            log.error(e.message, e)
-            throw FiksException(e.message, e)
-        }
+        return fiksWebClient.post()
+            .uri("/digisos/api/v1/11415cd1-e26d-499a-8421-751457dfcbd5/$id")
+            .headers { it.addAll(headers()) }
+            .body(BodyInserters.fromValue(objectMapper.writeValueAsString(digisosApiWrapper)))
+            .retrieve()
+            .bodyToMono<String>()
+            .onErrorMap(WebClientResponseException::class.java) { e ->
+                log.warn("Fiks - oppdaterDigisosSak feilet - ${e.statusCode} ${e.statusText}", e)
+                when {
+                    e.statusCode.is4xxClientError -> FiksClientException(e.rawStatusCode, e.message, e)
+                    else -> FiksServerException(e.rawStatusCode, e.message, e)
+                }
+            }
+            .block()
+            .also { log.info("Postet DigisosSak til Fiks") }
     }
 
     fun opprettDigisosSak(): String? {
-        val httpEntity = HttpEntity("", headers())
-        try {
-            val response = restTemplate.exchange("$baseUrl/digisos/api/v1/11415cd1-e26d-499a-8421-751457dfcbd5/ny?sokerFnr=$testbrukerNatalie", HttpMethod.POST, httpEntity, String::class.java)
-            log.info("Opprettet sak hos Fiks. Digisosid: ${response.body}")
-            return response.body?.replace("\"", "")
-        } catch (e: HttpStatusCodeException) {
-            log.warn("Fiks - opprettDigisosSak feilet - ${e.statusCode} ${e.statusText}", e)
-            throw FiksException(e.message, e)
-        } catch (e: Exception) {
-            log.error(e.message, e)
-            throw FiksException(e.message, e)
-        }
+        return fiksWebClient.post()
+            .uri("/digisos/api/v1/11415cd1-e26d-499a-8421-751457dfcbd5/ny?sokerFnr=$testbrukerNatalie")
+            .headers { it.addAll(headers()) }
+            .body(BodyInserters.fromValue(""))
+            .retrieve()
+            .bodyToMono<String>()
+            .onErrorMap(WebClientResponseException::class.java) { e ->
+                log.warn("Fiks - opprettDigisosSak feilet - ${e.statusCode} ${e.statusText}", e)
+                when {
+                    e.statusCode.is4xxClientError -> FiksClientException(e.rawStatusCode, e.message, e)
+                    else -> FiksServerException(e.rawStatusCode, e.message, e)
+                }
+            }
+            .block()
+            ?.replace("\"", "")
+            .also { log.info("Opprettet sak hos Fiks. Digisosid: $it") }
     }
 
     private fun headers(): HttpHeaders {
         val headers = HttpHeaders()
         val accessToken = idPortenService.getToken()
         headers.accept = Collections.singletonList(MediaType.ALL)
-        headers.set(HEADER_INTEGRASJON_ID, fiksIntegrasjonIdKommune)
-        headers.set(HEADER_INTEGRASJON_PASSORD, fiksIntegrasjonPassordKommune)
+        headers.set(HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonIdKommune)
+        headers.set(HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonPassordKommune)
         headers.set(AUTHORIZATION, BEARER + accessToken.token)
         headers.contentType = MediaType.APPLICATION_JSON
         return headers
