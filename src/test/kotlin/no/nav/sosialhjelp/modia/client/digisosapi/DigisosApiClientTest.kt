@@ -10,6 +10,7 @@ import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.service.idporten.IdPortenService
 import no.nav.sosialhjelp.modia.utils.DigisosApiWrapper
 import no.nav.sosialhjelp.modia.utils.SakWrapper
+import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.Test
 import org.springframework.web.reactive.function.client.WebClient
 
@@ -31,7 +32,8 @@ internal class DigisosApiClientTest {
                 .setResponseCode(202)
                 .setBody("ok")
         )
-
-        digisosApiClient.oppdaterDigisosSak("123123", DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), ""))
+        assertThatCode {
+            digisosApiClient.oppdaterDigisosSak("123123", DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), ""))
+        }.doesNotThrowAnyException()
     }
 }
