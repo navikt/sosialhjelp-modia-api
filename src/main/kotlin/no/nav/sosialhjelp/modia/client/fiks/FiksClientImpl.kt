@@ -83,7 +83,7 @@ class FiksClientImpl(
                 .uri {
                     it.path(PATH_DIGISOSSAK)
                         .queryParam(SPORINGSID, "{$SPORINGSID}")
-                        .build(mapOf(DIGISOSID to digisosId, SPORINGSID to sporingsId))
+                        .build(digisosId, sporingsId)
                 }
                 .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
                 .retrieve()
@@ -130,7 +130,7 @@ class FiksClientImpl(
                 .uri {
                     it.path(PATH_DOKUMENT)
                         .queryParam(SPORINGSID, "{$SPORINGSID}")
-                        .build(mapOf(DIGISOSID to digisosId, DOKUMENTLAGERID to dokumentlagerId, SPORINGSID to sporingsId))
+                        .build(digisosId, dokumentlagerId, sporingsId)
                 }
                 .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
                 .retrieve()
@@ -161,7 +161,7 @@ class FiksClientImpl(
                 .uri {
                     it.path(PATH_ALLE_DIGISOSSAKER)
                         .queryParam(SPORINGSID, "{$SPORINGSID}")
-                        .build(mapOf(SPORINGSID to sporingsId))
+                        .build(sporingsId)
                 }
                 .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
                 .body(BodyInserters.fromValue(Fnr(fnr)))
