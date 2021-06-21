@@ -7,21 +7,24 @@ import no.nav.sosialhjelp.modia.config.ClientProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.WebClient
 
 @Profile("!mock")
 @Configuration
-class KommuneInfoClientConfig {
+class KommuneInfoClientConfig(
+    private val proxiedWebClient: WebClient,
+    private val clientProperties: ClientProperties
+) {
 
     @Bean
-    fun kommuneInfoClient(restTemplate: RestTemplate, clientProperties: ClientProperties): KommuneInfoClient {
+    fun kommuneInfoClient(): KommuneInfoClient {
         return KommuneInfoClientImpl(
-            restTemplate,
-            toFiksProperties(clientProperties)
+            proxiedWebClient,
+            fiksProperties()
         )
     }
 
-    private fun toFiksProperties(clientProperties: ClientProperties): FiksProperties {
+    private fun fiksProperties(): FiksProperties {
         return FiksProperties(
             clientProperties.fiksDigisosEndpointUrl + FiksPaths.PATH_KOMMUNEINFO,
             clientProperties.fiksDigisosEndpointUrl + FiksPaths.PATH_ALLE_KOMMUNEINFO,
