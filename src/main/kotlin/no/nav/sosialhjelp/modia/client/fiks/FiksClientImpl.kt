@@ -206,10 +206,6 @@ class FiksClientImpl(
         private const val SPORINGSID = "sporingsId"
         private const val DIGISOSID = "digisosId"
         private const val DOKUMENTLAGERID = "dokumentlagerId"
-
-        private const val retryAttempts: Int = 5
-        private const val initialDelayMillis: Long = 100
-        private const val maxDelayMillis: Long = 10000
     }
 
     private data class Fnr(
