@@ -25,7 +25,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import kotlin.test.assertTrue
 
 internal class UtbetalingerServiceTest {
     private val fiksClient: FiksClient = mockk()
@@ -192,7 +191,7 @@ internal class UtbetalingerServiceTest {
 
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
-        assertTrue(response[0].harVilkar)
+        assertThat(response[0].harVilkar).isTrue
     }
 
     @Disabled("disabled frem til det blir bekreftet om dokumentasjonkrav skal være med i response")
