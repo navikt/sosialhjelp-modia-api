@@ -7,11 +7,12 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.WebClient
 
 @Profile("!mock")
 @Configuration
 class IdPortenClientConfig(
+    private val proxiedWebClient: WebClient,
     @Value("\${no.nav.sosialhjelp.idporten.token_url}") private val tokenUrl: String,
     @Value("\${no.nav.sosialhjelp.idporten.client_id}") private val clientId: String,
     @Value("\${no.nav.sosialhjelp.idporten.scope}") private val scope: String,
@@ -21,22 +22,22 @@ class IdPortenClientConfig(
 ) {
 
     @Bean
-    fun idPortenClient(restTemplate: RestTemplate): IdPortenClient {
+    fun idPortenClient(): IdPortenClient {
         return IdPortenClient(
-            restTemplate = restTemplate,
+            webClient = proxiedWebClient,
             idPortenProperties = idPortenProperties()
         )
     }
 
     fun idPortenProperties(): IdPortenProperties {
         return IdPortenProperties(
-            tokenUrl,
-            clientId,
-            scope,
-            configUrl,
-            truststoreType,
-            truststoreFilepath,
-            getVirkSertSti()
+            tokenUrl = tokenUrl,
+            clientId = clientId,
+            scope = scope,
+            configUrl = configUrl,
+            truststoreType = truststoreType,
+            truststoreFilepath = truststoreFilepath,
+            virksomhetSertifikatPath = getVirkSertSti()
         )
     }
 }
