@@ -31,6 +31,7 @@ import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.reactive.function.client.bodyToMono
+import org.springframework.web.util.UriComponentsBuilder
 import java.util.UUID
 
 @Profile("!mock")
@@ -80,7 +81,7 @@ class FiksClientImpl(
 
         val digisosSak: DigisosSak? = withRetry {
             fiksWebClient.get()
-                .uri(PATH_DIGISOSSAK.plus(sporingsIdQuery), digisosId, sporingsId)
+                .uri(withSporingsId(PATH_DIGISOSSAK), digisosId, sporingsId)
                 .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
                 .retrieve()
                 .bodyToMono<DigisosSak>()
@@ -123,7 +124,7 @@ class FiksClientImpl(
 
         val dokument: Any? = withRetry {
             fiksWebClient.get()
-                .uri(PATH_DOKUMENT.plus(sporingsIdQuery), digisosId, dokumentlagerId, sporingsId)
+                .uri(withSporingsId(PATH_DOKUMENT), digisosId, dokumentlagerId, sporingsId)
                 .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
                 .retrieve()
                 .bodyToMono(requestedClass)
@@ -150,7 +151,7 @@ class FiksClientImpl(
 
         val digisosSaker: List<DigisosSak>? = withRetry {
             fiksWebClient.post()
-                .uri(PATH_ALLE_DIGISOSSAKER.plus(sporingsIdQuery), sporingsId)
+                .uri(withSporingsId(PATH_ALLE_DIGISOSSAKER), sporingsId)
                 .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
                 .body(BodyInserters.fromValue(Fnr(fnr)))
                 .retrieve()
@@ -190,13 +191,14 @@ class FiksClientImpl(
     companion object {
         private val log by logger()
 
-        private val sporingsIdQuery: String
-            get() = "?$SPORINGSID={$SPORINGSID}"
+        private fun withSporingsId(path: String): String {
+            return UriComponentsBuilder.fromPath(path)
+                .queryParam("SPORINGSID", "{$SPORINGSID}")
+                .toUriString()
+        }
 
         //        Query param navn
         private const val SPORINGSID = "sporingsId"
-        private const val DIGISOSID = "digisosId"
-        private const val DOKUMENTLAGERID = "dokumentlagerId"
 
         private const val retryAttempts: Int = 5
         private const val initialDelayMillis: Long = 100
