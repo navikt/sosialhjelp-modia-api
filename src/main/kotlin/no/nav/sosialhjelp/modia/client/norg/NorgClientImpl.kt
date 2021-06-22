@@ -26,11 +26,7 @@ class NorgClientImpl(
         if (enhetsnr == "") return null
 
         return norgWebClient.get()
-            .uri {
-                it
-                    .path("/enhet/{enhetsnr}")
-                    .build(mapOf("enhetsnr" to enhetsnr))
-            }
+            .uri("/enhet/{enhetsnr}", enhetsnr)
             .header(HEADER_CALL_ID, getCallId())
             .retrieve()
             .bodyToMono<NavEnhet>()
