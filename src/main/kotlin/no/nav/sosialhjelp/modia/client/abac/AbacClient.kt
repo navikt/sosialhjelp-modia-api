@@ -33,10 +33,9 @@ class AbacClientImpl(
             .retrieve()
             .bodyToMono<String>()
             .onErrorMap { e ->
-                if (e is WebClientResponseException) {
-                    log.error("Abac - noe feilet. Status: ${e.statusCode}, message: ${e.message}.", e)
-                } else {
-                    log.error("Abac - noe feilet.", e)
+                when (e) {
+                    is WebClientResponseException -> log.error("Abac - noe feilet. Status: ${e.statusCode}, message: ${e.message}.", e)
+                    else -> log.error("Abac - noe feilet.", e)
                 }
                 AbacException("Noe feilet ved kall til Abac.", e)
             }
