@@ -80,11 +80,7 @@ class FiksClientImpl(
 
         val digisosSak: DigisosSak? = withRetry {
             fiksWebClient.get()
-                .uri {
-                    it.path(PATH_DIGISOSSAK)
-                        .queryParam(SPORINGSID, "{$SPORINGSID}")
-                        .build(mapOf(DIGISOSID to digisosId, SPORINGSID to sporingsId))
-                }
+                .uri(PATH_DIGISOSSAK.plus(sporingsIdQuery), digisosId, sporingsId)
                 .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
                 .retrieve()
                 .bodyToMono<DigisosSak>()
@@ -127,11 +123,7 @@ class FiksClientImpl(
 
         val dokument: Any? = withRetry {
             fiksWebClient.get()
-                .uri {
-                    it.path(PATH_DOKUMENT)
-                        .queryParam(SPORINGSID, "{$SPORINGSID}")
-                        .build(mapOf(DIGISOSID to digisosId, DOKUMENTLAGERID to dokumentlagerId, SPORINGSID to sporingsId))
-                }
+                .uri(PATH_DOKUMENT.plus(sporingsIdQuery), digisosId, dokumentlagerId, sporingsId)
                 .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
                 .retrieve()
                 .bodyToMono(requestedClass)
@@ -158,11 +150,7 @@ class FiksClientImpl(
 
         val digisosSaker: List<DigisosSak>? = withRetry {
             fiksWebClient.post()
-                .uri {
-                    it.path(PATH_ALLE_DIGISOSSAKER)
-                        .queryParam(SPORINGSID, "{$SPORINGSID}")
-                        .build(mapOf(SPORINGSID to sporingsId))
-                }
+                .uri(PATH_ALLE_DIGISOSSAKER.plus(sporingsIdQuery), sporingsId)
                 .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
                 .body(BodyInserters.fromValue(Fnr(fnr)))
                 .retrieve()
@@ -201,6 +189,9 @@ class FiksClientImpl(
 
     companion object {
         private val log by logger()
+
+        private val sporingsIdQuery: String
+            get() = "?$SPORINGSID={$SPORINGSID}"
 
         //        Query param navn
         private const val SPORINGSID = "sporingsId"
