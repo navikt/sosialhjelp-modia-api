@@ -1,7 +1,6 @@
 package no.nav.sosialhjelp.modia.client.norg
 
 import no.nav.sosialhjelp.modia.common.NorgException
-import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.redis.ALLE_NAVENHETER_CACHE_KEY
 import no.nav.sosialhjelp.modia.redis.ALLE_NAVENHETER_CACHE_TIME_TO_LIVE_SECONDS
@@ -11,64 +10,52 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import no.nav.sosialhjelp.modia.utils.mdc.MDCUtils.getCallId
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.springframework.context.annotation.Profile
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
-import org.springframework.web.client.HttpStatusCodeException
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.WebClientResponseException
+import org.springframework.web.reactive.function.client.bodyToMono
 
-@Profile("!mock & !local")
+@Profile("!(mock | local)")
 @Component
 class NorgClientImpl(
-    clientProperties: ClientProperties,
-    private val restTemplate: RestTemplate,
+    private val norgWebClient: WebClient,
     private val redisService: RedisService
 ) : NorgClient {
-
-    private val baseUrl = clientProperties.norgEndpointUrl
 
     override fun hentNavEnhet(enhetsnr: String): NavEnhet? {
         if (enhetsnr == "") return null
 
-        try {
-            val urlTemplate = "$baseUrl/enhet/{enhetsnr}"
-            val vars = mapOf("enhetsnr" to enhetsnr)
-            val requestEntity = createRequestEntity()
-            val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, requestEntity, NavEnhet::class.java, vars)
-
-            log.debug("Norg2 - GET enhet $enhetsnr OK")
-            return response.body!!
-        } catch (e: HttpStatusCodeException) {
-            log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
-            throw NorgException(e.message, e)
-        } catch (e: Exception) {
-            log.warn("Norg2 - Noe feilet", e)
-            throw NorgException(e.message, e)
-        }
+        return norgWebClient.get()
+            .uri("/enhet/{enhetsnr}", enhetsnr)
+            .header(HEADER_CALL_ID, getCallId())
+            .retrieve()
+            .bodyToMono<NavEnhet>()
+            .onErrorMap { e ->
+                when (e) {
+                    is WebClientResponseException -> log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
+                    else -> log.warn("Norg2 - Noe feilet", e)
+                }
+                NorgException(e.message, e)
+            }
+            .block()!!
+            .also { log.debug("Norg2 - GET enhet $enhetsnr OK") }
     }
 
     override fun hentAlleNavEnheter(): List<NavEnhet> {
-        try {
-            val urlTemplate = "$baseUrl/enhet?enhetStatusListe=AKTIV"
-            val requestEntity = createRequestEntity()
-            val response = restTemplate.exchange(urlTemplate, HttpMethod.GET, requestEntity, typeRef<List<NavEnhet>>())
-
-            return response.body!!
-                .also { lagreTilCache(it) }
-        } catch (e: HttpStatusCodeException) {
-            log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
-            throw NorgException(e.message, e)
-        } catch (e: Exception) {
-            log.warn("Norg2 - Noe feilet", e)
-            throw NorgException(e.message, e)
-        }
-    }
-
-    private fun createRequestEntity(): HttpEntity<Nothing> {
-        val headers = HttpHeaders()
-        headers.set(HEADER_CALL_ID, getCallId())
-        return HttpEntity(headers)
+        return norgWebClient.get()
+            .uri("/enhet?enhetStatusListe=AKTIV")
+            .header(HEADER_CALL_ID, getCallId())
+            .retrieve()
+            .bodyToMono(typeRef<List<NavEnhet>>())
+            .onErrorMap { e ->
+                when (e) {
+                    is WebClientResponseException -> log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
+                    else -> log.warn("Norg2 - Noe feilet", e)
+                }
+                NorgException(e.message, e)
+            }
+            .block()!!
+            .also { lagreTilCache(it) }
     }
 
     private fun lagreTilCache(list: List<NavEnhet>) {
