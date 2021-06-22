@@ -9,17 +9,15 @@ import no.nav.sosialhjelp.selftest.DependencyCheck
 import no.nav.sosialhjelp.selftest.DependencyType
 import no.nav.sosialhjelp.selftest.Importance
 import org.springframework.context.annotation.Profile
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
-import org.springframework.web.client.HttpStatusCodeException
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.WebClientResponseException
+import org.springframework.web.reactive.function.client.bodyToMono
 
 @Profile("!mock")
 @Component
 class NorgCheck(
-    private val restTemplate: RestTemplate,
+    private val norgWebClient: WebClient,
     clientProperties: ClientProperties
 ) : DependencyCheck {
 
@@ -29,19 +27,19 @@ class NorgCheck(
     override val importance = Importance.WARNING
 
     override fun doCheck() {
-        try {
-            val headers = HttpHeaders()
-            headers.set(HEADER_CALL_ID, getCallId())
-
-            // samme kall som selftest i soknad-api
-            restTemplate.exchange("$address/kodeverk/EnhetstyperNorg", HttpMethod.GET, HttpEntity<Nothing>(headers), String::class.java)
-        } catch (e: HttpStatusCodeException) {
-            log.warn("Selftest - Norg2 - noe feilet - ${e.statusCode} ${e.statusText}", e)
-            throw NorgException(e.message, e)
-        } catch (e: Exception) {
-            log.warn("Selftest - Norg2 - noe feilet", e)
-            throw NorgException(e.message, e)
-        }
+        norgWebClient.get()
+            .uri("/kodeverk/EnhetstyperNorg")
+            .header(HEADER_CALL_ID, getCallId())
+            .retrieve()
+            .bodyToMono<String>()
+            .onErrorMap { e ->
+                when (e) {
+                    is WebClientResponseException -> log.warn("Selftest - Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
+                    else -> log.warn("Selftest - Norg2 - Noe feilet", e)
+                }
+                NorgException(e.message, e)
+            }
+            .block()
     }
 
     companion object {
