@@ -2,31 +2,22 @@ package no.nav.sosialhjelp.modia.client.kommunenavn
 
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.typeRef
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.client.RestTemplate
+import org.springframework.stereotype.Component
+import org.springframework.web.reactive.function.client.WebClient
 
+@Component
 class KommunenavnClient(
-    private val restTemplate: RestTemplate
+    private val proxiedWebClient: WebClient
 ) {
     fun getAll(): KommunenavnProperties {
-        try {
-            val response = restTemplate.exchange(
-                "https://register.geonorge.no/api/subregister/sosi-kodelister/kartverket/kommunenummer-alle.json",
-                HttpMethod.GET,
-                HttpEntity<Nothing>(HttpHeaders()),
-                typeRef<KommunenavnProperties>()
-            )
-            return response.body!!
-        } catch (e: HttpClientErrorException) {
-            log.warn("Kartverket - henting av info feilet:", e)
-            throw(e)
-        } catch (e: Exception) {
-            log.warn("Kartverket - henting av info feilet:", e)
-            throw(e)
-        }
+        return proxiedWebClient.get()
+            .uri("https://register.geonorge.no/api/subregister/sosi-kodelister/kartverket/kommunenummer-alle.json")
+            .retrieve()
+            .bodyToMono(typeRef<KommunenavnProperties>())
+            .doOnError {
+                log.warn("Kartverket - henting av info feilet:", it)
+            }
+            .block()!!
     }
 
     companion object {
