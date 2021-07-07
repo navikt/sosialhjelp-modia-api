@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav.sosialhjelp"
 
 object Versions {
-    const val kotlin = "1.5.10"
+    const val kotlin = "1.5.20"
     const val coroutines = "1.5.0"
     const val springBoot = "2.5.1"
     const val logback = "1.2.3"
@@ -15,16 +15,17 @@ object Versions {
     const val filformat = "1.2021.04.15-10.42-6eb47b47da27"
     const val micrometerRegistry = "1.6.2"
     const val prometheus = "0.9.0"
-    const val tokenValidation = "1.3.7"
+    const val tokenValidation = "1.3.8"
     const val jackson = "2.12.3"
     const val guava = "30.1.1-jre"
     const val abacAttributeConstants = "3.3.13"
     const val logbackSyslog4j = "1.0.0"
     const val syslog4j = "0.9.30"
-    const val lettuce = "6.0.5.RELEASE"
+    const val lettuce = "6.0.6.RELEASE"
     const val unleash = "3.3.4"
     const val springdoc = "1.5.9"
     const val jsonSmart = "2.4.7"
+    const val rhino = "1.7.13"
 
     // Test only
     const val junitJupiter = "5.7.0"
@@ -34,9 +35,9 @@ object Versions {
 
 plugins {
     application
-    kotlin("jvm") version "1.5.10"
+    kotlin("jvm") version "1.5.20"
 
-    id("org.jetbrains.kotlin.plugin.spring") version "1.5.10"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.5.20"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("com.github.ben-manes.versions") version "0.38.0"
@@ -143,10 +144,13 @@ dependencies {
 //    Spesifikke versjoner oppgradert etter ønske fra snyk
     constraints {
         implementation("com.google.guava:guava:${Versions.guava}") {
-            because("Transitiv avhengighet dratt inn av jedis-mock@0.1.16 har sårbarhet. Constraintsen kan fjernes når jedis-mock bruker guava@30.0-jre eller nyere")
+            because("Snyk ønsker 30.1.1-jre eller høyere.")
         }
         implementation("net.minidev:json-smart:${Versions.jsonSmart}") {
-            because("Snyk ønsker 2.4.5 eller høyere. Transitiv avhengighet dratt inn av com.nimbusds:oauth2-oidc-sdk@9.3.3 har sårbarhet.")
+            because("Snyk ønsker 2.4.5 eller høyere.")
+        }
+        implementation("org.mozilla:rhino:${Versions.rhino}") {
+            because("Snyk ønsker 1.7.12 eller høyere. Transitiv avhengighet dratt inn av com.github.java-json-tools:json-schema-core@1.2.14 har sårbarhet.")
         }
     }
 }
