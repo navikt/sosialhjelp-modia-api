@@ -48,21 +48,13 @@ class FiksClientImpl(
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
 
     override fun hentDigisosSak(digisosId: String): DigisosSak {
-        hentDigisosSakFraCache(digisosId)?.let {
-            log.info("Hentet digisosSak=$digisosId fra cache")
-            return it
-        }
-
-        return hentDigisosSakFraFiks(digisosId)
+        return hentDigisosSakFraCache(digisosId)?.also { log.info("Hentet digisosSak=$digisosId fra cache") }
+            ?: hentDigisosSakFraFiks(digisosId)
     }
 
     override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
-        hentDokumentFraCache(dokumentlagerId, requestedClass)?.let {
-            log.info("Hentet dokument=$dokumentlagerId fra cache")
-            return it
-        }
-
-        return hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
+        return hentDokumentFraCache(dokumentlagerId, requestedClass)?.also { log.info("Hentet dokument=$dokumentlagerId fra cache") }
+            ?: hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
     }
 
     private fun skalBrukeCache(): Boolean {
