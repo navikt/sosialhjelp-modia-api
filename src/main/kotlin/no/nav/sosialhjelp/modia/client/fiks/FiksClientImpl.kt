@@ -48,15 +48,13 @@ class FiksClientImpl(
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
 
     override fun hentDigisosSak(digisosId: String): DigisosSak {
-        hentDigisosSakFraCache(digisosId)?.let { return it }
-
-        return hentDigisosSakFraFiks(digisosId)
+        return hentDigisosSakFraCache(digisosId)?.also { log.info("Hentet digisosSak=$digisosId fra cache") }
+            ?: hentDigisosSakFraFiks(digisosId)
     }
 
     override fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
-        hentDokumentFraCache(dokumentlagerId, requestedClass)?.let { return it }
-
-        return hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
+        return hentDokumentFraCache(dokumentlagerId, requestedClass)?.also { log.info("Hentet dokument=$dokumentlagerId fra cache") }
+            ?: hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
     }
 
     private fun skalBrukeCache(): Boolean {
@@ -105,6 +103,7 @@ class FiksClientImpl(
 
     private fun lagreTilCache(id: String, any: Any) {
         if (skalBrukeCache()) {
+            log.info("Lagret digisossak/dokument id=$id til cache")
             redisService.set(cacheKeyFor(id), objectMapper.writeValueAsBytes(any))
         }
     }
@@ -170,9 +169,7 @@ class FiksClientImpl(
             }
     }
 
-    private fun genererSporingsId(): String {
-        return UUID.randomUUID().toString()
-    }
+    private fun genererSporingsId(): String = UUID.randomUUID().toString()
 
     private fun <T> withRetry(block: () -> T): T {
         return runBlocking {
