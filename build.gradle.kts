@@ -12,7 +12,7 @@ object Versions {
     const val logback = "1.2.3"
     const val logstash = "6.6"
     const val sosialhjelpCommon = "1.05daec2"
-    const val filformat = "1.2021.04.15-10.42-6eb47b47da27"
+    const val filformat = "1.2021.07.07-09.02-3adcd1adc14b"
     const val micrometerRegistry = "1.6.2"
     const val prometheus = "0.9.0"
     const val tokenValidation = "1.3.8"
@@ -25,7 +25,6 @@ object Versions {
     const val unleash = "3.3.4"
     const val springdoc = "1.5.9"
     const val jsonSmart = "2.4.7"
-    const val rhino = "1.7.13"
 
     // Test only
     const val junitJupiter = "5.7.0"
@@ -148,9 +147,6 @@ dependencies {
         }
         implementation("net.minidev:json-smart:${Versions.jsonSmart}") {
             because("Snyk ønsker 2.4.5 eller høyere.")
-        }
-        implementation("org.mozilla:rhino:${Versions.rhino}") {
-            because("Snyk ønsker 1.7.12 eller høyere. Transitiv avhengighet dratt inn av com.github.java-json-tools:json-schema-core@1.2.14 har sårbarhet.")
         }
     }
 }
