@@ -12,9 +12,9 @@ import no.nav.sosialhjelp.modia.client.fiks.FiksPaths.PATH_DIGISOSSAK
 import no.nav.sosialhjelp.modia.client.fiks.FiksPaths.PATH_DOKUMENT
 import no.nav.sosialhjelp.modia.client.unleash.FIKS_CACHE_ENABLED
 import no.nav.sosialhjelp.modia.config.ClientProperties
-import no.nav.sosialhjelp.modia.feilmeldingUtenFnr
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.logging.AuditService
+import no.nav.sosialhjelp.modia.maskerFnr
 import no.nav.sosialhjelp.modia.messageUtenFnr
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.service.idporten.IdPortenService
@@ -85,9 +85,9 @@ class FiksClientImpl(
                 .onErrorMap(WebClientResponseException::class.java) { e ->
                     log.warn("Fiks - hentDigisosSak feilet - ${messageUtenFnr(e)}", e)
                     when {
-                        e.statusCode == HttpStatus.NOT_FOUND -> FiksNotFoundException(e.message?.feilmeldingUtenFnr, e)
-                        e.statusCode.is4xxClientError -> FiksClientException(e.rawStatusCode, e.message?.feilmeldingUtenFnr, e)
-                        else -> FiksServerException(e.rawStatusCode, e.message?.feilmeldingUtenFnr, e)
+                        e.statusCode == HttpStatus.NOT_FOUND -> FiksNotFoundException(e.message?.maskerFnr, e)
+                        e.statusCode.is4xxClientError -> FiksClientException(e.rawStatusCode, e.message?.maskerFnr, e)
+                        else -> FiksServerException(e.rawStatusCode, e.message?.maskerFnr, e)
                     }
                 }
                 .block()
@@ -129,8 +129,8 @@ class FiksClientImpl(
                 .onErrorMap(WebClientResponseException::class.java) { e ->
                     log.warn("Fiks - hentDokument feilet - ${messageUtenFnr(e)}", e)
                     when {
-                        e.statusCode.is4xxClientError -> FiksClientException(e.rawStatusCode, e.message?.feilmeldingUtenFnr, e)
-                        else -> FiksServerException(e.rawStatusCode, e.message?.feilmeldingUtenFnr, e)
+                        e.statusCode.is4xxClientError -> FiksClientException(e.rawStatusCode, e.message?.maskerFnr, e)
+                        else -> FiksServerException(e.rawStatusCode, e.message?.maskerFnr, e)
                     }
                 }
                 .block()
@@ -157,8 +157,8 @@ class FiksClientImpl(
                 .onErrorMap(WebClientResponseException::class.java) { e ->
                     log.warn("Fiks - hentAlleDigisosSaker feilet - ${messageUtenFnr(e)}", e)
                     when {
-                        e.statusCode.is4xxClientError -> FiksClientException(e.rawStatusCode, e.message?.feilmeldingUtenFnr, e)
-                        else -> FiksServerException(e.rawStatusCode, e.message?.feilmeldingUtenFnr, e)
+                        e.statusCode.is4xxClientError -> FiksClientException(e.rawStatusCode, e.message?.maskerFnr, e)
+                        else -> FiksServerException(e.rawStatusCode, e.message?.maskerFnr, e)
                     }
                 }
                 .block()
