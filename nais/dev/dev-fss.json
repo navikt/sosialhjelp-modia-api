@@ -9,6 +9,10 @@
     "/var/run/secrets/nais.io/appdynamics": "/apikey/appdynamics/dev",
     "/serviceuser/srvsosialhjelp-mod": "/serviceuser/data/dev/srvsosialhjelp-mod"
   },
+  "envsecret": [
+    "redis-password-modia-api",
+    "testbruker-natalie"
+  ],
   "env": {
     "ABAC_PDP_ENDPOINT_URL": "https://abac-sosialhjelp.dev.intern.nav.no/application/authorize",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.test.ks.no",

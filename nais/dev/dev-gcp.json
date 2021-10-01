@@ -3,6 +3,10 @@
   "ingress": [
     "https://sosialhjelp-modia-api-gcp.dev.nav.no/sosialhjelp/modia-api"
   ],
+  "envsecret": [
+    "redis-password-modia-api",
+    "testbruker-natalie"
+  ],
   "env": {
     "SPRING_PROFILES_ACTIVE": "mock-alt,log-console,no-redis",
     "METADATA_URL": "https://digisos-gcp.dev.nav.no/sosialhjelp/mock-alt-api/well-known/azuread",
