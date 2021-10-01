@@ -28,8 +28,6 @@ no.nav.sosialhjelp.idporten:
   client_id: clientid
   scope: scope
   config_url: configurl
-  truststore_type: truststoretype
-  truststore_filepath: filepath
 
 no.nav.security.jwt:
   issuer.azuread:

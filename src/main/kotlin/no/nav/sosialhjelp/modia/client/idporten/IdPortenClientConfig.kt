@@ -17,8 +17,6 @@ class IdPortenClientConfig(
     @Value("\${no.nav.sosialhjelp.idporten.client_id}") private val clientId: String,
     @Value("\${no.nav.sosialhjelp.idporten.scope}") private val scope: String,
     @Value("\${no.nav.sosialhjelp.idporten.config_url}") private val configUrl: String,
-    @Value("\${no.nav.sosialhjelp.idporten.truststore_type}") private val truststoreType: String,
-    @Value("\${no.nav.sosialhjelp.idporten.truststore_filepath}") private val truststoreFilepath: String
 ) {
 
     @Bean
@@ -35,8 +33,6 @@ class IdPortenClientConfig(
             clientId = clientId,
             scope = scope,
             configUrl = configUrl,
-            truststoreType = truststoreType,
-            truststoreFilepath = truststoreFilepath,
             virksomhetSertifikatPath = getVirkSertSti()
         )
     }

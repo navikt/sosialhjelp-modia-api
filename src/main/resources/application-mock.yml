@@ -39,7 +39,5 @@ no.nav.sosialhjelp.idporten:
   client_id: clientid
   scope: scope
   config_url: configurl
-  truststore_type: truststoretype
-  truststore_filepath: truststorefilepath
 
 loginurl: ${LOGINURL:http://localhost:8383/sosialhjelp/modia-api/local/cookie}

@@ -57,8 +57,6 @@ no.nav.sosialhjelp.idporten:
   client_id: ${ID_PORTEN_CLIENT_ID}
   scope: ${ID_PORTEN_SCOPE}
   config_url: ${ID_PORTEN_CONFIG_URL}
-  truststore_type: ${TRUSTSTORE_TYPE}
-  truststore_filepath: ${TRUSTSTORE_FILEPATH}
 
 #Token-validering
 no.nav.security.jwt:
