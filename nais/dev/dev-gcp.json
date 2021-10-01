@@ -4,8 +4,7 @@
     "https://sosialhjelp-modia-api-gcp.dev.nav.no/sosialhjelp/modia-api"
   ],
   "envsecret": [
-    "redis-password-modia-api",
-    "testbruker-natalie"
+    "redis-password-modia-api"
   ],
   "env": {
     "SPRING_PROFILES_ACTIVE": "mock-alt,log-console,no-redis",

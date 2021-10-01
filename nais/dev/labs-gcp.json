@@ -3,9 +3,7 @@
   "ingress": [
     "https://sosialhjelp-modia-api.labs.nais.io/sosialhjelp/modia-api"
   ],
-  "envsecret": [
-    "testbruker-natalie"
-  ],
+  "envsecret": [],
   "env": {
     "SPRING_PROFILES_ACTIVE": "mock-alt,log-console,no-redis",
     "METADATA_URL": "https://digisos.labs.nais.io/sosialhjelp/mock-alt-api/well-known/azuread",
