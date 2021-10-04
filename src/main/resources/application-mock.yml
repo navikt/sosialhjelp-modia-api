@@ -24,9 +24,7 @@ client:
   abac_pdp_endpoint_url: abac_pdp_endpoint_url
   fiks_digisos_endpoint_url: digisosapiurl
   fiks_integrasjonid: integrasjonid
-  fiks_integrasjonid_kommune: integrasjonidkommune
   fiks_integrasjonpassord: integrasjonpw
-  fiks_integrasjonpassord_kommune: integrasjonpwkommune
   norg_endpoint_url: norgurl
   norg_oppslag_url: norgurl2
   pdl_endpoint_url: pdlurl
