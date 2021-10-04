@@ -9,7 +9,8 @@
     "/serviceuser/srvsosialhjelp-mod": "/serviceuser/data/prod/srvsosialhjelp-mod"
   },
   "envsecret": [
-    "redis-password-modia-api"
+    "redis-password-modia-api",
+    "fiks-integrasjon-secret"
   ],
   "env": {
     "ABAC_PDP_ENDPOINT_URL": "https://abac-sosialhjelp.intern.nav.no/application/authorize",
