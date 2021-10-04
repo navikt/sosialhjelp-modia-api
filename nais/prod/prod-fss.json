@@ -5,7 +5,6 @@
   ],
   "secretKvPaths": {
     "/var/run/secrets/nais.io/virksomhetssertifikat": "/secret/virksomhetssertifikat/prod/maskinporten",
-    "/var/run/secrets/nais.io/vault": "/kv/prod/fss/sosialhjelp-modia-api/teamdigisos",
     "/serviceuser/srvsosialhjelp-mod": "/serviceuser/data/prod/srvsosialhjelp-mod"
   },
   "envsecret": [
