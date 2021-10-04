@@ -12,10 +12,7 @@ class ClientProperties {
     lateinit var fiksDigisosEndpointUrl: String
 
     lateinit var fiksIntegrasjonId: String
-    lateinit var fiksIntegrasjonIdKommune: String
-
     lateinit var fiksIntegrasjonpassord: String
-    lateinit var fiksIntegrasjonPassordKommune: String
 
     lateinit var norgEndpointUrl: String
 
