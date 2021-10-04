@@ -11,7 +11,8 @@
   },
   "envsecret": [
     "redis-password-modia-api",
-    "testbruker-natalie"
+    "testbruker-natalie",
+    "fiks-integrasjon-secret"
   ],
   "env": {
     "ABAC_PDP_ENDPOINT_URL": "https://abac-sosialhjelp.dev.intern.nav.no/application/authorize",
