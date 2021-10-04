@@ -31,10 +31,12 @@ spec:
     min: {{minReplicas}}
     max: {{maxReplicas}}
   webproxy: {{webProxyEnabled}}
-{{#unless isLabsGcp}}
+{{#if envsecret.length}}
   envFrom:
-    - secret: redis-password-modia-api
-{{/unless}}
+{{#each envsecret}}
+    - secret: "{{this}}"
+{{/each}}
+{{/if}}
   accessPolicy:
     inbound:
       rules:
