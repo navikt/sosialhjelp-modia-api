@@ -17,9 +17,6 @@ class RedisConfig {
     @Bean
     fun redisClient(properties: RedisProperties): RedisClient {
         val redisUri = RedisURI.create(properties.host, properties.port)
-        if (properties.password.isNullOrEmpty()) {
-            log.error("Redis-password er nullOrEmpty??")
-        }
         redisUri.setPassword(properties.password as CharSequence)
 
         return RedisClient.create(redisUri)

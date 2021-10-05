@@ -31,12 +31,12 @@ spec:
     min: {{minReplicas}}
     max: {{maxReplicas}}
   webproxy: {{webProxyEnabled}}
-{{#if envsecret.length}}
+{{#unless isLabsGcp}}
   envFrom:
 {{#each envsecret}}
     - secret: "{{this}}"
 {{/each}}
-{{/if}}
+{{/unless}}
   accessPolicy:
     inbound:
       rules:
