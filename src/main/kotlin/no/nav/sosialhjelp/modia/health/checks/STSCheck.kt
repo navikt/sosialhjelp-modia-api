@@ -9,7 +9,7 @@ import no.nav.sosialhjelp.selftest.Importance
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
-@Profile("!(mock | local)")
+@Profile("!local")
 @Component
 class STSCheck(
     clientProperties: ClientProperties,

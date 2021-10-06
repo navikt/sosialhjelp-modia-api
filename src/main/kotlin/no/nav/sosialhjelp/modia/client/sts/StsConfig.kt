@@ -8,7 +8,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.WebClient
 
-@Profile("!(mock | local)")
+@Profile("!local")
 @Configuration
 class StsConfig(
     private val clientProperties: ClientProperties,
