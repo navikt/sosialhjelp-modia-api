@@ -6,10 +6,8 @@ import no.nav.sosialhjelp.client.kommuneinfo.KommuneInfoClientImpl
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
 import org.springframework.web.reactive.function.client.WebClient
 
-@Profile("!mock")
 @Configuration
 class KommuneInfoClientConfig(
     private val proxiedWebClient: WebClient,
