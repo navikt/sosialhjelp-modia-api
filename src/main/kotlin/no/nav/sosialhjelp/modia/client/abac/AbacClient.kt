@@ -13,11 +13,10 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import org.springframework.web.reactive.function.client.bodyToMono
 
 interface AbacClient {
-
     fun sjekkTilgang(request: Request): AbacResponse
 }
 
-@Profile("!(mock | local)")
+@Profile("!local")
 @Component
 class AbacClientImpl(
     private val clientProperties: ClientProperties,
@@ -54,5 +53,14 @@ class AbacClientImpl(
 
         private val Request.fnr: String
             get() = resource?.attributes?.first { it.attributeId == NavAttributter.RESOURCE_FELLES_PERSON_FNR }?.value!!
+    }
+}
+
+@Profile("local")
+@Component
+class AbacClientMock : AbacClient {
+
+    override fun sjekkTilgang(request: Request): AbacResponse {
+        return AbacResponse(Decision.Permit, emptyList())
     }
 }

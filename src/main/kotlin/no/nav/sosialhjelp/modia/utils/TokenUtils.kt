@@ -11,7 +11,7 @@ interface TokenUtils {
     fun hentTokenMedGraphScope(): String
 }
 
-@Profile("!(mock | mock-alt | local)")
+@Profile("!(mock-alt | local)")
 @Component
 class TokenUtilsImpl(
     private val clientConfigurationProperties: ClientConfigurationProperties,
@@ -30,7 +30,7 @@ class TokenUtilsImpl(
     }
 }
 
-@Profile("(mock | mock-alt | local)")
+@Profile("(mock-alt | local)")
 @Component
 class MockTokenUtils : TokenUtils {
 

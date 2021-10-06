@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import java.time.LocalDateTime
 
-@Profile("!(mock | local)")
+@Profile("!local")
 @Component
 class STSClient(
     private val stsWebClient: WebClient
