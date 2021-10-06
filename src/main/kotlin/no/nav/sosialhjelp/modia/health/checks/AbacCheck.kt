@@ -8,7 +8,7 @@ import no.nav.sosialhjelp.selftest.Importance
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
-@Profile("!(mock | mock-alt)")
+@Profile("!mock-alt")
 @Component
 class AbacCheck(
     private val abacService: AbacService,
