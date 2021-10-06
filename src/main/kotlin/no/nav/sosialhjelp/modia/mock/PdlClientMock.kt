@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Component
-@Profile("mock | local")
+@Profile("local")
 class PdlClientMock : PdlClient {
 
     private val pdlHentPersonMap = mutableMapOf<String, PdlHentPerson>()
