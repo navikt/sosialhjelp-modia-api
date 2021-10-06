@@ -18,7 +18,7 @@ class WebClientConfig {
             .build()
 
     @Bean
-    @Profile("!(mock | local)")
+    @Profile("!local")
     fun basicAuthWebClient(webClientBuilder: WebClient.Builder): WebClient =
         webClientBuilder
             .clientConnector(getUnproxiedReactorClientHttpConnector())

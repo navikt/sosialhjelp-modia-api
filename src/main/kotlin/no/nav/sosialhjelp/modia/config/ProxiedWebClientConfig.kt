@@ -11,7 +11,7 @@ import org.springframework.http.codec.json.Jackson2JsonDecoder
 import org.springframework.http.codec.json.Jackson2JsonEncoder
 import org.springframework.web.reactive.function.client.WebClient
 
-@Profile("!(mock|mock-alt|local)")
+@Profile("!(mock-alt|local)")
 @Configuration
 class ProxiedWebClientConfig {
 
@@ -30,7 +30,7 @@ class ProxiedWebClientConfig {
             .build()
 }
 
-@Profile("mock|mock-alt|local")
+@Profile("mock-alt|local")
 @Configuration
 class MockProxiedWebClientConfig {
 
