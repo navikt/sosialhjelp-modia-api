@@ -9,8 +9,8 @@ class MiljoUtils {
     @Value("\${spring.profiles.active}")
     private var activeProfile: String = PROD_FSS // default verdi er prod-fss
 
-    fun isProfileMockOrLocal(): Boolean {
-        return activeProfile.contains(MOCK) || activeProfile.contains(MOCK_ALT) || activeProfile.contains(LOCAL)
+    fun isProfileMockAltOrLocal(): Boolean {
+        return activeProfile.contains(MOCK_ALT) || activeProfile.contains(LOCAL)
     }
 
     fun isRunningInProd(): Boolean {
@@ -19,7 +19,6 @@ class MiljoUtils {
 
     companion object {
         private const val LOCAL = "local"
-        private const val MOCK = "mock"
         private const val MOCK_ALT = "mock-alt"
         private const val PROD_FSS = "prod-fss"
     }
