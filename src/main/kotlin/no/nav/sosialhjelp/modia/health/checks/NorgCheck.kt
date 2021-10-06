@@ -8,13 +8,11 @@ import no.nav.sosialhjelp.modia.utils.mdc.MDCUtils.getCallId
 import no.nav.sosialhjelp.selftest.DependencyCheck
 import no.nav.sosialhjelp.selftest.DependencyType
 import no.nav.sosialhjelp.selftest.Importance
-import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.reactive.function.client.bodyToMono
 
-@Profile("!mock")
 @Component
 class NorgCheck(
     private val norgWebClient: WebClient,
