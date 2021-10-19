@@ -33,7 +33,9 @@ spec:
   webproxy: {{webProxyEnabled}}
 {{#unless isLabsGcp}}
   envFrom:
-    - secret: redis-password-modia-api
+{{#each envsecret}}
+    - secret: "{{this}}"
+{{/each}}
 {{/unless}}
   accessPolicy:
     inbound:

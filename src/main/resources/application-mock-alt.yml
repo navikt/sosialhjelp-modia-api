@@ -12,9 +12,7 @@ client:
   abac_pdp_endpoint_url: ${ABAC_PDP_ENDPOINT_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/abac/application/authorize}
   fiks_digisos_endpoint_url: ${FIKS_DIGISOS_ENDPOINT_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/fiks}
   fiks_integrasjonid: ${INTEGRASJONSID_FIKS:id}
-  fiks_integrasjonid_kommune: ${INTEGRASJONSID_FIKS_KOMMUNE:idkom}
   fiks_integrasjonpassord: ${INTEGRASJONPASSORD_FIKS:pwd}
-  fiks_integrasjonpassord_kommune: ${INTEGRASJONPASSORD_FIKS_KOMMUNE:pwdcom}
   norg_endpoint_url: ${NORG_ENDPOINT_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/norg_endpoint_url}
   norg_oppslag_url: ${NORG_OPPSLAG_URL:https://norg2-frontend.nais.adeo.no/#/startsok?enhetNr=}
   pdl_endpoint_url: ${PDL_ENDPOINT_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/pdl_endpoint_url}
@@ -27,7 +25,5 @@ no.nav.sosialhjelp.idporten:
   client_id: ${ID_PORTEN_CLIENT_ID:1c3631f4-dbf2-4c12-bdc4-156cbd53c625}
   scope: ${ID_PORTEN_SCOPE:ks:fiks}
   config_url: ${ID_PORTEN_CONFIG_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/well-known/idporten}
-  truststore_type: ${TRUSTSTORE_TYPE:PKCS12}
-  truststore_filepath: ${TRUSTSTORE_FILEPATH:key.p12.b64}
 
 loginurl: ${LOGINURL:http://localhost:8383/sosialhjelp/modia-api/local/cookie}

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 
-@Profile("!mock")
+@Profile("!local")
 @Configuration
 class UnleashConfig(
     private val clientProperties: ClientProperties
@@ -31,7 +31,7 @@ class UnleashConfig(
         .build()
 }
 
-@Profile("mock")
+@Profile("local")
 @Configuration
 class UnleashMockConfig {
 

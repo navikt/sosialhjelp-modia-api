@@ -42,9 +42,7 @@ client:
   abac_pdp_endpoint_url: ${ABAC_PDP_ENDPOINT_URL}
   fiks_digisos_endpoint_url: ${FIKS_DIGISOS_ENDPOINT_URL}
   fiks_integrasjonid: ${INTEGRASJONSID_FIKS}
-  fiks_integrasjonid_kommune: ${INTEGRASJONSID_FIKS_KOMMUNE}
   fiks_integrasjonpassord: ${INTEGRASJONPASSORD_FIKS}
-  fiks_integrasjonpassord_kommune: ${INTEGRASJONPASSORD_FIKS_KOMMUNE}
   norg_endpoint_url: ${NORG_ENDPOINT_URL}
   norg_oppslag_url: ${NORG_OPPSLAG_URL:https://norg2-frontend.nais.adeo.no/#/startsok?enhetNr=}
   pdl_endpoint_url: ${PDL_ENDPOINT_URL}
@@ -57,8 +55,6 @@ no.nav.sosialhjelp.idporten:
   client_id: ${ID_PORTEN_CLIENT_ID}
   scope: ${ID_PORTEN_SCOPE}
   config_url: ${ID_PORTEN_CONFIG_URL}
-  truststore_type: ${TRUSTSTORE_TYPE}
-  truststore_filepath: ${TRUSTSTORE_FILEPATH}
 
 #Token-validering
 no.nav.security.jwt:

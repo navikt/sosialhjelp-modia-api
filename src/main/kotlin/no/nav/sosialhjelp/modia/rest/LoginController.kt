@@ -24,7 +24,7 @@ class LoginController(
         val msgraphAccessToken = tokenUtils.hentTokenMedGraphScope()
         val msgraphCookie = Cookie(MSGRAPH_COOKIE_NAME, msgraphAccessToken)
         msgraphCookie.isHttpOnly = true
-        msgraphCookie.secure = !miljoUtils.isProfileMockOrLocal()
+        msgraphCookie.secure = !miljoUtils.isProfileMockAltOrLocal()
         msgraphCookie.path = "/"
         response.addCookie(msgraphCookie)
         return ResponseEntity.ok(LoginResponse("ok"))

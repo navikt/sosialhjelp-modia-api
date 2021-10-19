@@ -5,17 +5,14 @@ import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.idporten.client.AccessToken
 import no.nav.sosialhjelp.idporten.client.IdPortenClient
 import no.nav.sosialhjelp.modia.service.idporten.IdPortenServiceImpl.CachedToken.Companion.shouldRenewToken
-import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
 interface IdPortenService {
-
     fun getToken(): AccessToken
 }
 
 @Component
-@Profile("!mock")
 class IdPortenServiceImpl(
     private val idPortenClient: IdPortenClient
 ) : IdPortenService {

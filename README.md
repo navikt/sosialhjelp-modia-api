@@ -87,7 +87,7 @@ Legg til spring-profil `no-redis` for å disable redis.
 Sett env-variablene `REDIS_HOST=localhost` og `REDIS_PASSWORD=<lokal_redis_pw>` for å gå mot lokal redis (f.eks redis docker image)
 
 ## Lokal kjøring
-Bruk spring profile `local` eller `mock`.
+Bruk spring profile `local` for integrasjon mot KS sitt testmiljø, eller `mock-alt` for integrasjon mot sosialhjelp-mock-alt-api.
 
 #### Environment variabler
 Sett dummy-verdier for `SRVSOSIALHJELP_MODIA_API_USERNAME` og `SRVSOSIALHJELP_MODIA_API_PASSWORD`

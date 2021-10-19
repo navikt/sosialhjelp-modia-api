@@ -8,7 +8,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
-@Profile("!(mock | local)")
+@Profile("!local")
 class AbacConfig(
     private val basicAuthWebClient: WebClient,
     private val clientProperties: ClientProperties
