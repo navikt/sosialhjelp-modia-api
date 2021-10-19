@@ -65,19 +65,19 @@ fun hentSoknadTittel(digisosSak: DigisosSak, model: InternalDigisosSoker): Strin
     }
 }
 
-val String.feilmeldingUtenFnr: String
+val String.maskerFnr: String
     get() {
         return this.replace(Regex("""\b[0-9]{11}\b"""), "[FNR]")
     }
 
 val ErrorMessage.feilmeldingUtenFnr: String?
     get() {
-        return this.message?.feilmeldingUtenFnr
+        return this.message?.maskerFnr
     }
 
 fun messageUtenFnr(e: WebClientResponseException): String {
     val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
-    val message = e.message?.feilmeldingUtenFnr
+    val message = e.message?.maskerFnr
     return "$message - $fiksErrorMessage"
 }
 
