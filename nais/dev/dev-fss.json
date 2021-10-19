@@ -1,7 +1,7 @@
 {
   "namespace": "teamdigisos",
   "ingress": [
-    "https://sosialhjelp-modia-api.dev.adeo.no/sosialhjelp/modia-api"
+    "https://sosialhjelp-modia-api.dev.intern.nav.no/sosialhjelp/modia-api"
   ],
   "secretKvPaths": {
     "/var/run/secrets/nais.io/virksomhetssertifikat": "/secret/virksomhetssertifikat/preprod/shared",
