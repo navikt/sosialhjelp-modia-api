@@ -62,5 +62,5 @@ jobs:
         run: docker build -t ${{ env.DOCKER_TAG }} .
       - name: Push docker image
         run: |
-          docker push --all-tags ${{ env.DOCKER_IMAGE }
+          docker push --all-tags ${{ env.DOCKER_IMAGE }}
 
