@@ -26,6 +26,7 @@ object Versions {
     const val springdoc = "1.5.9"
     const val jsonSmart = "2.4.7"
     const val gson = "2.8.9"
+    const val junit = "4.13.2"
 
     // Test only
     const val junitJupiter = "5.7.0"
@@ -151,6 +152,9 @@ dependencies {
         }
         implementation("com.google.code.gson:gson:${Versions.gson}") {
             because("Snyk ønsker 2.8.9 eller høyere. Transitiv avhengighet dratt inn av unleash-client-java.")
+        }
+        testImplementation("junit:junit:${Versions.junit}") {
+            because("Snyk ønsker 4.13.1 eller høyere. Transitiv avhengighet dratt inn av token-validation-spring-test.")
         }
     }
 }
