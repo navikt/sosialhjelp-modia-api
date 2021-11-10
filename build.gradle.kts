@@ -15,8 +15,8 @@ object Versions {
     const val filformat = "1.2021.07.07-09.02-3adcd1adc14b"
     const val micrometerRegistry = "1.6.2"
     const val prometheus = "0.9.0"
-    const val tokenValidation = "1.3.8"
-    const val jackson = "2.12.3"
+    const val tokenValidation = "1.3.9"
+    const val jackson = "2.13.0"
     const val guava = "30.1.1-jre"
     const val abacAttributeConstants = "3.3.13"
     const val logbackSyslog4j = "1.0.0"
@@ -25,6 +25,8 @@ object Versions {
     const val unleash = "3.3.4"
     const val springdoc = "1.5.9"
     const val jsonSmart = "2.4.7"
+    const val gson = "2.8.9"
+    const val junit = "4.13.2"
 
     // Test only
     const val junitJupiter = "5.7.0"
@@ -147,6 +149,12 @@ dependencies {
         }
         implementation("net.minidev:json-smart:${Versions.jsonSmart}") {
             because("Snyk ønsker 2.4.5 eller høyere.")
+        }
+        implementation("com.google.code.gson:gson:${Versions.gson}") {
+            because("Snyk ønsker 2.8.9 eller høyere. Transitiv avhengighet dratt inn av unleash-client-java.")
+        }
+        testImplementation("junit:junit:${Versions.junit}") {
+            because("Snyk ønsker 4.13.1 eller høyere. Transitiv avhengighet dratt inn av token-validation-spring-test.")
         }
     }
 }
