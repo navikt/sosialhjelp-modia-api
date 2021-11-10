@@ -25,6 +25,7 @@ object Versions {
     const val unleash = "3.3.4"
     const val springdoc = "1.5.9"
     const val jsonSmart = "2.4.7"
+    const val gson = "2.8.9"
 
     // Test only
     const val junitJupiter = "5.7.0"
@@ -147,6 +148,9 @@ dependencies {
         }
         implementation("net.minidev:json-smart:${Versions.jsonSmart}") {
             because("Snyk ønsker 2.4.5 eller høyere.")
+        }
+        implementation("com.google.code.gson:gson:${Versions.gson}") {
+            because("Snyk ønsker 2.8.9 eller høyere. Transitiv avhengighet dratt inn av unleash-client-java.")
         }
     }
 }
