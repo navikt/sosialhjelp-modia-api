@@ -27,7 +27,7 @@ object Versions {
     const val jsonSmart = "2.4.7"
     const val gson = "2.8.9"
     const val junit = "4.13.2"
-    const val log4j = "2.15.0"
+    const val log4j = "2.16.0"
 
     // Test only
     const val junitJupiter = "5.7.0"
