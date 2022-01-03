@@ -21,7 +21,7 @@ object Versions {
     const val abacAttributeConstants = "3.3.13"
     const val logbackSyslog4j = "1.0.0"
     const val syslog4j = "0.9.30"
-    const val lettuce = "6.0.8.RELEASE"
+    const val lettuce = "6.1.5.RELEASE"
     const val unleash = "3.3.4"
     const val springdoc = "1.6.0"
     const val jsonSmart = "2.4.7"
