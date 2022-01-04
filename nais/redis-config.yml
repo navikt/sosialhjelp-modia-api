@@ -19,8 +19,8 @@ spec:
       cpu: 100m
       memory: 128Mi
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 1m
+      memory: 32Mi
   accessPolicy: # for GCP
     inbound:
       rules:
