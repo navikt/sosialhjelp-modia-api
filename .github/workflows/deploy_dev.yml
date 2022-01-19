@@ -3,15 +3,22 @@ on:
   workflow_dispatch:
     inputs:
       config-file-name:
-        description: 'Config-fil (uten .json) som skal deployes'
+        description: 'Config-fil som skal deployes'
         required: true
         default: 'dev-fss'
+        type: choice
+        options:
+          - 'dev-fss'
+          - 'dev-gcp'
+          - 'labs-gcp'
       cluster:
-        description: 'Cluster å deploye til (dev-fss, labs-gcp eller dev-gcp)'
+        description: 'Cluster å deploye til'
         required: true
         default: 'dev-fss'
-  repository_dispatch:
-    types: [deploy_dev_gcp, deploy_miljo_tag]
+        options:
+          - 'dev-gcp'
+          - 'dev-fss'
+          - 'labs-gcp'
 
 jobs:
   deploy:
