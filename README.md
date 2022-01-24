@@ -1,12 +1,39 @@
-![](https://github.com/navikt/sosialhjelp-modia-api/workflows/Build%20image/badge.svg?branch=master)
-![](https://github.com/navikt/sosialhjelp-modia-api/workflows/Deploy%20Dev/badge.svg?)
-![](https://github.com/navikt/sosialhjelp-modia-api/workflows/Deploy%20Prod/badge.svg?)
+[![Build image](https://github.com/navikt/sosialhjelp-modia-api/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/navikt/sosialhjelp-modia-api/actions/workflows/build.yml)
+[![Deploy til prod-fss](https://github.com/navikt/sosialhjelp-modia-api/actions/workflows/deploy_prod.yml/badge.svg)](https://github.com/navikt/sosialhjelp-modia-api/actions/workflows/deploy_prod.yml)
 
 # sosialhjelp-modia-api
 Backend-app som skal gi innsyn i sosialhjelp-saker for saksbehandlere ved NKS.
 
 ## Henvendelser
-Henvendelser kan sendes via Slack i kanalen #digisos.
+Spørsmål knyttet til koden eller teamet kan stilles til teamdigisos@nav.no.
+
+### For NAV-ansatte
+Interne henvendelser kan sendes via Slack i kanalen #team_digisos.
+
+## Teknologi
+* Kotlin
+* JDK 11
+* Gradle
+* Spring-boot
+* navikt/token-support
+* Redis (cache)
+
+### Krav
+- JDK 11
+
+## Bygging og kjøring av tester
+Bygge og kjør tester ved å kjøre: `./gradlew test`
+
+### Lokal kjøring mot mock-alt
+Kjør `Application.kt` med springprofilene `mock-alt,log-console,no-redis`.\
+Sett dummy env-variabel-verdier for `SRVSOSIALHJELP_MODIA_API_USERNAME` og `SRVSOSIALHJELP_MODIA_API_PASSWORD`
+
+#### Med redis
+Kjør `Application.kt` med springprofilene `mock-alt,log-console`\
+Sett env-variablene `REDIS_HOST=localhost` og `REDIS_PASSWORD=<lokal_redis_pw>` for å gå mot lokal redis (f.eks bitnami redis docker image)
+
+### Lokal kjøring med integrasjon mot KS
+Kjør `TestApplication.kt` med springprofilene `local,log-console` for integrasjon mot KS sitt testmiljø (lenge siden dette er testet).
 
 ## Hvordan komme i gang
 ### Hente github-package-registry pakker fra NAV-IT
@@ -59,35 +86,12 @@ Legg til pre-commit check/format hooks:
 * `./gradlew addKtlintCheckGitPreCommitHook`
 * `./gradlew addKtlintFormatGitPreCommitHook`
 
-## Oppsett av nytt prosjekt
-Prosjektet bruker Github Actions for bygg og deploy
-
 ### Github package registry
 - Docker image pushes til github package registry [https://github.com/navikt/sosialhjelp-modia-api/packages/](https://github.com/navikt/sosialhjelp-modia-api/packages/)
 
 ### Github Actions
-- Docker image bygges ved push => `.github/workflows/build.yml`
-- Deploy til dev => `.github/workflows/deploy_dev.yml`
-- Deploy til prod => `.github/workflows/deploy_prod.yml`
+- Docker image bygges ved push: `.github/workflows/build.yml`
+- Deploy til dev: `.github/workflows/deploy_dev.yml`
+- Deploy til prod: `.github/workflows/deploy_prod.yml`
+- Redis: Endringer i `redis-config.yml` eller `redisexporter.yml` i andre brancher enn `master` gir autodeploy til dev-fss, og endringer på `master` gir autodeploy til prod-fss.
 
-### Github deployment
-- Github deployments - registrer ditt github-repo [her](https://deployment.prod-sbs.nais.io/auth/form)
-- Deployments vises [her](https://github.com/navikt/sosialhjelp-modia-api/deployments)
-
-### Vault
-- Lag PR til `vault-iac` slik at man kan lagre secrets på vault.
-- Denne må godkjennes og merges før man kan opprette secrets i din apps katalog `.../app/namespace`.
-
-## Redis
-Applikasjonen bruker Redis for caching. Endringer i `redis-config.yml` eller `redisexporter.yml` i andre brancher enn `master` gir autodeploy til dev-fss, og endringer på `master` gir autodeploy til prod-fss.
-Samtidig kan man manuelt deploy redis-instanser med eks `kubectl apply -f nais/redis-config.yml`.
-
-### Lokal kjøring og redis
-Legg til spring-profil `no-redis` for å disable redis.
-Sett env-variablene `REDIS_HOST=localhost` og `REDIS_PASSWORD=<lokal_redis_pw>` for å gå mot lokal redis (f.eks redis docker image)
-
-## Lokal kjøring
-Bruk spring profile `local` for integrasjon mot KS sitt testmiljø, eller `mock-alt` for integrasjon mot sosialhjelp-mock-alt-api.
-
-#### Environment variabler
-Sett dummy-verdier for `SRVSOSIALHJELP_MODIA_API_USERNAME` og `SRVSOSIALHJELP_MODIA_API_PASSWORD`
