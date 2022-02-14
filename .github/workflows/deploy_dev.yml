@@ -16,6 +16,7 @@ on:
         description: 'Cluster å deploye til'
         required: true
         default: 'dev-fss'
+        type: choice
         options:
           - 'dev-gcp'
           - 'dev-fss'

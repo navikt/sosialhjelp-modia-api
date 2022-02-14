@@ -1,4 +1,5 @@
 {
+  "applicationName": "sosialhjelp-modia-api",
   "namespace": "teamdigisos",
   "ingress": [
     "https://sosialhjelp-modia-api.dev.intern.nav.no/sosialhjelp/modia-api"
