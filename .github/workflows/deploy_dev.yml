@@ -10,6 +10,7 @@ on:
         options:
           - 'dev-fss'
           - 'dev-gcp'
+          - 'dev-mock'
           - 'labs-gcp'
       cluster:
         description: 'Cluster å deploye til'
