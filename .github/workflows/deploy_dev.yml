@@ -10,11 +10,13 @@ on:
         options:
           - 'dev-fss'
           - 'dev-gcp'
+          - 'dev-gcp-mock'
           - 'labs-gcp'
       cluster:
         description: 'Cluster å deploye til'
         required: true
         default: 'dev-fss'
+        type: choice
         options:
           - 'dev-gcp'
           - 'dev-fss'

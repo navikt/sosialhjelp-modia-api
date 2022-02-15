@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: sosialhjelp-modia-api
+  name: {{applicationName}}
   namespace: {{namespace}}
   labels:
     team: teamdigisos
@@ -49,6 +49,7 @@ spec:
         - host: "unleash.nais.io"
       rules:
         - application: sosialhjelp-mock-alt-api
+        - application: sosialhjelp-mock-alt-api-mock
         - application: sosialhjelp-modia-api-redis
 {{#if isGcp}}
   filesFrom:
