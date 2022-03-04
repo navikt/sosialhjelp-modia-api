@@ -8,7 +8,7 @@ group = "no.nav.sosialhjelp"
 object Versions {
     const val kotlin = "1.6.10"
     const val coroutines = "1.6.0"
-    const val springBoot = "2.6.3"
+    const val springBoot = "2.6.4"
     const val logback = "1.2.10"
     const val logstash = "7.0.1"
     const val sosialhjelpCommon = "1.4204e7e"
