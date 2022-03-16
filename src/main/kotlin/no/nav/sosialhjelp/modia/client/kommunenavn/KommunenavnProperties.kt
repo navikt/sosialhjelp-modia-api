@@ -1,26 +1,7 @@
 package no.nav.sosialhjelp.modia.client.kommunenavn
 
 data class KommunenavnProperties(
-    val ContainedItemsResult: ContainedItemsResult,
-    val SelectedDOKMunicipality: String,
-    val containedItemClass: String,
-    val containedSubRegisters: List<Any>,
     val containeditems: List<ContainedItem>,
-    val contentsummary: String,
-    val id: String,
-    val label: String,
-    val lang: String,
-    val lastUpdated: String,
-    val manager: String,
-    val owner: String,
-    val uuid: String
-)
-
-data class ContainedItemsResult(
-    val Count: Int,
-    val Limit: Int,
-    val Offset: Int,
-    val Total: Int
 )
 
 data class ContainedItem(
