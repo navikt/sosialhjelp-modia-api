@@ -15,7 +15,9 @@ import no.finn.unleash.Unleash
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
+import no.nav.sosialhjelp.modia.client.unleash.BERGEN_ENABLED
 import no.nav.sosialhjelp.modia.client.unleash.FIKS_CACHE_ENABLED
+import no.nav.sosialhjelp.modia.client.unleash.STAVANGER_ENABLED
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logging.AuditService
 import no.nav.sosialhjelp.modia.redis.RedisService
@@ -45,7 +47,7 @@ internal class FiksClientTest {
     private val unleash: Unleash = mockk()
     private val retryProperties: FiksRetryProperties = mockk()
 
-    private val fiksClient = FiksClientImpl(fiksWebClient, clientProperties, idPortenService, auditService, redisService, unleash, retryProperties)
+    private val fiksClient = FiksClientImpl(fiksWebClient, clientProperties, idPortenService, auditService, redisService, unleash, retryProperties, "1234", "1111")
 
     private val id = "123"
 
@@ -69,6 +71,8 @@ internal class FiksClientTest {
         every { retryProperties.maxDelay } returns 10
 
         every { unleash.isEnabled(FIKS_CACHE_ENABLED, false) } returns true
+        every { unleash.isEnabled(BERGEN_ENABLED, false) } returns true
+        every { unleash.isEnabled(STAVANGER_ENABLED, false) } returns true
     }
 
     @AfterEach

@@ -10,7 +10,10 @@ import no.nav.sosialhjelp.kotlin.utils.retry
 import no.nav.sosialhjelp.modia.client.fiks.FiksPaths.PATH_ALLE_DIGISOSSAKER
 import no.nav.sosialhjelp.modia.client.fiks.FiksPaths.PATH_DIGISOSSAK
 import no.nav.sosialhjelp.modia.client.fiks.FiksPaths.PATH_DOKUMENT
+import no.nav.sosialhjelp.modia.client.unleash.BERGEN_ENABLED
 import no.nav.sosialhjelp.modia.client.unleash.FIKS_CACHE_ENABLED
+import no.nav.sosialhjelp.modia.client.unleash.STAVANGER_ENABLED
+import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.logging.AuditService
@@ -23,6 +26,7 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.fiksHeaders
 import no.nav.sosialhjelp.modia.utils.RequestUtils
 import no.nav.sosialhjelp.modia.utils.objectMapper
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
@@ -41,6 +45,8 @@ class FiksClientImpl(
     private val redisService: RedisService,
     private val unleash: Unleash,
     private val retryProperties: FiksRetryProperties,
+    @Value("\${client.bergen_kommunenummer}") private val bergenKommunenummer: String,
+    @Value("\${client.stavanger_kommunenummer}") private val stavangerKommunenummer: String,
 ) : FiksClient {
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
@@ -74,7 +80,7 @@ class FiksClientImpl(
         val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
 
-        val digisosSak: DigisosSak? = withRetry {
+        val digisosSak: DigisosSak = withRetry {
             fiksWebClient.get()
                 .uri(PATH_DIGISOSSAK.plus(sporingsIdQuery), digisosId, sporingsId)
                 .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
@@ -88,11 +94,14 @@ class FiksClientImpl(
                         else -> FiksServerException(e.rawStatusCode, e.message?.maskerFnr, e)
                     }
                 }
-                .block()
+                .block() ?: throw FiksServerException(500, "Fiks - DigisosSak nedlasting feilet!", null)
         }
 
+        if (!harKommunenTilgangTilModia(digisosSak.kommunenummer)) {
+            throw ManglendeTilgangException("Fiks - DigisosSak tilhører en kommune uten tilgang!")
+        }
         log.info("Hentet DigisosSak $digisosId fra Fiks")
-        return digisosSak!!
+        return digisosSak
             .also {
                 auditService.reportFiks(it.sokerFnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId", HttpMethod.GET, sporingsId)
                 lagreTilCache(digisosId, it)
@@ -118,7 +127,7 @@ class FiksClientImpl(
         val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
 
-        val dokument: Any? = withRetry {
+        val dokument: Any = withRetry {
             fiksWebClient.get()
                 .uri(PATH_DOKUMENT.plus(sporingsIdQuery), digisosId, dokumentlagerId, sporingsId)
                 .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
@@ -131,10 +140,10 @@ class FiksClientImpl(
                         else -> FiksServerException(e.rawStatusCode, e.message?.maskerFnr, e)
                     }
                 }
-                .block()
+                .block() ?: throw FiksServerException(500, "Fiks - Dokkunment nedlasting feilet!", null)
         }
         log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
-        return dokument!!
+        return dokument
             .also {
                 auditService.reportFiks(fnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId", HttpMethod.GET, sporingsId)
                 lagreTilCache(dokumentlagerId, it)
@@ -145,7 +154,7 @@ class FiksClientImpl(
         val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
 
-        val digisosSaker: List<DigisosSak>? = withRetry {
+        val digisosSaker: List<DigisosSak> = withRetry {
             fiksWebClient.post()
                 .uri(PATH_ALLE_DIGISOSSAKER.plus(sporingsIdQuery), sporingsId)
                 .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
@@ -159,12 +168,22 @@ class FiksClientImpl(
                         else -> FiksServerException(e.rawStatusCode, e.message?.maskerFnr, e)
                     }
                 }
-                .block()
+                .block() ?: throw FiksServerException(500, "Fiks - AlleDigisosSaker nedlasting feilet!", null)
         }
-        return digisosSaker!!
+        return digisosSaker.filter { harKommunenTilgangTilModia(it.kommunenummer) }
             .also {
                 auditService.reportFiks(fnr, baseUrl + PATH_ALLE_DIGISOSSAKER, HttpMethod.POST, sporingsId)
             }
+    }
+
+    private fun harKommunenTilgangTilModia(kommunenummer: String): Boolean {
+        if (unleash.isEnabled(BERGEN_ENABLED, false) && kommunenummer == bergenKommunenummer) {
+            return true
+        }
+        if (unleash.isEnabled(STAVANGER_ENABLED, false) && kommunenummer == stavangerKommunenummer) {
+            return true
+        }
+        return false
     }
 
     private fun genererSporingsId(): String = UUID.randomUUID().toString()
@@ -190,8 +209,6 @@ class FiksClientImpl(
 
         //        Query param navn
         private const val SPORINGSID = "sporingsId"
-        private const val DIGISOSID = "digisosId"
-        private const val DOKUMENTLAGERID = "dokumentlagerId"
     }
 
     private data class Fnr(
