@@ -12,14 +12,14 @@ Interne henvendelser kan sendes via Slack i kanalen #team_digisos.
 
 ## Teknologi
 * Kotlin
-* JDK 11
+* JDK 17
 * Gradle
 * Spring-boot
 * navikt/token-support
 * Redis (cache)
 
 ### Krav
-- JDK 11
+- JDK 17
 
 ## Bygging og kjøring av tester
 Bygge og kjør tester ved å kjøre: `./gradlew test`
