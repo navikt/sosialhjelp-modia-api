@@ -34,6 +34,9 @@ spec:
 {{#if maskinportenEnabled}}
   maskinporten:
     enabled: true
+    scopes:
+      consumes:
+        - name: "ks:fiks"
 {{/if}}
 {{#unless isLabsGcp}}
   envFrom:
@@ -55,10 +58,6 @@ spec:
         - application: sosialhjelp-mock-alt-api
         - application: sosialhjelp-mock-alt-api-mock
         - application: sosialhjelp-modia-api-redis
-{{#if isGcp}}
-  filesFrom:
-    - secret: virksomhetssertifikat
-{{/if}}
   vault:
     enabled: {{vaultEnabled}}
 {{#if vaultEnabled}}

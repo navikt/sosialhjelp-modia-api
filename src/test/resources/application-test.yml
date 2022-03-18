@@ -23,12 +23,6 @@ client:
   unleash_url: "http://localhost:58888"
   unleash_instance_id: "local"
 
-no.nav.sosialhjelp.idporten:
-  token_url: tokenurl
-  client_id: clientid
-  scope: scope
-  config_url: configurl
-
 #Maskinporten
 maskinporten_clientid: clientid
 maskinporten_scopes: scopes
