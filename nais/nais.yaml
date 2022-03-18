@@ -31,6 +31,10 @@ spec:
     min: {{minReplicas}}
     max: {{maxReplicas}}
   webproxy: {{webProxyEnabled}}
+{{#if maskinportenEnabled}}
+  maskinporten:
+    enabled: true
+{{/if}}
 {{#unless isLabsGcp}}
   envFrom:
 {{#each envsecret}}
