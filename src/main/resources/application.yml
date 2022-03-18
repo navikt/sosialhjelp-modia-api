@@ -59,6 +59,12 @@ no.nav.sosialhjelp.idporten:
   scope: ${ID_PORTEN_SCOPE}
   config_url: ${ID_PORTEN_CONFIG_URL}
 
+#Maskinporten
+maskinporten_clientid: ${MASKINPORTEN_CLIENT_ID}
+maskinporten_scopes: ${MASKINPORTEN_SCOPES}
+maskinporten_well_known_url: ${MASKINPORTEN_WELL_KNOWN_URL}
+maskinporten_client_jwk: ${MASKINPORTEN_CLIENT_JWK}
+
 #Token-validering
 no.nav.security.jwt:
   issuer.azuread:

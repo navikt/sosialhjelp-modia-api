@@ -29,6 +29,12 @@ no.nav.sosialhjelp.idporten:
   scope: scope
   config_url: configurl
 
+#Maskinporten
+maskinporten_clientid: clientid
+maskinporten_scopes: scopes
+maskinporten_well_known_url: ${MASKINPORTEN_WELL_KNOWN_URL:https://maskinporten}
+maskinporten_client_jwk: generateRSA
+
 no.nav.security.jwt:
   issuer.azuread:
     discoveryurl: http://localhost:${mock-oauth2-server.port}/azuread/.well-known/openid-configuration
