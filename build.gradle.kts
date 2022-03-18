@@ -52,8 +52,8 @@ application {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 ktlint {
@@ -184,7 +184,7 @@ repositories {
 tasks {
     withType<KotlinCompile> {
         kotlinOptions {
-            jvmTarget = "11"
+            jvmTarget = "17"
             freeCompilerArgs = listOf("-Xjsr305=strict", "-XXLanguage:+InlineClasses")
         }
     }
