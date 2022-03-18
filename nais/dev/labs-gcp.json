@@ -33,5 +33,6 @@
   "isLabsGcp": true,
   "vaultEnabled": false,
   "dev": true,
-  "azureEnabled": false
+  "azureEnabled": false,
+  "maskinportenEnabled": false
 }
