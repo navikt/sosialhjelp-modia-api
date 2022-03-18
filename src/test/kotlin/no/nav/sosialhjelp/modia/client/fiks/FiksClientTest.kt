@@ -15,13 +15,13 @@ import no.finn.unleash.Unleash
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
+import no.nav.sosialhjelp.modia.client.maskinporten.MaskinportenClient
 import no.nav.sosialhjelp.modia.client.unleash.FIKS_CACHE_ENABLED
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logging.AuditService
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.responses.ok_digisossak_response_string
 import no.nav.sosialhjelp.modia.responses.ok_minimal_jsondigisossoker_response_string
-import no.nav.sosialhjelp.modia.service.idporten.IdPortenService
 import no.nav.sosialhjelp.modia.utils.RequestUtils
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.assertj.core.api.Assertions.assertThat
@@ -39,13 +39,13 @@ internal class FiksClientTest {
     private val mockWebServer = MockWebServer()
     private val fiksWebClient = WebClient.create(mockWebServer.url("/").toString())
     private val clientProperties: ClientProperties = mockk(relaxed = true)
-    private val idPortenService: IdPortenService = mockk()
+    private val maskinportenClient: MaskinportenClient = mockk()
     private val auditService: AuditService = mockk()
     private val redisService: RedisService = mockk()
     private val unleash: Unleash = mockk()
     private val retryProperties: FiksRetryProperties = mockk()
 
-    private val fiksClient = FiksClientImpl(fiksWebClient, clientProperties, idPortenService, auditService, redisService, unleash, retryProperties)
+    private val fiksClient = FiksClientImpl(fiksWebClient, clientProperties, maskinportenClient, auditService, redisService, unleash, retryProperties)
 
     private val id = "123"
 
@@ -57,7 +57,7 @@ internal class FiksClientTest {
         mockkObject(RequestUtils)
         every { RequestUtils.getSosialhjelpModiaSessionId() } returns "abcdefghijkl"
 
-        every { idPortenService.getToken().token } returns "token"
+        every { maskinportenClient.getToken() } returns "token"
         every { auditService.reportFiks(any(), any(), any(), any()) } just Runs
 
         every { redisService.get(any(), any()) } returns null
