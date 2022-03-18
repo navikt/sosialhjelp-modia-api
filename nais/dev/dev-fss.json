@@ -4,9 +4,6 @@
   "ingress": [
     "https://sosialhjelp-modia-api.dev.intern.nav.no/sosialhjelp/modia-api"
   ],
-  "secretKvPaths": {
-    "/var/run/secrets/nais.io/virksomhetssertifikat": "/secret/virksomhetssertifikat/preprod/shared"
-  },
   "envsecret": [
     "redis-password-modia-api",
     "testbruker-natalie",
@@ -16,10 +13,6 @@
   "env": {
     "ABAC_PDP_ENDPOINT_URL": "https://abac-sosialhjelp.dev.intern.nav.no/application/authorize",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.test.ks.no",
-    "ID_PORTEN_TOKEN_URL": "https://oidc-ver2.difi.no/idporten-oidc-provider/token",
-    "ID_PORTEN_CONFIG_URL": "https://oidc-ver2.difi.no/idporten-oidc-provider/.well-known/openid-configuration",
-    "ID_PORTEN_CLIENT_ID": "1c3631f4-dbf2-4c12-bdc4-156cbd53c625",
-    "ID_PORTEN_SCOPE": "ks:fiks",
     "NORG_ENDPOINT_URL": "https://norg2.dev.adeo.no/norg2/api/v1",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.adeo.no/#/startsok?enhetNr=",
     "PDL_ENDPOINT_URL": "https://pdl-api.nais.preprod.local/graphql",
@@ -41,7 +34,6 @@
   "webProxyEnabled": true,
   "isGcp": false,
   "isLabsGcp": false,
-  "vaultEnabled": true,
   "dev": true,
   "azureEnabled": true,
   "maskinportenEnabled": true

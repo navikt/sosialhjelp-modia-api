@@ -23,12 +23,6 @@ client:
   unleash_url: ${UNLEASH_API_URL:https://unleash.nais.io/api}
   unleash_instance_id: ${UNLEASH_INSTANCE_ID:local}
 
-no.nav.sosialhjelp.idporten:
-  token_url: ${ID_PORTEN_TOKEN_URL:http://${mock-alt-api-host}:8989/sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/token}
-  client_id: ${ID_PORTEN_CLIENT_ID:1c3631f4-dbf2-4c12-bdc4-156cbd53c625}
-  scope: ${ID_PORTEN_SCOPE:ks:fiks}
-  config_url: ${ID_PORTEN_CONFIG_URL:http://${mock-alt-api-host}:8989/sosialhjelp/mock-alt-api/well-known/idporten${mock-alt-api-wellknown-queryparam}}
-
 #Maskinporten
 maskinporten_clientid: maskinporten_clientid
 maskinporten_scopes: scopes
