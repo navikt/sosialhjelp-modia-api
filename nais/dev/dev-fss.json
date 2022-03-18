@@ -5,13 +5,13 @@
     "https://sosialhjelp-modia-api.dev.intern.nav.no/sosialhjelp/modia-api"
   ],
   "secretKvPaths": {
-    "/var/run/secrets/nais.io/virksomhetssertifikat": "/secret/virksomhetssertifikat/preprod/shared",
-    "/serviceuser/srvsosialhjelp-mod": "/serviceuser/data/dev/srvsosialhjelp-mod"
+    "/var/run/secrets/nais.io/virksomhetssertifikat": "/secret/virksomhetssertifikat/preprod/shared"
   },
   "envsecret": [
     "redis-password-modia-api",
     "testbruker-natalie",
-    "fiks-integrasjon-secret"
+    "fiks-integrasjon-secret",
+    "serviceuser-srvsosialhjelp-mod"
   ],
   "env": {
     "ABAC_PDP_ENDPOINT_URL": "https://abac-sosialhjelp.dev.intern.nav.no/application/authorize",
