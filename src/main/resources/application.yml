@@ -53,12 +53,6 @@ client:
   unleash_url: ${UNLEASH_API_URL}
   unleash_instance_id: ${UNLEASH_INSTANCE_ID}
 
-no.nav.sosialhjelp.idporten:
-  token_url: ${ID_PORTEN_TOKEN_URL}
-  client_id: ${ID_PORTEN_CLIENT_ID}
-  scope: ${ID_PORTEN_SCOPE}
-  config_url: ${ID_PORTEN_CONFIG_URL}
-
 #Maskinporten
 maskinporten_clientid: ${MASKINPORTEN_CLIENT_ID}
 maskinporten_scopes: ${MASKINPORTEN_SCOPES}

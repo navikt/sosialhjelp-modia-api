@@ -5,7 +5,6 @@
     "https://sosialhjelp-modia-api.intern.nav.no/sosialhjelp/modia-api"
   ],
   "secretKvPaths": {
-    "/var/run/secrets/nais.io/virksomhetssertifikat": "/secret/virksomhetssertifikat/prod/maskinporten",
     "/serviceuser/srvsosialhjelp-mod": "/serviceuser/data/prod/srvsosialhjelp-mod"
   },
   "envsecret": [
@@ -15,10 +14,6 @@
   "env": {
     "ABAC_PDP_ENDPOINT_URL": "https://abac-sosialhjelp.intern.nav.no/application/authorize",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.ks.no",
-    "ID_PORTEN_TOKEN_URL": "https://oidc.difi.no/idporten-oidc-provider/token",
-    "ID_PORTEN_CONFIG_URL": "https://oidc.difi.no/idporten-oidc-provider/.well-known/openid-configuration",
-    "ID_PORTEN_CLIENT_ID": "bd520e59-6e01-4669-a7c8-f68fa2cac362",
-    "ID_PORTEN_SCOPE": "ks:fiks",
     "NORG_ENDPOINT_URL": "https://norg2.nais.adeo.no/norg2/api/v1",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.nais.adeo.no/#/startsok?enhetNr=",
     "PDL_ENDPOINT_URL": "https://pdl-api.nais.adeo.no/graphql",
