@@ -31,6 +31,13 @@ spec:
     min: {{minReplicas}}
     max: {{maxReplicas}}
   webproxy: {{webProxyEnabled}}
+{{#if maskinportenEnabled}}
+  maskinporten:
+    enabled: true
+    scopes:
+      consumes:
+        - name: "ks:fiks"
+{{/if}}
 {{#unless isLabsGcp}}
   envFrom:
 {{#each envsecret}}
@@ -51,19 +58,6 @@ spec:
         - application: sosialhjelp-mock-alt-api
         - application: sosialhjelp-mock-alt-api-mock
         - application: sosialhjelp-modia-api-redis
-{{#if isGcp}}
-  filesFrom:
-    - secret: virksomhetssertifikat
-{{/if}}
-  vault:
-    enabled: {{vaultEnabled}}
-{{#if vaultEnabled}}
-    paths:
-{{#each secretKvPaths}}
-      - mountPath: {{@key}}
-        kvPath: {{this}}
-{{/each}}
-{{/if}}
   ingresses:
 {{#each ingress}}
     - "{{this}}"

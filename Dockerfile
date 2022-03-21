@@ -1,10 +1,9 @@
-FROM navikt/java:11
+FROM navikt/java:17
 
 ENV LC_ALL="no_NB.UTF-8"
 ENV LANG="no_NB.UTF-8"
 ENV TZ="Europe/Oslo"
 
-COPY /nais/scripts /init-scripts
 COPY build/libs/*.jar app.jar
 
 ENV JAVA_OPTS="-XX:MaxRAMPercentage=75 \

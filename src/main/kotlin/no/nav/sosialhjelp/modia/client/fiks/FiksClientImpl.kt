@@ -20,7 +20,6 @@ import no.nav.sosialhjelp.modia.logging.AuditService
 import no.nav.sosialhjelp.modia.maskerFnr
 import no.nav.sosialhjelp.modia.messageUtenFnr
 import no.nav.sosialhjelp.modia.redis.RedisService
-import no.nav.sosialhjelp.modia.service.idporten.IdPortenService
 import no.nav.sosialhjelp.modia.typeRef
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.fiksHeaders
@@ -40,7 +39,7 @@ import java.util.UUID
 class FiksClientImpl(
     private val fiksWebClient: WebClient,
     private val clientProperties: ClientProperties,
-    private val idPortenService: IdPortenService,
+    private val maskinportenClient: MaskinportenClient,
     private val auditService: AuditService,
     private val redisService: RedisService,
     private val unleash: Unleash,
@@ -77,13 +76,12 @@ class FiksClientImpl(
     private fun cacheKeyFor(id: String) = "${RequestUtils.getSosialhjelpModiaSessionId()}_$id"
 
     private fun hentDigisosSakFraFiks(digisosId: String): DigisosSak {
-        val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
 
         val digisosSak: DigisosSak = withRetry {
             fiksWebClient.get()
                 .uri(PATH_DIGISOSSAK.plus(sporingsIdQuery), digisosId, sporingsId)
-                .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
+                .headers { it.addAll(fiksHeaders(clientProperties, BEARER + maskinportenClient.getToken())) }
                 .retrieve()
                 .bodyToMono<DigisosSak>()
                 .onErrorMap(WebClientResponseException::class.java) { e ->
@@ -124,13 +122,12 @@ class FiksClientImpl(
     }
 
     private fun hentDokumentFraFiks(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
-        val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
 
         val dokument: Any = withRetry {
             fiksWebClient.get()
                 .uri(PATH_DOKUMENT.plus(sporingsIdQuery), digisosId, dokumentlagerId, sporingsId)
-                .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
+                .headers { it.addAll(fiksHeaders(clientProperties, BEARER + maskinportenClient.getToken())) }
                 .retrieve()
                 .bodyToMono(requestedClass)
                 .onErrorMap(WebClientResponseException::class.java) { e ->
@@ -151,13 +148,12 @@ class FiksClientImpl(
     }
 
     override fun hentAlleDigisosSaker(fnr: String): List<DigisosSak> {
-        val virksomhetsToken = idPortenService.getToken()
         val sporingsId = genererSporingsId()
 
         val digisosSaker: List<DigisosSak> = withRetry {
             fiksWebClient.post()
                 .uri(PATH_ALLE_DIGISOSSAKER.plus(sporingsIdQuery), sporingsId)
-                .headers { it.addAll(fiksHeaders(clientProperties, BEARER + virksomhetsToken.token)) }
+                .headers { it.addAll(fiksHeaders(clientProperties, BEARER + maskinportenClient.getToken())) }
                 .body(BodyInserters.fromValue(Fnr(fnr)))
                 .retrieve()
                 .bodyToMono(typeRef<List<DigisosSak>>())
