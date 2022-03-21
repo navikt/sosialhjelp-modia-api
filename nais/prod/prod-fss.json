@@ -28,7 +28,9 @@
     "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
     "UNLEASH_INSTANCE_ID": "prod-fss",
-    "SWAGGER_ENABLED": "false"
+    "SWAGGER_ENABLED": "false",
+    "BERGEN_KOMMUNENUMMER": "4601",
+    "STAVANGER_KOMMUNENUMMER": "1103"
   },
   "minReplicas": "2",
   "maxReplicas": "4",
