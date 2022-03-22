@@ -167,8 +167,6 @@ class FiksClientImpl(
                 }
                 .block() ?: throw FiksServerException(500, "Fiks - AlleDigisosSaker nedlasting feilet!", null)
         }
-        log.info("DEBUG: Bergen: $bergenKommunenummer, Stavanger: $stavangerKommunenummer")
-        digisosSaker.forEach { log.info("DEBUG: sak.kommunenummer: ${it.kommunenummer}") }
         return digisosSaker.filter { harKommunenTilgangTilModia(it.kommunenummer) }
             .also {
                 auditService.reportFiks(fnr, baseUrl + PATH_ALLE_DIGISOSSAKER, HttpMethod.POST, sporingsId)

@@ -54,3 +54,5 @@ val ok_digisossak_response_string = """
   }
 }
 """.trimIndent()
+
+val ok_digisossak_annen_kommune_response_string = ok_digisossak_response_string.replace("\"1111\"", "\"2222\"")
