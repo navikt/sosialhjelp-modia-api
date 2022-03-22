@@ -138,7 +138,7 @@ class FiksClientImpl(
                         else -> FiksServerException(e.rawStatusCode, e.message?.maskerFnr, e)
                     }
                 }
-                .block() ?: throw FiksServerException(500, "Fiks - Dokkunment nedlasting feilet!", null)
+                .block() ?: throw FiksServerException(500, "Fiks - Dokument nedlasting feilet!", null)
         }
         log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
         return dokument
