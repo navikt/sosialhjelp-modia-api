@@ -22,7 +22,9 @@
     "CACHE_TIME_TO_LIVE_SECONDS": "60",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
     "UNLEASH_INSTANCE_ID": "dev-fss",
-    "SWAGGER_ENABLED": "true"
+    "SWAGGER_ENABLED": "true",
+    "BERGEN_KOMMUNENUMMER": "3002",
+    "STAVANGER_KOMMUNENUMMER": "1103"
   },
   "minReplicas": "1",
   "maxReplicas": "2",
