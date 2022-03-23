@@ -36,7 +36,7 @@ class UtbetalingerController(
         @RequestParam fom: String?,
         @RequestParam tom: String?
     ): ResponseEntity<List<UtbetalingerResponse>> {
-        abacService.harTilgang(ident.fnr, token,"/utbetalinger", HttpMethod.POST)
+        abacService.harTilgang(ident.fnr, token, "/utbetalinger", HttpMethod.POST)
 
         return ResponseEntity.ok().body(
             utbetalingerService.hentAlleUtbetalinger(
@@ -54,7 +54,7 @@ class UtbetalingerController(
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident
     ): ResponseEntity<List<UtbetalingerResponse>> {
-        abacService.harTilgang(ident.fnr, token,"/$fiksDigisosId/utbetalinger", HttpMethod.POST)
+        abacService.harTilgang(ident.fnr, token, "/$fiksDigisosId/utbetalinger", HttpMethod.POST)
 
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         return ResponseEntity.ok().body(utbetalingerService.hentUtbetalingerForDigisosSak(digisosSak))

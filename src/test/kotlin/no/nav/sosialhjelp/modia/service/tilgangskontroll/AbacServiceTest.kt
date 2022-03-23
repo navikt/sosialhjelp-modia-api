@@ -1,34 +1,34 @@
-//package no.nav.sosialhjelp.modia.service.tilgangskontroll
-//
-//import io.mockk.clearAllMocks
-//import io.mockk.every
-//import io.mockk.mockk
-//import io.mockk.slot
-//import io.mockk.unmockkAll
-//import no.nav.abac.xacml.NavAttributter.ADVICEOROBLIGATION_DENY_POLICY
-//import no.nav.sosialhjelp.modia.client.abac.AbacClient
-//import no.nav.sosialhjelp.modia.client.abac.AbacConstants.DENY_REASON
-//import no.nav.sosialhjelp.modia.client.abac.AbacConstants.FP1_KODE6
-//import no.nav.sosialhjelp.modia.client.abac.AbacConstants.FP2_KODE7
-//import no.nav.sosialhjelp.modia.client.abac.AbacConstants.FP3_EGEN_ANSATT
-//import no.nav.sosialhjelp.modia.client.abac.AbacConstants.SOSIALHJELP_AD_ROLLE
-//import no.nav.sosialhjelp.modia.client.abac.AbacResponse
-//import no.nav.sosialhjelp.modia.client.abac.Advice
-//import no.nav.sosialhjelp.modia.client.abac.Attribute
-//import no.nav.sosialhjelp.modia.client.abac.Decision
-//import no.nav.sosialhjelp.modia.client.abac.Request
-//import no.nav.sosialhjelp.modia.common.AbacException
-//import no.nav.sosialhjelp.modia.common.ManglendeModiaSosialhjelpTilgangException
-//import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
-//import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
-//import org.assertj.core.api.Assertions.assertThat
-//import org.assertj.core.api.Assertions.assertThatCode
-//import org.assertj.core.api.Assertions.assertThatThrownBy
-//import org.junit.jupiter.api.AfterEach
-//import org.junit.jupiter.api.BeforeEach
-//import org.junit.jupiter.api.Test
-//
-//internal class AbacServiceTest {
+package no.nav.sosialhjelp.modia.service.tilgangskontroll
+
+// import io.mockk.clearAllMocks
+// import io.mockk.every
+// import io.mockk.mockk
+// import io.mockk.slot
+// import io.mockk.unmockkAll
+// import no.nav.abac.xacml.NavAttributter.ADVICEOROBLIGATION_DENY_POLICY
+// import no.nav.sosialhjelp.modia.client.abac.AbacClient
+// import no.nav.sosialhjelp.modia.client.abac.AbacConstants.DENY_REASON
+// import no.nav.sosialhjelp.modia.client.abac.AbacConstants.FP1_KODE6
+// import no.nav.sosialhjelp.modia.client.abac.AbacConstants.FP2_KODE7
+// import no.nav.sosialhjelp.modia.client.abac.AbacConstants.FP3_EGEN_ANSATT
+// import no.nav.sosialhjelp.modia.client.abac.AbacConstants.SOSIALHJELP_AD_ROLLE
+// import no.nav.sosialhjelp.modia.client.abac.AbacResponse
+// import no.nav.sosialhjelp.modia.client.abac.Advice
+// import no.nav.sosialhjelp.modia.client.abac.Attribute
+// import no.nav.sosialhjelp.modia.client.abac.Decision
+// import no.nav.sosialhjelp.modia.client.abac.Request
+// import no.nav.sosialhjelp.modia.common.AbacException
+// import no.nav.sosialhjelp.modia.common.ManglendeModiaSosialhjelpTilgangException
+// import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
+// import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
+// import org.assertj.core.api.Assertions.assertThat
+// import org.assertj.core.api.Assertions.assertThatCode
+// import org.assertj.core.api.Assertions.assertThatThrownBy
+// import org.junit.jupiter.api.AfterEach
+// import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+
+internal class AbacServiceTest {
 //
 //    private val abacClient: AbacClient = mockk()
 //    private val service = AbacService(abacClient)
@@ -50,13 +50,13 @@
 //        unmockkAll()
 //    }
 //
-//    @Test
-//    internal fun `harTilgang - abacClient gir Permit - kaster ingen exception`() {
+    @Test
+    internal fun `harTilgang - abacClient gir Permit - kaster ingen exception`() {
 //        every { abacClient.sjekkTilgang(any()) } returns AbacResponse(Decision.Permit, null)
 //
 //        assertThatCode { service.harTilgang(fnr, "token") }
 //            .doesNotThrowAnyException()
-//    }
+    }
 //
 //    @Test
 //    internal fun `deny uten advices - kaster AbacException`() {
@@ -143,4 +143,4 @@
 //            .isInstanceOf(ManglendeTilgangException::class.java)
 //            .hasMessageContaining("deny")
 //    }
-//}
+}

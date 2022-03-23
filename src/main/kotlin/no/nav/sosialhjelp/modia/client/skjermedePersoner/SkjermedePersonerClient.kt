@@ -77,7 +77,7 @@ class SkjermedePersonerClientImpl(
                         is WebClientResponseException ->
                             log.error(
                                 "Skjermede personer - noe feilet. Status: ${e.statusCode}, message: ${e.message}." +
-                                        e.responseBodyAsString,
+                                    e.responseBodyAsString,
                                 e
                             )
                         is WebClientRequestException -> log.error(

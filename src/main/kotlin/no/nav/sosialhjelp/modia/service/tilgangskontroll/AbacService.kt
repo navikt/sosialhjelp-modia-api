@@ -22,11 +22,11 @@ class AbacService(
     fun harTilgang(brukerIdent: String, token: String, url: String, method: HttpMethod) {
         val pdlPerson = pdlClient.hentPerson(brukerIdent)?.hentPerson
             ?: throw PdlException("Person ikke funnet i PDL.")
-                //.also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
+        // .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
         if (pdlPerson.isKode6Or7()) throw ManglendeTilgangException("Person har addressebeskyttelse.")
-            //.also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
+        // .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
         if (skjermedePersonerClient.erPersonSkjermet(brukerIdent)) throw ManglendeTilgangException("Person er skjermet.")
-            //.also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
+        // .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
 
 //        val request = Request(
 //            environment = Attributes(
@@ -54,5 +54,4 @@ class AbacService(
 //            Decision.NotApplicable, Decision.Indeterminate -> throw AbacException("AbacResponse med decision=${abacResponse.decision}.")
 //        }
     }
-
 }

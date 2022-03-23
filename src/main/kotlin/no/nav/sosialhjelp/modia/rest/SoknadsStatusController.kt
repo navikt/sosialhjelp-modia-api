@@ -24,7 +24,7 @@ class SoknadsStatusController(
 
     @PostMapping("/{fiksDigisosId}/soknadsStatus")
     fun hentSoknadsStatus(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadsStatusResponse> {
-        abacService.harTilgang(ident.fnr, token,"/$fiksDigisosId/soknadsStatus", HttpMethod.POST)
+        abacService.harTilgang(ident.fnr, token, "/$fiksDigisosId/soknadsStatus", HttpMethod.POST)
 
         val soknadsStatus: SoknadsStatusResponse = soknadsStatusService.hentSoknadsStatus(fiksDigisosId)
         return ResponseEntity.ok().body(soknadsStatus)

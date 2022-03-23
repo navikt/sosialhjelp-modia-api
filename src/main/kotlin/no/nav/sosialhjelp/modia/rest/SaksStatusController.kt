@@ -32,7 +32,7 @@ class SaksStatusController(
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident
     ): ResponseEntity<List<SaksStatusResponse>> {
-        abacService.harTilgang(ident.fnr, token,"/$fiksDigisosId/saksStatus", HttpMethod.POST)
+        abacService.harTilgang(ident.fnr, token, "/$fiksDigisosId/saksStatus", HttpMethod.POST)
 
         val saksStatuser = saksStatusService.hentSaksStatuser(fiksDigisosId)
         if (saksStatuser.isEmpty()) {

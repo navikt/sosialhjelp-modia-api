@@ -27,7 +27,7 @@ class VedleggController(
 
     @PostMapping("/{fiksDigisosId}/vedlegg")
     fun hentVedlegg(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<VedleggResponse>> {
-        abacService.harTilgang(ident.fnr, token,"/$fiksDigisosId/vedlegg", HttpMethod.POST)
+        abacService.harTilgang(ident.fnr, token, "/$fiksDigisosId/vedlegg", HttpMethod.POST)
 
         val internalVedleggList: List<InternalVedlegg> = vedleggService.hentAlleOpplastedeVedlegg(fiksDigisosId)
         if (internalVedleggList.isEmpty()) {

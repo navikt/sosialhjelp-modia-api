@@ -26,7 +26,7 @@ class OppgaveController(
 
     @PostMapping("/{fiksDigisosId}/oppgaver")
     fun hentOppgaver(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<OppgaveResponse>> {
-        abacService.harTilgang(ident.fnr, token,"/$fiksDigisosId/oppgaver", HttpMethod.POST)
+        abacService.harTilgang(ident.fnr, token, "/$fiksDigisosId/oppgaver", HttpMethod.POST)
 
         val oppgaver = oppgaveService.hentOppgaver(fiksDigisosId)
         if (oppgaver.isEmpty()) {

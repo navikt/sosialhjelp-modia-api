@@ -22,7 +22,7 @@ class PersoninfoController(
 
     @PostMapping("/personinfo")
     fun hentPersoninfo(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<PersoninfoResponse> {
-        abacService.harTilgang(ident.fnr, token,"/personinfo", HttpMethod.POST)
+        abacService.harTilgang(ident.fnr, token, "/personinfo", HttpMethod.POST)
 
         val personinfoResponse = personinfoService.hentPersoninfo(ident.fnr)
         return ResponseEntity.ok(personinfoResponse)
