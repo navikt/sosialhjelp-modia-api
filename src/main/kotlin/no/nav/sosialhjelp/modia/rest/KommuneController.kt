@@ -5,6 +5,7 @@ import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.service.kommune.KommuneService
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -24,7 +25,7 @@ class KommuneController(
 
     @PostMapping("/kommuner/{kommunenummer}")
     fun hentKommuneInfo(@PathVariable kommunenummer: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<KommuneResponse> {
-        abacService.harTilgang(ident.fnr, token)
+        abacService.harTilgang(ident.fnr, token, "/kommuner/$kommunenummer", HttpMethod.POST)
 
         val kommuneInfo = kommuneService.get(kommunenummer)
         return ResponseEntity.ok(

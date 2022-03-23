@@ -6,6 +6,7 @@ import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
 import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -26,7 +27,7 @@ class VedleggController(
 
     @PostMapping("/{fiksDigisosId}/vedlegg")
     fun hentVedlegg(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<VedleggResponse>> {
-        abacService.harTilgang(ident.fnr, token)
+        abacService.harTilgang(ident.fnr, token,"/$fiksDigisosId/vedlegg", HttpMethod.POST)
 
         val internalVedleggList: List<InternalVedlegg> = vedleggService.hentAlleOpplastedeVedlegg(fiksDigisosId)
         if (internalVedleggList.isEmpty()) {

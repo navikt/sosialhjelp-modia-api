@@ -7,6 +7,7 @@ import no.nav.sosialhjelp.modia.domain.UtfallVedtak
 import no.nav.sosialhjelp.modia.service.saksstatus.SaksStatusService
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -31,7 +32,7 @@ class SaksStatusController(
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident
     ): ResponseEntity<List<SaksStatusResponse>> {
-        abacService.harTilgang(ident.fnr, token)
+        abacService.harTilgang(ident.fnr, token,"/$fiksDigisosId/saksStatus", HttpMethod.POST)
 
         val saksStatuser = saksStatusService.hentSaksStatuser(fiksDigisosId)
         if (saksStatuser.isEmpty()) {

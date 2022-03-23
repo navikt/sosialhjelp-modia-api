@@ -5,6 +5,7 @@ import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.service.soknadsstatus.SoknadsStatusService
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -23,7 +24,7 @@ class SoknadsStatusController(
 
     @PostMapping("/{fiksDigisosId}/soknadsStatus")
     fun hentSoknadsStatus(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadsStatusResponse> {
-        abacService.harTilgang(ident.fnr, token)
+        abacService.harTilgang(ident.fnr, token,"/$fiksDigisosId/soknadsStatus", HttpMethod.POST)
 
         val soknadsStatus: SoknadsStatusResponse = soknadsStatusService.hentSoknadsStatus(fiksDigisosId)
         return ResponseEntity.ok().body(soknadsStatus)

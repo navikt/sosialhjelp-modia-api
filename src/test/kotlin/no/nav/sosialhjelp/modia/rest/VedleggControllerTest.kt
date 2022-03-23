@@ -33,7 +33,7 @@ internal class VedleggControllerTest {
     internal fun setUp() {
         clearAllMocks()
 
-        every { abacService.harTilgang(any(), any()) } just Runs
+        every { abacService.harTilgang(any(), any(), any(), any()) } just Runs
     }
 
     @Test

@@ -14,6 +14,7 @@ import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import no.nav.sosialhjelp.modia.unixTimestampToDate
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -35,7 +36,7 @@ class SoknadsoversiktController(
 
     @PostMapping("/soknader")
     fun getSoknader(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SoknadResponse>> {
-        abacService.harTilgang(ident.fnr, token)
+        abacService.harTilgang(ident.fnr, token,"//soknader", HttpMethod.POST)
 
         val saker = try {
             fiksClient.hentAlleDigisosSaker(ident.fnr)
@@ -60,7 +61,7 @@ class SoknadsoversiktController(
 
     @PostMapping("/{fiksDigisosId}/soknadDetaljer")
     fun getSoknadDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadDetaljerResponse> {
-        abacService.harTilgang(ident.fnr, token)
+        abacService.harTilgang(ident.fnr, token,"/$fiksDigisosId/soknadDetaljer", HttpMethod.POST)
 
         val sak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createSoknadsoversiktModel(sak)

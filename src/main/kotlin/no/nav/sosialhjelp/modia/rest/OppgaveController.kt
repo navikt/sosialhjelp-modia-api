@@ -5,6 +5,7 @@ import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.service.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -25,7 +26,7 @@ class OppgaveController(
 
     @PostMapping("/{fiksDigisosId}/oppgaver")
     fun hentOppgaver(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<OppgaveResponse>> {
-        abacService.harTilgang(ident.fnr, token)
+        abacService.harTilgang(ident.fnr, token,"/$fiksDigisosId/oppgaver", HttpMethod.POST)
 
         val oppgaver = oppgaveService.hentOppgaver(fiksDigisosId)
         if (oppgaver.isEmpty()) {

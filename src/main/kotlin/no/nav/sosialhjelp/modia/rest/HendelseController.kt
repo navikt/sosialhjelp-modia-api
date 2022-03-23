@@ -4,6 +4,7 @@ import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.service.hendelse.HendelseService
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,7 +23,7 @@ class HendelseController(
 
     @PostMapping("/{fiksDigisosId}/hendelser")
     fun hentHendelser(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<HendelseResponse>> {
-        abacService.harTilgang(ident.fnr, token)
+        abacService.harTilgang(ident.fnr, token, "/$fiksDigisosId/hendelser", HttpMethod.POST)
 
         val hendelser = hendelseService.hentHendelser(fiksDigisosId)
         return ResponseEntity.ok(hendelser)

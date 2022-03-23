@@ -22,3 +22,8 @@ const val TITLE_ABAC = "Abac"
 const val TITLE_FIKS = "Fiks"
 
 const val RESOURCE_AUDIT_ACCESS = "audit:access"
+
+enum class Access() {
+    PERMIT,
+    DENY,
+}

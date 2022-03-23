@@ -36,6 +36,16 @@ class AuditService(
         auditLogger.report(attributes)
     }
 
+    fun reportToAuditlog(brukerFnr: String, url: String, httpMethod: HttpMethod, access: Access) {
+        val attributes: Map<String, Any> = commonAttributes(brukerFnr, url, httpMethod)
+            .plus(
+                mapOf(
+                    RESOURCE to RESOURCE_AUDIT_ACCESS,
+                )
+            )
+        auditLogger.report(attributes)
+    }
+
     fun reportFiks(brukerFnr: String, url: String, httpMethod: HttpMethod, fiksRequestId: String) {
         val attributes: Map<String, Any> = commonAttributes(brukerFnr, url, httpMethod)
             .plus(
