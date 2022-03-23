@@ -16,10 +16,14 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
 import no.nav.sosialhjelp.modia.client.maskinporten.MaskinportenClient
+import no.nav.sosialhjelp.modia.client.unleash.BERGEN_ENABLED
 import no.nav.sosialhjelp.modia.client.unleash.FIKS_CACHE_ENABLED
+import no.nav.sosialhjelp.modia.client.unleash.STAVANGER_ENABLED
+import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logging.AuditService
 import no.nav.sosialhjelp.modia.redis.RedisService
+import no.nav.sosialhjelp.modia.responses.ok_digisossak_annen_kommune_response_string
 import no.nav.sosialhjelp.modia.responses.ok_digisossak_response_string
 import no.nav.sosialhjelp.modia.responses.ok_minimal_jsondigisossoker_response_string
 import no.nav.sosialhjelp.modia.utils.RequestUtils
@@ -45,7 +49,10 @@ internal class FiksClientTest {
     private val unleash: Unleash = mockk()
     private val retryProperties: FiksRetryProperties = mockk()
 
-    private val fiksClient = FiksClientImpl(fiksWebClient, clientProperties, maskinportenClient, auditService, redisService, unleash, retryProperties)
+    private val BERGEN_KOMMUNENUMMER = "1234"
+    private val STAVANGER_KOMMUNENUMMER = "1111"
+
+    private val fiksClient = FiksClientImpl(fiksWebClient, clientProperties, maskinportenClient, auditService, redisService, unleash, retryProperties, BERGEN_KOMMUNENUMMER, STAVANGER_KOMMUNENUMMER)
 
     private val id = "123"
 
@@ -69,6 +76,8 @@ internal class FiksClientTest {
         every { retryProperties.maxDelay } returns 10
 
         every { unleash.isEnabled(FIKS_CACHE_ENABLED, false) } returns true
+        every { unleash.isEnabled(BERGEN_ENABLED, false) } returns true
+        every { unleash.isEnabled(STAVANGER_ENABLED, false) } returns true
     }
 
     @AfterEach
@@ -89,6 +98,19 @@ internal class FiksClientTest {
         val result = fiksClient.hentDigisosSak(id)
 
         assertThat(result).isNotNull
+    }
+
+    @Test
+    fun `GET feiler dersom kummunen ikke er riktig`() {
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(ok_digisossak_annen_kommune_response_string)
+        )
+
+        assertThatExceptionOfType(ManglendeTilgangException::class.java)
+            .isThrownBy { fiksClient.hentDigisosSak(id) }
     }
 
     @Test

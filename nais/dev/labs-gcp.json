@@ -16,7 +16,9 @@
     "STS_TOKEN_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/sts_token_endpoint_url/token",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
     "UNLEASH_INSTANCE_ID": "labs-gcp",
-    "SWAGGER_ENABLED": "true"
+    "SWAGGER_ENABLED": "true",
+    "BERGEN_KOMMUNENUMMER": "4601",
+    "STAVANGER_KOMMUNENUMMER": "1103"
   },
   "minReplicas": "1",
   "maxReplicas": "1",
