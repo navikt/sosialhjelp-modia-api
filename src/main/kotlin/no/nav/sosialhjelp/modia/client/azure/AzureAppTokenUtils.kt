@@ -3,7 +3,7 @@ package no.nav.sosialhjelp.modia.client.azure
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.modia.client.azure.model.AzuredingsResponse
-import org.springframework.beans.factory.annotation.Value
+import no.nav.sosialhjelp.modia.config.ClientProperties
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -21,19 +21,16 @@ interface AzureAppTokenUtils {
 @Component
 class AzureAppTokenUtilsImpl(
     webClientBuilder: WebClient.Builder,
-    @Value("\${dialog-api.azure_token_endpoint_url}") private val tokenEndpoint: String,
-    @Value("\${dialog-api.azure_client_id}") private val clientId: String,
-    @Value("\${dialog-api.azure_client_secret}") private val clientSecret: String,
-    @Value("\${dialog-api.skjermede_personer_scope}") private val skjermedePersonerScope: String,
+    private val clientProperties: ClientProperties,
 ) : AzureAppTokenUtils {
-    private val webClient: WebClient = buildWebClient(webClientBuilder, tokenEndpoint, applicationFormUrlencodedHeaders())
+    private val webClient: WebClient = buildWebClient(webClientBuilder, clientProperties.azureTokenEndpointUrl, applicationFormUrlencodedHeaders())
 
     override fun hentTokenMedSkjermedePersonerScope(): String {
         return runBlocking(Dispatchers.IO) {
             val params = LinkedMultiValueMap<String, String>()
-            params.add("client_id", clientId)
-            params.add("scope", skjermedePersonerScope)
-            params.add("client_secret", clientSecret)
+            params.add("client_id", clientProperties.azureClientId)
+            params.add("scope", clientProperties.skjermedePersonerScope)
+            params.add("client_secret", clientProperties.azureClientSecret)
             params.add("grant_type", "client_credentials")
 
             val tokenResponse: AzuredingsResponse = webClient.post()
@@ -44,7 +41,7 @@ class AzureAppTokenUtilsImpl(
         }
     }
 
-    final fun applicationFormUrlencodedHeaders(): HttpHeaders {
+    private final fun applicationFormUrlencodedHeaders(): HttpHeaders {
         val headers = HttpHeaders()
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
         return headers

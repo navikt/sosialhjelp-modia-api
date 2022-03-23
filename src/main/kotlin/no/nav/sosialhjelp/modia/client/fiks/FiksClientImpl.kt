@@ -26,7 +26,6 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.fiksHeaders
 import no.nav.sosialhjelp.modia.utils.RequestUtils
 import no.nav.sosialhjelp.modia.utils.objectMapper
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
@@ -45,8 +44,6 @@ class FiksClientImpl(
     private val redisService: RedisService,
     private val unleash: Unleash,
     private val retryProperties: FiksRetryProperties,
-    @Value("\${client.bergen_kommunenummer}") private val bergenKommunenummer: String,
-    @Value("\${client.stavanger_kommunenummer}") private val stavangerKommunenummer: String,
 ) : FiksClient {
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
@@ -174,10 +171,10 @@ class FiksClientImpl(
     }
 
     private fun harKommunenTilgangTilModia(kommunenummer: String): Boolean {
-        if (unleash.isEnabled(BERGEN_ENABLED, false) && kommunenummer == bergenKommunenummer) {
+        if (unleash.isEnabled(BERGEN_ENABLED, false) && kommunenummer == clientProperties.bergenKommunenummer) {
             return true
         }
-        if (unleash.isEnabled(STAVANGER_ENABLED, false) && kommunenummer == stavangerKommunenummer) {
+        if (unleash.isEnabled(STAVANGER_ENABLED, false) && kommunenummer == clientProperties.stavangerKommunenummer) {
             return true
         }
         return false

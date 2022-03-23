@@ -25,6 +25,11 @@ client:
   sts_token_endpoint_url: ${STS_TOKEN_ENDPOINT_URL:sts_token_endpoint_url}
   bergen_kommunenummer: ${BERGEN_KOMMUNENUMMER:4601}
   stavanger_kommunenummer: ${STAVANGER_KOMMUNENUMMER:1103}
+  azure_token_endpoint_url: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT:azure_token_endpoint_url}
+  azure_client_id: ${AZURE_APP_CLIENT_ID:azure_client_id}
+  azure_client_secret: ${AZURE_APP_CLIENT_SECRET:azure_client_secret}
+  skjermede_personer_scope: ${SKJERMEDE_PERSONER_SCOPE:skjermede_personer_scope}
+  skjermede_personer_endpoint_url: ${SKJERMEDE_PERSONER_ENDPOINT_URL:skjermede_personer_endpoint_url}
   unleash_url: ${UNLEASH_API_URL:https://unleash.nais.io/api}
   unleash_instance_id: ${UNLEASH_INSTANCE_ID:local}
 

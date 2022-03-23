@@ -52,6 +52,11 @@ client:
   sts_token_endpoint_url: ${STS_TOKEN_ENDPOINT_URL}
   bergen_kommunenummer: ${BERGEN_KOMMUNENUMMER}
   stavanger_kommunenummer: ${STAVANGER_KOMMUNENUMMER}
+  azure_token_endpoint_url: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
+  azure_client_id: ${AZURE_APP_CLIENT_ID}
+  azure_client_secret: ${AZURE_APP_CLIENT_SECRET}
+  skjermede_personer_scope: ${SKJERMEDE_PERSONER_SCOPE}
+  skjermede_personer_endpoint_url: ${SKJERMEDE_PERSONER_ENDPOINT_URL}
   unleash_url: ${UNLEASH_API_URL}
   unleash_instance_id: ${UNLEASH_INSTANCE_ID}
 

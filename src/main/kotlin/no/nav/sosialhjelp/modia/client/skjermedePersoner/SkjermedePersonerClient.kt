@@ -7,11 +7,11 @@ import no.nav.sosialhjelp.modia.client.azure.AzureAppTokenUtils
 import no.nav.sosialhjelp.modia.client.azure.buildWebClient
 import no.nav.sosialhjelp.modia.client.skjermedePersoner.model.SkjermedePersonerRequest
 import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
+import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import no.nav.sosialhjelp.modia.utils.objectMapper
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
@@ -30,10 +30,10 @@ class SkjermedePersonerClientImpl(
     webClientBuilder: WebClient.Builder,
     private val azureAppTokenUtils: AzureAppTokenUtils,
     private val redisService: RedisService,
-    @Value("\${dialog-api.skjermede_personer_endpoint_url}") private val skjermedePersonerEndpoint: String,
+    private val clientProperties: ClientProperties,
 ) : SkjermedePersonerClient {
 
-    private val webClient: WebClient = buildWebClient(webClientBuilder, skjermedePersonerEndpoint)
+    private val webClient: WebClient = buildWebClient(webClientBuilder, clientProperties.skjermedePersonerEndpointUrl)
 
     override fun erPersonSkjermet(ident: String): Boolean {
         hentFraCache(ident)?.let { return it }
@@ -42,19 +42,7 @@ class SkjermedePersonerClientImpl(
 
     private fun hentFraCache(ident: String): Boolean? {
         val skjermetStatus = redisService.get("SKJERMEDE_PERSONER_$ident", Boolean::class.java)
-        oppdaterCacheIBakgrunnen(skjermetStatus, ident)
         return skjermetStatus?.let { return it as Boolean }
-    }
-
-    private fun oppdaterCacheIBakgrunnen(skjermetStatus: Any?, ident: String) {
-//        if (skjermetStatus != null) {
-//            CoroutineScope(Dispatchers.IO).launch {
-//                val ttl = redisService.getTtl("SKJERMEDE_PERSONER_$ident", ident) ?: -1L
-//                if (ttl < (toTimerTimeToLive / 2)) {
-//                    lagreSkjermetStatus(hentSkjermetStatusFraServer(ident), ident)
-//                }
-//            }
-//        }
     }
 
     private fun lagreSkjermetStatus(skjermet: Boolean?, ident: String) {
