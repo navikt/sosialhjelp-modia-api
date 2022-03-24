@@ -5,8 +5,6 @@ import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.modia.client.azure.model.AzuredingsResponse
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import org.springframework.context.annotation.Profile
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
@@ -39,12 +37,6 @@ class AzureAppTokenUtilsImpl(
                 .awaitBody()
             tokenResponse.accessToken
         }
-    }
-
-    private final fun applicationFormUrlencodedHeaders(): HttpHeaders {
-        val headers = HttpHeaders()
-        headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-        return headers
     }
 }
 

@@ -30,7 +30,7 @@ class SkjermedePersonerClientImpl(
     webClientBuilder: WebClient.Builder,
     private val azureAppTokenUtils: AzureAppTokenUtils,
     private val redisService: RedisService,
-    private val clientProperties: ClientProperties,
+    clientProperties: ClientProperties,
 ) : SkjermedePersonerClient {
 
     private val webClient: WebClient = buildWebClient(webClientBuilder, clientProperties.skjermedePersonerEndpointUrl)

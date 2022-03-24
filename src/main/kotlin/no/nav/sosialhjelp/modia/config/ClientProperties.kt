@@ -20,12 +20,20 @@ class ClientProperties {
 
     lateinit var stsTokenEndpointUrl: String
 
+    lateinit var veilederGruppeId: String
+
     lateinit var bergenKommunenummer: String
     lateinit var stavangerKommunenummer: String
 
     lateinit var azureTokenEndpointUrl: String
     lateinit var azureClientId: String
     lateinit var azureClientSecret: String
+    lateinit var azuredingsUrl: String
+    lateinit var azuredingsClientId: String
+    lateinit var azuredingsJwtAudience: String
+    lateinit var azuredingsPrivateJwk: String
+    lateinit var azureGraphUrl: String
+
     lateinit var skjermedePersonerScope: String
     lateinit var skjermedePersonerEndpointUrl: String
 

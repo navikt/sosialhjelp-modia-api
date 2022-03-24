@@ -20,6 +20,8 @@ object Versions {
     const val guava = "31.1-jre"
     const val abacAttributeConstants = "3.3.13"
     const val logbackSyslog4j = "1.0.0"
+    const val javaJwt = "3.19.0"
+    const val jwksRsa = "0.21.0"
     const val syslog4j = "0.9.30"
     const val lettuce = "6.1.6.RELEASE"
     const val unleash = "3.3.4"
@@ -109,6 +111,10 @@ dependencies {
 //    Auditlogger syslog
     implementation("com.papertrailapp:logback-syslog4j:${Versions.logbackSyslog4j}")
     implementation("org.syslog4j:syslog4j:${Versions.syslog4j}")
+
+//    JWT
+    implementation("com.auth0:java-jwt:${Versions.javaJwt}")
+    implementation("com.auth0:jwks-rsa:${Versions.jwksRsa}")
 
 //    Filformat
     implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:${Versions.filformat}")
