@@ -12,15 +12,14 @@ import org.springframework.web.reactive.function.client.awaitBody
 
 @Component
 class AzureGraphClient(
-    webClientBuilder: WebClient.Builder,
-    clientProperties: ClientProperties,
+    private val proxiedWebClient: WebClient,
+    private val clientProperties: ClientProperties,
 ) {
-    val webClient = buildWebClient(webClientBuilder, clientProperties.azureGraphUrl)
-
     fun hentInnloggetVeilederSineGrupper(token: String): AzureAdGrupper {
         return runBlocking(Dispatchers.IO) {
-            webClient.get()
-                .uri("/me/memberOf")
+            proxiedWebClient.get()
+                .uri("${clientProperties.azureGraphUrl}/me/memberOf")
+                .headers { applicationJsonHttpHeaders().map { it.key to it.value } }
                 .header(HttpHeaders.AUTHORIZATION, BEARER + token)
                 .retrieve()
                 .awaitBody()

@@ -9,24 +9,23 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.web.reactive.function.client.WebClient
 
-class AzuredingsWebClient(val webClient: WebClient)
+class AzuredingsWebConfig(val tokenEndpoint: String)
 
 @Configuration
 class AzuredingsClientConfig(
+    private val proxiedWebClient: WebClient,
     private val clientProperties: ClientProperties,
 ) {
     @Bean
     @Profile("!test")
-    fun azuredingsWebClient(webClientBuilder: WebClient.Builder): AzuredingsWebClient {
+    fun azuredingsWebClient(webClientBuilder: WebClient.Builder): AzuredingsWebConfig {
         val wellKnown = downloadWellKnown(clientProperties.azuredingsUrl)
         log.info("AzuredingsClient: Lastet ned well known fra: ${clientProperties.azuredingsUrl} bruker token endpoint: ${wellKnown.token_endpoint}")
-        return AzuredingsWebClient(
-            buildWebClient(webClientBuilder, wellKnown.token_endpoint, applicationFormUrlencodedHeaders())
-        )
+        return AzuredingsWebConfig(wellKnown.token_endpoint)
     }
 
     fun downloadWellKnown(url: String): WellKnown =
-        WebClient.create()
+        proxiedWebClient
             .get()
             .uri(url)
             .retrieve()
@@ -36,11 +35,9 @@ class AzuredingsClientConfig(
 
     @Bean
     @Profile("test")
-    fun azuredingsWebClientTest(webClientBuilder: WebClient.Builder): AzuredingsWebClient {
+    fun azuredingsWebClientTest(webClientBuilder: WebClient.Builder): AzuredingsWebConfig {
         log.info("AzuredingsClient: Setter opp test client som bruker token endpoint: ${clientProperties.azuredingsUrl}")
-        return AzuredingsWebClient(
-            buildWebClient(webClientBuilder, clientProperties.azuredingsUrl)
-        )
+        return AzuredingsWebConfig(clientProperties.azuredingsUrl)
     }
 
     companion object {

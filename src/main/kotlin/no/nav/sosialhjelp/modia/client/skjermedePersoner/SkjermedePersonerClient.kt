@@ -4,7 +4,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.modia.client.azure.AzureAppTokenUtils
-import no.nav.sosialhjelp.modia.client.azure.buildWebClient
 import no.nav.sosialhjelp.modia.client.skjermedePersoner.model.SkjermedePersonerRequest
 import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.config.ClientProperties
@@ -27,13 +26,11 @@ interface SkjermedePersonerClient {
 @Profile("!test")
 @Component
 class SkjermedePersonerClientImpl(
-    webClientBuilder: WebClient.Builder,
+    private val proxiedWebClient: WebClient,
     private val azureAppTokenUtils: AzureAppTokenUtils,
     private val redisService: RedisService,
-    clientProperties: ClientProperties,
+    private val clientProperties: ClientProperties,
 ) : SkjermedePersonerClient {
-
-    private val webClient: WebClient = buildWebClient(webClientBuilder, clientProperties.skjermedePersonerEndpointUrl)
 
     override fun erPersonSkjermet(ident: String): Boolean {
         hentFraCache(ident)?.let { return it }
@@ -54,8 +51,8 @@ class SkjermedePersonerClientImpl(
         val azureAdToken = azureAppTokenUtils.hentTokenMedSkjermedePersonerScope()
 
         val response: String = runBlocking(Dispatchers.IO) {
-            webClient.post()
-                .uri("/skjermet")
+            proxiedWebClient.post()
+                .uri("${clientProperties.skjermedePersonerEndpointUrl}/skjermet")
                 .header(HttpHeaders.AUTHORIZATION, BEARER + azureAdToken)
                 .bodyValue(SkjermedePersonerRequest(ident))
                 .retrieve()

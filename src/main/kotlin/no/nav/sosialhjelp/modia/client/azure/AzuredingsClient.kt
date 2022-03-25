@@ -6,11 +6,13 @@ import no.nav.sosialhjelp.modia.client.azure.model.AzuredingsResponse
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
 
 @Component
 internal class AzuredingsClient(
-    private val azuredingsWebClient: AzuredingsWebClient,
+    private val proxiedWebClient: WebClient,
+    private val azuredingsWebConfig: AzuredingsWebConfig,
 ) {
 
     suspend fun exchangeToken(subjectToken: String, clientAssertion: String, clientId: String, scope: String): AzuredingsResponse {
@@ -24,7 +26,10 @@ internal class AzuredingsClient(
             params.add("requested_token_use", "on_behalf_of")
             params.add("scope", scope)
 
-            azuredingsWebClient.webClient.post()
+            proxiedWebClient
+                .post()
+                .uri(azuredingsWebConfig.tokenEndpoint)
+                .headers { applicationFormUrlencodedHeaders().map { it.key to it.value } }
                 .body(BodyInserters.fromFormData(params))
                 .retrieve()
                 .awaitBody()
