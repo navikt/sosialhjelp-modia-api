@@ -11,13 +11,13 @@
     "serviceuser-srvsosialhjelp-mod"
   ],
   "env": {
+    "SPRING_PROFILES_ACTIVE": "dev-fss,log-console,log-audit",
     "ABAC_PDP_ENDPOINT_URL": "https://abac-sosialhjelp.dev.intern.nav.no/application/authorize",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.test.ks.no",
     "NORG_ENDPOINT_URL": "https://norg2.dev.adeo.no/norg2/api/v1",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.adeo.no/#/startsok?enhetNr=",
     "PDL_ENDPOINT_URL": "https://pdl-api.nais.preprod.local/graphql",
     "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.preprod.local/rest/v1/sts/token",
-    "SPRING_PROFILES_ACTIVE": "dev-fss,log-kibana,log-audit",
     "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local",
     "CACHE_TIME_TO_LIVE_SECONDS": "60",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
