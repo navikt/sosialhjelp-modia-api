@@ -11,6 +11,7 @@ import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.logging.AuditService
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
+import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 
 @Component
 class AbacService(
@@ -22,8 +23,10 @@ class AbacService(
 ) {
 
     fun harTilgang(brukerIdent: String, token: String, url: String, method: HttpMethod) {
-        if (!azureGraphClient.hentInnloggetVeilederSineGrupper(token).value.any { it.id == clientProperties.veilederGruppeId })
+        val rawToken = token.replace(BEARER, "")
+        if (!azureGraphClient.hentInnloggetVeilederSineGrupper(rawToken).value.any { it.id == clientProperties.veilederGruppeId })
             throw ManglendeTilgangException("Veileder er ikke i riktig azure gruppe til å bruke dialogløsningen.")
+        //.also {}
         log.debug("Logget inn med gruppe ${clientProperties.veilederGruppeId}")
         val pdlPerson = pdlClient.hentPerson(brukerIdent)?.hentPerson
             ?: throw PdlException("Person ikke funnet i PDL.")
