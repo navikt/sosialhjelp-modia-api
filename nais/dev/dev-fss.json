@@ -18,7 +18,7 @@
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.test.ks.no",
     "NORG_ENDPOINT_URL": "https://norg2.dev.adeo.no/norg2/api/v1",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.adeo.no/#/startsok?enhetNr=",
-    "PDL_ENDPOINT_URL": "https://pdl-api.dev-fss-pub.nais.io/graphql",
+    "PDL_ENDPOINT_URL": "https://pdl-api.nais.preprod.local/graphql",
     "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.preprod.local/rest/v1/sts/token",
     "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local",
     "CACHE_TIME_TO_LIVE_SECONDS": "60",
@@ -29,7 +29,7 @@
     "STAVANGER_KOMMUNENUMMER": "1103"
   },
   "minReplicas": "1",
-  "maxReplicas": "2",
+  "maxReplicas": "1",
   "cpuLimit": "500m",
   "memoryLimit": "1Gi",
   "cpuRequest": "10m",
