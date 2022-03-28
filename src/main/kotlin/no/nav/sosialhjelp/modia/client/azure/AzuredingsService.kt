@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
+import no.nav.sosialhjelp.modia.redis.RedisKeyType
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.utils.MiljoUtils
 import org.springframework.stereotype.Service
@@ -36,8 +37,8 @@ class CachingAzuredingsService internal constructor(
 
     override suspend fun exchangeToken(token: String, scope: String): String {
 
-        val redisKey = "AZURE_TOKEN_$token$scope"
-        redisService.get(redisKey, (String::class.java))
+        val redisKey = "$token$scope"
+        redisService.get(RedisKeyType.AZUREDINGS, redisKey, (String::class.java))
             ?.let { return (it as String) }
 
         val jwt = createSignedAssertion(clientProperties.azuredingsJwtClientId, clientProperties.azuredingsJwtAudience, privateRsaKey)
@@ -66,7 +67,7 @@ class CachingAzuredingsService internal constructor(
     }
 
     private fun lagreTilCache(key: String, onBehalfToken: String) {
-        redisService.set(key, onBehalfToken.toByteArray(), 30)
+        redisService.set(RedisKeyType.AZUREDINGS, key, onBehalfToken.toByteArray(), 30)
     }
 
     companion object {

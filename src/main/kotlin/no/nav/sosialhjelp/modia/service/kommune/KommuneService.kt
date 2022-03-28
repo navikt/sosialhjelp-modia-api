@@ -2,6 +2,7 @@ package no.nav.sosialhjelp.modia.service.kommune
 
 import no.nav.sosialhjelp.api.fiks.KommuneInfo
 import no.nav.sosialhjelp.modia.client.fiks.KommuneInfoClient
+import no.nav.sosialhjelp.modia.redis.RedisKeyType
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.springframework.stereotype.Component
@@ -26,7 +27,7 @@ class KommuneService(
     }
 
     private fun lagreTilCache(kommuneInfo: KommuneInfo) {
-        redisService.set(kommuneInfo.kommunenummer, objectMapper.writeValueAsBytes(kommuneInfo))
+        redisService.set(RedisKeyType.KOMMUNE_SERVICE, kommuneInfo.kommunenummer, objectMapper.writeValueAsBytes(kommuneInfo))
     }
 
     private fun leggTilKommuneINavnet(kommunenavn: String): String {
@@ -34,6 +35,6 @@ class KommuneService(
     }
 
     private fun hentFraCache(kommunenummer: String): KommuneInfo? {
-        return redisService.get(kommunenummer, KommuneInfo::class.java) as KommuneInfo?
+        return redisService.get(RedisKeyType.KOMMUNE_SERVICE, kommunenummer, KommuneInfo::class.java) as KommuneInfo?
     }
 }

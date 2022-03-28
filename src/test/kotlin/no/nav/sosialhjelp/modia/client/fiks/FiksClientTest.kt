@@ -64,8 +64,8 @@ internal class FiksClientTest {
         every { maskinportenClient.getToken() } returns "token"
         every { auditService.reportFiks(any(), any(), any(), any()) } just Runs
 
-        every { redisService.get(any(), any()) } returns null
-        every { redisService.set(any(), any(), any()) } just Runs
+        every { redisService.get(any(), any(), any()) } returns null
+        every { redisService.set(any(), any(), any(), any()) } just Runs
         every { redisService.defaultTimeToLiveSeconds } returns 1
 
         every { retryProperties.attempts } returns 2
@@ -128,7 +128,7 @@ internal class FiksClientTest {
     @Test
     fun `GET digisosSak fra cache`() {
         val digisosSak: DigisosSak = objectMapper.readValue(ok_digisossak_response_string)
-        every { redisService.get(any(), DigisosSak::class.java) } returns digisosSak
+        every { redisService.get(any(), any(), DigisosSak::class.java) } returns digisosSak
 
         val result2 = fiksClient.hentDigisosSak(id)
 
@@ -149,17 +149,17 @@ internal class FiksClientTest {
         val result1 = fiksClient.hentDigisosSak(id)
 
         assertThat(result1).isNotNull
-        verify(exactly = 1) { redisService.get(any(), DigisosSak::class.java) }
-        verify(exactly = 1) { redisService.set(any(), any(), any()) }
+        verify(exactly = 1) { redisService.get(any(), any(), DigisosSak::class.java) }
+        verify(exactly = 1) { redisService.set(any(), any(), any(), any()) }
 
         val digisosSak: DigisosSak = objectMapper.readValue(ok_digisossak_response_string)
-        every { redisService.get(any(), DigisosSak::class.java) } returns digisosSak
+        every { redisService.get(any(), any(), DigisosSak::class.java) } returns digisosSak
 
         val result = fiksClient.hentDigisosSak(id)
 
         assertThat(result).isNotNull
-        verify(exactly = 2) { redisService.get(any(), any()) }
-        verify(exactly = 1) { redisService.set(any(), any(), any()) }
+        verify(exactly = 2) { redisService.get(any(), any(), any()) }
+        verify(exactly = 1) { redisService.set(any(), any(), any(), any()) }
     }
 
     @Test
@@ -175,13 +175,13 @@ internal class FiksClientTest {
 
 //        annen veileder har hentet digisosSak tidligere (og finnes i cache)
         val annenSaksbehandler = "other"
-        every { redisService.get("${annenSaksbehandler}_$id", DigisosSak::class.java) } returns digisosSak
+        every { redisService.get(any(), "${annenSaksbehandler}_$id", DigisosSak::class.java) } returns digisosSak
 
         val result = fiksClient.hentDigisosSak(id)
 
         assertThat(result).isNotNull
-        verify(exactly = 1) { redisService.get(any(), any()) }
-        verify(exactly = 1) { redisService.set(any(), any(), any()) }
+        verify(exactly = 1) { redisService.get(any(), any(), any()) }
+        verify(exactly = 1) { redisService.set(any(), any(), any(), any()) }
     }
 
     @Test
@@ -199,7 +199,7 @@ internal class FiksClientTest {
 
         assertThat(result).isNotNull
 
-        verify(exactly = 0) { redisService.get(any(), any()) }
+        verify(exactly = 0) { redisService.get(any(), any(), any()) }
     }
 
     @Test
@@ -219,7 +219,7 @@ internal class FiksClientTest {
     @Test
     fun `GET dokument fra cache`() {
         val jsonDigisosSoker: JsonDigisosSoker = objectMapper.readValue(ok_minimal_jsondigisossoker_response_string)
-        every { redisService.get(any(), JsonDigisosSoker::class.java) } returns jsonDigisosSoker
+        every { redisService.get(any(), any(), JsonDigisosSoker::class.java) } returns jsonDigisosSoker
 
         val result = fiksClient.hentDokument("fnr", id, "dokumentlagerId", JsonDigisosSoker::class.java)
 
