@@ -9,6 +9,8 @@
     "SPRING_PROFILES_ACTIVE": "mock-alt,log-console,no-redis",
     "METADATA_URL": "https://digisos.labs.nais.io/sosialhjelp/mock-alt-api/well-known/azuread",
     "ABAC_PDP_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/abac/application/authorize",
+    "AZURE_GRAPH_API_URL": "http://sosialhjelp-mock-alt-api/sosialhjelp/mock-alt-api/azuread/graph",
+    "VEILEDER_GRUPPE_ID": "0000-MOCK-sosialhjelp-dialog-veileder",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/fiks",
     "NORG_ENDPOINT_URL": "https://sosialhjelp-mock-alt-api.labs.nais.io/sosialhjelp/mock-alt-api/norg_endpoint_url",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.adeo.no/#/startsok?enhetNr=",

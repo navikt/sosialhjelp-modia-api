@@ -11,6 +11,8 @@
   ],
   "env": {
     "ABAC_PDP_ENDPOINT_URL": "https://abac-sosialhjelp.intern.nav.no/application/authorize",
+    "AZURE_GRAPH_API_URL": "https://graph.microsoft.com/v1.0",
+    "VEILEDER_GRUPPE_ID": "2dc13d53-66ff-46a3-824a-b0ae9dd22c45",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.ks.no",
     "NORG_ENDPOINT_URL": "https://norg2.nais.adeo.no/norg2/api/v1",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.nais.adeo.no/#/startsok?enhetNr=",
