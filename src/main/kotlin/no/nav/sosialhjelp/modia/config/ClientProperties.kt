@@ -29,7 +29,7 @@ class ClientProperties {
     lateinit var azureClientId: String
     lateinit var azureClientSecret: String
     lateinit var azuredingsUrl: String
-    lateinit var azuredingsClientId: String
+    lateinit var azuredingsJwtClientId: String
     lateinit var azuredingsJwtAudience: String
     lateinit var azuredingsPrivateJwk: String
     lateinit var azureGraphUrl: String

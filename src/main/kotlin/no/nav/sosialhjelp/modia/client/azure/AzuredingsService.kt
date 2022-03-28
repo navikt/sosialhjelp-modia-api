@@ -40,10 +40,10 @@ class CachingAzuredingsService internal constructor(
         redisService.get(redisKey, (String::class.java))
             ?.let { return (it as String) }
 
-        val jwt = createSignedAssertion(clientProperties.azuredingsClientId, clientProperties.azuredingsJwtAudience, privateRsaKey)
+        val jwt = createSignedAssertion(clientProperties.azuredingsJwtClientId, clientProperties.azuredingsJwtAudience, privateRsaKey)
 
         return try {
-            azuredingsClient.exchangeToken(token, jwt, clientProperties.azuredingsClientId, scope).accessToken
+            azuredingsClient.exchangeToken(token, jwt, clientProperties.azuredingsJwtClientId, scope).accessToken
                 .also { lagreTilCache(redisKey, it) }
         } catch (e: WebClientResponseException) {
             log.warn("Error message from server: ${e.responseBodyAsString}")

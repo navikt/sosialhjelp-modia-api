@@ -54,8 +54,8 @@ client:
   bergen_kommunenummer: ${BERGEN_KOMMUNENUMMER}
   stavanger_kommunenummer: ${STAVANGER_KOMMUNENUMMER}
   azure_token_endpoint_url: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
-  azuredings_jwt_audience: ${AZURE_OPENID_CONFIG_ISSUER:dummyAudience}
   azuredings_url: ${AZURE_APP_WELL_KNOWN_URL}
+  azuredings_jwt_audience: ${AZURE_OPENID_CONFIG_ISSUER:dummyAudience}
   azuredings_jwt_client_id: ${AZURE_APP_CLIENT_ID}
   azuredings_private_jwk: ${AZURE_APP_JWK}
   azure_client_id: ${AZURE_APP_CLIENT_ID}
