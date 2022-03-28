@@ -9,8 +9,8 @@ on:
         type: choice
         options:
           - 'dev-fss'
-          - 'dev-gcp'
-          - 'dev-gcp-mock'
+          - 'dev'
+          - 'mock'
           - 'labs-gcp'
       cluster:
         description: 'Cluster å deploye til'
