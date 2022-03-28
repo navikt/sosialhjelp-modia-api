@@ -73,7 +73,8 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(ManglendeTilgangException::class)
     fun handleManglendeTilgangException(e: ManglendeTilgangException): ResponseEntity<String> {
-        // "maskerer" manglende tilgang fra abac?
+        // "maskerer" manglende tilgang til bruker?
+        log.info("ManglendeTilgangException: ${e.message}", e)
         return ResponseEntity(HttpStatus.OK)
     }
 
