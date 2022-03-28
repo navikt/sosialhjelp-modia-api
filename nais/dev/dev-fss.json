@@ -14,7 +14,7 @@
     "SPRING_PROFILES_ACTIVE": "dev-fss,log-console,log-audit",
     "ABAC_PDP_ENDPOINT_URL": "https://abac-sosialhjelp.dev.intern.nav.no/application/authorize",
     "AZURE_GRAPH_API_URL": "https://graph.microsoft.com/v1.0",
-    "VEILEDER_GRUPPE_ID": "55f10d2b-f3ac-4d85-b989-655145ab5f30-feil",
+    "VEILEDER_GRUPPE_ID": "55f10d2b-f3ac-4d85-b989-655145ab5f30",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.test.ks.no",
     "NORG_ENDPOINT_URL": "https://norg2.dev.adeo.no/norg2/api/v1",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.adeo.no/#/startsok?enhetNr=",
