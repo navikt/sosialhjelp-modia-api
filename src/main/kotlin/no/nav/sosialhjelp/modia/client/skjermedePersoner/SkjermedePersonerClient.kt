@@ -3,7 +3,7 @@ package no.nav.sosialhjelp.modia.client.skjermedePersoner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
-import no.nav.sosialhjelp.modia.client.azure.AzureAppTokenUtils
+import no.nav.sosialhjelp.modia.client.azure.AzuredingsService
 import no.nav.sosialhjelp.modia.client.skjermedePersoner.model.SkjermedePersonerRequest
 import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.config.ClientProperties
@@ -20,21 +20,21 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import org.springframework.web.reactive.function.client.bodyToMono
 
 interface SkjermedePersonerClient {
-    fun erPersonSkjermet(ident: String): Boolean
+    fun erPersonSkjermet(ident: String, veilederToken: String): Boolean
 }
 
 @Profile("!test")
 @Component
 class SkjermedePersonerClientImpl(
     private val proxiedWebClient: WebClient,
-    private val azureAppTokenUtils: AzureAppTokenUtils,
+    private val azuredingsService: AzuredingsService,
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
 ) : SkjermedePersonerClient {
 
-    override fun erPersonSkjermet(ident: String): Boolean {
+    override fun erPersonSkjermet(ident: String, veilederToken: String): Boolean {
         hentFraCache(ident)?.let { return it }
-        return hentSkjermetStatusFraServer(ident).also { lagreSkjermetStatus(it, ident) }
+        return hentSkjermetStatusFraServer(ident, veilederToken).also { lagreSkjermetStatus(it, ident) }
     }
 
     private fun hentFraCache(ident: String): Boolean? {
@@ -46,11 +46,11 @@ class SkjermedePersonerClientImpl(
         skjermet?.let { redisService.set("SKJERMEDE_PERSONER_$ident", objectMapper.writeValueAsBytes(it), 2 * 60 * 60) }
     }
 
-    private fun hentSkjermetStatusFraServer(ident: String): Boolean {
+    private fun hentSkjermetStatusFraServer(ident: String, veilederToken: String): Boolean {
         log.debug("Sjekker om person er skjermet.")
-        val azureAdToken = azureAppTokenUtils.hentTokenMedSkjermedePersonerScope()
 
         val response: String = runBlocking(Dispatchers.IO) {
+            val azureAdToken = azuredingsService.exchangeToken(veilederToken, clientProperties.skjermedePersonerScope)
             proxiedWebClient.post()
                 .uri("${clientProperties.skjermedePersonerEndpointUrl}/skjermet")
                 .header(HttpHeaders.AUTHORIZATION, BEARER + azureAdToken)
@@ -89,7 +89,7 @@ class SkjermedePersonerClientImpl(
 @Component
 class SkjermedePersonerClientMock : SkjermedePersonerClient {
 
-    override fun erPersonSkjermet(ident: String): Boolean {
+    override fun erPersonSkjermet(ident: String, veilederToken: String): Boolean {
         return false
     }
 }

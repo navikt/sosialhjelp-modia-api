@@ -33,7 +33,7 @@ class AbacService(
         // .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
         if (pdlPerson.isKode6Or7()) throw ManglendeTilgangException("Person har addressebeskyttelse.")
         // .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
-        if (skjermedePersonerClient.erPersonSkjermet(brukerIdent)) throw ManglendeTilgangException("Person er skjermet.")
+        if (skjermedePersonerClient.erPersonSkjermet(brukerIdent, token)) throw ManglendeTilgangException("Person er skjermet.")
         // .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
     }
     companion object {
