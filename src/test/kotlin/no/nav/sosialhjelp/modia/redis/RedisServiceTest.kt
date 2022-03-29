@@ -28,7 +28,7 @@ internal class RedisServiceTest {
     internal fun `store gir null`() {
         every { redisStore.get(any()) } returns null
 
-        val digisosSak = service.get(RedisKeyType.FIKS_CLIENT,"key", DigisosSak::class.java)
+        val digisosSak = service.get(RedisKeyType.FIKS_CLIENT, "key", DigisosSak::class.java)
         assertThat(digisosSak).isNull()
     }
 
@@ -36,7 +36,7 @@ internal class RedisServiceTest {
     internal fun `store gir feil type`() {
         every { redisStore.get(any()) } returns ok_kommuneinfo_response_string.toByteArray()
 
-        val digisosSak = service.get(RedisKeyType.SKJERMEDE_PERSONER,"key", DigisosSak::class.java)
+        val digisosSak = service.get(RedisKeyType.SKJERMEDE_PERSONER, "key", DigisosSak::class.java)
         assertThat(digisosSak).isNull()
     }
 }
