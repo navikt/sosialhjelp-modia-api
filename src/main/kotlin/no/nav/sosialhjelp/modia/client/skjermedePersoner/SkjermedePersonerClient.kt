@@ -27,7 +27,7 @@ interface SkjermedePersonerClient {
 @Profile("!test")
 @Component
 class SkjermedePersonerClientImpl(
-    private val proxiedWebClient: WebClient,
+    private val webClient: WebClient,
     private val azuredingsService: AzuredingsService,
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
@@ -52,7 +52,7 @@ class SkjermedePersonerClientImpl(
 
         val response: String = runBlocking(Dispatchers.IO) {
             val azureAdToken = azuredingsService.exchangeToken(veilederToken, clientProperties.skjermedePersonerScope)
-            proxiedWebClient.post()
+            webClient.post()
                 .uri("${clientProperties.skjermedePersonerEndpointUrl}/skjermet")
                 .headers { applicationJsonHttpHeaders() }
                 .header(HttpHeaders.AUTHORIZATION, BEARER + azureAdToken)
