@@ -1,8 +1,8 @@
 {
-  "applicationName": "sosialhjelp-modia-api",
+  "applicationName": "sosialhjelp-modia-api-dev",
   "namespace": "teamdigisos",
   "ingress": [
-    "https://sosialhjelp-modia-api-gcp.dev.nav.no/sosialhjelp/modia-api"
+    "https://sosialhjelp-modia-api-dev.dev.nav.no/sosialhjelp/modia-api"
   ],
   "envsecret": [
     "redis-password-modia-api"
