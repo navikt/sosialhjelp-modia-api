@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.modia.client.azure.AzuredingsService
+import no.nav.sosialhjelp.modia.client.azure.applicationJsonHttpHeaders
 import no.nav.sosialhjelp.modia.client.skjermedePersoner.model.SkjermedePersonerRequest
 import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.config.ClientProperties
@@ -27,7 +28,7 @@ interface SkjermedePersonerClient {
 @Profile("!test")
 @Component
 class SkjermedePersonerClientImpl(
-    private val proxiedWebClient: WebClient,
+    private val webClient: WebClient,
     private val azuredingsService: AzuredingsService,
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
@@ -52,8 +53,9 @@ class SkjermedePersonerClientImpl(
 
         val response: String = runBlocking(Dispatchers.IO) {
             val azureAdToken = azuredingsService.exchangeToken(veilederToken, clientProperties.skjermedePersonerScope)
-            proxiedWebClient.post()
+            webClient.post()
                 .uri("${clientProperties.skjermedePersonerEndpointUrl}/skjermet")
+                .headers { applicationJsonHttpHeaders() }
                 .header(HttpHeaders.AUTHORIZATION, BEARER + azureAdToken)
                 .bodyValue(SkjermedePersonerRequest(ident))
                 .retrieve()
@@ -62,7 +64,7 @@ class SkjermedePersonerClientImpl(
                     when (e) {
                         is WebClientResponseException ->
                             log.error(
-                                "Skjermede personer - noe feilet. Status: ${e.statusCode}, message: ${e.message}." +
+                                "Skjermede personer - noe feilet. Status: ${e.statusCode}, message: ${e.message}.\n" +
                                     e.responseBodyAsString,
                                 e
                             )
