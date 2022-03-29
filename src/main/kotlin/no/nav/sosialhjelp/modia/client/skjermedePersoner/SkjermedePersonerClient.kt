@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.modia.client.azure.AzuredingsService
+import no.nav.sosialhjelp.modia.client.azure.applicationJsonHttpHeaders
 import no.nav.sosialhjelp.modia.client.skjermedePersoner.model.SkjermedePersonerRequest
 import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.config.ClientProperties
@@ -53,6 +54,7 @@ class SkjermedePersonerClientImpl(
             val azureAdToken = azuredingsService.exchangeToken(veilederToken, clientProperties.skjermedePersonerScope)
             proxiedWebClient.post()
                 .uri("${clientProperties.skjermedePersonerEndpointUrl}/skjermet")
+                .headers { applicationJsonHttpHeaders() }
                 .header(HttpHeaders.AUTHORIZATION, BEARER + azureAdToken)
                 .bodyValue(SkjermedePersonerRequest(ident))
                 .httpRequest { log.info("DEBUG pcn: ${objectMapper.writeValueAsString(it)}") }
