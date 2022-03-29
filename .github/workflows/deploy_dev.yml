@@ -9,7 +9,6 @@ on:
         type: choice
         options:
           - 'dev-fss'
-          - 'dev'
           - 'mock'
           - 'labs-gcp'
       cluster:
