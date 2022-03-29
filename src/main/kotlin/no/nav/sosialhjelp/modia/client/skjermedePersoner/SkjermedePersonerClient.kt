@@ -55,6 +55,7 @@ class SkjermedePersonerClientImpl(
                 .uri("${clientProperties.skjermedePersonerEndpointUrl}/skjermet")
                 .header(HttpHeaders.AUTHORIZATION, BEARER + azureAdToken)
                 .bodyValue(SkjermedePersonerRequest(ident))
+                .httpRequest { log.info("DEBUG pcn: ${objectMapper.writeValueAsString(it)}") }
                 .retrieve()
                 .bodyToMono<String>()
                 .onErrorMap { e ->
