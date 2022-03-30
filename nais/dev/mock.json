@@ -14,6 +14,7 @@
     "FIKS_DIGISOS_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/fiks",
     "NORG_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/norg_endpoint_url",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.adeo.no/#/startsok?enhetNr=",
+    "MASKINPORTEN_WELL_KNOWN_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/well-known/maskinporten",
     "PDL_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/pdl_endpoint_url",
     "STS_TOKEN_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/sts_token_endpoint_url/token",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
