@@ -17,7 +17,7 @@ import no.nav.sosialhjelp.modia.domain.Utbetaling
 import no.nav.sosialhjelp.modia.domain.Vilkar
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.service.oppgave.OppgaveService
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
+import no.nav.sosialhjelp.modia.service.tilgangskontroll.TilgangskontrollService
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.KILDE_INNSYN_API
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -30,9 +30,9 @@ internal class SoknadsoversiktControllerTest {
     private val fiksClient: FiksClient = mockk()
     private val eventService: EventService = mockk()
     private val oppgaveService: OppgaveService = mockk()
-    private val abacService: AbacService = mockk()
+    private val tilgangskontrollService: TilgangskontrollService = mockk()
 
-    private val controller = SoknadsoversiktController(fiksClient, eventService, oppgaveService, abacService)
+    private val controller = SoknadsoversiktController(fiksClient, eventService, oppgaveService, tilgangskontrollService)
 
     private val digisosSak1: DigisosSak = mockk()
     private val digisosSak2: DigisosSak = mockk()
@@ -56,7 +56,7 @@ internal class SoknadsoversiktControllerTest {
     internal fun setUp() {
         clearAllMocks()
 
-        every { abacService.harTilgang(any(), any(), any(), any()) } just Runs
+        every { tilgangskontrollService.harTilgang(any(), any(), any(), any()) } just Runs
 
         every { digisosSak1.fiksDigisosId } returns id_1
         every { digisosSak1.sistEndret } returns 0L

@@ -1,11 +1,5 @@
 package no.nav.sosialhjelp.modia.logging
 
-import no.nav.abac.xacml.NavAttributter.ADVICEOROBLIGATION_CAUSE
-import no.nav.abac.xacml.NavAttributter.ADVICEOROBLIGATION_DENY_POLICY
-import no.nav.abac.xacml.NavAttributter.ADVICEOROBLIGATION_DENY_RULE
-import no.nav.sosialhjelp.modia.client.abac.AbacResponse
-import no.nav.sosialhjelp.modia.client.abac.Decision
-import no.nav.sosialhjelp.modia.logging.cef.Abac
 import no.nav.sosialhjelp.modia.logging.cef.CommonEventFormat
 import no.nav.sosialhjelp.modia.logging.cef.Extension
 import no.nav.sosialhjelp.modia.logging.cef.Fiks
@@ -36,7 +30,6 @@ class AuditLogger {
             consumerId = values[CONSUMER_ID] as String,
             url = values[URL] as String,
             httpMethod = values[HTTP_METHOD] as HttpMethod,
-            abac = populateAbacIfPresent(values),
             fiks = populateFiksIfPresent(values)
         )
 
@@ -45,34 +38,10 @@ class AuditLogger {
                 log = SPORINGSLOGG,
                 resource = values.getOrDefault(RESOURCE, "") as String,
                 title = values.getOrDefault(TITLE, "") as String,
-                severity = getSeverity(values, extension)
+                severity = getSeverity(values)
             ),
             extension = extension
         )
-    }
-
-    private fun populateAbacIfPresent(values: Map<String, Any>): Abac? {
-        return if (values.containsKey(ABAC_RESPONSE)) {
-            val abacResponse = values[ABAC_RESPONSE] as AbacResponse
-            Abac(
-                decision = abacResponse.decision,
-                denyPolicy = getAdvice(abacResponse, ADVICEOROBLIGATION_DENY_POLICY),
-                denyCause = getAdvice(abacResponse, ADVICEOROBLIGATION_CAUSE),
-                denyRule = getAdvice(abacResponse, ADVICEOROBLIGATION_DENY_RULE)
-            )
-        } else {
-            null
-        }
-    }
-
-    private fun getAdvice(abacResponse: AbacResponse, abacAttributeConstant: String): String? {
-        return abacResponse.associatedAdvice
-            ?.flatMap { advice ->
-                advice.attributeAssignment
-                    ?.filter { it.attributeId.equals(abacAttributeConstant, true) }
-                    .orEmpty()
-            }
-            ?.joinToString(separator = ",") { it.value } // potensielt flere denypolicies eller denycauses separeres med komma
     }
 
     private fun populateFiksIfPresent(values: Map<String, Any>): Fiks? {
@@ -83,12 +52,8 @@ class AuditLogger {
         }
     }
 
-    private fun getSeverity(values: Map<String, Any>, extension: Extension): Severity {
-        return if (extension.abac != null && extension.abac.decision == Decision.Deny) {
-            Severity.WARN
-        } else {
-            (values[SEVERITY] ?: Severity.INFO) as Severity
-        }
+    private fun getSeverity(values: Map<String, Any>): Severity {
+        return (values[SEVERITY] ?: Severity.INFO) as Severity
     }
 
     companion object {

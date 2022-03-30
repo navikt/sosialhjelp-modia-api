@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.UtbetalingsStatus
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
+import no.nav.sosialhjelp.modia.service.tilgangskontroll.TilgangskontrollService
 import no.nav.sosialhjelp.modia.service.utbetalinger.UtbetalingerService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
@@ -25,7 +25,7 @@ import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
 class UtbetalingerController(
     private val utbetalingerService: UtbetalingerService,
     private val fiksClient: FiksClient,
-    private val abacService: AbacService
+    private val tilgangskontrollService: TilgangskontrollService
 ) {
 
     @PostMapping("/utbetalinger")
@@ -36,7 +36,7 @@ class UtbetalingerController(
         @RequestParam fom: String?,
         @RequestParam tom: String?
     ): ResponseEntity<List<UtbetalingerResponse>> {
-        abacService.harTilgang(ident.fnr, token, "/utbetalinger", HttpMethod.POST)
+        tilgangskontrollService.harTilgang(ident.fnr, token, "/utbetalinger", HttpMethod.POST)
 
         return ResponseEntity.ok().body(
             utbetalingerService.hentAlleUtbetalinger(
@@ -54,7 +54,7 @@ class UtbetalingerController(
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident
     ): ResponseEntity<List<UtbetalingerResponse>> {
-        abacService.harTilgang(ident.fnr, token, "/$fiksDigisosId/utbetalinger", HttpMethod.POST)
+        tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/utbetalinger", HttpMethod.POST)
 
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         return ResponseEntity.ok().body(utbetalingerService.hentUtbetalingerForDigisosSak(digisosSak))

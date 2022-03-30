@@ -2,7 +2,7 @@ package no.nav.sosialhjelp.modia.rest
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
+import no.nav.sosialhjelp.modia.service.tilgangskontroll.TilgangskontrollService
 import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
 import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
@@ -22,12 +22,12 @@ import java.time.LocalDateTime
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class VedleggController(
     private val vedleggService: VedleggService,
-    private val abacService: AbacService
+    private val tilgangskontrollService: TilgangskontrollService
 ) {
 
     @PostMapping("/{fiksDigisosId}/vedlegg")
     fun hentVedlegg(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<VedleggResponse>> {
-        abacService.harTilgang(ident.fnr, token, "/$fiksDigisosId/vedlegg", HttpMethod.POST)
+        tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/vedlegg", HttpMethod.POST)
 
         val internalVedleggList: List<InternalVedlegg> = vedleggService.hentAlleOpplastedeVedlegg(fiksDigisosId)
         if (internalVedleggList.isEmpty()) {

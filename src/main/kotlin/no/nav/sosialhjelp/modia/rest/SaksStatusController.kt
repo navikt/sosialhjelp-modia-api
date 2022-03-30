@@ -5,7 +5,7 @@ import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.domain.SaksStatus
 import no.nav.sosialhjelp.modia.domain.UtfallVedtak
 import no.nav.sosialhjelp.modia.service.saksstatus.SaksStatusService
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
+import no.nav.sosialhjelp.modia.service.tilgangskontroll.TilgangskontrollService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
@@ -23,7 +23,7 @@ import java.time.LocalDate
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class SaksStatusController(
     private val saksStatusService: SaksStatusService,
-    private val abacService: AbacService
+    private val tilgangskontrollService: TilgangskontrollService
 ) {
 
     @PostMapping("/{fiksDigisosId}/saksStatus")
@@ -32,7 +32,7 @@ class SaksStatusController(
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident
     ): ResponseEntity<List<SaksStatusResponse>> {
-        abacService.harTilgang(ident.fnr, token, "/$fiksDigisosId/saksStatus", HttpMethod.POST)
+        tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/saksStatus", HttpMethod.POST)
 
         val saksStatuser = saksStatusService.hentSaksStatuser(fiksDigisosId)
         if (saksStatuser.isEmpty()) {
