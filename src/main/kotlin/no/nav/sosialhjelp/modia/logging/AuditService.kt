@@ -12,8 +12,7 @@ class AuditService(
     private val tokenUtils: TokenUtils
 ) {
 
-    private fun commonAttributes(brukerFnr: String, url: String, httpMethod: HttpMethod, access: Access)
-            : Map<String, Any> {
+    private fun commonAttributes(brukerFnr: String, url: String, httpMethod: HttpMethod, access: Access): Map<String, Any> {
         return mutableMapOf(
             CALL_ID to (MDCUtils.getCallId() ?: ""),
             CONSUMER_ID to SRVSOSIALHJELP_MOD,
