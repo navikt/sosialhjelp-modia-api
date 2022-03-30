@@ -10,6 +10,14 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonkrav) {
 
     val log by logger()
 
+    val dokumentasjonkrav = Dokumentasjonkrav(
+        referanse = hendelse.dokumentasjonkravreferanse,
+        beskrivelse = hendelse.beskrivelse,
+        oppfyllt = hendelse.status == JsonDokumentasjonkrav.Status.OPPFYLT
+    )
+
+    this.dokumentasjonkrav.oppdaterEllerLeggTilDokumentasjonkrav(hendelse, dokumentasjonkrav)
+
     val utbetalingerMedSakKnytning = mutableListOf<Utbetaling>()
     val utbetalingerUtenSakKnytning = mutableListOf<Utbetaling>()
     for (utbetalingsreferanse in hendelse.utbetalingsreferanse) {
@@ -34,11 +42,6 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonkrav) {
         return
     }
 
-    val dokumentasjonkrav = Dokumentasjonkrav(
-        referanse = hendelse.dokumentasjonkravreferanse,
-        beskrivelse = hendelse.beskrivelse,
-        oppfyllt = hendelse.status == JsonDokumentasjonkrav.Status.OPPFYLT
-    )
 
     val union = utbetalingerMedSakKnytning.union(utbetalingerUtenSakKnytning)
     union.forEach { it.dokumentasjonkrav.oppdaterEllerLeggTilDokumentasjonkrav(hendelse, dokumentasjonkrav) }
