@@ -56,7 +56,7 @@ internal class TilgangskontrollServiceTest {
     }
 
     @Test
-    internal fun `harTilgang - abacClient gir Permit - kaster ingen exception`() {
+    internal fun `harTilgang - kaster ingen exception`() {
         service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST)
         verify { auditService wasNot called }
     }

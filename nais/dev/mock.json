@@ -10,7 +10,6 @@
   "env": {
     "SPRING_PROFILES_ACTIVE": "mock-alt,log-console,no-redis",
     "METADATA_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/well-known/azuread",
-    "ABAC_PDP_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/abac/application/authorize",
     "AZURE_GRAPH_API_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/azuread/graph",
     "AZURE_APP_WELL_KNOWN_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/azure-well-known/selvbetjening",
     "AZURE_APP_CLIENT_ID": "someaudience",
