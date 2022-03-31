@@ -16,7 +16,7 @@ import java.util.Date
 import java.util.UUID
 
 @Service
-class AzuredingsService (
+class AzuredingsService(
     private val azuredingsClient: AzuredingsClient,
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
