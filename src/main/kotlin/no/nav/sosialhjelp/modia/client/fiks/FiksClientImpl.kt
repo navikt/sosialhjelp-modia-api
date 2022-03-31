@@ -171,8 +171,10 @@ class FiksClientImpl(
 
     private fun harKommunenTilgangTilModia(kommunenummer: String): Boolean {
         log.info(
-            "DEBUG: harKommunenTilgangTilModia nr: $kommunenummer unleashB: ${unleash.isEnabled(BERGEN_ENABLED)}" +
-                "unleashS: ${unleash.isEnabled(STAVANGER_ENABLED)} nrB: ${clientProperties.bergenKommunenummer}" +
+            "DEBUG: harKommunenTilgangTilModia nr: $kommunenummer " +
+                "unleashB: ${unleash.isEnabled(BERGEN_ENABLED, false)}" +
+                "unleashS: ${unleash.isEnabled(STAVANGER_ENABLED, false)} " +
+                "nrB: ${clientProperties.bergenKommunenummer}" +
                 "nrS: ${clientProperties.stavangerKommunenummer}"
         )
         if (unleash.isEnabled(BERGEN_ENABLED, false) && kommunenummer == clientProperties.bergenKommunenummer) {
