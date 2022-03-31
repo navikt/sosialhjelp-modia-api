@@ -14,7 +14,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 
 @Component
-class AbacService(
+class TilgangskontrollService(
     private val pdlClient: PdlClient,
     private val skjermedePersonerClient: SkjermedePersonerClient,
     private val azureGraphClient: AzureGraphClient,

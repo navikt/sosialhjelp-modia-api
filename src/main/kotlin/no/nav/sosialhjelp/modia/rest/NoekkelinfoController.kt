@@ -5,7 +5,7 @@ import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.domain.SendingType
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.service.noekkelinfo.NoekkelinfoService
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
+import no.nav.sosialhjelp.modia.service.tilgangskontroll.TilgangskontrollService
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
@@ -23,12 +23,12 @@ import java.time.LocalDateTime
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class NoekkelinfoController(
     private val noekkelinfoService: NoekkelinfoService,
-    private val abacService: AbacService
+    private val tilgangskontrollService: TilgangskontrollService
 ) {
 
     @PostMapping("/{fiksDigisosId}/noekkelinfo")
     fun hentNoekkelInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadNoekkelinfoResponse> {
-        abacService.harTilgang(ident.fnr, token, "/$fiksDigisosId/noekkelinfo", HttpMethod.POST)
+        tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/noekkelinfo", HttpMethod.POST)
 
         val noekkelinfo = noekkelinfoService.hentNoekkelInfo(fiksDigisosId)
         return ResponseEntity.ok().body(noekkelinfo)
