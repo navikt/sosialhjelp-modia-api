@@ -30,7 +30,7 @@
     "UNLEASH_INSTANCE_ID": "dev-mock",
     "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.cluster.local",
     "SWAGGER_ENABLED": "true",
-    "BERGEN_KOMMUNENUMMER": "4601",
+    "BERGEN_KOMMUNENUMMER": "1337",
     "STAVANGER_KOMMUNENUMMER": "1103"
   },
   "minReplicas": "1",

@@ -26,7 +26,7 @@
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
     "UNLEASH_INSTANCE_ID": "labs-gcp",
     "SWAGGER_ENABLED": "true",
-    "BERGEN_KOMMUNENUMMER": "4601",
+    "BERGEN_KOMMUNENUMMER": "1337",
     "STAVANGER_KOMMUNENUMMER": "1103"
   },
   "minReplicas": "1",
