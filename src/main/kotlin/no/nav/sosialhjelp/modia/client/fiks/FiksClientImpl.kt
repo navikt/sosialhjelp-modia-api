@@ -166,12 +166,13 @@ class FiksClientImpl(
         }
         log.info("Hentet ${digisosSaker.size} saker fra Fiks (før filter.)")
         return digisosSaker.filter { harKommunenTilgangTilModia(it.kommunenummer) }
-            .also {
-                auditService.reportFiks(fnr, baseUrl + PATH_ALLE_DIGISOSSAKER, HttpMethod.POST, sporingsId)
-            }
+            .also { auditService.reportFiks(fnr, baseUrl + PATH_ALLE_DIGISOSSAKER, HttpMethod.POST, sporingsId) }
     }
 
     private fun harKommunenTilgangTilModia(kommunenummer: String): Boolean {
+        log.info("DEBUG: harKommunenTilgangTilModia nr: $kommunenummer unleashB: ${unleash.isEnabled(BERGEN_ENABLED)}" +
+                "unleashS: ${unleash.isEnabled(STAVANGER_ENABLED)} nrB: ${clientProperties.bergenKommunenummer}" +
+                "nrS: ${clientProperties.stavangerKommunenummer}")
         if (unleash.isEnabled(BERGEN_ENABLED, false) && kommunenummer == clientProperties.bergenKommunenummer) {
             return true
         }
