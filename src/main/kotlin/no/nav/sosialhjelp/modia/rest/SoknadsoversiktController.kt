@@ -33,10 +33,9 @@ class SoknadsoversiktController(
     private val oppgaveService: OppgaveService,
     private val tilgangskontrollService: TilgangskontrollService
 ) {
-
     @PostMapping("/soknader")
     fun getSoknader(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SoknadResponse>> {
-        tilgangskontrollService.harTilgang(ident.fnr, token, "//soknader", HttpMethod.POST)
+        tilgangskontrollService.harTilgang(ident.fnr, token, "/soknader", HttpMethod.POST)
 
         val saker = try {
             fiksClient.hentAlleDigisosSaker(ident.fnr)
