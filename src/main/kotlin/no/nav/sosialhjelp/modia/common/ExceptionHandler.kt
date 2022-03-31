@@ -57,13 +57,6 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         return ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
-    @ExceptionHandler(AbacException::class)
-    fun handleAbacException(e: AbacException): ResponseEntity<FrontendErrorMessage> {
-        log.warn("Noe feilet ved kall til Abac", e)
-        val error = FrontendErrorMessage(ABAC_ERROR, "Noe uventet feilet")
-        return ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
-
     @ExceptionHandler(MsGraphException::class)
     fun handleMsGraphException(e: MsGraphException): ResponseEntity<FrontendErrorMessage> {
         log.warn("MsGraph - noe feilet", e)
@@ -73,7 +66,8 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(ManglendeTilgangException::class)
     fun handleManglendeTilgangException(e: ManglendeTilgangException): ResponseEntity<String> {
-        // "maskerer" manglende tilgang fra abac?
+        // "maskerer" manglende tilgang til bruker?
+        log.info("ManglendeTilgangException: ${e.message}")
         return ResponseEntity(HttpStatus.OK)
     }
 
@@ -123,7 +117,6 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         private const val FIKS_ERROR = "fiks_error"
         private const val NORG_ERROR = "norg_error"
         private const val PDL_ERROR = "pdl_error"
-        private const val ABAC_ERROR = "abac_error"
         private const val MSGRAPH_ERROR = "msgraph_error"
         private const val TILGANG_ERROR = "tilgang_error"
     }

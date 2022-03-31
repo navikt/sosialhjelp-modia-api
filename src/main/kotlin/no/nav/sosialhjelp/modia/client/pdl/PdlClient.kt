@@ -59,6 +59,7 @@ class PdlClientImpl(
             .block()
     }
 
+    @Suppress("SameParameterValue")
     private fun getResourceAsString(path: String) = this.javaClass.getResource(path)?.readText()?.replace("[\n\r]", "")
         ?: throw RuntimeException("Feil ved lesing av graphql-spørring fra fil")
 
@@ -107,8 +108,10 @@ class PdlClientMock : PdlClient {
     }
 
     private fun defaultPdlHentPerson(): PdlHentPerson {
+        @Suppress("SameParameterValue")
         return PdlHentPerson(
             PdlPerson(
+                listOf(Adressebeskyttelse(Gradering.UGRADERT)),
                 listOf(PdlPersonNavn("Bruce", "mock", "Banner")),
                 listOf(PdlKjoenn(Kjoenn.KVINNE)),
                 listOf(PdlFoedselsdato("2000-01-01")),

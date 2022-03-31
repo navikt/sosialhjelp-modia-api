@@ -49,10 +49,7 @@ internal class FiksClientTest {
     private val unleash: Unleash = mockk()
     private val retryProperties: FiksRetryProperties = mockk()
 
-    private val BERGEN_KOMMUNENUMMER = "1234"
-    private val STAVANGER_KOMMUNENUMMER = "1111"
-
-    private val fiksClient = FiksClientImpl(fiksWebClient, clientProperties, maskinportenClient, auditService, redisService, unleash, retryProperties, BERGEN_KOMMUNENUMMER, STAVANGER_KOMMUNENUMMER)
+    private val fiksClient = FiksClientImpl(fiksWebClient, clientProperties, maskinportenClient, auditService, redisService, unleash, retryProperties)
 
     private val id = "123"
 
@@ -75,6 +72,8 @@ internal class FiksClientTest {
         every { retryProperties.initialDelay } returns 5
         every { retryProperties.maxDelay } returns 10
 
+        every { clientProperties.bergenKommunenummer } returns "1234"
+        every { clientProperties.stavangerKommunenummer } returns "1111"
         every { unleash.isEnabled(FIKS_CACHE_ENABLED, false) } returns true
         every { unleash.isEnabled(BERGEN_ENABLED, false) } returns true
         every { unleash.isEnabled(STAVANGER_ENABLED, false) } returns true

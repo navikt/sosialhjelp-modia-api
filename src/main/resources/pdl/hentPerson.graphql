@@ -1,5 +1,8 @@
 query($ident: ID!, $navnHistorikk: Boolean!){
     hentPerson(ident: $ident) {
+        adressebeskyttelse(historikk: false) {
+            gradering
+        }
         navn(historikk: $navnHistorikk) {
             fornavn
             mellomnavn

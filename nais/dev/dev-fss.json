@@ -11,13 +11,16 @@
     "serviceuser-srvsosialhjelp-mod"
   ],
   "env": {
-    "ABAC_PDP_ENDPOINT_URL": "https://abac-sosialhjelp.dev.intern.nav.no/application/authorize",
+    "SPRING_PROFILES_ACTIVE": "dev-fss,log-console,log-audit",
+    "AZURE_GRAPH_API_URL": "https://graph.microsoft.com/v1.0",
+    "VEILEDER_GRUPPE_ID": "55f10d2b-f3ac-4d85-b989-655145ab5f30",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.test.ks.no",
     "NORG_ENDPOINT_URL": "https://norg2.dev.adeo.no/norg2/api/v1",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.adeo.no/#/startsok?enhetNr=",
     "PDL_ENDPOINT_URL": "https://pdl-api.nais.preprod.local/graphql",
+    "SKJERMEDE_PERSONER_ENDPOINT_URL": "https://skjermede-personer-pip.dev.intern.nav.no",
+    "SKJERMEDE_PERSONER_SCOPE": "api://dev-gcp.nom.skjermede-personer-pip/.default",
     "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.preprod.local/rest/v1/sts/token",
-    "SPRING_PROFILES_ACTIVE": "dev-fss,log-kibana,log-audit",
     "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local",
     "CACHE_TIME_TO_LIVE_SECONDS": "60",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
@@ -27,7 +30,7 @@
     "STAVANGER_KOMMUNENUMMER": "1103"
   },
   "minReplicas": "1",
-  "maxReplicas": "2",
+  "maxReplicas": "1",
   "cpuLimit": "500m",
   "memoryLimit": "1Gi",
   "cpuRequest": "10m",

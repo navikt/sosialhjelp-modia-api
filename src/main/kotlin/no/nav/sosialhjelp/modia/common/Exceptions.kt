@@ -5,11 +5,6 @@ class NorgException(
     override val cause: Throwable?
 ) : RuntimeException(message, cause)
 
-class AbacException(
-    override val message: String?,
-    override val cause: Throwable? = null
-) : RuntimeException(message, cause)
-
 class ManglendeTilgangException(
     override val message: String?
 ) : RuntimeException(message)

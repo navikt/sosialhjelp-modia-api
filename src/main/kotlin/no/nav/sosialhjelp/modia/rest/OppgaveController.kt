@@ -3,8 +3,9 @@ package no.nav.sosialhjelp.modia.rest
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.service.oppgave.OppgaveService
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
+import no.nav.sosialhjelp.modia.service.tilgangskontroll.TilgangskontrollService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -20,12 +21,12 @@ import java.time.LocalDate
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class OppgaveController(
     private val oppgaveService: OppgaveService,
-    private val abacService: AbacService
+    private val tilgangskontrollService: TilgangskontrollService
 ) {
 
     @PostMapping("/{fiksDigisosId}/oppgaver")
     fun hentOppgaver(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<OppgaveResponse>> {
-        abacService.harTilgang(ident.fnr, token)
+        tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/oppgaver", HttpMethod.POST)
 
         val oppgaver = oppgaveService.hentOppgaver(fiksDigisosId)
         if (oppgaver.isEmpty()) {

@@ -31,11 +31,24 @@ data class PdlHentPerson(
 )
 
 data class PdlPerson(
+    val adressebeskyttelse: List<Adressebeskyttelse>,
     val navn: List<PdlPersonNavn>,
     val kjoenn: List<PdlKjoenn>,
     val foedsel: List<PdlFoedselsdato>,
     val telefonnummer: List<PdlTelefonnummer>
 )
+
+data class Adressebeskyttelse(
+    val gradering: Gradering
+)
+
+@Suppress("unused")
+enum class Gradering {
+    STRENGT_FORTROLIG_UTLAND, // kode 6 (utland)
+    STRENGT_FORTROLIG, // kode 6
+    FORTROLIG, // kode 7
+    UGRADERT
+}
 
 data class PdlPersonNavn(
     val fornavn: String,
@@ -57,6 +70,7 @@ data class PdlTelefonnummer(
     val prioritet: Int
 )
 
+@Suppress("unused")
 enum class Kjoenn { MANN, KVINNE, UKJENT }
 
 val PdlHentPerson.navn: String?
@@ -87,7 +101,7 @@ val PdlHentPerson.alder: Int?
         return hentPerson?.foedsel?.firstOrNull()?.foedselsdato?.let { Period.between(LocalDate.parse(it), LocalDate.now()).years }
     }
 
-val PdlHentPerson.kjoenn: String?
+val PdlHentPerson.kjoenn: String
     get() {
         return hentPerson?.kjoenn?.firstOrNull()?.kjoenn.toString()
     }
@@ -98,3 +112,17 @@ val PdlHentPerson.telefonnummer: String?
             ?.minByOrNull { it.prioritet }
             ?.let { it.landskode.plus(it.nummer) }
     }
+
+fun PdlPerson.isKode6Or7(): Boolean {
+    return adressebeskyttelse.any {
+        it.isKode6() || it.isKode7()
+    }
+}
+
+fun Adressebeskyttelse.isKode6(): Boolean {
+    return this.gradering == Gradering.STRENGT_FORTROLIG || this.gradering == Gradering.STRENGT_FORTROLIG_UTLAND
+}
+
+fun Adressebeskyttelse.isKode7(): Boolean {
+    return this.gradering == Gradering.FORTROLIG
+}
