@@ -36,6 +36,7 @@ class TilgangskontrollService(
         if (skjermedePersonerClient.erPersonSkjermet(brukerIdent, veilederToken)) throw ManglendeTilgangException("Person er skjermet.")
             .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
     }
+
     companion object {
         val log by logger()
     }

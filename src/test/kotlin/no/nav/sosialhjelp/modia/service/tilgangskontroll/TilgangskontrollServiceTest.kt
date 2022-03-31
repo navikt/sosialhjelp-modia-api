@@ -56,7 +56,7 @@ internal class TilgangskontrollServiceTest {
     }
 
     @Test
-    internal fun `harTilgang - abacClient gir Permit - kaster ingen exception`() {
+    internal fun `harTilgang - kaster ingen exception`() {
         service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST)
         verify { auditService wasNot called }
     }
@@ -81,7 +81,7 @@ internal class TilgangskontrollServiceTest {
     }
 
     @Test
-    internal fun `deny - manglende tilgang til sosialhjelp - feil gruppe`() {
+    internal fun `manglende tilgang til sosialhjelp - feil gruppe`() {
         every { azureGraphClient.hentInnloggetVeilederSineGrupper(any()) } returns azureAdFeilGruppe
 
         assertThatThrownBy { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) }
@@ -90,7 +90,7 @@ internal class TilgangskontrollServiceTest {
     }
 
     @Test
-    internal fun `deny - manglende tilgang til sosialhjelp - ingen grupper`() {
+    internal fun `manglende tilgang til sosialhjelp - ingen grupper`() {
         every { azureGraphClient.hentInnloggetVeilederSineGrupper(any()) } returns azureAdIngenGruppe
 
         assertThatThrownBy { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) }
@@ -99,7 +99,7 @@ internal class TilgangskontrollServiceTest {
     }
 
     @Test
-    internal fun `deny - manglende tilgang til kode6`() {
+    internal fun `manglende tilgang til kode6`() {
         val kode6 = listOf(Adressebeskyttelse(Gradering.STRENGT_FORTROLIG))
         val personMedKode6 = PdlHentPerson(PdlPerson(kode6, emptyList(), emptyList(), emptyList(), emptyList()))
         every { pdlClient.hentPerson(any()) } returns personMedKode6
@@ -110,7 +110,7 @@ internal class TilgangskontrollServiceTest {
     }
 
     @Test
-    internal fun `deny - manglende tilgang til kode6 utland`() {
+    internal fun `manglende tilgang til kode6 utland`() {
         val kode6 = listOf(Adressebeskyttelse(Gradering.STRENGT_FORTROLIG_UTLAND))
         val personMedKode6 = PdlHentPerson(PdlPerson(kode6, emptyList(), emptyList(), emptyList(), emptyList()))
         every { pdlClient.hentPerson(any()) } returns personMedKode6
@@ -121,7 +121,7 @@ internal class TilgangskontrollServiceTest {
     }
 
     @Test
-    internal fun `deny - manglende tilgang til kode7`() {
+    internal fun `manglende tilgang til kode7`() {
         val kode7 = listOf(Adressebeskyttelse(Gradering.FORTROLIG))
         val personMedKode7 = PdlHentPerson(PdlPerson(kode7, emptyList(), emptyList(), emptyList(), emptyList()))
         every { pdlClient.hentPerson(any()) } returns personMedKode7
@@ -132,7 +132,7 @@ internal class TilgangskontrollServiceTest {
     }
 
     @Test
-    internal fun `deny - manglende tilgang til egenAnsatt`() {
+    internal fun `manglende tilgang til egenAnsatt`() {
         every { skjermedePersonerClient.erPersonSkjermet(any(), any()) } returns true
 
         assertThatThrownBy { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) }

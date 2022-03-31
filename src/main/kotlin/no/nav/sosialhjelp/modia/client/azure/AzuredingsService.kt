@@ -7,7 +7,6 @@ import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
-import no.nav.sosialhjelp.modia.redis.RedisKeyType
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.utils.MiljoUtils
 import org.springframework.stereotype.Service
@@ -16,17 +15,13 @@ import java.time.Instant
 import java.util.Date
 import java.util.UUID
 
-interface AzuredingsService {
-    suspend fun exchangeToken(token: String, scope: String): String
-}
-
 @Service
-class CachingAzuredingsService internal constructor(
+class AzuredingsService(
     private val azuredingsClient: AzuredingsClient,
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
     miljoUtils: MiljoUtils,
-) : AzuredingsService {
+) {
 
     private val privateRsaKey: RSAKey = if (clientProperties.azuredingsPrivateJwk == "generateRSA") {
         if (miljoUtils.isRunningInProd()) throw RuntimeException("Generation of RSA keys is not allowed in prod.")
@@ -35,10 +30,10 @@ class CachingAzuredingsService internal constructor(
         RSAKey.parse(clientProperties.azuredingsPrivateJwk)
     }
 
-    override suspend fun exchangeToken(token: String, scope: String): String {
+    suspend fun exchangeToken(token: String, scope: String): String {
 
-        val redisKey = "$token$scope"
-        redisService.get(RedisKeyType.AZUREDINGS, redisKey, (String::class.java))
+        val redisKey = "AZURE_TOKEN_$token$scope"
+        redisService.get(redisKey, (String::class.java))
             ?.let { return (it as String) }
 
         val jwt = createSignedAssertion(clientProperties.azuredingsJwtClientId, clientProperties.azuredingsJwtAudience, privateRsaKey)
@@ -67,7 +62,7 @@ class CachingAzuredingsService internal constructor(
     }
 
     private fun lagreTilCache(key: String, onBehalfToken: String) {
-        redisService.set(RedisKeyType.AZUREDINGS, key, onBehalfToken.toByteArray(), 30)
+        redisService.set(key, onBehalfToken.toByteArray(), 30)
     }
 
     companion object {

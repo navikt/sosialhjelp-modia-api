@@ -18,7 +18,6 @@ object Versions {
     const val tokenValidation = "2.0.12"
     const val jackson = "2.13.2"
     const val guava = "31.1-jre"
-    const val abacAttributeConstants = "3.3.13"
     const val logbackSyslog4j = "1.0.0"
     const val javaJwt = "3.19.0"
     const val jwksRsa = "0.21.0"
@@ -129,9 +128,6 @@ dependencies {
 
 //    Springdoc
     implementation("org.springdoc:springdoc-openapi-ui:${Versions.springdoc}")
-
-//    Abac-attributter
-    implementation("no.nav.abac.policies:abac-attribute-constants:${Versions.abacAttributeConstants}")
 
 //    Unleash
     implementation("no.finn.unleash:unleash-client-java:${Versions.unleash}")

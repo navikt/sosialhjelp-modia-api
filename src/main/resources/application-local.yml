@@ -15,7 +15,6 @@ springdoc:
     enabled: true
 
 client:
-  abac_pdp_endpoint_url: ${ABAC_PDP_ENDPOINT_URL:abac_pdp_endpoint_url}
   fiks_digisos_endpoint_url: ${FIKS_DIGISOS_ENDPOINT_URL:https://api.fiks.test.ks.no}
   fiks_integrasjonid: ${INTEGRASJONSID_FIKS}
   fiks_integrasjonpassord: ${INTEGRASJONPASSORD_FIKS}

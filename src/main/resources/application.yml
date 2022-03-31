@@ -42,7 +42,6 @@ springdoc:
 
 #Environment-variabler som settes av NAIS
 client:
-  abac_pdp_endpoint_url: ${ABAC_PDP_ENDPOINT_URL}
   fiks_digisos_endpoint_url: ${FIKS_DIGISOS_ENDPOINT_URL}
   fiks_integrasjonid: ${INTEGRASJONSID_FIKS}
   fiks_integrasjonpassord: ${INTEGRASJONPASSORD_FIKS}

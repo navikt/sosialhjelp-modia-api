@@ -55,7 +55,6 @@ spec:
         - host: "login.microsoftonline.com"
         - host: "unleash.nais.io"
       rules:
-        - application: sosialhjelp-mock-alt-api
         - application: sosialhjelp-mock-alt-api-mock
         - application: sosialhjelp-modia-api-redis
   ingresses:

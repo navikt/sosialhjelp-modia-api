@@ -165,10 +165,9 @@ class FiksClientImpl(
                 }
                 .block() ?: throw FiksServerException(500, "Fiks - AlleDigisosSaker nedlasting feilet!", null)
         }
+        log.info("Hentet ${digisosSaker.size} saker fra Fiks (før filter.)")
         return digisosSaker.filter { harKommunenTilgangTilModia(it.kommunenummer) }
-            .also {
-                auditService.reportFiks(fnr, baseUrl + PATH_ALLE_DIGISOSSAKER, HttpMethod.POST, sporingsId)
-            }
+            .also { auditService.reportFiks(fnr, baseUrl + PATH_ALLE_DIGISOSSAKER, HttpMethod.POST, sporingsId) }
     }
 
     private fun harKommunenTilgangTilModia(kommunenummer: String): Boolean {
