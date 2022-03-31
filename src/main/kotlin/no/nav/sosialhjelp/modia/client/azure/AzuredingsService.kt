@@ -15,17 +15,13 @@ import java.time.Instant
 import java.util.Date
 import java.util.UUID
 
-interface AzuredingsService {
-    suspend fun exchangeToken(token: String, scope: String): String
-}
-
 @Service
-class CachingAzuredingsService internal constructor(
+class AzuredingsService (
     private val azuredingsClient: AzuredingsClient,
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
     miljoUtils: MiljoUtils,
-) : AzuredingsService {
+) {
 
     private val privateRsaKey: RSAKey = if (clientProperties.azuredingsPrivateJwk == "generateRSA") {
         if (miljoUtils.isRunningInProd()) throw RuntimeException("Generation of RSA keys is not allowed in prod.")
@@ -34,7 +30,7 @@ class CachingAzuredingsService internal constructor(
         RSAKey.parse(clientProperties.azuredingsPrivateJwk)
     }
 
-    override suspend fun exchangeToken(token: String, scope: String): String {
+    suspend fun exchangeToken(token: String, scope: String): String {
 
         val redisKey = "AZURE_TOKEN_$token$scope"
         redisService.get(redisKey, (String::class.java))

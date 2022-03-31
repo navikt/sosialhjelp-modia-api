@@ -2,7 +2,7 @@ package no.nav.sosialhjelp.modia.client.azure.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-internal data class AzuredingsResponse(
+data class AzuredingsResponse(
     @JsonProperty("token_type") val tokenType: String,
     @JsonProperty("scope") val scope: String = "",
     @JsonProperty("expires_in") val expiresIn: Int = 0,

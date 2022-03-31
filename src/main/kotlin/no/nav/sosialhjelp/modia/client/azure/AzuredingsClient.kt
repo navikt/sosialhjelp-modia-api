@@ -3,6 +3,7 @@ package no.nav.sosialhjelp.modia.client.azure
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.client.azure.model.AzuredingsResponse
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
@@ -10,7 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
 
 @Component
-internal class AzuredingsClient(
+class AzuredingsClient(
     private val proxiedWebClient: WebClient,
     private val azuredingsWebConfig: AzuredingsWebConfig,
 ) {
@@ -29,7 +30,7 @@ internal class AzuredingsClient(
             proxiedWebClient
                 .post()
                 .uri(azuredingsWebConfig.tokenEndpoint)
-                .headers { applicationFormUrlencodedHeaders().map { it.key to it.value } }
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(params))
                 .retrieve()
                 .awaitBody()

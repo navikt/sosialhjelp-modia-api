@@ -21,7 +21,6 @@ class AzureGraphClient(
             val excangedToken = azuredingsService.exchangeToken(token, "https://graph.microsoft.com/.default")
             proxiedWebClient.get()
                 .uri("${clientProperties.azureGraphUrl}/me/memberOf")
-                .headers { applicationJsonHttpHeaders().map { it.key to it.value } }
                 .header(HttpHeaders.AUTHORIZATION, BEARER + excangedToken)
                 .retrieve()
                 .awaitBody()
