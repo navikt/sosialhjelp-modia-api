@@ -5,6 +5,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.modia.client.azure.model.AzuredingsResponse
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import org.springframework.context.annotation.Profile
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
@@ -32,7 +33,7 @@ class AzureAppTokenUtilsImpl(
 
             val tokenResponse: AzuredingsResponse = proxiedWebClient.post()
                 .uri(clientProperties.azureTokenEndpointUrl)
-                .headers { applicationFormUrlencodedHeaders().map { it.key to it.value } }
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(params))
                 .retrieve()
                 .awaitBody()
