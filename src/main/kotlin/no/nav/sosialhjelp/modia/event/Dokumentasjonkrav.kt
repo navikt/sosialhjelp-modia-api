@@ -3,17 +3,23 @@ package no.nav.sosialhjelp.modia.event
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonDokumentasjonkrav
 import no.nav.sosialhjelp.modia.domain.Dokumentasjonkrav
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.domain.OppgaveStatus
 import no.nav.sosialhjelp.modia.domain.Utbetaling
 import no.nav.sosialhjelp.modia.logger
+import no.nav.sosialhjelp.modia.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonkrav) {
 
     val log by logger()
 
     val dokumentasjonkrav = Dokumentasjonkrav(
-        referanse = hendelse.dokumentasjonkravreferanse,
+        dokumentasjonkravId = hendelse.dokumentasjonkravreferanse,
+        tittel = hendelse.tittel,
         beskrivelse = hendelse.beskrivelse,
-        oppfyllt = hendelse.status == JsonDokumentasjonkrav.Status.OPPFYLT
+        frist =  hendelse.frist?.toLocalDateTime()?.toLocalDate(),
+        datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
+        status = OppgaveStatus.valueOf(hendelse.status.value()),
+        utbetalingsReferanse = hendelse.utbetalingsreferanse
     )
 
     this.dokumentasjonkrav.oppdaterEllerLeggTilDokumentasjonkrav(hendelse, dokumentasjonkrav)
@@ -53,8 +59,8 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonkrav) {
 }
 
 private fun MutableList<Dokumentasjonkrav>.oppdaterEllerLeggTilDokumentasjonkrav(hendelse: JsonDokumentasjonkrav, dokumentasjonkrav: Dokumentasjonkrav) {
-    if (any { it.referanse == hendelse.dokumentasjonkravreferanse }) {
-        filter { it.referanse == hendelse.dokumentasjonkravreferanse }
+    if (any { it.dokumentasjonkravId == hendelse.dokumentasjonkravreferanse }) {
+        filter { it.dokumentasjonkravId == hendelse.dokumentasjonkravreferanse }
             .forEach { it.oppdaterFelter(hendelse) }
     } else {
         this.add(dokumentasjonkrav)
@@ -63,5 +69,5 @@ private fun MutableList<Dokumentasjonkrav>.oppdaterEllerLeggTilDokumentasjonkrav
 
 private fun Dokumentasjonkrav.oppdaterFelter(hendelse: JsonDokumentasjonkrav) {
     beskrivelse = hendelse.beskrivelse
-    oppfyllt = hendelse.status == JsonDokumentasjonkrav.Status.OPPFYLT
+    status = OppgaveStatus.valueOf(hendelse.status.value())
 }

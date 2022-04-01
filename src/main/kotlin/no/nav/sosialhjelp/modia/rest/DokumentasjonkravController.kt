@@ -33,6 +33,8 @@ class DokumentasjonkravController(
 
     data class DokumentasjonkravResponse(
         val referanse: String,
-        val status: String
+        val sakstittel: String?,
+        val status: String,
+        val utbetalingsbeskrivelse: String?
     )
 }

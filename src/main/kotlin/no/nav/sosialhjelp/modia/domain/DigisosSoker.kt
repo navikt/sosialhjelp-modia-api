@@ -79,10 +79,17 @@ data class Vilkar(
 )
 
 data class Dokumentasjonkrav(
-    var referanse: String,
+    var dokumentasjonkravId: String,
+    var tittel: String?,
     var beskrivelse: String?,
-    var oppfyllt: Boolean // rename til relevant?
-)
+    var status: OppgaveStatus,
+    var utbetalingsReferanse: List<String>?,
+    var datoLagtTil: LocalDateTime,
+    var frist: LocalDate?
+) {
+    fun isEmpty(): Boolean = tittel.isNullOrBlank() && beskrivelse.isNullOrBlank()
+
+}
 
 data class Hendelse(
     val tittel: String,
@@ -120,4 +127,8 @@ enum class UtbetalingsStatus {
 
 enum class UtfallVedtak {
     INNVILGET, DELVIS_INNVILGET, AVSLATT, AVVIST
+}
+
+enum class OppgaveStatus {
+    RELEVANT, ANNULLERT, OPPFYLT, IKKE_OPPFYLT, LEVERT_TIDLIGERE
 }

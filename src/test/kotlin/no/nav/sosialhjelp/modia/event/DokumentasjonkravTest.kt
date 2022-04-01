@@ -67,9 +67,9 @@ internal class DokumentasjonkravTest {
         assertThat(model.saker[0].utbetalinger).hasSize(1)
         val utbetaling = model.saker[0].utbetalinger[0]
         assertThat(utbetaling.dokumentasjonkrav).hasSize(1)
-        assertThat(utbetaling.dokumentasjonkrav[0].referanse).isEqualTo(dokumentasjonkrav_ref_1)
+        assertThat(utbetaling.dokumentasjonkrav[0].dokumentasjonkravId).isEqualTo(dokumentasjonkrav_ref_1)
         assertThat(utbetaling.dokumentasjonkrav[0].beskrivelse).isEqualTo("beskrivelse")
-        assertThat(utbetaling.dokumentasjonkrav[0].oppfyllt).isEqualTo(true)
+        assertThat(utbetaling.dokumentasjonkrav[0].status).isEqualTo(true)
     }
 
     @Test
@@ -146,6 +146,6 @@ internal class DokumentasjonkravTest {
         assertThat(model.saker[0].utbetalinger).hasSize(1)
         val utbetaling = model.saker[0].utbetalinger[0]
         assertThat(utbetaling.dokumentasjonkrav).hasSize(1)
-        assertThat(utbetaling.dokumentasjonkrav[0].referanse).isEqualTo(dokumentasjonkrav_ref_1)
+        assertThat(utbetaling.dokumentasjonkrav[0].dokumentasjonkravId).isEqualTo(dokumentasjonkrav_ref_1)
     }
 }
