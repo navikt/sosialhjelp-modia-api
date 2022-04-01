@@ -4,6 +4,7 @@ import no.nav.sosialhjelp.modia.common.NorgException
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.redis.ALLE_NAVENHETER_CACHE_KEY
 import no.nav.sosialhjelp.modia.redis.ALLE_NAVENHETER_CACHE_TIME_TO_LIVE_SECONDS
+import no.nav.sosialhjelp.modia.redis.RedisKeyType
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.typeRef
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
@@ -64,7 +65,7 @@ class NorgClientImpl(
     }
 
     private fun lagreTilCache(list: List<NavEnhet>) {
-        redisService.set(ALLE_NAVENHETER_CACHE_KEY, objectMapper.writeValueAsBytes(list), ALLE_NAVENHETER_CACHE_TIME_TO_LIVE_SECONDS)
+        redisService.set(RedisKeyType.NORG_CLIENT, ALLE_NAVENHETER_CACHE_KEY, objectMapper.writeValueAsBytes(list), ALLE_NAVENHETER_CACHE_TIME_TO_LIVE_SECONDS)
     }
 
     companion object {

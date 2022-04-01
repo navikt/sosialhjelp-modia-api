@@ -20,6 +20,7 @@ import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.logging.AuditService
 import no.nav.sosialhjelp.modia.maskerFnr
 import no.nav.sosialhjelp.modia.messageUtenFnr
+import no.nav.sosialhjelp.modia.redis.RedisKeyType
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.typeRef
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
@@ -65,7 +66,7 @@ class FiksClientImpl(
     private fun hentDigisosSakFraCache(digisosId: String): DigisosSak? {
         if (skalBrukeCache()) {
             log.debug("Forsøker å hente digisosSak fra cache")
-            return redisService.get(cacheKeyFor(digisosId), DigisosSak::class.java) as DigisosSak?
+            return redisService.get(RedisKeyType.FIKS_CLIENT, cacheKeyFor(digisosId), DigisosSak::class.java) as DigisosSak?
         }
         return null
     }
@@ -107,14 +108,14 @@ class FiksClientImpl(
     private fun lagreTilCache(id: String, any: Any) {
         if (skalBrukeCache()) {
             log.info("Lagret digisossak/dokument id=$id til cache")
-            redisService.set(cacheKeyFor(id), objectMapper.writeValueAsBytes(any))
+            redisService.set(RedisKeyType.FIKS_CLIENT, cacheKeyFor(id), objectMapper.writeValueAsBytes(any))
         }
     }
 
     private fun hentDokumentFraCache(dokumentlagerId: String, requestedClass: Class<out Any>): Any? {
         if (skalBrukeCache()) {
             log.debug("Forsøker å hente dokument fra cache")
-            return redisService.get(cacheKeyFor(dokumentlagerId), requestedClass)
+            return redisService.get(RedisKeyType.FIKS_CLIENT, cacheKeyFor(dokumentlagerId), requestedClass)
         }
         return null
     }
