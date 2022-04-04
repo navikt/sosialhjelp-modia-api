@@ -35,7 +35,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
     }
     sakForReferanse.vedtak.add(vedtak)
 
-    val beskrivelse = "${sakForReferanse.tittel ?: DEFAULT_TITTEL} er ferdig behandlet"
+    val beskrivelse = "${sakForReferanse.tittel ?: DEFAULT_TITTEL} er ferdigbehandlet"
 
     historikk.add(Hendelse(SAK_FERDIGBEHANDLET, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime(), VIS_BREVET))
 }
