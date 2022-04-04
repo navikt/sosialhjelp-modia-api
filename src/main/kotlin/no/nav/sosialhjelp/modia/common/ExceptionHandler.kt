@@ -65,16 +65,16 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     }
 
     @ExceptionHandler(ManglendeTilgangException::class)
-    fun handleManglendeTilgangException(e: ManglendeTilgangException): ResponseEntity<String> {
-        // "maskerer" manglende tilgang til bruker?
+    fun handleManglendeTilgangException(e: ManglendeTilgangException): ResponseEntity<FrontendErrorMessage> {
         log.info("ManglendeTilgangException: ${e.message}")
-        return ResponseEntity(HttpStatus.OK)
+        val error = FrontendErrorMessage(TILGANG_ERROR, "Mangler tilgang til bruker")
+        return ResponseEntity(error, HttpStatus.FORBIDDEN)
     }
 
     @ExceptionHandler(ManglendeModiaSosialhjelpTilgangException::class)
     fun handleManglendeModiaSosialhjelpTilgangException(e: ManglendeModiaSosialhjelpTilgangException): ResponseEntity<FrontendErrorMessage> {
         log.info("Veileder manger ad-rolle for tilgang til sosialhjelp i modia.")
-        val error = FrontendErrorMessage(TILGANG_ERROR, "Mangler tilgang")
+        val error = FrontendErrorMessage(TILGANG_ERROR, "Mangler tilgang til tjenesten")
         return ResponseEntity(error, HttpStatus.FORBIDDEN)
     }
 
@@ -126,6 +126,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         val message: String?
     )
 
+    @Suppress("unused")
     class FrontendUnauthorizedMelding(
         val loginUrl: String,
         type: String?,
