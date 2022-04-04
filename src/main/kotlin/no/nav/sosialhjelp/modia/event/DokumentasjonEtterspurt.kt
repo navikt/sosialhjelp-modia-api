@@ -17,12 +17,12 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonEtterspurt) {
         .toMutableList()
 
     if (hendelse.dokumenter.isNotEmpty() && hendelse.forvaltningsbrev != null) {
-        val beskrivelse = "Du må sende dokumentasjon."
+        val beskrivelse = "Vi trenger flere opplysninger til søknaden din"
         historikk.add(Hendelse(DOKUMENTASJONSKRAV, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime(), VIS_BREVET))
     }
 
     if (prevSize > 0 && oppgaver.size == 0 && status != SoknadsStatus.FERDIGBEHANDLET && status != SoknadsStatus.BEHANDLES_IKKE) {
-        val beskrivelse = "Vi har sett på dokumentene dine og vil gi beskjed om vi trenger mer fra deg."
+        val beskrivelse = "Vi har sett på opplysningene dine og vil gi beskjed om vi trenger noe mer fra deg"
         historikk.add(Hendelse(DOKUMENTASJONSKRAV, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
     }
 }
