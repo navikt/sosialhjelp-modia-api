@@ -84,7 +84,7 @@ data class Dokumentasjonkrav(
     var beskrivelse: String?,
     var status: OppgaveStatus,
     var utbetalingsReferanse: List<String>?,
-    var datoLagtTil: LocalDateTime,
+    var datoLagtTil: LocalDateTime?,
     var frist: LocalDateTime?
 ) {
     fun isEmpty(): Boolean = tittel.isNullOrBlank() && beskrivelse.isNullOrBlank()

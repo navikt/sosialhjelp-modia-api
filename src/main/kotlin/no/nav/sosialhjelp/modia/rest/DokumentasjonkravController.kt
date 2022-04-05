@@ -3,8 +3,9 @@ package no.nav.sosialhjelp.modia.rest
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.service.dokumentasjonkrav.DokumentasjonkravService
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
+import no.nav.sosialhjelp.modia.service.tilgangskontroll.TilgangskontrollService
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -15,7 +16,7 @@ import java.time.LocalDate
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class DokumentasjonkravController(
     private val dokumentasjonkravService: DokumentasjonkravService,
-    private val abacService: AbacService
+    private val tilgangskontrollService: TilgangskontrollService
 ) {
 
     @PostMapping("/{fiksDigisosId}/dokumentasjonkrav")
@@ -23,9 +24,8 @@ class DokumentasjonkravController(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
         @RequestBody ident: Ident
-    ): ResponseEntity<List<DokumentasjonkravController.DokumentasjonkravResponse>> {
-        abacService.harTilgang(ident.fnr, token)
-
+    ): ResponseEntity<List<DokumentasjonkravResponse>> {
+        tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/dokumentasjonkrav", HttpMethod.POST)
         val dokumentasjonkrav = dokumentasjonkravService.hentDokumentasjonkrav(fiksDigisosId)
         if (dokumentasjonkrav.isEmpty()) {
             return ResponseEntity(HttpStatus.NO_CONTENT)
@@ -42,6 +42,6 @@ class DokumentasjonkravController(
         @JsonFormat(pattern = "yyyy-MM-dd")
         val innsendelsesfrist: LocalDate?,
         @JsonFormat(pattern = "yyyy-MM-dd")
-        val vedleggDatoLagtTil: LocalDate?,
+        val datoLagtTil: LocalDate?,
     )
 }

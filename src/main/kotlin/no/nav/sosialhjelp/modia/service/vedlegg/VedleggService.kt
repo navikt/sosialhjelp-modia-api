@@ -37,6 +37,7 @@ class VedleggService(
 
     fun hentEttersendteVedlegg(digisosSak: DigisosSak, model: InternalDigisosSoker): List<InternalVedlegg> {
         val requestAttributes = getRequestAttributes()
+        val originalSoknadNAV = digisosSak.originalSoknadNAV ?: return emptyList()
 
         val alleVedlegg = runBlocking(Dispatchers.IO + MDCContext()) {
             digisosSak.ettersendtInfoNAV?.ettersendelser
@@ -51,7 +52,8 @@ class VedleggService(
                                 tilleggsinfo = vedlegg.tilleggsinfo,
                                 innsendelsesfrist = hentInnsendelsesfristFraOppgave(model, vedlegg),
                                 antallFiler = matchDokumentInfoOgJsonFiler(ettersendelse.vedlegg, vedlegg.filer),
-                                datoLagtTil = unixToLocalDateTime(ettersendelse.timestampSendt)
+                                datoLagtTil = unixToLocalDateTime(ettersendelse.timestampSendt),
+                                unixToLocalDateTime(originalSoknadNAV.timestampSendt)
                             )
                         }
                 }
@@ -72,7 +74,8 @@ class VedleggService(
                     tilleggsinfo = it.tilleggsinfo,
                     innsendelsesfrist = it.innsendelsesfrist,
                     antallFiler = 0,
-                    datoLagtTil = null
+                    datoLagtTil = null,
+                    tidspunktLastetOpp = null
                 )
             }
         return kombinerAlleLikeVedlegg(alleVedlegg)

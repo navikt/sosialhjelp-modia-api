@@ -41,9 +41,9 @@ class DokumentasjonkravService(
                     sakstittel = "sakstittel",
                     status = value[0].status.toString(),
                     utbetalingsbeskrivelse = "utebetalingsbeskrivelse",
+                    antallVedlegg = hentAntallOpplastedeVedlegg(value[0], ettersendteVedlegg),
                     innsendelsesfrist = value[0].frist?.toLocalDate(),
-                    vedleggDatoLagtTil = hentVedleggDatoLagtTil(value[0], ettersendteVedlegg),
-                    antallVedlegg = hentAntallOpplastedeVedlegg(value[0], ettersendteVedlegg)
+                    datoLagtTil = value[0].datoLagtTil?.toLocalDate()
                 )
             }
             .toList()
@@ -54,25 +54,15 @@ class DokumentasjonkravService(
     private fun hentAntallOpplastedeVedlegg(dokumentasjonkrav: Dokumentasjonkrav, vedleggListe: List<InternalVedlegg>): Int {
         return vedleggListe
             .filter { it.type == dokumentasjonkrav.tittel && it.tilleggsinfo == dokumentasjonkrav.beskrivelse }
-            .firstOrNull { it.datoLagtTil != null && it.datoLagtTil.isAfter(dokumentasjonkrav.tidspunktForKrav) }
+            .firstOrNull { it.datoLagtTil != null && it.datoLagtTil.isAfter(dokumentasjonkrav.datoLagtTil) }
             ?.antallFiler ?: 0
-    }
-
-    // FIXme: flere enn 1 vedlegg lastet opp på ulike datoer. Bruk nyeste dato?
-    //  skal kanskje ikke være mulig, siden oppgaver i innsyn ansees som ferdige ved opplasting?
-    private fun hentVedleggDatoLagtTil(dokumentasjonkrav: Dokumentasjonkrav, vedleggListe: List<InternalVedlegg>): LocalDate? {
-        return vedleggListe
-            .filter { it.type == dokumentasjonkrav.tittel && it.tilleggsinfo == dokumentasjonkrav.beskrivelse }
-            .filter { it.datoLagtTil != null && it.datoLagtTil.isAfter(dokumentasjonkrav.tidspunktForKrav) }
-            .maxByOrNull { it.datoLagtTil!! }
-            ?.datoLagtTil?.toLocalDate()
     }
 
     private fun erAlleredeLastetOpp(dokumentasjonkrav: Dokumentasjonkrav, vedleggListe: List<InternalVedlegg>): Boolean {
         return vedleggListe
             .filter { it.type == dokumentasjonkrav.tittel }
             .filter { it.tilleggsinfo == dokumentasjonkrav.beskrivelse }
-            .any { dokumentasjonkrav.frist == null || it.tidspunktLastetOpp.isAfter(dokumentasjonkrav.datoLagtTil) }
+            .any { dokumentasjonkrav.frist == null || it.tidspunktLastetOpp?.isAfter(dokumentasjonkrav.datoLagtTil) ?: false }
     }
 
     companion object {
