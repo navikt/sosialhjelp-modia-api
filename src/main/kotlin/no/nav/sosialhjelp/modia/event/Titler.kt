@@ -6,7 +6,7 @@ object Titler {
     const val SOKNAD_VIDERESENDT = "Søknaden er videresendt"
     const val SOKNAD_UNDER_BEHANDLING = "Søknaden er under behandling"
     const val SOKNAD_FERDIGBEHANDLET = "Søknaden er ferdigbehandlet"
-    const val SOKNAD_BEHANDLES_IKKE = "Din søknad vil bli behandlet, men vi kan ikke vise behandlingsstatus digitalt."
+    const val SOKNAD_BEHANDLES_IKKE = "Vi kan ikke vise status for søknaden din på nav.no"
 
     const val SAK_FERDIGBEHANDLET = "Sak er ferdigbehandlet"
 
