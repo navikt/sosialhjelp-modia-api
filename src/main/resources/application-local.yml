@@ -15,7 +15,6 @@ springdoc:
     enabled: true
 
 client:
-  abac_pdp_endpoint_url: ${ABAC_PDP_ENDPOINT_URL:abac_pdp_endpoint_url}
   fiks_digisos_endpoint_url: ${FIKS_DIGISOS_ENDPOINT_URL:https://api.fiks.test.ks.no}
   fiks_integrasjonid: ${INTEGRASJONSID_FIKS}
   fiks_integrasjonpassord: ${INTEGRASJONPASSORD_FIKS}
@@ -23,8 +22,19 @@ client:
   norg_oppslag_url: ${NORG_OPPSLAG_URL:https://norg2-frontend.nais.adeo.no/#/startsok?enhetNr=}
   pdl_endpoint_url: ${PDL_ENDPOINT_URL:pdl_endpoint_url}
   sts_token_endpoint_url: ${STS_TOKEN_ENDPOINT_URL:sts_token_endpoint_url}
+  veileder_gruppe_id: ${VEILEDER_GRUPPE_ID:0000-MOCK-sosialhjelp-dialog-veileder}
   bergen_kommunenummer: ${BERGEN_KOMMUNENUMMER:0301}
   stavanger_kommunenummer: ${STAVANGER_KOMMUNENUMMER:1103}
+  azuredings_jwt_audience: ${AZURE_OPENID_CONFIG_ISSUER:dummyAudience}
+  azuredings_url: ${AZURE_APP_WELL_KNOWN_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/azure-well-known/selvbetjening}
+  azure_token_endpoint_url: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/azuretoken/selvbetjening}
+  azuredings_jwt_client_id: ${AZURE_APP_CLIENT_ID:localhost:teamdigisos:sosialhjelp-dialog-api}
+  azuredings_private_jwk: ${AZURE_APP_JWK:generateRSA}
+  azure_client_id: ${AZURE_APP_CLIENT_ID:azure_client_id}
+  azure_client_secret: ${AZURE_APP_CLIENT_SECRET:azure_client_secret}
+  azure_graph_url: ${AZURE_GRAPH_API_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/azuread/graph}
+  skjermede_personer_scope: ${SKJERMEDE_PERSONER_SCOPE:skjermede_personer_scope}
+  skjermede_personer_endpoint_url: ${SKJERMEDE_PERSONER_ENDPOINT_URL:skjermede_personer_endpoint_url}
   unleash_url: ${UNLEASH_API_URL:https://unleash.nais.io/api}
   unleash_instance_id: ${UNLEASH_INSTANCE_ID:local}
 

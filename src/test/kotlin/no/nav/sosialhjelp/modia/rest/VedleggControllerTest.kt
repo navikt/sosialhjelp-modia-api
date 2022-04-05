@@ -6,7 +6,7 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import no.nav.sosialhjelp.modia.rest.VedleggController.VedleggResponse
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.AbacService
+import no.nav.sosialhjelp.modia.service.tilgangskontroll.TilgangskontrollService
 import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
 import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
 import org.assertj.core.api.Assertions.assertThat
@@ -18,9 +18,9 @@ import java.time.LocalDateTime
 internal class VedleggControllerTest {
 
     private val vedleggService: VedleggService = mockk()
-    private val abacService: AbacService = mockk()
+    private val tilgangskontrollService: TilgangskontrollService = mockk()
 
-    private val controller = VedleggController(vedleggService, abacService)
+    private val controller = VedleggController(vedleggService, tilgangskontrollService)
 
     private val fnr = "11111111111"
     private val id = "123"
@@ -33,7 +33,7 @@ internal class VedleggControllerTest {
     internal fun setUp() {
         clearAllMocks()
 
-        every { abacService.harTilgang(any(), any()) } just Runs
+        every { tilgangskontrollService.harTilgang(any(), any(), any(), any()) } just Runs
     }
 
     @Test

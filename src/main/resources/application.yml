@@ -42,7 +42,6 @@ springdoc:
 
 #Environment-variabler som settes av NAIS
 client:
-  abac_pdp_endpoint_url: ${ABAC_PDP_ENDPOINT_URL}
   fiks_digisos_endpoint_url: ${FIKS_DIGISOS_ENDPOINT_URL}
   fiks_integrasjonid: ${INTEGRASJONSID_FIKS}
   fiks_integrasjonpassord: ${INTEGRASJONPASSORD_FIKS}
@@ -50,8 +49,19 @@ client:
   norg_oppslag_url: ${NORG_OPPSLAG_URL:https://norg2-frontend.nais.adeo.no/#/startsok?enhetNr=}
   pdl_endpoint_url: ${PDL_ENDPOINT_URL}
   sts_token_endpoint_url: ${STS_TOKEN_ENDPOINT_URL}
+  veileder_gruppe_id: ${VEILEDER_GRUPPE_ID}
   bergen_kommunenummer: ${BERGEN_KOMMUNENUMMER}
   stavanger_kommunenummer: ${STAVANGER_KOMMUNENUMMER}
+  azure_token_endpoint_url: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
+  azuredings_url: ${AZURE_APP_WELL_KNOWN_URL}
+  azuredings_jwt_audience: ${AZURE_OPENID_CONFIG_ISSUER:dummyAudience}
+  azuredings_jwt_client_id: ${AZURE_APP_CLIENT_ID}
+  azuredings_private_jwk: ${AZURE_APP_JWK}
+  azure_client_id: ${AZURE_APP_CLIENT_ID}
+  azure_client_secret: ${AZURE_APP_CLIENT_SECRET}
+  azure_graph_url: ${AZURE_GRAPH_API_URL}
+  skjermede_personer_scope: ${SKJERMEDE_PERSONER_SCOPE}
+  skjermede_personer_endpoint_url: ${SKJERMEDE_PERSONER_ENDPOINT_URL}
   unleash_url: ${UNLEASH_API_URL}
   unleash_instance_id: ${UNLEASH_INSTANCE_ID}
 

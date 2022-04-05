@@ -6,11 +6,6 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockkObject
 import io.mockk.slot
-import no.nav.abac.xacml.NavAttributter
-import no.nav.sosialhjelp.modia.client.abac.AbacResponse
-import no.nav.sosialhjelp.modia.client.abac.Advice
-import no.nav.sosialhjelp.modia.client.abac.Attribute
-import no.nav.sosialhjelp.modia.client.abac.Decision
 import no.nav.sosialhjelp.modia.logging.AuditLogger.Companion.sporingslogg
 import no.nav.sosialhjelp.modia.logging.cef.Severity
 import org.assertj.core.api.Assertions.assertThat
@@ -60,45 +55,6 @@ internal class AuditLoggerTest {
     }
 
     @Test
-    internal fun `should warn log abac deny`() {
-        every { sporingslogg.warn(capture(cefString)) } just Runs
-
-        values[SEVERITY] = Severity.WARN
-        values[ABAC_RESPONSE] = createAbacDeny()
-
-        logger.report(values)
-
-        assertThat(cefString.isCaptured).isTrue
-        assertThat(cefString.captured)
-            // headers
-            .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|WARN|")
-            // extension
-            .contains("suid=Z999888")
-            .contains("duid=11111122222")
-            .contains("flexString1=Deny flexString1Label=Decision")
-            .contains("flexString2=[cause=1_cause,2_cause,policy=1_denyPolicy,2_denyPolicy,rule=1_rule,2_rule] flexString2Label=abac_deny_response")
-    }
-
-    @Test
-    internal fun `should info log abac permit`() {
-        every { sporingslogg.info(capture(cefString)) } just Runs
-
-        values[SEVERITY] = Severity.INFO
-        values[ABAC_RESPONSE] = createAbacPermit()
-
-        logger.report(values)
-
-        assertThat(cefString.isCaptured).isTrue
-        assertThat(cefString.captured)
-            // headers
-            .contains("CEF:0|sosialhjelp-modia-api|$SPORINGSLOGG|1.0|$RESOURCE_AUDIT_ACCESS|title|INFO|")
-            // extension
-            .contains("suid=Z999888")
-            .contains("duid=11111122222")
-            .contains("flexString1=Permit flexString1Label=Decision")
-    }
-
-    @Test
     internal fun `should info log fiks request`() {
         values[FIKS_REQUEST_ID] = "123123"
 
@@ -112,33 +68,5 @@ internal class AuditLoggerTest {
             .contains("suid=Z999888")
             .contains("duid=11111122222")
             .contains("cs5=123123 cs5Label=fiksRequestId")
-    }
-
-    private fun createAbacDeny(): AbacResponse {
-        return AbacResponse(
-            Decision.Deny,
-            listOf(
-                Advice(
-                    "id",
-                    listOf(
-                        Attribute(NavAttributter.ADVICEOROBLIGATION_DENY_POLICY, "1_denyPolicy"),
-                        Attribute(NavAttributter.ADVICEOROBLIGATION_CAUSE, "1_cause"),
-                        Attribute(NavAttributter.ADVICEOROBLIGATION_DENY_RULE, "1_rule")
-                    )
-                ),
-                Advice(
-                    "id2",
-                    listOf(
-                        Attribute(NavAttributter.ADVICEOROBLIGATION_DENY_POLICY, "2_denyPolicy"),
-                        Attribute(NavAttributter.ADVICEOROBLIGATION_CAUSE, "2_cause"),
-                        Attribute(NavAttributter.ADVICEOROBLIGATION_DENY_RULE, "2_rule")
-                    )
-                )
-            )
-        )
-    }
-
-    private fun createAbacPermit(): AbacResponse {
-        return AbacResponse(Decision.Permit, emptyList())
     }
 }

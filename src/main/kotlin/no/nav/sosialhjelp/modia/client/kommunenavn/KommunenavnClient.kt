@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @Component
 class KommunenavnClient(
-    private val proxiedWebClient: WebClient
+    private val proxiedWebClient: WebClient,
 ) {
     fun getAll(): KommunenavnProperties {
         return proxiedWebClient.get()

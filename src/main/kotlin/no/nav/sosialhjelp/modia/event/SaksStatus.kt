@@ -31,7 +31,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonSaksStatus) {
                 historikk.add(
                     Hendelse(
                         tittel,
-                        "Vi kan ikke vise behandlingsstatus for $tittel digitalt.",
+                        "Vi kan ikke vise status for søknaden din $tittel på nav.no",
                         hendelse.hendelsestidspunkt.toLocalDateTime()
                     )
                 )
@@ -53,7 +53,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonSaksStatus) {
         val tittel = hendelse.tittel ?: "saken din"
         val beskrivelse: String? = when (status) {
             SaksStatus.UNDER_BEHANDLING -> "${tittel.replaceFirstChar { it.titlecase(Locale.getDefault()) }} er under behandling"
-            SaksStatus.BEHANDLES_IKKE, SaksStatus.IKKE_INNSYN -> "Vi kan ikke vise behandlingsstatus for $tittel digitalt."
+            SaksStatus.BEHANDLES_IKKE, SaksStatus.IKKE_INNSYN -> "Vi kan ikke vise status for søknaden din $tittel på nav.no"
             else -> null
         }
         if (beskrivelse != null) {

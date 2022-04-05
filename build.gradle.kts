@@ -8,30 +8,31 @@ group = "no.nav.sosialhjelp"
 object Versions {
     const val kotlin = "1.6.10"
     const val coroutines = "1.6.0"
-    const val springBoot = "2.6.4"
-    const val logback = "1.2.10"
+    const val springBoot = "2.6.6"
+    const val logback = "1.2.11"
     const val logstash = "7.0.1"
-    const val sosialhjelpCommon = "1.231cd9b"
-    const val filformat = "1.2022.01.30-13.18-01cd95216e0b"
-    const val micrometerRegistry = "1.8.3"
-    const val prometheus = "0.14.0"
-    const val tokenValidation = "2.0.12"
+    const val sosialhjelpCommon = "1.c57dc86"
+    const val filformat = "1.2022.03.31-14.09-4daafcd63deb"
+    const val micrometerRegistry = "1.8.4"
+    const val prometheus = "0.15.0"
+    const val tokenValidation = "2.0.14"
     const val jackson = "2.13.2"
     const val guava = "31.1-jre"
-    const val abacAttributeConstants = "3.3.13"
     const val logbackSyslog4j = "1.0.0"
+    const val javaJwt = "3.19.1"
+    const val jwksRsa = "0.21.1"
     const val syslog4j = "0.9.30"
-    const val lettuce = "6.1.6.RELEASE"
+    const val lettuce = "6.1.8.RELEASE"
     const val unleash = "3.3.4"
     const val springdoc = "1.6.6"
-    const val jsonSmart = "2.4.7"
-    const val gson = "2.8.9"
+    const val jsonSmart = "2.4.8"
+    const val gson = "2.9.0"
     const val junit = "4.13.2"
-    const val log4j = "2.17.1"
+    const val log4j = "2.17.2"
 
     // Test only
     const val junitJupiter = "5.8.2"
-    const val mockk = "1.12.2"
+    const val mockk = "1.12.3"
     const val mockwebserver = "5.0.0-alpha.2"
 }
 
@@ -56,7 +57,7 @@ java {
 }
 
 ktlint {
-    this.version.set("0.41.0")
+    this.version.set("0.45.1")
 }
 
 configurations {
@@ -110,6 +111,10 @@ dependencies {
     implementation("com.papertrailapp:logback-syslog4j:${Versions.logbackSyslog4j}")
     implementation("org.syslog4j:syslog4j:${Versions.syslog4j}")
 
+//    JWT
+    implementation("com.auth0:java-jwt:${Versions.javaJwt}")
+    implementation("com.auth0:jwks-rsa:${Versions.jwksRsa}")
+
 //    Filformat
     implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:${Versions.filformat}")
 
@@ -123,9 +128,6 @@ dependencies {
 
 //    Springdoc
     implementation("org.springdoc:springdoc-openapi-ui:${Versions.springdoc}")
-
-//    Abac-attributter
-    implementation("no.nav.abac.policies:abac-attribute-constants:${Versions.abacAttributeConstants}")
 
 //    Unleash
     implementation("no.finn.unleash:unleash-client-java:${Versions.unleash}")

@@ -56,7 +56,7 @@ class HendelseService(
             .groupBy { it.datoHendelse.rundNedTilNaermeste5Minutt() }
             .forEach { (_, grupperteVilkar) ->
                 historikk.add(
-                    Hendelse("Utbetalingsplanen din har blitt oppdatert.", null, grupperteVilkar[0].datoHendelse) // TODO - lenke til utbetalingsplan
+                    Hendelse("Dine utbetalinger har blitt oppdatert", null, grupperteVilkar[0].datoHendelse) // TODO - lenke til utbetalingsplan
                 )
             }
     }
