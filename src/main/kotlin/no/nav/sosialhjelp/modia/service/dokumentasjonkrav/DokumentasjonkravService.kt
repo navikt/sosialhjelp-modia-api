@@ -2,7 +2,6 @@ package no.nav.sosialhjelp.modia.service.dokumentasjonkrav
 
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.Dokumentasjonkrav
-import no.nav.sosialhjelp.modia.domain.Oppgave
 import no.nav.sosialhjelp.modia.domain.OppgaveStatus
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.logger
@@ -36,11 +35,15 @@ class DokumentasjonkravService(
             .filter { !erAlleredeLastetOpp(it, ettersendteVedlegg) }
             .filter { it.status == OppgaveStatus.RELEVANT }
             .groupBy { it.frist }
-            .map { (key, value) ->
+            .map { (_, value) ->
                 DokumentasjonkravResponse(
                     referanse = value[0].dokumentasjonkravId,
+                    sakstittel = "sakstittel",
                     status = value[0].status.toString(),
-
+                    utbetalingsbeskrivelse = "utebetalingsbeskrivelse",
+                    innsendelsesfrist = value[0].frist?.toLocalDate(),
+                    vedleggDatoLagtTil = hentVedleggDatoLagtTil(value[0], ettersendteVedlegg),
+                    antallVedlegg = hentAntallOpplastedeVedlegg(value[0], ettersendteVedlegg)
                 )
             }
             .toList()
@@ -48,12 +51,19 @@ class DokumentasjonkravService(
         return dokumentasjonkravResponseList
     }
 
+    private fun hentAntallOpplastedeVedlegg(dokumentasjonkrav: Dokumentasjonkrav, vedleggListe: List<InternalVedlegg>): Int {
+        return vedleggListe
+            .filter { it.type == dokumentasjonkrav.tittel && it.tilleggsinfo == dokumentasjonkrav.beskrivelse }
+            .firstOrNull { it.datoLagtTil != null && it.datoLagtTil.isAfter(dokumentasjonkrav.tidspunktForKrav) }
+            ?.antallFiler ?: 0
+    }
+
     // FIXme: flere enn 1 vedlegg lastet opp på ulike datoer. Bruk nyeste dato?
     //  skal kanskje ikke være mulig, siden oppgaver i innsyn ansees som ferdige ved opplasting?
-    private fun hentVedleggDatoLagtTil(oppgave: Oppgave, vedleggListe: List<InternalVedlegg>): LocalDate? {
+    private fun hentVedleggDatoLagtTil(dokumentasjonkrav: Dokumentasjonkrav, vedleggListe: List<InternalVedlegg>): LocalDate? {
         return vedleggListe
-            .filter { it.type == oppgave.tittel && it.tilleggsinfo == oppgave.tilleggsinfo }
-            .filter { it.datoLagtTil != null && it.datoLagtTil.isAfter(oppgave.tidspunktForKrav) }
+            .filter { it.type == dokumentasjonkrav.tittel && it.tilleggsinfo == dokumentasjonkrav.beskrivelse }
+            .filter { it.datoLagtTil != null && it.datoLagtTil.isAfter(dokumentasjonkrav.tidspunktForKrav) }
             .maxByOrNull { it.datoLagtTil!! }
             ?.datoLagtTil?.toLocalDate()
     }

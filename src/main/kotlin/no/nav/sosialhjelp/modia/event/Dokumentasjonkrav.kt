@@ -16,10 +16,10 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonkrav) {
         dokumentasjonkravId = hendelse.dokumentasjonkravreferanse,
         tittel = hendelse.tittel,
         beskrivelse = hendelse.beskrivelse,
-        frist =  hendelse.frist?.toLocalDateTime()?.toLocalDate(),
-        datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
         status = OppgaveStatus.valueOf(hendelse.status.value()),
-        utbetalingsReferanse = hendelse.utbetalingsreferanse
+        utbetalingsReferanse = hendelse.utbetalingsreferanse,
+        datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
+        frist =  hendelse.frist?.toLocalDateTime()
     )
 
     this.dokumentasjonkrav.oppdaterEllerLeggTilDokumentasjonkrav(hendelse, dokumentasjonkrav)
