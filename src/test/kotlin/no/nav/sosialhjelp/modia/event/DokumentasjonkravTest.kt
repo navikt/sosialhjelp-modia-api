@@ -6,6 +6,7 @@ import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.client.norg.NorgClient
+import no.nav.sosialhjelp.modia.domain.OppgaveStatus
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.service.innsyn.InnsynService
 import no.nav.sosialhjelp.modia.service.vedlegg.SoknadVedleggService
@@ -53,7 +54,7 @@ internal class DokumentasjonkravTest {
                         SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3),
                         SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_4),
                         UTBETALING.withHendelsestidspunkt(tidspunkt_5),
-                        DOKUMENTASJONKRAV_OPPFYLT.withHendelsestidspunkt(tidspunkt_6)
+                        DOKUMENTASJONKRAV_RELEVANT.withHendelsestidspunkt(tidspunkt_6)
                     )
                 )
 
@@ -69,7 +70,7 @@ internal class DokumentasjonkravTest {
         assertThat(utbetaling.dokumentasjonkrav).hasSize(1)
         assertThat(utbetaling.dokumentasjonkrav[0].dokumentasjonkravId).isEqualTo(dokumentasjonkrav_ref_1)
         assertThat(utbetaling.dokumentasjonkrav[0].beskrivelse).isEqualTo("beskrivelse")
-        assertThat(utbetaling.dokumentasjonkrav[0].status).isEqualTo(true)
+        assertThat(utbetaling.dokumentasjonkrav[0].status).isEqualTo(OppgaveStatus.RELEVANT)
     }
 
     @Test

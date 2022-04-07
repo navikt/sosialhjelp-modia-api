@@ -77,7 +77,7 @@ internal class VedleggServiceTest {
         every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns emptyList()
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns listOf(
-            InternalVedlegg(dokumenttype, null, null, 1, null)
+            InternalVedlegg(dokumenttype, null, null, 1, null, null)
         )
 
         val list = service.hentAlleOpplastedeVedlegg(id)
@@ -140,8 +140,8 @@ internal class VedleggServiceTest {
 
         every { eventService.createModel(any()) } returns model
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns listOf(
-            InternalVedlegg(dokumenttype, null, null, 1, LocalDateTime.ofInstant(tid_soknad, zoneIdOslo)),
-            InternalVedlegg(dokumenttype_2, null, null, 1, LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
+            InternalVedlegg(dokumenttype, null, null, 1, LocalDateTime.ofInstant(tid_soknad, zoneIdOslo), null),
+            InternalVedlegg(dokumenttype_2, null, null, 1, LocalDateTime.ofInstant(tid_soknad, zoneIdOslo), null)
         )
 
         val list = service.hentAlleOpplastedeVedlegg(id)
@@ -233,8 +233,8 @@ internal class VedleggServiceTest {
 
         every { eventService.createModel(any()) } returns model
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns listOf(
-            InternalVedlegg(dokumenttype, null, null, 1, LocalDateTime.ofInstant(tid_soknad, zoneIdOslo)),
-            InternalVedlegg(dokumenttype_2, null, null, 1, LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
+            InternalVedlegg(dokumenttype, null, null, 1, LocalDateTime.ofInstant(tid_soknad, zoneIdOslo), null),
+            InternalVedlegg(dokumenttype_2, null, null, 1, LocalDateTime.ofInstant(tid_soknad, zoneIdOslo), null)
         )
         val list = service.hentAlleOpplastedeVedlegg(id)
 

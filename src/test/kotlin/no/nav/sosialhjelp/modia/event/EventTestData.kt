@@ -196,6 +196,13 @@ val DOKUMENTASJONKRAV_OPPFYLT: JsonDokumentasjonkrav = JsonDokumentasjonkrav()
     .withBeskrivelse("beskrivelse")
     .withStatus(JsonDokumentasjonkrav.Status.OPPFYLT)
 
+val DOKUMENTASJONKRAV_RELEVANT: JsonDokumentasjonkrav = JsonDokumentasjonkrav()
+    .withType(JsonHendelse.Type.DOKUMENTASJONKRAV)
+    .withDokumentasjonkravreferanse(dokumentasjonkrav_ref_1)
+    .withUtbetalingsreferanse(listOf(utbetaling_ref_1))
+    .withBeskrivelse("beskrivelse")
+    .withStatus(JsonDokumentasjonkrav.Status.RELEVANT)
+
 fun resetHendelser() {
     SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(null)
     SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(null)

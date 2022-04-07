@@ -142,10 +142,10 @@ internal class OppgaveServiceTest {
 
         every { eventService.createModel(any()) } returns model
         every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns listOf(
-            InternalVedlegg(type, tillegg, frist, 1, tidspunktEtterKrav),
-            InternalVedlegg(type2, null, frist2, 1, tidspunktEtterKrav),
-            InternalVedlegg(type3, tillegg3, frist3, 1, tidspunktFoerKrav), // Filtreres bort pga. tidspunkt
-            InternalVedlegg(type3, null, frist3, 1, tidspunktEtterKrav)
+            InternalVedlegg(type, tillegg, frist, 1, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1)),
+            InternalVedlegg(type2, null, frist2, 1, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1)),
+            InternalVedlegg(type3, tillegg3, frist3, 1, tidspunktFoerKrav, tidspunktEtterKrav.plusDays(1)), // Filtreres bort pga. tidspunkt
+            InternalVedlegg(type3, null, frist3, 1, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1))
         ) // Filtreres bort pga tillegsinfo
         // Så type3 er den eneste oppgaven uten vedlegg
 
@@ -177,7 +177,7 @@ internal class OppgaveServiceTest {
 
         every { eventService.createModel(any()) } returns model
         every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns listOf(
-            InternalVedlegg(type, tillegg, frist, 2, tidspunktEtterKrav)
+            InternalVedlegg(type, tillegg, frist, 2, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1))
         )
 
         val oppgaver = service.hentOppgaver("123")
