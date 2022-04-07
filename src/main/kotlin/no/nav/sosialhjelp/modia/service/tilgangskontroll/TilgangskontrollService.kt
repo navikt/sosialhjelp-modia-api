@@ -39,6 +39,13 @@ class TilgangskontrollService(
             .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
     }
 
+    fun harVeilederTilgangTilTjenesten(token: String, url: String, method: HttpMethod) {
+        val veilederToken = token.replace(BEARER, "")
+        if (!azureGraphClient.hentInnloggetVeilederSineGrupper(veilederToken).value.any { it.id == clientProperties.veilederGruppeId })
+            throw ManglendeModiaSosialhjelpTilgangException("Veileder er ikke i riktig azure gruppe til å bruke dialogløsningen.")
+                .also { auditService.reportToAuditlog("", url, method, Access.DENY) }
+    }
+
     private fun hentPersonFraPdl(brukerIdent: String): PdlPerson? {
         return try {
             pdlClient.hentPerson(brukerIdent)?.hentPerson
