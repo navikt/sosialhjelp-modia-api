@@ -2,10 +2,12 @@ package no.nav.sosialhjelp.modia.service.tilgangskontroll
 
 import no.nav.sosialhjelp.modia.client.azure.AzureGraphClient
 import no.nav.sosialhjelp.modia.client.pdl.PdlClient
+import no.nav.sosialhjelp.modia.client.pdl.PdlPerson
 import no.nav.sosialhjelp.modia.client.pdl.isKode6Or7
 import no.nav.sosialhjelp.modia.client.skjermedePersoner.SkjermedePersonerClient
 import no.nav.sosialhjelp.modia.common.ManglendeModiaSosialhjelpTilgangException
 import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
+import no.nav.sosialhjelp.modia.common.PdlException
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.logging.Access
@@ -28,13 +30,21 @@ class TilgangskontrollService(
         if (!azureGraphClient.hentInnloggetVeilederSineGrupper(veilederToken).value.any { it.id == clientProperties.veilederGruppeId })
             throw ManglendeModiaSosialhjelpTilgangException("Veileder er ikke i riktig azure gruppe til å bruke dialogløsningen.")
                 .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
-        val pdlPerson = pdlClient.hentPerson(brukerIdent)?.hentPerson
+        val pdlPerson = hentPersonFraPdl(brukerIdent)
             ?: throw ManglendeTilgangException("Person ikke funnet i PDL.")
                 .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
         if (pdlPerson.isKode6Or7()) throw ManglendeTilgangException("Person har addressebeskyttelse.")
             .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
         if (skjermedePersonerClient.erPersonSkjermet(brukerIdent, veilederToken)) throw ManglendeTilgangException("Person er skjermet.")
             .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
+    }
+
+    private fun hentPersonFraPdl(brukerIdent: String): PdlPerson? {
+        return try {
+            pdlClient.hentPerson(brukerIdent)?.hentPerson
+        } catch (e: PdlException) {
+            null
+        }
     }
 
     companion object {
