@@ -9,7 +9,6 @@ import no.nav.sosialhjelp.modia.rest.DokumentasjonkravController.Dokumentasjonkr
 import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
 import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
 import org.springframework.stereotype.Component
-import java.time.LocalDate
 
 @Component
 class DokumentasjonkravService(

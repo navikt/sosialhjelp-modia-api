@@ -88,7 +88,6 @@ data class Dokumentasjonkrav(
     var frist: LocalDateTime?
 ) {
     fun isEmpty(): Boolean = tittel.isNullOrBlank() && beskrivelse.isNullOrBlank()
-
 }
 
 data class Hendelse(

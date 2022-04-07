@@ -19,7 +19,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonkrav) {
         status = OppgaveStatus.valueOf(hendelse.status.value()),
         utbetalingsReferanse = hendelse.utbetalingsreferanse,
         datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
-        frist =  hendelse.frist?.toLocalDateTime()
+        frist = hendelse.frist?.toLocalDateTime()
     )
 
     this.dokumentasjonkrav.oppdaterEllerLeggTilDokumentasjonkrav(hendelse, dokumentasjonkrav)
@@ -47,7 +47,6 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonkrav) {
         log.warn("Fant ingen utbetalinger å knytte dokumentasjonkrav til. Utbetalingsreferanser: ${hendelse.utbetalingsreferanse}")
         return
     }
-
 
     val union = utbetalingerMedSakKnytning.union(utbetalingerUtenSakKnytning)
     union.forEach { it.dokumentasjonkrav.oppdaterEllerLeggTilDokumentasjonkrav(hendelse, dokumentasjonkrav) }
