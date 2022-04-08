@@ -1,12 +1,15 @@
 package no.nav.sosialhjelp.modia.responses
 
-val ok_digisossak_response_string = """
+import org.joda.time.DateTime
+
+fun ok_digisossak_response_string(sistEndret: DateTime = DateTime.now().minusMonths(1)): String {
+    return """
 {
   "fiksDigisosId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "sokerFnr": "11111111111",
   "fiksOrgId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "kommunenummer": "1111",
-  "sistEndret": 0,
+  "sistEndret": ${sistEndret.millis},
   "originalSoknadNAV": {
     "navEksternRefId": "11000001",
     "metadata": "3fa85f64-5717-4562-b3fc-2c963f66afa0",
@@ -54,5 +57,6 @@ val ok_digisossak_response_string = """
   }
 }
 """.trimIndent()
+}
 
-val ok_digisossak_annen_kommune_response_string = ok_digisossak_response_string.replace("\"1111\"", "\"2222\"")
+val ok_digisossak_annen_kommune_response_string = ok_digisossak_response_string().replace("\"1111\"", "\"2222\"")
