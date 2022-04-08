@@ -349,6 +349,47 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
+    fun `hentAlleUtbetalinger skal filtrere ned til 0 utbetalinger`() {
+        val model = InternalDigisosSoker()
+        val vilkar = Vilkar("vilkar1", "Skal hoppe", false, LocalDateTime.now(), LocalDateTime.now())
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
+        val utbetaling1 = Utbetaling(
+            "referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
+            null, utbetalingsdato, null, null, null, false, null, null, mutableListOf(vilkar), mutableListOf(), LocalDateTime.now()
+        )
+        model.utbetalinger.add(utbetaling1)
+
+        coEvery { eventService.createModel(any()) } returns model
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 0, null, null)
+
+        assertThat(response).isNotNull
+        assertThat(response).hasSize(0)
+    }
+
+    @Test
+    fun `hentAlleUtbetalinger skal filtrere bort utbetalinger til gamle saker`() {
+        val model = InternalDigisosSoker()
+        val vilkar = Vilkar("vilkar1", "Skal hoppe", false, LocalDateTime.now(), LocalDateTime.now())
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
+        val utbetaling1 = Utbetaling(
+            "referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
+            null, utbetalingsdato, null, null, null, false, null, null, mutableListOf(vilkar), mutableListOf(), LocalDateTime.now()
+        )
+        model.utbetalinger.add(utbetaling1)
+
+        coEvery { eventService.createModel(any()) } returns model
+        coEvery { mockDigisosSak.sistEndret } returns ZonedDateTime.now(ZoneId.of("UTC")).minusMonths(5).toInstant().toEpochMilli()
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
+
+        assertThat(response).isNotNull
+        assertThat(response).hasSize(0)
+    }
+
+    @Test
     internal fun `bare fom er satt`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
