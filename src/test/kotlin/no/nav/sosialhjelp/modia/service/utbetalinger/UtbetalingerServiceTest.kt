@@ -197,7 +197,16 @@ internal class UtbetalingerServiceTest {
     @Test
     fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med dokumentasjonkrav`() {
         val model = InternalDigisosSoker()
-        val dokumentasjonkrav = Dokumentasjonkrav("dokumentasjonskrav", "Dokumentasjonstittel", "beskrivelse", OppgaveStatus.RELEVANT, null, null, null)
+        val dokumentasjonkrav = Dokumentasjonkrav(
+            "dokumentasjonskrav",
+            "Dokumentasjonstittel",
+            "beskrivelse",
+            OppgaveStatus.RELEVANT,
+            null,
+            null,
+            null,
+            hendelse.saksreferanse
+        )
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val utbetaling1 = Utbetaling(
             "referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",

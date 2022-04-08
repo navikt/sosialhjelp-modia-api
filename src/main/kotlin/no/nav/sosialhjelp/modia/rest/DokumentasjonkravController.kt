@@ -42,7 +42,6 @@ class DokumentasjonkravController(
         val referanse: String,
         val sakstittel: String?,
         val status: String,
-        val utbetalingsbeskrivelse: String?,
         val antallVedlegg: Int,
         @JsonFormat(pattern = "yyyy-MM-dd")
         val innsendelsesfrist: LocalDate?,

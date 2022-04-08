@@ -16,6 +16,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonkrav) {
         dokumentasjonkravId = hendelse.dokumentasjonkravreferanse,
         tittel = hendelse.tittel,
         beskrivelse = hendelse.beskrivelse,
+        saksreferanse = hendelse.saksreferanse,
         status = OppgaveStatus.valueOf(hendelse.status.value()),
         utbetalingsReferanse = hendelse.utbetalingsreferanse,
         datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
