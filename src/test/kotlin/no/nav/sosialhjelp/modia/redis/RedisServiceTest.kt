@@ -17,7 +17,7 @@ internal class RedisServiceTest {
 
     @Test
     internal fun `skal hente fra store`() {
-        every { redisStore.get(any()) } returns ok_digisossak_response_string.toByteArray()
+        every { redisStore.get(any()) } returns ok_digisossak_response_string().toByteArray()
 
         val digisosSak = service.get(RedisKeyType.AZUREDINGS, "key", DigisosSak::class.java)
 

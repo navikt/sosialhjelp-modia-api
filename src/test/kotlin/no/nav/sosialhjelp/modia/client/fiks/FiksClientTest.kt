@@ -14,6 +14,7 @@ import mockwebserver3.MockWebServer
 import no.finn.unleash.Unleash
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
 import no.nav.sosialhjelp.modia.client.maskinporten.MaskinportenClient
 import no.nav.sosialhjelp.modia.client.unleash.BERGEN_ENABLED
@@ -30,6 +31,7 @@ import no.nav.sosialhjelp.modia.utils.RequestUtils
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
+import org.joda.time.DateTime
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -86,17 +88,72 @@ internal class FiksClientTest {
     }
 
     @Test
+    fun `GET hent alle DigisosSaker`() {
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(
+                    listOf(
+                        ok_digisossak_response_string(),
+                        ok_digisossak_response_string(DateTime.now().minusMonths(1)),
+                        ok_digisossak_response_string(DateTime.now().minusMonths(2)),
+                    ).toString()
+                )
+        )
+
+        val result = fiksClient.hentAlleDigisosSaker(id)
+
+        assertThat(result).isNotNull
+        assertThat(result).hasSize(3)
+    }
+
+    @Test
+    fun `GET hent alle DigisosSaker bortsett fra de eldre enn 15 maneder`() {
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(
+                    listOf(
+                        ok_digisossak_response_string(),
+                        ok_digisossak_response_string(DateTime.now().minusMonths(1)),
+                        ok_digisossak_response_string(DateTime.now().minusMonths(16)),
+                    ).toString()
+                )
+        )
+
+        val result = fiksClient.hentAlleDigisosSaker(id)
+
+        assertThat(result).isNotNull
+        assertThat(result).hasSize(2)
+    }
+
+    @Test
     fun `GET eksakt 1 DigisosSak`() {
         mockWebServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setBody(ok_digisossak_response_string)
+                .setBody(ok_digisossak_response_string())
         )
 
         val result = fiksClient.hentDigisosSak(id)
 
         assertThat(result).isNotNull
+    }
+
+    @Test
+    fun `GET eksakt 0 DigisosSak dersom den er eldre enn 15 maneder`() {
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(ok_digisossak_response_string(DateTime.now().minusMonths(16)))
+        )
+
+        assertThatExceptionOfType(FiksNotFoundException::class.java)
+            .isThrownBy { fiksClient.hentDigisosSak(id) }
     }
 
     @Test
@@ -127,7 +184,7 @@ internal class FiksClientTest {
 
     @Test
     fun `GET digisosSak fra cache`() {
-        val digisosSak: DigisosSak = objectMapper.readValue(ok_digisossak_response_string)
+        val digisosSak: DigisosSak = objectMapper.readValue(ok_digisossak_response_string())
         every { redisService.get(any(), any(), DigisosSak::class.java) } returns digisosSak
 
         val result2 = fiksClient.hentDigisosSak(id)
@@ -143,7 +200,7 @@ internal class FiksClientTest {
             MockResponse()
                 .setResponseCode(200)
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setBody(ok_digisossak_response_string)
+                .setBody(ok_digisossak_response_string())
         )
 
         val result1 = fiksClient.hentDigisosSak(id)
@@ -152,7 +209,7 @@ internal class FiksClientTest {
         verify(exactly = 1) { redisService.get(any(), any(), DigisosSak::class.java) }
         verify(exactly = 1) { redisService.set(any(), any(), any(), any()) }
 
-        val digisosSak: DigisosSak = objectMapper.readValue(ok_digisossak_response_string)
+        val digisosSak: DigisosSak = objectMapper.readValue(ok_digisossak_response_string())
         every { redisService.get(any(), any(), DigisosSak::class.java) } returns digisosSak
 
         val result = fiksClient.hentDigisosSak(id)
@@ -168,10 +225,10 @@ internal class FiksClientTest {
             MockResponse()
                 .setResponseCode(200)
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setBody(ok_digisossak_response_string)
+                .setBody(ok_digisossak_response_string())
         )
 
-        val digisosSak = objectMapper.readValue(ok_digisossak_response_string, DigisosSak::class.java)
+        val digisosSak = objectMapper.readValue(ok_digisossak_response_string(), DigisosSak::class.java)
 
 //        annen veileder har hentet digisosSak tidligere (og finnes i cache)
         val annenSaksbehandler = "other"
@@ -190,7 +247,7 @@ internal class FiksClientTest {
             MockResponse()
                 .setResponseCode(200)
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setBody(ok_digisossak_response_string)
+                .setBody(ok_digisossak_response_string())
         )
 
         every { RequestUtils.getSosialhjelpModiaSessionId() } returns null

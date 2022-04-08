@@ -27,6 +27,7 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.fiksHeaders
 import no.nav.sosialhjelp.modia.utils.RequestUtils
 import no.nav.sosialhjelp.modia.utils.objectMapper
+import org.joda.time.DateTime
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
@@ -96,6 +97,9 @@ class FiksClientImpl(
 
         if (!harKommunenTilgangTilModia(digisosSak.kommunenummer)) {
             throw ManglendeTilgangException("Fiks - DigisosSak tilhører en kommune uten tilgang!")
+        }
+        if (!isDigisosSakNewerThanMonths(digisosSak, 15)) {
+            throw FiksNotFoundException("Fiks - DigisosSak er for gammel!", null)
         }
         log.info("Hentet DigisosSak $digisosId fra Fiks")
         return digisosSak
@@ -167,6 +171,7 @@ class FiksClientImpl(
         }
         log.info("Hentet ${digisosSaker.size} saker fra Fiks (før filter.)")
         return digisosSaker.filter { harKommunenTilgangTilModia(it.kommunenummer) }
+            .filter { isDigisosSakNewerThanMonths(it, 15) }
             .also { auditService.reportFiks(fnr, baseUrl + PATH_ALLE_DIGISOSSAKER, HttpMethod.POST, sporingsId) }
     }
 
@@ -179,6 +184,9 @@ class FiksClientImpl(
         }
         return false
     }
+
+    fun isDigisosSakNewerThanMonths(digisosSak: DigisosSak, months: Int): Boolean =
+        digisosSak.sistEndret >= DateTime.now().minusMonths(months).millis
 
     private fun genererSporingsId(): String = UUID.randomUUID().toString()
 
