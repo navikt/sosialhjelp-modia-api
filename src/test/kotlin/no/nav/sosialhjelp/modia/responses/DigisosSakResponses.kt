@@ -56,7 +56,7 @@ fun ok_digisossak_response_string(sistEndret: DateTime = DateTime.now().minusMon
     "timestampSistOppdatert": 0
   }
 }
-""".trimIndent()
+    """.trimIndent()
 }
 
 val ok_digisossak_annen_kommune_response_string = ok_digisossak_response_string().replace("\"1111\"", "\"2222\"")

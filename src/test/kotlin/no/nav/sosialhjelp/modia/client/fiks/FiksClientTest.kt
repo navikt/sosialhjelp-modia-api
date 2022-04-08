@@ -98,7 +98,8 @@ internal class FiksClientTest {
                         ok_digisossak_response_string(),
                         ok_digisossak_response_string(DateTime.now().minusMonths(1)),
                         ok_digisossak_response_string(DateTime.now().minusMonths(2)),
-                    ).toString())
+                    ).toString()
+                )
         )
 
         val result = fiksClient.hentAlleDigisosSaker(id)
@@ -118,7 +119,8 @@ internal class FiksClientTest {
                         ok_digisossak_response_string(),
                         ok_digisossak_response_string(DateTime.now().minusMonths(1)),
                         ok_digisossak_response_string(DateTime.now().minusMonths(16)),
-                    ).toString())
+                    ).toString()
+                )
         )
 
         val result = fiksClient.hentAlleDigisosSaker(id)
