@@ -1,13 +1,11 @@
 package no.nav.sosialhjelp.modia.redis
 
-import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.responses.ok_digisossak_response_string
 import no.nav.sosialhjelp.modia.responses.ok_kommuneinfo_response_string
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class RedisServiceTest {
@@ -16,11 +14,6 @@ internal class RedisServiceTest {
     private val cacheProperties: CacheProperties = mockk(relaxed = true)
 
     private val service = RedisServiceImpl(redisStore, cacheProperties)
-
-    @BeforeEach
-    internal fun setUp() {
-        clearAllMocks()
-    }
 
     @Test
     internal fun `skal hente fra store`() {
