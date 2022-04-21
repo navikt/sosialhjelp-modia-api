@@ -73,18 +73,6 @@ class PdlClientImpl(
     private fun getResourceAsString(path: String) = this.javaClass.getResource(path)?.readText()?.replace("[\n\r]", "")
         ?: throw RuntimeException("Feil ved lesing av graphql-spørring fra fil")
 
-//    private fun headers(): HttpHeaders {
-//        val stsToken: String = stsClient.token()
-//
-//        val headers = HttpHeaders()
-//        headers.contentType = APPLICATION_JSON
-//        headers.set(HEADER_CALL_ID, getCallId())
-//        headers.set(HEADER_CONSUMER_TOKEN, BEARER + stsToken)
-//        headers.set(AUTHORIZATION, BEARER + stsToken)
-//        headers.set(HEADER_TEMA, TEMA_KOM)
-//        return headers
-//    }
-
     private fun checkForPdlApiErrors(response: PdlPersonResponse?) {
         response?.errors?.let { handleErrors(it) }
     }
