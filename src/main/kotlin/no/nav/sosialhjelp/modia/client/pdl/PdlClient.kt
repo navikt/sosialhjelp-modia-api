@@ -1,25 +1,27 @@
 package no.nav.sosialhjelp.modia.client.pdl
 
-import no.nav.sosialhjelp.modia.client.sts.STSClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import no.nav.sosialhjelp.modia.client.azure.AzuredingsService
 import no.nav.sosialhjelp.modia.common.PdlException
+import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
-import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CONSUMER_TOKEN
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_TEMA
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.TEMA_KOM
 import no.nav.sosialhjelp.modia.utils.mdc.MDCUtils.getCallId
 import org.springframework.context.annotation.Profile
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
+import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.bodyToMono
 
 interface PdlClient {
-    fun hentPerson(ident: String): PdlHentPerson?
+    fun hentPerson(ident: String, veilederToken: String): PdlHentPerson?
     fun ping()
 }
 
@@ -27,26 +29,34 @@ interface PdlClient {
 @Component
 class PdlClientImpl(
     private val pdlWebClient: WebClient,
-    private val stsClient: STSClient
+    private val azuredingsService: AzuredingsService,
+    private val clientProperties: ClientProperties,
 ) : PdlClient {
 
-    override fun hentPerson(ident: String): PdlHentPerson? {
+    override fun hentPerson(ident: String, veilederToken: String): PdlHentPerson? {
         val query = getResourceAsString("/pdl/hentPerson.graphql")
 
-        val pdlPersonResponse = pdlWebClient.post()
-            .headers { it.addAll(headers()) }
-            .bodyValue(PdlRequest(query, Variables(ident)))
-            .retrieve()
-            .bodyToMono<PdlPersonResponse>()
-            .onErrorMap(WebClientResponseException::class.java) {
-                log.error("PDL - ${it.rawStatusCode} ${it.statusText} feil ved henting av navn fra PDL", it)
-                PdlException(it.message)
+        val pdlPersonResponse = try {
+            runBlocking(Dispatchers.IO) {
+                val azureAdToken = azuredingsService.exchangeToken(veilederToken, clientProperties.pdlScope)
+
+                pdlWebClient.post()
+                    .contentType(APPLICATION_JSON)
+                    .header(AUTHORIZATION, BEARER + azureAdToken)
+                    .header(HEADER_CALL_ID, getCallId())
+                    .header(HEADER_TEMA, TEMA_KOM)
+                    .bodyValue(PdlRequest(query, Variables(ident)))
+                    .retrieve()
+                    .awaitBody<PdlPersonResponse>()
             }
-            .block()
+        } catch (e: WebClientResponseException) {
+            log.error("PDL - ${e.rawStatusCode} ${e.statusText} feil ved henting av navn fra PDL", e)
+            throw PdlException(e.message)
+        }
 
         checkForPdlApiErrors(pdlPersonResponse)
 
-        return pdlPersonResponse?.data
+        return pdlPersonResponse.data
     }
 
     override fun ping() {
@@ -63,17 +73,17 @@ class PdlClientImpl(
     private fun getResourceAsString(path: String) = this.javaClass.getResource(path)?.readText()?.replace("[\n\r]", "")
         ?: throw RuntimeException("Feil ved lesing av graphql-spørring fra fil")
 
-    private fun headers(): HttpHeaders {
-        val stsToken: String = stsClient.token()
-
-        val headers = HttpHeaders()
-        headers.contentType = APPLICATION_JSON
-        headers.set(HEADER_CALL_ID, getCallId())
-        headers.set(HEADER_CONSUMER_TOKEN, BEARER + stsToken)
-        headers.set(AUTHORIZATION, BEARER + stsToken)
-        headers.set(HEADER_TEMA, TEMA_KOM)
-        return headers
-    }
+//    private fun headers(): HttpHeaders {
+//        val stsToken: String = stsClient.token()
+//
+//        val headers = HttpHeaders()
+//        headers.contentType = APPLICATION_JSON
+//        headers.set(HEADER_CALL_ID, getCallId())
+//        headers.set(HEADER_CONSUMER_TOKEN, BEARER + stsToken)
+//        headers.set(AUTHORIZATION, BEARER + stsToken)
+//        headers.set(HEADER_TEMA, TEMA_KOM)
+//        return headers
+//    }
 
     private fun checkForPdlApiErrors(response: PdlPersonResponse?) {
         response?.errors?.let { handleErrors(it) }
@@ -97,7 +107,7 @@ class PdlClientMock : PdlClient {
 
     private val pdlHentPersonMap = mutableMapOf<String, PdlHentPerson>()
 
-    override fun hentPerson(ident: String): PdlHentPerson? {
+    override fun hentPerson(ident: String, veilederToken: String): PdlHentPerson? {
         return pdlHentPersonMap.getOrElse(
             ident
         ) {

@@ -18,6 +18,7 @@
     "NORG_ENDPOINT_URL": "https://norg2.dev.adeo.no/norg2/api/v1",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.adeo.no/#/startsok?enhetNr=",
     "PDL_ENDPOINT_URL": "https://pdl-api.nais.preprod.local/graphql",
+    "PDL_SCOPE": "api://dev-fss.pdl.pdl-api/.default",
     "SKJERMEDE_PERSONER_ENDPOINT_URL": "https://skjermede-personer-pip.dev.intern.nav.no",
     "SKJERMEDE_PERSONER_SCOPE": "api://dev-gcp.nom.skjermede-personer-pip/.default",
     "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.preprod.local/rest/v1/sts/token",
