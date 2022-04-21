@@ -24,7 +24,7 @@ class PersoninfoController(
     fun hentPersoninfo(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<PersoninfoResponse> {
         tilgangskontrollService.harTilgang(ident.fnr, token, "/personinfo", HttpMethod.POST)
 
-        val personinfoResponse = personinfoService.hentPersoninfo(ident.fnr)
+        val personinfoResponse = personinfoService.hentPersoninfo(ident.fnr, token)
         return ResponseEntity.ok(personinfoResponse)
     }
 
