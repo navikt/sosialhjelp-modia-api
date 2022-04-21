@@ -6,7 +6,6 @@
   ],
   "envsecret": [
     "redis-password-modia-api",
-    "testbruker-natalie",
     "fiks-integrasjon-secret"
   ],
   "env": {
