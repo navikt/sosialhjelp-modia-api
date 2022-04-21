@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.norg
+package no.nav.sosialhjelp.modia.navkontor.norg
 
 data class NavEnhet(
     val enhetId: Int,

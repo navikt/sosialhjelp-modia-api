@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.norg
+package no.nav.sosialhjelp.modia.navkontor.norg
 
 import no.nav.sosialhjelp.modia.common.NorgException
 import no.nav.sosialhjelp.modia.logger
