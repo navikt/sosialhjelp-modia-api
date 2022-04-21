@@ -6,8 +6,7 @@
   ],
   "envsecret": [
     "redis-password-modia-api",
-    "fiks-integrasjon-secret",
-    "serviceuser-srvsosialhjelp-mod"
+    "fiks-integrasjon-secret"
   ],
   "env": {
     "SPRING_PROFILES_ACTIVE": "prod-fss,log-kibana,log-audit",
