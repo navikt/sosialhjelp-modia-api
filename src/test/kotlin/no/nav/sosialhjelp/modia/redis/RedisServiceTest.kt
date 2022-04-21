@@ -19,9 +19,18 @@ internal class RedisServiceTest {
     internal fun `skal hente fra store`() {
         every { redisStore.get(any()) } returns ok_digisossak_response_string().toByteArray()
 
-        val digisosSak = service.get(RedisKeyType.AZUREDINGS, "key", DigisosSak::class.java)
+        val digisosSak = service.get(RedisKeyType.FIKS_CLIENT, "key", DigisosSak::class.java)
 
         assertThat(digisosSak).isNotNull
+    }
+
+    @Test
+    internal fun `skal hente string-value fra store`() {
+        every { redisStore.get(any()) } returns "tralala".toByteArray()
+
+        val result = service.get(RedisKeyType.AZUREDINGS, "key", String::class.java) as? String
+
+        assertThat(result).isEqualTo("tralala")
     }
 
     @Test
