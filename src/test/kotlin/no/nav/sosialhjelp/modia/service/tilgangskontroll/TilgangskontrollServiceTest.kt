@@ -50,7 +50,7 @@ internal class TilgangskontrollServiceTest {
     internal fun setUp() {
         every { azureGraphClient.hentInnloggetVeilederSineGrupper(any()) } returns azureAdRiktigGruppe
         every { clientProperties.veilederGruppeId } returns veilederGruppe
-        every { pdlClient.hentPerson(fnr) } returns pdlPersonUtenBeskyttelse
+        every { pdlClient.hentPerson(fnr, any()) } returns pdlPersonUtenBeskyttelse
         every { skjermedePersonerClient.erPersonSkjermet(fnr, any()) } returns false
         every { auditService.reportToAuditlog(any(), any(), any(), any()) } just runs
     }
@@ -102,7 +102,7 @@ internal class TilgangskontrollServiceTest {
     internal fun `manglende tilgang til kode6`() {
         val kode6 = listOf(Adressebeskyttelse(Gradering.STRENGT_FORTROLIG))
         val personMedKode6 = PdlHentPerson(PdlPerson(kode6, emptyList(), emptyList(), emptyList(), emptyList()))
-        every { pdlClient.hentPerson(any()) } returns personMedKode6
+        every { pdlClient.hentPerson(any(), any()) } returns personMedKode6
 
         assertThatThrownBy { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) }
             .isInstanceOf(ManglendeTilgangException::class.java)
@@ -113,7 +113,7 @@ internal class TilgangskontrollServiceTest {
     internal fun `manglende tilgang til kode6 utland`() {
         val kode6 = listOf(Adressebeskyttelse(Gradering.STRENGT_FORTROLIG_UTLAND))
         val personMedKode6 = PdlHentPerson(PdlPerson(kode6, emptyList(), emptyList(), emptyList(), emptyList()))
-        every { pdlClient.hentPerson(any()) } returns personMedKode6
+        every { pdlClient.hentPerson(any(), any()) } returns personMedKode6
 
         assertThatThrownBy { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) }
             .isInstanceOf(ManglendeTilgangException::class.java)
@@ -124,7 +124,7 @@ internal class TilgangskontrollServiceTest {
     internal fun `manglende tilgang til kode7`() {
         val kode7 = listOf(Adressebeskyttelse(Gradering.FORTROLIG))
         val personMedKode7 = PdlHentPerson(PdlPerson(kode7, emptyList(), emptyList(), emptyList(), emptyList()))
-        every { pdlClient.hentPerson(any()) } returns personMedKode7
+        every { pdlClient.hentPerson(any(), any()) } returns personMedKode7
 
         assertThatThrownBy { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) }
             .isInstanceOf(ManglendeTilgangException::class.java)

@@ -21,6 +21,7 @@ client:
   norg_endpoint_url: ${NORG_ENDPOINT_URL:norg_endpoint_url}
   norg_oppslag_url: ${NORG_OPPSLAG_URL:https://norg2-frontend.nais.adeo.no/#/startsok?enhetNr=}
   pdl_endpoint_url: ${PDL_ENDPOINT_URL:pdl_endpoint_url}
+  pdl_scope: ${PDL_SCOPE:pdl_scope}
   sts_token_endpoint_url: ${STS_TOKEN_ENDPOINT_URL:sts_token_endpoint_url}
   veileder_gruppe_id: ${VEILEDER_GRUPPE_ID:0000-MOCK-sosialhjelp-dialog-veileder}
   bergen_kommunenummer: ${BERGEN_KOMMUNENUMMER:0301}
