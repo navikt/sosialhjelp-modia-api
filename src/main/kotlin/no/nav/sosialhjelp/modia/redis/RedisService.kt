@@ -10,6 +10,7 @@ import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.io.IOException
+import java.nio.charset.StandardCharsets
 
 enum class RedisKeyType {
     AZUREDINGS,
@@ -39,10 +40,14 @@ class RedisServiceImpl(
         val bytes: ByteArray? = redisStore.get("${type.name}_$key") // Redis har konfigurert timout for disse.
         return if (bytes != null) {
             try {
-                val obj = objectMapper.readValue(bytes, requestedClass)
-                valider(obj)
-                log.debug("Hentet ${requestedClass.simpleName} fra cache, type=${type.name}")
-                obj
+                if (requestedClass == String::class.java) {
+                    log.debug("Hentet ${requestedClass.simpleName} fra cache, type=${type.name}")
+                    String(bytes, StandardCharsets.UTF_8)
+                } else {
+                    objectMapper.readValue(bytes, requestedClass)
+                        .also { valider(it) }
+                        .also { log.debug("Hentet ${requestedClass.simpleName} fra cache, type=${type.name}") }
+                }
             } catch (e: IOException) {
                 log.warn("Fant type=${type.name} i cache, men value var ikke ${requestedClass.simpleName}")
                 null
