@@ -17,8 +17,6 @@ class ClientProperties {
     lateinit var pdlEndpointUrl: String
     lateinit var pdlScope: String
 
-    lateinit var stsTokenEndpointUrl: String
-
     lateinit var veilederGruppeId: String
 
     lateinit var bergenKommunenummer: String

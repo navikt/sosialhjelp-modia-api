@@ -25,7 +25,6 @@
     "SKJERMEDE_PERSONER_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/skjermede-personer",
     "SKJERMEDE_PERSONER_SCOPE": "dummyScope",
     "MASKINPORTEN_WELL_KNOWN_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/well-known/maskinporten",
-    "STS_TOKEN_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/sts_token_endpoint_url/token",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
     "UNLEASH_INSTANCE_ID": "dev-mock",
     "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.cluster.local",
