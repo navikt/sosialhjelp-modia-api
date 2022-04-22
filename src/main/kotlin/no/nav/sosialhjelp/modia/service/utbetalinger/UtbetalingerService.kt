@@ -90,7 +90,7 @@ class UtbetalingerService(
 
     private fun isUtbetalingOrForfallInnenforIntervall(utbetaling: Utbetaling, fom: LocalDate?, tom: LocalDate?): Boolean {
         val range = when {
-            fom != null && tom != null && fom.isBefore(tom) -> fom.rangeTo(tom)
+            fom != null && tom != null && (fom.isBefore(tom) || fom.isEqual(tom)) -> fom.rangeTo(tom)
             fom != null && tom == null -> fom.rangeTo(LocalDate.now())
             fom == null && tom != null -> LocalDate.now().minusYears(1).rangeTo(tom)
             else -> throw IllegalStateException("Fom og tom kan ikke begge være null")
@@ -130,8 +130,7 @@ class UtbetalingerService(
         return UtbetalingerResponse(
             tittel = utbetaling.beskrivelse,
             belop = utbetaling.belop.toDouble(),
-            utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato
-                ?: utbetaling.forfallsDato,
+            utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato ?: utbetaling.forfallsDato,
             status = utbetaling.status,
             fiksDigisosId = fiksDigisosId,
             fom = utbetaling.fom,

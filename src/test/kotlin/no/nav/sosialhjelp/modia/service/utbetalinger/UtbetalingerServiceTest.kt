@@ -492,6 +492,34 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
+    fun `fom og tom er samme dag og utbetalingsdato er utenfor intervall`() {
+        val utbetalingsdato = LocalDate.now().withDayOfMonth(1).plusDays(1)
+        val fom = LocalDate.now().withDayOfMonth(1)
+        val tom = LocalDate.now().withDayOfMonth(1)
+        val sistEndret = ZonedDateTime.of(fom.plusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        val model = InternalDigisosSoker()
+        model.utbetalinger.addAll(
+            arrayOf(
+                Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato, null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
+            )
+        )
+        model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
+
+        val digisosSak: DigisosSak = mockk()
+        coEvery { digisosSak.fiksDigisosId } returns digisosId
+        coEvery { digisosSak.kommunenummer } returns "0001"
+        coEvery { digisosSak.sistEndret } returns sistEndret
+        coEvery { eventService.createModel(digisosSak) } returns model
+
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak)
+
+        val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, fom, tom)
+
+        assertThat(response).isEmpty()
+    }
+
+    @Test
     fun `skal gi feil - fom er etter tom`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
