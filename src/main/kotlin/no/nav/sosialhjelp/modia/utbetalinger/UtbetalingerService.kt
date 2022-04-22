@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.utbetalinger
+package no.nav.sosialhjelp.modia.utbetalinger
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -11,8 +11,6 @@ import no.nav.sosialhjelp.modia.domain.UtbetalingsStatus
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.flatMapParallel
 import no.nav.sosialhjelp.modia.logger
-import no.nav.sosialhjelp.modia.rest.UtbetalingerController.NavKontor
-import no.nav.sosialhjelp.modia.rest.UtbetalingerController.UtbetalingerResponse
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import org.joda.time.DateTime
 import org.springframework.stereotype.Component
