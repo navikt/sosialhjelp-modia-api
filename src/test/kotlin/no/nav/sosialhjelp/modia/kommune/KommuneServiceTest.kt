@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.kommune
+package no.nav.sosialhjelp.modia.kommune
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.mockk.Runs

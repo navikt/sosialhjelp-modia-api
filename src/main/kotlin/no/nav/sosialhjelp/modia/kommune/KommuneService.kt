@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.kommune
+package no.nav.sosialhjelp.modia.kommune
 
 import no.nav.sosialhjelp.api.fiks.KommuneInfo
 import no.nav.sosialhjelp.modia.client.fiks.KommuneInfoClient
