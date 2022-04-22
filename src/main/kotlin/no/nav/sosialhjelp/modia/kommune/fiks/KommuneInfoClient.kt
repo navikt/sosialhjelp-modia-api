@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.fiks
+package no.nav.sosialhjelp.modia.kommune.fiks
 
 import no.nav.sosialhjelp.api.fiks.KommuneInfo
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksClientException
