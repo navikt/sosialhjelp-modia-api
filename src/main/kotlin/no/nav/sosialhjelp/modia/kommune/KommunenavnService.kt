@@ -1,6 +1,6 @@
 package no.nav.sosialhjelp.modia.kommune
 
-import no.nav.sosialhjelp.modia.client.kommunenavn.KommunenavnClient
+import no.nav.sosialhjelp.modia.kommune.kartverket.KommunenavnClient
 import no.nav.sosialhjelp.modia.logger
 import org.joda.time.DateTime
 import org.springframework.stereotype.Service

@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.kommunenavn
+package no.nav.sosialhjelp.modia.kommune.kartverket
 
 data class KommunenavnProperties(
     val containeditems: List<ContainedItem>,
