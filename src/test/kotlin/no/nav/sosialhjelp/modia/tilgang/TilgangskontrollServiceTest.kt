@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.tilgangskontroll
+package no.nav.sosialhjelp.modia.tilgang
 
 import io.mockk.called
 import io.mockk.every
@@ -7,10 +7,6 @@ import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.slot
 import io.mockk.verify
-import no.nav.sosialhjelp.modia.client.azure.AzureGraphClient
-import no.nav.sosialhjelp.modia.client.azure.model.AzureAdGruppe
-import no.nav.sosialhjelp.modia.client.azure.model.AzureAdGrupper
-import no.nav.sosialhjelp.modia.client.skjermedePersoner.SkjermedePersonerClient
 import no.nav.sosialhjelp.modia.common.ManglendeModiaSosialhjelpTilgangException
 import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.config.ClientProperties
@@ -20,6 +16,10 @@ import no.nav.sosialhjelp.modia.person.pdl.Gradering
 import no.nav.sosialhjelp.modia.person.pdl.PdlClient
 import no.nav.sosialhjelp.modia.person.pdl.PdlHentPerson
 import no.nav.sosialhjelp.modia.person.pdl.PdlPerson
+import no.nav.sosialhjelp.modia.tilgang.azure.AzureGraphClient
+import no.nav.sosialhjelp.modia.tilgang.azure.model.AzureAdGruppe
+import no.nav.sosialhjelp.modia.tilgang.azure.model.AzureAdGrupper
+import no.nav.sosialhjelp.modia.tilgang.skjermedepersoner.SkjermedePersonerClient
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy

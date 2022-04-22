@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.azure
+package no.nav.sosialhjelp.modia.tilgang.azure
 
 import no.nav.sosialhjelp.modia.client.maskinporten.WellKnown
 import no.nav.sosialhjelp.modia.common.ManglendeTilgangException

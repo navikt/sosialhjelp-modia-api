@@ -1,3 +1,3 @@
-package no.nav.sosialhjelp.modia.client.azure.model
+package no.nav.sosialhjelp.modia.tilgang.azure.model
 
 class AzureAdGrupper(val value: List<AzureAdGruppe>)

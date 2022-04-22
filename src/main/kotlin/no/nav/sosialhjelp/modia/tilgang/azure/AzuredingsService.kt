@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.azure
+package no.nav.sosialhjelp.modia.tilgang.azure
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm

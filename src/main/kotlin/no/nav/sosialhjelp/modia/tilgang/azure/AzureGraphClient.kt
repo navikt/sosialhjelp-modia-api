@@ -1,9 +1,9 @@
-package no.nav.sosialhjelp.modia.client.azure
+package no.nav.sosialhjelp.modia.tilgang.azure
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import no.nav.sosialhjelp.modia.client.azure.model.AzureAdGrupper
 import no.nav.sosialhjelp.modia.config.ClientProperties
+import no.nav.sosialhjelp.modia.tilgang.azure.model.AzureAdGrupper
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component

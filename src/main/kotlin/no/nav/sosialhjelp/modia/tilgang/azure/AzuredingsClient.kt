@@ -1,8 +1,8 @@
-package no.nav.sosialhjelp.modia.client.azure
+package no.nav.sosialhjelp.modia.tilgang.azure
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import no.nav.sosialhjelp.modia.client.azure.model.AzuredingsResponse
+import no.nav.sosialhjelp.modia.tilgang.azure.model.AzuredingsResponse
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap

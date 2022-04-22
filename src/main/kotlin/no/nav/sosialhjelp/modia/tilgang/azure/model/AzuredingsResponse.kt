@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.azure.model
+package no.nav.sosialhjelp.modia.tilgang.azure.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
