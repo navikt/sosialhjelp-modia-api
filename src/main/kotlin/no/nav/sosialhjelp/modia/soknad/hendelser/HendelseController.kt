@@ -1,7 +1,7 @@
-package no.nav.sosialhjelp.modia.rest
+package no.nav.sosialhjelp.modia.soknad.hendelser
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.sosialhjelp.modia.service.hendelse.HendelseService
+import no.nav.sosialhjelp.modia.rest.Ident
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
@@ -28,11 +28,4 @@ class HendelseController(
         val hendelser = hendelseService.hentHendelser(fiksDigisosId)
         return ResponseEntity.ok(hendelser)
     }
-
-    data class HendelseResponse(
-        val tittel: String,
-        val tidspunkt: String,
-        val beskrivelse: String?,
-        val filbeskrivelse: String?
-    )
 }
