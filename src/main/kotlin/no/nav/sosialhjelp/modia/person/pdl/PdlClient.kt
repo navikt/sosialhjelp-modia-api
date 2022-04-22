@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.pdl
+package no.nav.sosialhjelp.modia.person.pdl
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking

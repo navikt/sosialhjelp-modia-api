@@ -1,7 +1,7 @@
-package no.nav.sosialhjelp.modia.rest
+package no.nav.sosialhjelp.modia.person
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.sosialhjelp.modia.service.personinfo.PersoninfoService
+import no.nav.sosialhjelp.modia.rest.Ident
 import no.nav.sosialhjelp.modia.service.tilgangskontroll.TilgangskontrollService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
@@ -27,11 +27,4 @@ class PersoninfoController(
         val personinfoResponse = personinfoService.hentPersoninfo(ident.fnr, token)
         return ResponseEntity.ok(personinfoResponse)
     }
-
-    data class PersoninfoResponse(
-        val sammensattNavn: String?,
-        val alder: Int?,
-        val kjoenn: String?,
-        val tlfnr: String?
-    )
 }

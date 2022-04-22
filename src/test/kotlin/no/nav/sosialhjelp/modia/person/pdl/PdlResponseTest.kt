@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.pdl
+package no.nav.sosialhjelp.modia.person.pdl
 
 import io.mockk.clearAllMocks
 import io.mockk.every

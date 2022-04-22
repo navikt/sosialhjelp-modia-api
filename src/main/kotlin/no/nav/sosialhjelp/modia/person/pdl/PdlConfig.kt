@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.pdl
+package no.nav.sosialhjelp.modia.person.pdl
 
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import org.springframework.context.annotation.Bean
