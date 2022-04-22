@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.rest
+package no.nav.sosialhjelp.modia.soknadoversikt
 
 import io.mockk.Called
 import io.mockk.Runs
@@ -16,6 +16,7 @@ import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.domain.Utbetaling
 import no.nav.sosialhjelp.modia.domain.Vilkar
 import no.nav.sosialhjelp.modia.event.EventService
+import no.nav.sosialhjelp.modia.rest.Ident
 import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveResponse
 import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService

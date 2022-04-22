@@ -1,14 +1,13 @@
-package no.nav.sosialhjelp.modia.rest
+package no.nav.sosialhjelp.modia.soknadoversikt
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
-import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.hentSoknadTittel
 import no.nav.sosialhjelp.modia.logger
+import no.nav.sosialhjelp.modia.rest.Ident
 import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import no.nav.sosialhjelp.modia.unixTimestampToDate
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.Date
 
 @ProtectedWithClaims(issuer = "azuread")
 @RestController
@@ -94,22 +92,4 @@ class SoknadsoversiktController(
     companion object {
         private val log by logger()
     }
-
-    data class SoknadResponse(
-        val fiksDigisosId: String,
-        val soknadTittel: String,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val sistOppdatert: Date,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val sendt: Date?,
-        val kilde: String
-    )
-
-    data class SoknadDetaljerResponse(
-        val fiksDigisosId: String,
-        val soknadTittel: String,
-        val status: SoknadsStatus,
-        val harNyeOppgaver: Boolean,
-        val harVilkar: Boolean
-    )
 }
