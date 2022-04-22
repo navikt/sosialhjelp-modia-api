@@ -348,7 +348,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    internal fun `bare fom er satt`() {
+    fun `bare fom er satt`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val sistEndretFørFom = ZonedDateTime.of(fom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
@@ -364,7 +364,7 @@ internal class UtbetalingerServiceTest {
         val modelFørFom = InternalDigisosSoker()
         modelFørFom.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato.plusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
+                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, fom.minusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
             )
         )
 
@@ -375,6 +375,8 @@ internal class UtbetalingerServiceTest {
         coEvery { eventService.createModel(digisosSak) } returns model
 
         val digisosSakFørFom: DigisosSak = mockk()
+        coEvery { digisosSakFørFom.fiksDigisosId } returns digisosId
+        coEvery { digisosSakFørFom.kommunenummer } returns "0001"
         coEvery { digisosSakFørFom.sistEndret } returns sistEndretFørFom
         coEvery { eventService.createModel(digisosSakFørFom) } returns modelFørFom
 
@@ -388,7 +390,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    internal fun `bare tom er satt`() {
+    fun `bare tom er satt`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val tom = LocalDate.now().withDayOfMonth(1).minusDays(1)
         val sistEndretFørTom = ZonedDateTime.of(tom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
@@ -405,7 +407,7 @@ internal class UtbetalingerServiceTest {
         val modelEtterTom = InternalDigisosSoker()
         modelEtterTom.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato.plusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
+                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, tom.plusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
             )
         )
 
@@ -416,6 +418,8 @@ internal class UtbetalingerServiceTest {
         coEvery { eventService.createModel(digisosSak) } returns model
 
         val digisosSakEtterTom: DigisosSak = mockk()
+        coEvery { digisosSakEtterTom.fiksDigisosId } returns digisosId
+        coEvery { digisosSakEtterTom.kommunenummer } returns "0001"
         coEvery { digisosSakEtterTom.sistEndret } returns sistEndretEtterTom
         coEvery { eventService.createModel(digisosSakEtterTom) } returns modelEtterTom
 
@@ -429,7 +433,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    internal fun `fom og tom er satt`() {
+    fun `fom og tom er satt`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val tom = LocalDate.now().withDayOfMonth(1).minusDays(1)
@@ -448,14 +452,14 @@ internal class UtbetalingerServiceTest {
         val modelFørFom = InternalDigisosSoker()
         modelFørFom.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato.minusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
+                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, fom.minusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
             )
         )
 
         val modelEtterTom = InternalDigisosSoker()
         modelEtterTom.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato.plusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
+                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, tom.plusDays(1), null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
             )
         )
 
@@ -466,11 +470,15 @@ internal class UtbetalingerServiceTest {
         coEvery { eventService.createModel(digisosSak) } returns model
 
         val digisosSakFørFom: DigisosSak = mockk()
+        coEvery { digisosSakFørFom.fiksDigisosId } returns digisosId
         coEvery { digisosSakFørFom.sistEndret } returns sistEndretFørFom
+        coEvery { digisosSakFørFom.kommunenummer } returns "0001"
         coEvery { eventService.createModel(digisosSakFørFom) } returns modelFørFom
 
         val digisosSakEtterTom: DigisosSak = mockk()
+        coEvery { digisosSakEtterTom.fiksDigisosId } returns digisosId
         coEvery { digisosSakEtterTom.sistEndret } returns sistEndretEtterTom
+        coEvery { digisosSakEtterTom.kommunenummer } returns "0001"
         coEvery { eventService.createModel(digisosSakEtterTom) } returns modelEtterTom
 
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakFørFom, digisosSakEtterTom)
@@ -483,7 +491,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    internal fun `skal gi feil - fom er etter tom`() {
+    fun `skal gi feil - fom er etter tom`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
 
