@@ -1,7 +1,7 @@
-package no.nav.sosialhjelp.modia.service.kommune
+package no.nav.sosialhjelp.modia.kommune
 
 import no.nav.sosialhjelp.api.fiks.KommuneInfo
-import no.nav.sosialhjelp.modia.client.fiks.KommuneInfoClient
+import no.nav.sosialhjelp.modia.kommune.fiks.KommuneInfoClient
 import no.nav.sosialhjelp.modia.redis.RedisKeyType
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.utils.objectMapper

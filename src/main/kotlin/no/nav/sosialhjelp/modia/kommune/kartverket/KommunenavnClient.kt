@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.kommunenavn
+package no.nav.sosialhjelp.modia.kommune.kartverket
 
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.typeRef

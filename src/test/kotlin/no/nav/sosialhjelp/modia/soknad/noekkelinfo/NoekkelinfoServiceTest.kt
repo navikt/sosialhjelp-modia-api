@@ -14,8 +14,8 @@ import no.nav.sosialhjelp.modia.domain.SendingType
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus.MOTTATT
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_SENDT
-import no.nav.sosialhjelp.modia.service.kommune.KommuneService
-import no.nav.sosialhjelp.modia.service.kommune.KommunenavnService
+import no.nav.sosialhjelp.modia.kommune.KommuneService
+import no.nav.sosialhjelp.modia.kommune.KommunenavnService
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach

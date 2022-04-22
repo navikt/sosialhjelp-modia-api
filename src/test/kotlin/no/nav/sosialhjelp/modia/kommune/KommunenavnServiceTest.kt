@@ -1,12 +1,12 @@
-package no.nav.sosialhjelp.modia.service.kommune
+package no.nav.sosialhjelp.modia.kommune
 
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import no.nav.sosialhjelp.modia.client.kommunenavn.ContainedItem
-import no.nav.sosialhjelp.modia.client.kommunenavn.KommunenavnClient
-import no.nav.sosialhjelp.modia.client.kommunenavn.KommunenavnProperties
+import no.nav.sosialhjelp.modia.kommune.kartverket.ContainedItem
+import no.nav.sosialhjelp.modia.kommune.kartverket.KommunenavnClient
+import no.nav.sosialhjelp.modia.kommune.kartverket.KommunenavnProperties
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

@@ -1,10 +1,8 @@
-package no.nav.sosialhjelp.modia.client.fiks
+package no.nav.sosialhjelp.modia.kommune.fiks
 
 import no.nav.sosialhjelp.api.fiks.KommuneInfo
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksClientException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
-import no.nav.sosialhjelp.modia.client.fiks.FiksPaths.PATH_ALLE_KOMMUNEINFO
-import no.nav.sosialhjelp.modia.client.fiks.FiksPaths.PATH_KOMMUNEINFO
 import no.nav.sosialhjelp.modia.client.maskinporten.MaskinportenClient
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
@@ -68,5 +66,8 @@ class KommuneInfoClient(
 
     companion object {
         private val log by logger()
+
+        const val PATH_KOMMUNEINFO = "/digisos/api/v1/nav/kommuner/{kommunenummer}"
+        const val PATH_ALLE_KOMMUNEINFO = "/digisos/api/v1/nav/kommuner"
     }
 }

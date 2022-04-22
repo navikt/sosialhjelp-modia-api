@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.kommune
+package no.nav.sosialhjelp.modia.kommune
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.mockk.Runs
@@ -9,7 +9,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.KommuneInfo
-import no.nav.sosialhjelp.modia.client.fiks.KommuneInfoClient
+import no.nav.sosialhjelp.modia.kommune.fiks.KommuneInfoClient
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.responses.ok_kommuneinfo_response_string
 import no.nav.sosialhjelp.modia.utils.objectMapper

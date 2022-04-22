@@ -5,8 +5,8 @@ import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.domain.NavKontorInformasjon
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.hentSoknadTittel
-import no.nav.sosialhjelp.modia.service.kommune.KommuneService
-import no.nav.sosialhjelp.modia.service.kommune.KommunenavnService
+import no.nav.sosialhjelp.modia.kommune.KommuneService
+import no.nav.sosialhjelp.modia.kommune.KommunenavnService
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import org.springframework.stereotype.Component
 
