@@ -1,9 +1,6 @@
 package no.nav.sosialhjelp.modia.service.tilgangskontroll
 
 import no.nav.sosialhjelp.modia.client.azure.AzureGraphClient
-import no.nav.sosialhjelp.modia.client.pdl.PdlClient
-import no.nav.sosialhjelp.modia.client.pdl.PdlPerson
-import no.nav.sosialhjelp.modia.client.pdl.isKode6Or7
 import no.nav.sosialhjelp.modia.client.skjermedePersoner.SkjermedePersonerClient
 import no.nav.sosialhjelp.modia.common.ManglendeModiaSosialhjelpTilgangException
 import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
@@ -12,6 +9,9 @@ import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.logging.Access
 import no.nav.sosialhjelp.modia.logging.AuditService
+import no.nav.sosialhjelp.modia.person.pdl.PdlClient
+import no.nav.sosialhjelp.modia.person.pdl.PdlPerson
+import no.nav.sosialhjelp.modia.person.pdl.isKode6Or7
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
