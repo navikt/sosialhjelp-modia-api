@@ -13,9 +13,9 @@ import no.nav.sosialhjelp.modia.event.Titler.SAK_FERDIGBEHANDLET
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_UNDER_BEHANDLING
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.service.innsyn.InnsynService
-import no.nav.sosialhjelp.modia.service.vedlegg.SoknadVedleggService
-import no.nav.sosialhjelp.modia.service.vedlegg.VEDLEGG_KREVES_STATUS
 import no.nav.sosialhjelp.modia.soknad.saksstatus.SaksStatusService.Companion.DEFAULT_TITTEL
+import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
+import no.nav.sosialhjelp.modia.soknad.vedlegg.VEDLEGG_KREVES_STATUS
 import no.nav.sosialhjelp.modia.toLocalDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach

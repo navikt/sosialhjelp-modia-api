@@ -12,8 +12,8 @@ import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_MOTTATT
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_VIDERESENDT
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.service.innsyn.InnsynService
-import no.nav.sosialhjelp.modia.service.vedlegg.SoknadVedleggService
-import no.nav.sosialhjelp.modia.service.vedlegg.VEDLEGG_KREVES_STATUS
+import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
+import no.nav.sosialhjelp.modia.soknad.vedlegg.VEDLEGG_KREVES_STATUS
 import no.nav.sosialhjelp.modia.toLocalDateTime
 import no.nav.sosialhjelp.modia.utils.DEFAULT_NAVENHETSNAVN
 import org.assertj.core.api.Assertions.assertThat

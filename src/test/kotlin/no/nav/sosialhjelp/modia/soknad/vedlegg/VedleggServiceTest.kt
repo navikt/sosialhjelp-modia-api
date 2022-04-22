@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.vedlegg
+package no.nav.sosialhjelp.modia.soknad.vedlegg
 
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -307,172 +307,174 @@ internal class VedleggServiceTest {
         assertThat(list[2].antallFiler).isEqualTo(0)
         assertThat(list[2].datoLagtTil).isNull()
     }
+
+    companion object {
+        private const val id = "123"
+
+        private const val ettersendelse_filnavn_1 = "filnavn.pdf"
+        private const val ettersendelse_filnavn_2 = "navn på fil.ocr"
+        private const val ettersendelse_filnavn_3 = "denne filens navn.jpg"
+        private const val ettersendelse_filnavn_4 = "gif.jpg"
+        private const val soknad_filnavn_1 = "originalSoknadVedlegg.png"
+        private const val soknad_filnavn_2 = "originalSoknadVedlegg_2.exe"
+
+        private const val dokumentlagerId_1 = "9999"
+        private const val dokumentlagerId_2 = "7777"
+        private const val dokumentlagerId_3 = "5555"
+        private const val dokumentlagerId_4 = "3333"
+        private const val dokumentlagerId_soknad_1 = "1111"
+        private const val dokumentlagerId_soknad_2 = "1234"
+
+        private const val dokumenttype = "type"
+        private const val dokumenttype_2 = "type 2"
+        private const val dokumenttype_3 = "type 3"
+        private const val dokumenttype_4 = "type 4"
+
+        private val tid_1 = Instant.now()
+        private val tid_2 = Instant.now().minus(2, ChronoUnit.DAYS)
+        private val tid_soknad = Instant.now().minus(14, ChronoUnit.DAYS)
+
+        private const val vedleggMetadata_ettersendelse_1 = "vedlegg metadata 1"
+        private const val vedleggMetadata_ettersendelse_2 = "vedlegg metadata 2"
+        private const val vedleggMetadata_ettersendelse_3 = "vedlegg metadata 3"
+        private const val vedleggMetadata_ettersendelse_4 = "vedlegg metadata 4"
+        private const val vedleggMetadata_ettersendelse_5 = "vedlegg metadata 5"
+        private const val vedleggMetadata_soknad_1 = "vedlegg metadata soknad"
+        private const val vedleggMetadata_soknad_2 = "vedlegg metadata soknad med vedlegg kreves og lastet opp"
+
+        private val ettersendelser = listOf(
+            Ettersendelse(
+                navEksternRefId = "ref 1",
+                vedleggMetadata = vedleggMetadata_ettersendelse_1,
+                vedlegg = listOf(DokumentInfo(ettersendelse_filnavn_1, dokumentlagerId_1, 42), DokumentInfo(ettersendelse_filnavn_2, dokumentlagerId_2, 42)),
+                timestampSendt = tid_1.toEpochMilli()
+            ),
+            Ettersendelse(
+                navEksternRefId = "ref 2",
+                vedleggMetadata = vedleggMetadata_ettersendelse_2,
+                vedlegg = listOf(DokumentInfo(ettersendelse_filnavn_3, dokumentlagerId_3, 42), DokumentInfo(ettersendelse_filnavn_4, dokumentlagerId_4, 84)),
+                timestampSendt = tid_2.toEpochMilli()
+            ),
+            Ettersendelse(
+                navEksternRefId = "ref 2",
+                vedleggMetadata = vedleggMetadata_ettersendelse_4,
+                vedlegg = listOf(DokumentInfo(ettersendelse_filnavn_4, dokumentlagerId_3, 1), DokumentInfo(ettersendelse_filnavn_4, dokumentlagerId_4, 2)),
+                timestampSendt = tid_2.toEpochMilli()
+            )
+        )
+
+        private val originalSoknad = OriginalSoknadNAV(
+            navEksternRefId = "123",
+            metadata = "metadata",
+            vedleggMetadata = vedleggMetadata_soknad_1,
+            soknadDokument = mockk(),
+            vedlegg = listOf(DokumentInfo(soknad_filnavn_1, dokumentlagerId_soknad_1, 1337), DokumentInfo(soknad_filnavn_2, dokumentlagerId_soknad_2, 1337)),
+            timestampSendt = tid_soknad.toEpochMilli()
+        )
+
+        private val soknadVedleggSpesifikasjon = JsonVedleggSpesifikasjon()
+            .withVedlegg(
+                listOf(
+                    JsonVedlegg()
+                        .withFiler(
+                            listOf(
+                                JsonFiler().withFilnavn(soknad_filnavn_1).withSha512("1234fasd")
+                            )
+                        )
+                        .withStatus(LASTET_OPP_STATUS)
+                        .withType(dokumenttype),
+                    JsonVedlegg()
+                        .withFiler(
+                            listOf(
+                                JsonFiler().withFilnavn(soknad_filnavn_2).withSha512("sfg234")
+                            )
+                        )
+                        .withStatus(LASTET_OPP_STATUS)
+                        .withType(dokumenttype_2)
+                )
+            )
+
+        private val soknadVedleggSpesifikasjonMedStatusKrevesOgLastetOpp = JsonVedleggSpesifikasjon()
+            .withVedlegg(
+                listOf(
+                    JsonVedlegg()
+                        .withFiler(
+                            listOf(
+                                JsonFiler().withFilnavn(soknad_filnavn_1).withSha512("1234fasd")
+                            )
+                        )
+                        .withStatus(LASTET_OPP_STATUS)
+                        .withType(dokumenttype),
+                    JsonVedlegg()
+                        .withFiler(listOf())
+                        .withStatus("VedleggKreves")
+                        .withType(dokumenttype_2)
+                )
+            )
+
+        private val ettersendteVedleggSpesifikasjon_1 = JsonVedleggSpesifikasjon()
+            .withVedlegg(
+                listOf(
+                    JsonVedlegg()
+                        .withFiler(
+                            listOf(
+                                JsonFiler().withFilnavn(ettersendelse_filnavn_1).withSha512("g25b3")
+                            )
+                        )
+                        .withStatus(LASTET_OPP_STATUS)
+                        .withType(dokumenttype_3),
+                    JsonVedlegg()
+                        .withFiler(
+                            listOf(
+                                JsonFiler().withFilnavn(ettersendelse_filnavn_2).withSha512("4avc65a8")
+                            )
+                        )
+                        .withStatus(LASTET_OPP_STATUS)
+                        .withType(dokumenttype_4)
+                )
+            )
+
+        private val ettersendteVedleggSpesifikasjon_2 = JsonVedleggSpesifikasjon()
+            .withVedlegg(
+                listOf(
+                    JsonVedlegg()
+                        .withFiler(
+                            listOf(
+                                JsonFiler().withFilnavn(ettersendelse_filnavn_3).withSha512("aadsfwr"),
+                                JsonFiler().withFilnavn(ettersendelse_filnavn_4).withSha512("uiuusss")
+                            )
+                        )
+                        .withStatus(LASTET_OPP_STATUS)
+                        .withType(dokumenttype_3)
+                )
+            )
+
+        private val ettersendteVedleggSpesifikasjon_3 = JsonVedleggSpesifikasjon()
+            .withVedlegg(
+                listOf(
+                    JsonVedlegg()
+                        .withFiler(
+                            listOf(
+                                JsonFiler().withFilnavn(ettersendelse_filnavn_3).withSha512("aadsfwr")
+                            )
+                        )
+                        .withStatus("VedleggAlleredeSendt")
+                        .withType(dokumenttype_3)
+                )
+            )
+
+        private val ettersendteVedleggSpesifikasjon_4 = JsonVedleggSpesifikasjon()
+            .withVedlegg(
+                listOf(
+                    JsonVedlegg()
+                        .withFiler(
+                            listOf(
+                                JsonFiler().withFilnavn(ettersendelse_filnavn_4).withSha512("1231231")
+                            )
+                        )
+                        .withStatus(LASTET_OPP_STATUS)
+                        .withType(dokumenttype_3)
+                )
+            )
+    }
 }
-
-private const val id = "123"
-
-private const val ettersendelse_filnavn_1 = "filnavn.pdf"
-private const val ettersendelse_filnavn_2 = "navn på fil.ocr"
-private const val ettersendelse_filnavn_3 = "denne filens navn.jpg"
-private const val ettersendelse_filnavn_4 = "gif.jpg"
-private const val soknad_filnavn_1 = "originalSoknadVedlegg.png"
-private const val soknad_filnavn_2 = "originalSoknadVedlegg_2.exe"
-
-private const val dokumentlagerId_1 = "9999"
-private const val dokumentlagerId_2 = "7777"
-private const val dokumentlagerId_3 = "5555"
-private const val dokumentlagerId_4 = "3333"
-private const val dokumentlagerId_soknad_1 = "1111"
-private const val dokumentlagerId_soknad_2 = "1234"
-
-private const val dokumenttype = "type"
-private const val dokumenttype_2 = "type 2"
-private const val dokumenttype_3 = "type 3"
-private const val dokumenttype_4 = "type 4"
-
-private val tid_1 = Instant.now()
-private val tid_2 = Instant.now().minus(2, ChronoUnit.DAYS)
-private val tid_soknad = Instant.now().minus(14, ChronoUnit.DAYS)
-
-private const val vedleggMetadata_ettersendelse_1 = "vedlegg metadata 1"
-private const val vedleggMetadata_ettersendelse_2 = "vedlegg metadata 2"
-private const val vedleggMetadata_ettersendelse_3 = "vedlegg metadata 3"
-private const val vedleggMetadata_ettersendelse_4 = "vedlegg metadata 4"
-private const val vedleggMetadata_ettersendelse_5 = "vedlegg metadata 5"
-private const val vedleggMetadata_soknad_1 = "vedlegg metadata soknad"
-private const val vedleggMetadata_soknad_2 = "vedlegg metadata soknad med vedlegg kreves og lastet opp"
-
-private val ettersendelser = listOf(
-    Ettersendelse(
-        navEksternRefId = "ref 1",
-        vedleggMetadata = vedleggMetadata_ettersendelse_1,
-        vedlegg = listOf(DokumentInfo(ettersendelse_filnavn_1, dokumentlagerId_1, 42), DokumentInfo(ettersendelse_filnavn_2, dokumentlagerId_2, 42)),
-        timestampSendt = tid_1.toEpochMilli()
-    ),
-    Ettersendelse(
-        navEksternRefId = "ref 2",
-        vedleggMetadata = vedleggMetadata_ettersendelse_2,
-        vedlegg = listOf(DokumentInfo(ettersendelse_filnavn_3, dokumentlagerId_3, 42), DokumentInfo(ettersendelse_filnavn_4, dokumentlagerId_4, 84)),
-        timestampSendt = tid_2.toEpochMilli()
-    ),
-    Ettersendelse(
-        navEksternRefId = "ref 2",
-        vedleggMetadata = vedleggMetadata_ettersendelse_4,
-        vedlegg = listOf(DokumentInfo(ettersendelse_filnavn_4, dokumentlagerId_3, 1), DokumentInfo(ettersendelse_filnavn_4, dokumentlagerId_4, 2)),
-        timestampSendt = tid_2.toEpochMilli()
-    )
-)
-
-private val originalSoknad = OriginalSoknadNAV(
-    navEksternRefId = "123",
-    metadata = "metadata",
-    vedleggMetadata = vedleggMetadata_soknad_1,
-    soknadDokument = mockk(),
-    vedlegg = listOf(DokumentInfo(soknad_filnavn_1, dokumentlagerId_soknad_1, 1337), DokumentInfo(soknad_filnavn_2, dokumentlagerId_soknad_2, 1337)),
-    timestampSendt = tid_soknad.toEpochMilli()
-)
-
-private val soknadVedleggSpesifikasjon = JsonVedleggSpesifikasjon()
-    .withVedlegg(
-        listOf(
-            JsonVedlegg()
-                .withFiler(
-                    listOf(
-                        JsonFiler().withFilnavn(soknad_filnavn_1).withSha512("1234fasd")
-                    )
-                )
-                .withStatus(LASTET_OPP_STATUS)
-                .withType(dokumenttype),
-            JsonVedlegg()
-                .withFiler(
-                    listOf(
-                        JsonFiler().withFilnavn(soknad_filnavn_2).withSha512("sfg234")
-                    )
-                )
-                .withStatus(LASTET_OPP_STATUS)
-                .withType(dokumenttype_2)
-        )
-    )
-
-private val soknadVedleggSpesifikasjonMedStatusKrevesOgLastetOpp = JsonVedleggSpesifikasjon()
-    .withVedlegg(
-        listOf(
-            JsonVedlegg()
-                .withFiler(
-                    listOf(
-                        JsonFiler().withFilnavn(soknad_filnavn_1).withSha512("1234fasd")
-                    )
-                )
-                .withStatus(LASTET_OPP_STATUS)
-                .withType(dokumenttype),
-            JsonVedlegg()
-                .withFiler(listOf())
-                .withStatus("VedleggKreves")
-                .withType(dokumenttype_2)
-        )
-    )
-
-private val ettersendteVedleggSpesifikasjon_1 = JsonVedleggSpesifikasjon()
-    .withVedlegg(
-        listOf(
-            JsonVedlegg()
-                .withFiler(
-                    listOf(
-                        JsonFiler().withFilnavn(ettersendelse_filnavn_1).withSha512("g25b3")
-                    )
-                )
-                .withStatus(LASTET_OPP_STATUS)
-                .withType(dokumenttype_3),
-            JsonVedlegg()
-                .withFiler(
-                    listOf(
-                        JsonFiler().withFilnavn(ettersendelse_filnavn_2).withSha512("4avc65a8")
-                    )
-                )
-                .withStatus(LASTET_OPP_STATUS)
-                .withType(dokumenttype_4)
-        )
-    )
-
-private val ettersendteVedleggSpesifikasjon_2 = JsonVedleggSpesifikasjon()
-    .withVedlegg(
-        listOf(
-            JsonVedlegg()
-                .withFiler(
-                    listOf(
-                        JsonFiler().withFilnavn(ettersendelse_filnavn_3).withSha512("aadsfwr"),
-                        JsonFiler().withFilnavn(ettersendelse_filnavn_4).withSha512("uiuusss")
-                    )
-                )
-                .withStatus(LASTET_OPP_STATUS)
-                .withType(dokumenttype_3)
-        )
-    )
-
-private val ettersendteVedleggSpesifikasjon_3 = JsonVedleggSpesifikasjon()
-    .withVedlegg(
-        listOf(
-            JsonVedlegg()
-                .withFiler(
-                    listOf(
-                        JsonFiler().withFilnavn(ettersendelse_filnavn_3).withSha512("aadsfwr")
-                    )
-                )
-                .withStatus("VedleggAlleredeSendt")
-                .withType(dokumenttype_3)
-        )
-    )
-
-private val ettersendteVedleggSpesifikasjon_4 = JsonVedleggSpesifikasjon()
-    .withVedlegg(
-        listOf(
-            JsonVedlegg()
-                .withFiler(
-                    listOf(
-                        JsonFiler().withFilnavn(ettersendelse_filnavn_4).withSha512("1231231")
-                    )
-                )
-                .withStatus(LASTET_OPP_STATUS)
-                .withType(dokumenttype_3)
-        )
-    )

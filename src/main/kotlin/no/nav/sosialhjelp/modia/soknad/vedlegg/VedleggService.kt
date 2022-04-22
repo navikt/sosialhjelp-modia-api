@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.vedlegg
+package no.nav.sosialhjelp.modia.soknad.vedlegg
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
