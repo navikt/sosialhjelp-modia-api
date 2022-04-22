@@ -8,7 +8,6 @@ import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.event.Titler.FORELOPIG_SVAR
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
-import no.nav.sosialhjelp.modia.service.innsyn.InnsynService
 import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
 import no.nav.sosialhjelp.modia.soknad.vedlegg.VEDLEGG_KREVES_STATUS
 import no.nav.sosialhjelp.modia.toLocalDateTime
@@ -18,11 +17,11 @@ import org.junit.jupiter.api.Test
 
 internal class ForelopigSvarTest {
 
-    private val innsynService: InnsynService = mockk()
+    private val jsonDigisosSokerService: JsonDigisosSokerService = mockk()
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
 
-    private val service = EventService(innsynService, norgClient, soknadVedleggService)
+    private val service = EventService(jsonDigisosSokerService, norgClient, soknadVedleggService)
 
     private val mockDigisosSak: DigisosSak = mockk()
 
@@ -44,7 +43,7 @@ internal class ForelopigSvarTest {
 
     @Test
     fun `ingen forelopigSvar`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -64,7 +63,7 @@ internal class ForelopigSvarTest {
 
     @Test
     fun `forelopigSvar mottatt`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")

@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.innsyn
+package no.nav.sosialhjelp.modia.event
 
 import io.mockk.clearMocks
 import io.mockk.every
@@ -9,10 +9,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class InnsynServiceTest {
+internal class JsonDigisosSokerServiceTest {
 
     private val fiksClient: FiksClient = mockk()
-    private val service = InnsynService(fiksClient)
+    private val jsonDigisosSokerService = JsonDigisosSokerService(fiksClient)
 
     @BeforeEach
     fun init() {
@@ -25,14 +25,14 @@ internal class InnsynServiceTest {
 
         every { fiksClient.hentDokument(any(), any(), any(), JsonDigisosSoker::class.java) } returns mockJsonDigisosSoker
 
-        val jsonDigisosSoker: JsonDigisosSoker? = service.hentJsonDigisosSoker("fnr", "123", "abc")
+        val jsonDigisosSoker: JsonDigisosSoker? = jsonDigisosSokerService.get("fnr", "123", "abc")
 
         assertThat(jsonDigisosSoker).isNotNull
     }
 
     @Test
     fun `Should return null if DigisosSoker is null`() {
-        val jsonDigisosSoker = service.hentJsonDigisosSoker("fnr", "123", null)
+        val jsonDigisosSoker = jsonDigisosSokerService.get("fnr", "123", null)
 
         assertThat(jsonDigisosSoker).isNull()
     }

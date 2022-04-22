@@ -22,7 +22,6 @@ import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.domain.Soknadsmottaker
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_SENDT
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
-import no.nav.sosialhjelp.modia.service.innsyn.InnsynService
 import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import no.nav.sosialhjelp.modia.utils.DEFAULT_NAVENHETSNAVN
@@ -31,13 +30,13 @@ import org.springframework.stereotype.Component
 
 @Component
 class EventService(
-    private val innsynService: InnsynService,
+    private val jsonDigisosSokerService: JsonDigisosSokerService,
     private val norgClient: NorgClient,
     private val soknadVedleggService: SoknadVedleggService
 ) {
 
     fun createModel(digisosSak: DigisosSak): InternalDigisosSoker {
-        val jsonDigisosSoker: JsonDigisosSoker? = innsynService.hentJsonDigisosSoker(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata)
+        val jsonDigisosSoker: JsonDigisosSoker? = jsonDigisosSokerService.get(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata)
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
 
         val model = InternalDigisosSoker()
@@ -69,7 +68,7 @@ class EventService(
     }
 
     fun createSoknadsoversiktModel(digisosSak: DigisosSak): InternalDigisosSoker {
-        val jsonDigisosSoker: JsonDigisosSoker? = innsynService.hentJsonDigisosSoker(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata)
+        val jsonDigisosSoker: JsonDigisosSoker? = jsonDigisosSokerService.get(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata)
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
 
         val model = InternalDigisosSoker()
