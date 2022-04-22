@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.utbetalinger
+package no.nav.sosialhjelp.modia.utbetalinger
 
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -14,7 +14,6 @@ import no.nav.sosialhjelp.modia.domain.Utbetaling
 import no.nav.sosialhjelp.modia.domain.UtbetalingsStatus
 import no.nav.sosialhjelp.modia.domain.Vilkar
 import no.nav.sosialhjelp.modia.event.EventService
-import no.nav.sosialhjelp.modia.rest.UtbetalingerController.UtbetalingerResponse
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
