@@ -8,7 +8,6 @@ import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.event.Titler.DOKUMENTASJONSKRAV
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
-import no.nav.sosialhjelp.modia.service.innsyn.InnsynService
 import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
 import no.nav.sosialhjelp.modia.soknad.vedlegg.VEDLEGG_KREVES_STATUS
 import no.nav.sosialhjelp.modia.toLocalDateTime
@@ -19,11 +18,11 @@ import org.junit.jupiter.api.Test
 
 internal class DokumentasjonEtterspurtTest {
 
-    private val innsynService: InnsynService = mockk()
+    private val jsonDigisosSokerService: JsonDigisosSokerService = mockk()
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
 
-    private val service = EventService(innsynService, norgClient, soknadVedleggService)
+    private val service = EventService(jsonDigisosSokerService, norgClient, soknadVedleggService)
 
     private val mockDigisosSak: DigisosSak = mockk()
 
@@ -48,7 +47,7 @@ internal class DokumentasjonEtterspurtTest {
 
     @Test
     fun `dokumentliste er satt OG vedtaksbrev er satt - skal gi oppgaver og historikk`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -81,7 +80,7 @@ internal class DokumentasjonEtterspurtTest {
 
     @Test
     internal fun `dokumentliste er satt OG forvaltningsbrev mangler - skal gi oppgaver men ikke historikk`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -110,7 +109,7 @@ internal class DokumentasjonEtterspurtTest {
 
     @Test
     fun `dokumentliste er tom OG forvaltningsbrev er satt - skal verken gi oppgaver eller historikk`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -134,7 +133,7 @@ internal class DokumentasjonEtterspurtTest {
     @Disabled("fixme - oppgaver fra søknad ikke inkludert (enda)")
     @Test
     fun `oppgaver skal hentes fra soknaden dersom det ikke finnes dokumentasjonEtterspurt`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
