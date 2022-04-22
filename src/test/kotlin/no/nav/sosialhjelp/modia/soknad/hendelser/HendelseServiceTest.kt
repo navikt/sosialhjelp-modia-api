@@ -11,7 +11,7 @@ import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_MOTTATT
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_SENDT
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_UNDER_BEHANDLING
-import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
+import no.nav.sosialhjelp.modia.soknad.vedlegg.VedleggService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

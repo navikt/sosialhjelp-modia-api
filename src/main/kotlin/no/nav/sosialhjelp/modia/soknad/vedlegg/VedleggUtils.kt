@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.vedlegg
+package no.nav.sosialhjelp.modia.soknad.vedlegg
 
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
 import no.nav.sosialhjelp.api.fiks.DokumentInfo

@@ -1,13 +1,12 @@
-package no.nav.sosialhjelp.modia.rest
+package no.nav.sosialhjelp.modia.soknad.vedlegg
 
 import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import no.nav.sosialhjelp.modia.rest.VedleggController.VedleggResponse
-import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
-import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
+import no.nav.sosialhjelp.modia.rest.Ident
+import no.nav.sosialhjelp.modia.soknad.vedlegg.VedleggController.VedleggResponse
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach

@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.vedlegg
+package no.nav.sosialhjelp.modia.soknad.vedlegg
 
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -57,45 +57,45 @@ internal class SoknadVedleggServiceTest {
         assertThat(vedleggKrevesList[0].type).isEqualTo(dokumenttype_2)
         assertThat(vedleggKrevesList[0].datoLagtTil).isEqualToIgnoringNanos(LocalDateTime.ofInstant(tid_soknad, zoneIdOslo))
     }
-}
 
-private const val id = "123"
+    companion object {
+        private const val soknad_filnavn_1 = "originalSoknadVedlegg.png"
 
-private const val soknad_filnavn_1 = "originalSoknadVedlegg.png"
+        private const val dokumentlagerId_soknad_1 = "1111"
 
-private const val dokumentlagerId_soknad_1 = "1111"
+        private const val dokumenttype = "type"
+        private const val dokumenttype_2 = "type 2"
 
-private const val dokumenttype = "type"
-private const val dokumenttype_2 = "type 2"
+        private val tid_soknad = Instant.now().minus(14, ChronoUnit.DAYS)
 
-private val tid_soknad = Instant.now().minus(14, ChronoUnit.DAYS)
+        private const val vedleggMetadata_soknad_1 = "vedlegg metadata soknad"
+        private const val vedleggMetadata_soknad_2 = "vedlegg metadata soknad med vedlegg kreves og lastet opp"
 
-private const val vedleggMetadata_soknad_1 = "vedlegg metadata soknad"
-private const val vedleggMetadata_soknad_2 = "vedlegg metadata soknad med vedlegg kreves og lastet opp"
-
-private val originalSoknadMedVedleggKrevesOgLastetOpp = OriginalSoknadNAV(
-    navEksternRefId = "123",
-    metadata = "metadata",
-    vedleggMetadata = vedleggMetadata_soknad_2,
-    soknadDokument = mockk(),
-    vedlegg = listOf(DokumentInfo(soknad_filnavn_1, dokumentlagerId_soknad_1, 1337)),
-    timestampSendt = tid_soknad.toEpochMilli()
-)
-
-private val soknadVedleggSpesifikasjonMedStatusKrevesOgLastetOpp = JsonVedleggSpesifikasjon()
-    .withVedlegg(
-        listOf(
-            JsonVedlegg()
-                .withFiler(
-                    listOf(
-                        JsonFiler().withFilnavn(soknad_filnavn_1).withSha512("1234fasd")
-                    )
-                )
-                .withStatus(LASTET_OPP_STATUS)
-                .withType(dokumenttype),
-            JsonVedlegg()
-                .withFiler(listOf())
-                .withStatus("VedleggKreves")
-                .withType(dokumenttype_2)
+        private val originalSoknadMedVedleggKrevesOgLastetOpp = OriginalSoknadNAV(
+            navEksternRefId = "123",
+            metadata = "metadata",
+            vedleggMetadata = vedleggMetadata_soknad_2,
+            soknadDokument = mockk(),
+            vedlegg = listOf(DokumentInfo(soknad_filnavn_1, dokumentlagerId_soknad_1, 1337)),
+            timestampSendt = tid_soknad.toEpochMilli()
         )
-    )
+
+        private val soknadVedleggSpesifikasjonMedStatusKrevesOgLastetOpp = JsonVedleggSpesifikasjon()
+            .withVedlegg(
+                listOf(
+                    JsonVedlegg()
+                        .withFiler(
+                            listOf(
+                                JsonFiler().withFilnavn(soknad_filnavn_1).withSha512("1234fasd")
+                            )
+                        )
+                        .withStatus(LASTET_OPP_STATUS)
+                        .withType(dokumenttype),
+                    JsonVedlegg()
+                        .withFiler(listOf())
+                        .withStatus("VedleggKreves")
+                        .withType(dokumenttype_2)
+                )
+            )
+    }
+}

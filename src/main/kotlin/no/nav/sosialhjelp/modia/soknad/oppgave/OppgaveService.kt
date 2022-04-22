@@ -4,8 +4,8 @@ import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.Oppgave
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.logger
-import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
-import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
+import no.nav.sosialhjelp.modia.soknad.vedlegg.InternalVedlegg
+import no.nav.sosialhjelp.modia.soknad.vedlegg.VedleggService
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 

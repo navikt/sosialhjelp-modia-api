@@ -23,7 +23,7 @@ import no.nav.sosialhjelp.modia.domain.Soknadsmottaker
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_SENDT
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.service.innsyn.InnsynService
-import no.nav.sosialhjelp.modia.service.vedlegg.SoknadVedleggService
+import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import no.nav.sosialhjelp.modia.utils.DEFAULT_NAVENHETSNAVN
 import no.nav.sosialhjelp.modia.utils.navenhetsnavnOrDefault

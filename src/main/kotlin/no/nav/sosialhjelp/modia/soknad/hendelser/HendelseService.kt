@@ -5,8 +5,8 @@ import no.nav.sosialhjelp.modia.domain.Hendelse
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.logger
-import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
-import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
+import no.nav.sosialhjelp.modia.soknad.vedlegg.InternalVedlegg
+import no.nav.sosialhjelp.modia.soknad.vedlegg.VedleggService
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
