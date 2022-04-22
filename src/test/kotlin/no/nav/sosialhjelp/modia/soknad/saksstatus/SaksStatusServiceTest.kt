@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.saksstatus
+package no.nav.sosialhjelp.modia.soknad.saksstatus
 
 import io.mockk.clearMocks
 import io.mockk.every
@@ -11,7 +11,7 @@ import no.nav.sosialhjelp.modia.domain.SaksStatus
 import no.nav.sosialhjelp.modia.domain.UtfallVedtak
 import no.nav.sosialhjelp.modia.domain.Vedtak
 import no.nav.sosialhjelp.modia.event.EventService
-import no.nav.sosialhjelp.modia.rest.SaksStatusController.SaksStatusResponse
+import no.nav.sosialhjelp.modia.soknad.saksstatus.SaksStatusService.Companion.DEFAULT_TITTEL
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
