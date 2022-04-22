@@ -1,8 +1,7 @@
-package no.nav.sosialhjelp.modia.rest
+package no.nav.sosialhjelp.modia.soknad.soknadsstatus
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.sosialhjelp.modia.domain.SoknadsStatus
-import no.nav.sosialhjelp.modia.service.soknadsstatus.SoknadsStatusService
+import no.nav.sosialhjelp.modia.rest.Ident
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
@@ -29,8 +28,4 @@ class SoknadsStatusController(
         val soknadsStatus: SoknadsStatusResponse = soknadsStatusService.hentSoknadsStatus(fiksDigisosId)
         return ResponseEntity.ok().body(soknadsStatus)
     }
-
-    data class SoknadsStatusResponse(
-        val status: SoknadsStatus
-    )
 }

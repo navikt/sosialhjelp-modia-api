@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.soknadsstatus
+package no.nav.sosialhjelp.modia.soknad.soknadsstatus
 
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -8,7 +8,6 @@ import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.event.EventService
-import no.nav.sosialhjelp.modia.rest.SoknadsStatusController.SoknadsStatusResponse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
