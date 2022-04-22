@@ -5,15 +5,14 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.modia.client.norg.NorgClient
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_FERDIGBEHANDLET
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_MOTTATT
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_SENDT
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_UNDER_BEHANDLING
-import no.nav.sosialhjelp.modia.service.innsyn.InnsynService
-import no.nav.sosialhjelp.modia.service.vedlegg.SoknadVedleggService
-import no.nav.sosialhjelp.modia.service.vedlegg.VEDLEGG_KREVES_STATUS
+import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
+import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
+import no.nav.sosialhjelp.modia.soknad.vedlegg.VEDLEGG_KREVES_STATUS
 import no.nav.sosialhjelp.modia.toLocalDateTime
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -22,11 +21,11 @@ import org.junit.jupiter.api.Test
 
 internal class SoknadsStatusTest {
 
-    private val innsynService: InnsynService = mockk()
+    private val jsonDigisosSokerService: JsonDigisosSokerService = mockk()
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
 
-    private val service = EventService(innsynService, norgClient, soknadVedleggService)
+    private val service = EventService(jsonDigisosSokerService, norgClient, soknadVedleggService)
 
     private val mockDigisosSak: DigisosSak = mockk()
 
@@ -48,7 +47,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus SENDT`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns null
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns null
 
         val model = service.createModel(mockDigisosSak)
 
@@ -64,7 +63,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus MOTTATT`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -90,7 +89,7 @@ internal class SoknadsStatusTest {
     fun `soknadsStatus MOTTATT papirsoknad`() {
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns null
         every { mockDigisosSak.originalSoknadNAV } returns null
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -114,7 +113,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus UNDER_BEHANDLING`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -140,7 +139,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus FERDIGBEHANDLET`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")

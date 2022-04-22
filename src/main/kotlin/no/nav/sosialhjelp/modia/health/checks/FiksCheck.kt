@@ -1,7 +1,7 @@
 package no.nav.sosialhjelp.modia.health.checks
 
-import no.nav.sosialhjelp.modia.client.fiks.KommuneInfoClient
 import no.nav.sosialhjelp.modia.config.ClientProperties
+import no.nav.sosialhjelp.modia.kommune.fiks.KommuneInfoClient
 import no.nav.sosialhjelp.selftest.DependencyCheck
 import no.nav.sosialhjelp.selftest.DependencyType
 import no.nav.sosialhjelp.selftest.Importance

@@ -9,7 +9,7 @@ import no.nav.sosialhjelp.modia.domain.SaksStatus
 import no.nav.sosialhjelp.modia.domain.UtfallVedtak
 import no.nav.sosialhjelp.modia.domain.Vedtak
 import no.nav.sosialhjelp.modia.event.Titler.SAK_FERDIGBEHANDLET
-import no.nav.sosialhjelp.modia.service.saksstatus.DEFAULT_TITTEL
+import no.nav.sosialhjelp.modia.soknad.saksstatus.SaksStatusService.Companion.DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {

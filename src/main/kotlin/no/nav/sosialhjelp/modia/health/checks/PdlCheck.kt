@@ -1,8 +1,8 @@
 package no.nav.sosialhjelp.modia.health.checks
 
-import no.nav.sosialhjelp.modia.client.pdl.PdlClient
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
+import no.nav.sosialhjelp.modia.person.pdl.PdlClient
 import no.nav.sosialhjelp.selftest.DependencyCheck
 import no.nav.sosialhjelp.selftest.DependencyType
 import no.nav.sosialhjelp.selftest.Importance
