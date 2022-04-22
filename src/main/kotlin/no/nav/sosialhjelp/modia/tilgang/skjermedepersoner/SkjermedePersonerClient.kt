@@ -1,15 +1,15 @@
-package no.nav.sosialhjelp.modia.client.skjermedePersoner
+package no.nav.sosialhjelp.modia.tilgang.skjermedepersoner
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
-import no.nav.sosialhjelp.modia.client.azure.AzuredingsService
-import no.nav.sosialhjelp.modia.client.skjermedePersoner.model.SkjermedePersonerRequest
 import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
-import no.nav.sosialhjelp.modia.redis.RedisKeyType
+import no.nav.sosialhjelp.modia.redis.RedisKeyType.SKJERMEDE_PERSONER
 import no.nav.sosialhjelp.modia.redis.RedisService
+import no.nav.sosialhjelp.modia.tilgang.azure.AzuredingsService
+import no.nav.sosialhjelp.modia.tilgang.skjermedepersoner.model.SkjermedePersonerRequest
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.springframework.context.annotation.Profile
@@ -40,12 +40,14 @@ class SkjermedePersonerClientImpl(
     }
 
     private fun hentFraCache(ident: String): Boolean? {
-        val skjermetStatus = redisService.get(RedisKeyType.SKJERMEDE_PERSONER, ident, Boolean::class.java)
+        val skjermetStatus = redisService.get(SKJERMEDE_PERSONER, ident, Boolean::class.java)
         return skjermetStatus?.let { return it as Boolean }
     }
 
     private fun lagreSkjermetStatus(skjermet: Boolean?, ident: String) {
-        skjermet?.let { redisService.set(RedisKeyType.SKJERMEDE_PERSONER, ident, objectMapper.writeValueAsBytes(it), 2 * 60 * 60) }
+        skjermet?.let {
+            redisService.set(SKJERMEDE_PERSONER, ident, objectMapper.writeValueAsBytes(it), 2 * 60 * 60)
+        }
     }
 
     private fun hentSkjermetStatusFraServer(ident: String, veilederToken: String): Boolean {
@@ -64,8 +66,7 @@ class SkjermedePersonerClientImpl(
                     when (e) {
                         is WebClientResponseException ->
                             log.error(
-                                "Skjermede personer - noe feilet. Status: ${e.statusCode}, message: ${e.message}.\n" +
-                                    e.responseBodyAsString,
+                                "Skjermede personer - noe feilet. Status: ${e.statusCode}, message: ${e.message}.\n ${e.responseBodyAsString}",
                                 e
                             )
                         is WebClientRequestException -> log.error(
