@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.health.selftest
+package no.nav.sosialhjelp.modia.app.health.selftest
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.converter.HttpMessageConverter

@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.health.checks
+package no.nav.sosialhjelp.modia.app.health.checks
 
 import no.nav.sosialhjelp.modia.common.NorgException
 import no.nav.sosialhjelp.modia.config.ClientProperties

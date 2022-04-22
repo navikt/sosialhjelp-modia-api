@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.unleash.strategy
+package no.nav.sosialhjelp.modia.app.featuretoggle.strategy
 
 import no.finn.unleash.strategy.Strategy
 

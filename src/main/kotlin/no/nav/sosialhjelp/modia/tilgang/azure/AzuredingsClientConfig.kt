@@ -1,6 +1,6 @@
 package no.nav.sosialhjelp.modia.tilgang.azure
 
-import no.nav.sosialhjelp.modia.client.maskinporten.WellKnown
+import no.nav.sosialhjelp.modia.app.maskinporten.WellKnown
 import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger

@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.health
+package no.nav.sosialhjelp.modia.app.health
 
 import no.nav.sosialhjelp.modia.utils.Miljo
 import no.nav.sosialhjelp.selftest.DependencyCheck
