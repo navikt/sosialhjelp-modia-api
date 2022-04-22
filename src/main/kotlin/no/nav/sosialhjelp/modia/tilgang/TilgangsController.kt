@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.rest
+package no.nav.sosialhjelp.modia.tilgang
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService

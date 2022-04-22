@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.noekkelinfo
+package no.nav.sosialhjelp.modia.soknad.noekkelinfo
 
 import io.mockk.clearAllMocks
 import io.mockk.every
