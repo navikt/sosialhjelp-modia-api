@@ -16,7 +16,8 @@ import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.domain.Utbetaling
 import no.nav.sosialhjelp.modia.domain.Vilkar
 import no.nav.sosialhjelp.modia.event.EventService
-import no.nav.sosialhjelp.modia.service.oppgave.OppgaveService
+import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveResponse
+import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.KILDE_INNSYN_API
 import org.assertj.core.api.Assertions.assertThat
@@ -46,7 +47,7 @@ internal class SoknadsoversiktControllerTest {
     private val utbetaling1: Utbetaling = mockk()
     private val utbetaling2: Utbetaling = mockk()
 
-    private val oppgaveResponseMock: OppgaveController.OppgaveResponse = mockk()
+    private val oppgaveResponseMock: OppgaveResponse = mockk()
 
     private val fnr = "11111111111"
     private val id_1 = "123"

@@ -1,10 +1,9 @@
-package no.nav.sosialhjelp.modia.service.oppgave
+package no.nav.sosialhjelp.modia.soknad.oppgave
 
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.Oppgave
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.logger
-import no.nav.sosialhjelp.modia.rest.OppgaveController.OppgaveResponse
 import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
 import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
 import org.springframework.stereotype.Component

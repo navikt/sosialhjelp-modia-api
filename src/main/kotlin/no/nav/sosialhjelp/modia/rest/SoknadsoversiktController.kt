@@ -9,7 +9,7 @@ import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.hentSoknadTittel
 import no.nav.sosialhjelp.modia.logger
-import no.nav.sosialhjelp.modia.service.oppgave.OppgaveService
+import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import no.nav.sosialhjelp.modia.unixTimestampToDate
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils
