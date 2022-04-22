@@ -13,7 +13,6 @@ import no.nav.sosialhjelp.modia.flatMapParallel
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.rest.UtbetalingerController.NavKontor
 import no.nav.sosialhjelp.modia.rest.UtbetalingerController.UtbetalingerResponse
-import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import org.joda.time.DateTime
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder.getRequestAttributes
@@ -61,13 +60,14 @@ class UtbetalingerService(
 
     private fun hentUtbetalingerForIntervall(digisosSaker: List<DigisosSak>, fom: LocalDate?, tom: LocalDate?): List<UtbetalingerResponse> {
         val requestAttributes = getRequestAttributes()
+        check(!(fom != null && tom != null && fom.isAfter(tom))) { "Fom kan ikke være etter tom" }
 
         return runBlocking(Dispatchers.IO + MDCContext()) {
             digisosSaker
-                .filter { isDigisosSakInnenforIntervall(it, fom, tom) }
+//                .filter { isDigisosSakInnenforIntervall(it, fom, tom) }
                 .flatMapParallel {
                     setRequestAttributes(requestAttributes)
-                    getUtbetalinger(it)
+                    getUtbetalinger(it, fom, tom)
                 }
                 .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         }
@@ -77,15 +77,28 @@ class UtbetalingerService(
         return digisosSak.sistEndret >= DateTime.now().minusMonths(months).millis
     }
 
-    private fun isDigisosSakInnenforIntervall(digisosSak: DigisosSak, fom: LocalDate?, tom: LocalDate?): Boolean {
+//    private fun isDigisosSakInnenforIntervall(digisosSak: DigisosSak, fom: LocalDate?, tom: LocalDate?): Boolean {
+//        val range = when {
+//            fom != null && tom != null && fom.isBefore(tom) -> fom.rangeTo(tom)
+//            fom != null && tom != null && fom.isAfter(tom) -> throw IllegalStateException("Fom kan ikke være etter tom")
+//            fom != null && tom == null -> fom.rangeTo(LocalDate.now())
+//            fom == null && tom != null -> LocalDate.now().minusYears(1).rangeTo(tom)
+//            else -> throw IllegalStateException("Fom og tom kan ikke begge være null")
+//        }
+//        return range.contains(unixToLocalDateTime(digisosSak.sistEndret).toLocalDate())
+//    }
+
+    private fun isUtbetalingOrForfallInnenforIntervall(utbetaling: Utbetaling, fom: LocalDate?, tom: LocalDate?): Boolean {
         val range = when {
             fom != null && tom != null && fom.isBefore(tom) -> fom.rangeTo(tom)
-            fom != null && tom != null && fom.isAfter(tom) -> throw IllegalStateException("Fom kan ikke være etter tom")
             fom != null && tom == null -> fom.rangeTo(LocalDate.now())
             fom == null && tom != null -> LocalDate.now().minusYears(1).rangeTo(tom)
             else -> throw IllegalStateException("Fom og tom kan ikke begge være null")
         }
-        return range.contains(unixToLocalDateTime(digisosSak.sistEndret).toLocalDate())
+
+        val utbetalingsDatoInnenfor = utbetaling.utbetalingsDato?.let { range.contains(it) } ?: false
+        val forfallsDatoInnenfor = utbetaling.forfallsDato?.let { range.contains(it) } ?: false
+        return utbetalingsDatoInnenfor || forfallsDatoInnenfor
     }
 
     private fun getUtbetalinger(digisosSak: DigisosSak): List<UtbetalingerResponse> {
@@ -94,6 +107,19 @@ class UtbetalingerService(
 
         return model.utbetalinger
             .filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
+            .map { utbetaling ->
+                utbetaling.infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(digisosSak.kommunenummer)
+                toUtbetalingResponse(utbetaling, digisosSak.fiksDigisosId, behandlendeNavKontor)
+            }
+    }
+
+    private fun getUtbetalinger(digisosSak: DigisosSak, fom: LocalDate?, tom: LocalDate?): List<UtbetalingerResponse> {
+        val model = eventService.createModel(digisosSak)
+        val behandlendeNavKontor = model.navKontorHistorikk.lastOrNull()
+
+        return model.utbetalinger
+            .filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
+            .filter { isUtbetalingOrForfallInnenforIntervall(it, fom, tom) }
             .map { utbetaling ->
                 utbetaling.infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(digisosSak.kommunenummer)
                 toUtbetalingResponse(utbetaling, digisosSak.fiksDigisosId, behandlendeNavKontor)
