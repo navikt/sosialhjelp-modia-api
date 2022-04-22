@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.rest
+package no.nav.sosialhjelp.modia.utils
 
 data class Ident(
     val fnr: String

@@ -16,10 +16,10 @@ import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.domain.Utbetaling
 import no.nav.sosialhjelp.modia.domain.Vilkar
 import no.nav.sosialhjelp.modia.event.EventService
-import no.nav.sosialhjelp.modia.rest.Ident
 import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveResponse
 import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
+import no.nav.sosialhjelp.modia.utils.Ident
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.KILDE_INNSYN_API
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
