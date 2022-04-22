@@ -7,10 +7,10 @@ import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.hentSoknadTittel
 import no.nav.sosialhjelp.modia.logger
-import no.nav.sosialhjelp.modia.rest.Ident
 import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import no.nav.sosialhjelp.modia.unixTimestampToDate
+import no.nav.sosialhjelp.modia.utils.Ident
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod

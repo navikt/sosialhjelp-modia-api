@@ -5,9 +5,9 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import no.nav.sosialhjelp.modia.rest.Ident
 import no.nav.sosialhjelp.modia.soknad.vedlegg.VedleggController.VedleggResponse
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
+import no.nav.sosialhjelp.modia.utils.Ident
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

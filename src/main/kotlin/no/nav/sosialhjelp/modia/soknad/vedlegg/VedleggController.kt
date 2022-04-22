@@ -2,8 +2,8 @@ package no.nav.sosialhjelp.modia.soknad.vedlegg
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.sosialhjelp.modia.rest.Ident
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
+import no.nav.sosialhjelp.modia.utils.Ident
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
