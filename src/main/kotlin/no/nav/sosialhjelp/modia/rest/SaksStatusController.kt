@@ -5,7 +5,7 @@ import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.domain.SaksStatus
 import no.nav.sosialhjelp.modia.domain.UtfallVedtak
 import no.nav.sosialhjelp.modia.service.saksstatus.SaksStatusService
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.TilgangskontrollService
+import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus

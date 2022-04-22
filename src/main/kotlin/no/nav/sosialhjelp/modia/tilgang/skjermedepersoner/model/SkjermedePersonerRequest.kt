@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.skjermedePersoner.model
+package no.nav.sosialhjelp.modia.tilgang.skjermedepersoner.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

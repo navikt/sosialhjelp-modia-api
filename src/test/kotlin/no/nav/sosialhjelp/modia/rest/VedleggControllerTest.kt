@@ -6,9 +6,9 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import no.nav.sosialhjelp.modia.rest.VedleggController.VedleggResponse
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.TilgangskontrollService
 import no.nav.sosialhjelp.modia.service.vedlegg.InternalVedlegg
 import no.nav.sosialhjelp.modia.service.vedlegg.VedleggService
+import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

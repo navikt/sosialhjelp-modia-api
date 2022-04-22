@@ -1,9 +1,9 @@
-package no.nav.sosialhjelp.modia.client.azure
+package no.nav.sosialhjelp.modia.tilgang.azure
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import no.nav.sosialhjelp.modia.client.azure.model.AzuredingsResponse
 import no.nav.sosialhjelp.modia.config.ClientProperties
+import no.nav.sosialhjelp.modia.tilgang.azure.model.AzuredingsResponse
 import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component

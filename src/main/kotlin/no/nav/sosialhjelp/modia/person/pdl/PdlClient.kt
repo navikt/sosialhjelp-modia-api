@@ -2,10 +2,10 @@ package no.nav.sosialhjelp.modia.person.pdl
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import no.nav.sosialhjelp.modia.client.azure.AzuredingsService
 import no.nav.sosialhjelp.modia.common.PdlException
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
+import no.nav.sosialhjelp.modia.tilgang.azure.AzuredingsService
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_TEMA
