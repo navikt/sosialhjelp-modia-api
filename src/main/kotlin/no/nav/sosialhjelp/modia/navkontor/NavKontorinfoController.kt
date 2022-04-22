@@ -1,7 +1,6 @@
-package no.nav.sosialhjelp.modia.rest
+package no.nav.sosialhjelp.modia.navkontor
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.sosialhjelp.modia.service.navkontor.NavKontorService
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -31,11 +30,4 @@ class NavKontorinfoController(
         }
         return ResponseEntity.ok(alleEnheter)
     }
-
-    data class KontorinfoResponse(
-        val enhetsnr: String,
-        val navn: String,
-        val kontorinfo: String,
-        val norgUrl: String,
-    )
 }

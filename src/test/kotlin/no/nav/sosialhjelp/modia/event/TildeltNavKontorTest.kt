@@ -5,12 +5,12 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.modia.client.norg.NorgClient
 import no.nav.sosialhjelp.modia.common.NorgException
 import no.nav.sosialhjelp.modia.domain.SendingType
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_MOTTATT
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_VIDERESENDT
+import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.service.innsyn.InnsynService
 import no.nav.sosialhjelp.modia.service.vedlegg.SoknadVedleggService
 import no.nav.sosialhjelp.modia.service.vedlegg.VEDLEGG_KREVES_STATUS

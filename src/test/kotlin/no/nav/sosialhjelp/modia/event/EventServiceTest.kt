@@ -5,13 +5,13 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.modia.client.norg.NorgClient
 import no.nav.sosialhjelp.modia.domain.SaksStatus
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.domain.UtfallVedtak
 import no.nav.sosialhjelp.modia.event.Titler.FORELOPIG_SVAR
 import no.nav.sosialhjelp.modia.event.Titler.SAK_FERDIGBEHANDLET
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_UNDER_BEHANDLING
+import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.service.innsyn.InnsynService
 import no.nav.sosialhjelp.modia.service.saksstatus.DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.service.vedlegg.SoknadVedleggService
