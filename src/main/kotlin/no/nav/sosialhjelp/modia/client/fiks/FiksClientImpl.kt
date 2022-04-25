@@ -7,10 +7,10 @@ import no.nav.sosialhjelp.api.fiks.exceptions.FiksClientException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
 import no.nav.sosialhjelp.kotlin.utils.retry
+import no.nav.sosialhjelp.modia.app.maskinporten.MaskinportenClient
 import no.nav.sosialhjelp.modia.client.fiks.FiksPaths.PATH_ALLE_DIGISOSSAKER
 import no.nav.sosialhjelp.modia.client.fiks.FiksPaths.PATH_DIGISOSSAK
 import no.nav.sosialhjelp.modia.client.fiks.FiksPaths.PATH_DOKUMENT
-import no.nav.sosialhjelp.modia.client.maskinporten.MaskinportenClient
 import no.nav.sosialhjelp.modia.client.unleash.BERGEN_ENABLED
 import no.nav.sosialhjelp.modia.client.unleash.FIKS_CACHE_ENABLED
 import no.nav.sosialhjelp.modia.client.unleash.STAVANGER_ENABLED

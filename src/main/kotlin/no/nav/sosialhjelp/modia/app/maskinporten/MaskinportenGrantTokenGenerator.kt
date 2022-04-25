@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.maskinporten
+package no.nav.sosialhjelp.modia.app.maskinporten
 
 import com.nimbusds.jose.JOSEObjectType
 import com.nimbusds.jose.JWSAlgorithm

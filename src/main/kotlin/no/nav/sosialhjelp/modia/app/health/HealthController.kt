@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.health
+package no.nav.sosialhjelp.modia.app.health
 
 import no.nav.security.token.support.core.api.Unprotected
 import no.nav.sosialhjelp.selftest.SelftestResult

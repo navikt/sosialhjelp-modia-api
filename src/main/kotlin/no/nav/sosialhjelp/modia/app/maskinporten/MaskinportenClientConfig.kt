@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.maskinporten
+package no.nav.sosialhjelp.modia.app.maskinporten
 
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.utils.MiljoUtils

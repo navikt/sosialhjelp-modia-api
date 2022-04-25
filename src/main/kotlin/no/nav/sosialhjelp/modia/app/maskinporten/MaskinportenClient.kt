@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.maskinporten
+package no.nav.sosialhjelp.modia.app.maskinporten
 
 import com.nimbusds.jwt.SignedJWT
 import no.nav.sosialhjelp.modia.logger
