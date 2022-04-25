@@ -62,7 +62,6 @@ class UtbetalingerService(
 
         return runBlocking(Dispatchers.IO + MDCContext()) {
             digisosSaker
-//                .filter { isDigisosSakInnenforIntervall(it, fom, tom) }
                 .flatMapParallel {
                     setRequestAttributes(requestAttributes)
                     getUtbetalinger(it, fom, tom)
@@ -74,17 +73,6 @@ class UtbetalingerService(
     private fun isDigisosSakNewerThanMonths(digisosSak: DigisosSak, months: Int): Boolean {
         return digisosSak.sistEndret >= DateTime.now().minusMonths(months).millis
     }
-
-//    private fun isDigisosSakInnenforIntervall(digisosSak: DigisosSak, fom: LocalDate?, tom: LocalDate?): Boolean {
-//        val range = when {
-//            fom != null && tom != null && fom.isBefore(tom) -> fom.rangeTo(tom)
-//            fom != null && tom != null && fom.isAfter(tom) -> throw IllegalStateException("Fom kan ikke være etter tom")
-//            fom != null && tom == null -> fom.rangeTo(LocalDate.now())
-//            fom == null && tom != null -> LocalDate.now().minusYears(1).rangeTo(tom)
-//            else -> throw IllegalStateException("Fom og tom kan ikke begge være null")
-//        }
-//        return range.contains(unixToLocalDateTime(digisosSak.sistEndret).toLocalDate())
-//    }
 
     private fun isUtbetalingOrForfallInnenforIntervall(utbetaling: Utbetaling, fom: LocalDate?, tom: LocalDate?): Boolean {
         val range = when {
