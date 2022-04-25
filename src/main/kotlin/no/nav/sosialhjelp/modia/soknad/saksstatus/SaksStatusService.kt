@@ -1,9 +1,9 @@
 package no.nav.sosialhjelp.modia.soknad.saksstatus
 
-import no.nav.sosialhjelp.modia.client.fiks.FiksClient
-import no.nav.sosialhjelp.modia.domain.Sak
-import no.nav.sosialhjelp.modia.domain.SaksStatus
-import no.nav.sosialhjelp.modia.event.EventService
+import no.nav.sosialhjelp.modia.digisossak.domain.Sak
+import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
+import no.nav.sosialhjelp.modia.digisossak.event.EventService
+import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.logger
 import org.springframework.stereotype.Component
 

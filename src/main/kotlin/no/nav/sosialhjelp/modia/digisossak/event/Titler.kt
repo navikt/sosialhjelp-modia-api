@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.event
+package no.nav.sosialhjelp.modia.digisossak.event
 
 object Titler {
     const val SOKNAD_SENDT = "Søknaden er sendt"

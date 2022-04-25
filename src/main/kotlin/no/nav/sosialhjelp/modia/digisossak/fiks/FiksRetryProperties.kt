@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.fiks
+package no.nav.sosialhjelp.modia.digisossak.fiks
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component

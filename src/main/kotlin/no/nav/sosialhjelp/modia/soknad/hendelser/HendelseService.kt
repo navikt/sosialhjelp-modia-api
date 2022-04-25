@@ -1,9 +1,9 @@
 package no.nav.sosialhjelp.modia.soknad.hendelser
 
-import no.nav.sosialhjelp.modia.client.fiks.FiksClient
-import no.nav.sosialhjelp.modia.domain.Hendelse
-import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
-import no.nav.sosialhjelp.modia.event.EventService
+import no.nav.sosialhjelp.modia.digisossak.domain.Hendelse
+import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.digisossak.event.EventService
+import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.soknad.vedlegg.InternalVedlegg
 import no.nav.sosialhjelp.modia.soknad.vedlegg.VedleggService

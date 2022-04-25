@@ -4,7 +4,8 @@ import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
-import no.nav.sosialhjelp.modia.client.fiks.FiksClient
+import no.nav.sosialhjelp.modia.digisossak.event.JsonDigisosSokerService
+import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

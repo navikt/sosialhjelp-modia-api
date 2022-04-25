@@ -1,7 +1,7 @@
-package no.nav.sosialhjelp.modia.event
+package no.nav.sosialhjelp.modia.digisossak.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
-import no.nav.sosialhjelp.modia.client.fiks.FiksClient
+import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import org.springframework.stereotype.Component
 
 @Component

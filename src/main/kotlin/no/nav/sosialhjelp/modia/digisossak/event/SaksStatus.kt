@@ -1,10 +1,10 @@
-package no.nav.sosialhjelp.modia.event
+package no.nav.sosialhjelp.modia.digisossak.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonSaksStatus
-import no.nav.sosialhjelp.modia.domain.Hendelse
-import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
-import no.nav.sosialhjelp.modia.domain.Sak
-import no.nav.sosialhjelp.modia.domain.SaksStatus
+import no.nav.sosialhjelp.modia.digisossak.domain.Hendelse
+import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.digisossak.domain.Sak
+import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
 import no.nav.sosialhjelp.modia.toLocalDateTime
 import java.util.Locale
 

@@ -1,9 +1,9 @@
-package no.nav.sosialhjelp.modia.event
+package no.nav.sosialhjelp.modia.digisossak.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVilkar
-import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
-import no.nav.sosialhjelp.modia.domain.Utbetaling
-import no.nav.sosialhjelp.modia.domain.Vilkar
+import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.digisossak.domain.Utbetaling
+import no.nav.sosialhjelp.modia.digisossak.domain.Vilkar
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.toLocalDateTime
 

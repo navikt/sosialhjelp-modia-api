@@ -1,9 +1,9 @@
 package no.nav.sosialhjelp.modia.soknad.noekkelinfo
 
-import no.nav.sosialhjelp.modia.client.fiks.FiksClient
-import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
-import no.nav.sosialhjelp.modia.domain.NavKontorInformasjon
-import no.nav.sosialhjelp.modia.event.EventService
+import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.digisossak.domain.NavKontorInformasjon
+import no.nav.sosialhjelp.modia.digisossak.event.EventService
+import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.hentSoknadTittel
 import no.nav.sosialhjelp.modia.kommune.KommuneService
 import no.nav.sosialhjelp.modia.kommune.KommunenavnService

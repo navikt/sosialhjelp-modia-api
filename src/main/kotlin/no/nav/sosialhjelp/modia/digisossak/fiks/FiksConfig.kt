@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.fiks
+package no.nav.sosialhjelp.modia.digisossak.fiks
 
 import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.utils.objectMapper

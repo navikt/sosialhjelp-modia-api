@@ -1,12 +1,12 @@
-package no.nav.sosialhjelp.modia.event
+package no.nav.sosialhjelp.modia.digisossak.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonDokumentasjonEtterspurt
 import no.nav.sosialhjelp.modia.common.VIS_BREVET
-import no.nav.sosialhjelp.modia.domain.Hendelse
-import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
-import no.nav.sosialhjelp.modia.domain.Oppgave
-import no.nav.sosialhjelp.modia.domain.SoknadsStatus
-import no.nav.sosialhjelp.modia.event.Titler.DOKUMENTASJONSKRAV
+import no.nav.sosialhjelp.modia.digisossak.domain.Hendelse
+import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.digisossak.domain.Oppgave
+import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
+import no.nav.sosialhjelp.modia.digisossak.event.Titler.DOKUMENTASJONSKRAV
 import no.nav.sosialhjelp.modia.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonEtterspurt) {

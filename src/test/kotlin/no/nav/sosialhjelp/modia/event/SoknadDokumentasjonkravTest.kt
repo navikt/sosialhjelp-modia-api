@@ -5,6 +5,8 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.modia.digisossak.event.EventService
+import no.nav.sosialhjelp.modia.digisossak.event.JsonDigisosSokerService
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.soknad.vedlegg.InternalVedlegg
 import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService

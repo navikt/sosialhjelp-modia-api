@@ -22,6 +22,8 @@ import no.nav.sosialhjelp.modia.client.unleash.FIKS_CACHE_ENABLED
 import no.nav.sosialhjelp.modia.client.unleash.STAVANGER_ENABLED
 import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.config.ClientProperties
+import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClientImpl
+import no.nav.sosialhjelp.modia.digisossak.fiks.FiksRetryProperties
 import no.nav.sosialhjelp.modia.logging.AuditService
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.responses.ok_digisossak_annen_kommune_response_string

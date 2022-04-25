@@ -5,8 +5,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.ErrorMessage
-import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
-import no.nav.sosialhjelp.modia.domain.SaksStatus
+import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
 import no.nav.sosialhjelp.modia.soknad.saksstatus.SaksStatusService.Companion.DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.slf4j.Logger

@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.domain
+package no.nav.sosialhjelp.modia.digisossak.domain
 
 import java.math.BigDecimal
 import java.time.LocalDate

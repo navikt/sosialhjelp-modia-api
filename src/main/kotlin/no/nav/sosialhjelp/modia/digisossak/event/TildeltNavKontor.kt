@@ -1,12 +1,12 @@
-package no.nav.sosialhjelp.modia.event
+package no.nav.sosialhjelp.modia.digisossak.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonTildeltNavKontor
 import no.nav.sosialhjelp.modia.common.NorgException
-import no.nav.sosialhjelp.modia.domain.Hendelse
-import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
-import no.nav.sosialhjelp.modia.domain.NavKontorInformasjon
-import no.nav.sosialhjelp.modia.domain.SendingType
-import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_VIDERESENDT
+import no.nav.sosialhjelp.modia.digisossak.domain.Hendelse
+import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.digisossak.domain.NavKontorInformasjon
+import no.nav.sosialhjelp.modia.digisossak.domain.SendingType
+import no.nav.sosialhjelp.modia.digisossak.event.Titler.SOKNAD_VIDERESENDT
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.toLocalDateTime
 import no.nav.sosialhjelp.modia.utils.navenhetsnavnOrDefault

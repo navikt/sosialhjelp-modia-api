@@ -1,14 +1,14 @@
-package no.nav.sosialhjelp.modia.event
+package no.nav.sosialhjelp.modia.digisossak.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtakFattet
 import no.nav.sosialhjelp.modia.common.VIS_BREVET
-import no.nav.sosialhjelp.modia.domain.Hendelse
-import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
-import no.nav.sosialhjelp.modia.domain.Sak
-import no.nav.sosialhjelp.modia.domain.SaksStatus
-import no.nav.sosialhjelp.modia.domain.UtfallVedtak
-import no.nav.sosialhjelp.modia.domain.Vedtak
-import no.nav.sosialhjelp.modia.event.Titler.SAK_FERDIGBEHANDLET
+import no.nav.sosialhjelp.modia.digisossak.domain.Hendelse
+import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.digisossak.domain.Sak
+import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
+import no.nav.sosialhjelp.modia.digisossak.domain.UtfallVedtak
+import no.nav.sosialhjelp.modia.digisossak.domain.Vedtak
+import no.nav.sosialhjelp.modia.digisossak.event.Titler.SAK_FERDIGBEHANDLET
 import no.nav.sosialhjelp.modia.soknad.saksstatus.SaksStatusService.Companion.DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.toLocalDateTime
 

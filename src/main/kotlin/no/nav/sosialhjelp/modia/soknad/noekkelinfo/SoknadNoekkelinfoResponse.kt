@@ -1,8 +1,8 @@
 package no.nav.sosialhjelp.modia.soknad.noekkelinfo
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import no.nav.sosialhjelp.modia.domain.SendingType
-import no.nav.sosialhjelp.modia.domain.SoknadsStatus
+import no.nav.sosialhjelp.modia.digisossak.domain.SendingType
+import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
 import java.time.LocalDate
 import java.time.LocalDateTime
 

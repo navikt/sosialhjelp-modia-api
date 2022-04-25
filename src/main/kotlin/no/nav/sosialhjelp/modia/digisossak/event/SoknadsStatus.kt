@@ -1,13 +1,13 @@
-package no.nav.sosialhjelp.modia.event
+package no.nav.sosialhjelp.modia.digisossak.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonSoknadsStatus
-import no.nav.sosialhjelp.modia.domain.Hendelse
-import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
-import no.nav.sosialhjelp.modia.domain.SoknadsStatus
-import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_BEHANDLES_IKKE
-import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_FERDIGBEHANDLET
-import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_MOTTATT
-import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_UNDER_BEHANDLING
+import no.nav.sosialhjelp.modia.digisossak.domain.Hendelse
+import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
+import no.nav.sosialhjelp.modia.digisossak.event.Titler.SOKNAD_BEHANDLES_IKKE
+import no.nav.sosialhjelp.modia.digisossak.event.Titler.SOKNAD_FERDIGBEHANDLET
+import no.nav.sosialhjelp.modia.digisossak.event.Titler.SOKNAD_MOTTATT
+import no.nav.sosialhjelp.modia.digisossak.event.Titler.SOKNAD_UNDER_BEHANDLING
 import no.nav.sosialhjelp.modia.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonSoknadsStatus) {
