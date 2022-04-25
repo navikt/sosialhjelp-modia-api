@@ -1,10 +1,11 @@
 package no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav
 
-import no.nav.sosialhjelp.modia.client.fiks.FiksClient
-import no.nav.sosialhjelp.modia.domain.Dokumentasjonkrav
-import no.nav.sosialhjelp.modia.domain.OppgaveStatus
-import no.nav.sosialhjelp.modia.domain.Sak
-import no.nav.sosialhjelp.modia.event.EventService
+
+import no.nav.sosialhjelp.modia.digisossak.domain.Dokumentasjonkrav
+import no.nav.sosialhjelp.modia.digisossak.domain.OppgaveStatus
+import no.nav.sosialhjelp.modia.digisossak.domain.Sak
+import no.nav.sosialhjelp.modia.digisossak.event.EventService
+import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.rest.DokumentasjonkravController.DokumentasjonkravResponse
 import no.nav.sosialhjelp.modia.soknad.vedlegg.InternalVedlegg

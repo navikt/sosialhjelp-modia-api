@@ -2,7 +2,7 @@ package no.nav.sosialhjelp.modia.soknad.vedlegg
 
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.modia.client.fiks.FiksClient
+import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import org.springframework.stereotype.Component
 

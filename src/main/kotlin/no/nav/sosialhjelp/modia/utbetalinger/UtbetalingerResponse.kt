@@ -1,7 +1,7 @@
 package no.nav.sosialhjelp.modia.utbetalinger
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import no.nav.sosialhjelp.modia.domain.UtbetalingsStatus
+import no.nav.sosialhjelp.modia.digisossak.domain.UtbetalingsStatus
 import java.time.LocalDate
 
 data class UtbetalingerResponse(

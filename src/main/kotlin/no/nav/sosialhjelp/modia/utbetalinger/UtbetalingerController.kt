@@ -1,7 +1,7 @@
 package no.nav.sosialhjelp.modia.utbetalinger
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.sosialhjelp.modia.client.fiks.FiksClient
+import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import no.nav.sosialhjelp.modia.utils.Ident
 import org.springframework.http.HttpHeaders.AUTHORIZATION
