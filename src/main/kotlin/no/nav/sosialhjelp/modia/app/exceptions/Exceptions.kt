@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.common
+package no.nav.sosialhjelp.modia.app.exceptions
 
 class NorgException(
     override val message: String?,

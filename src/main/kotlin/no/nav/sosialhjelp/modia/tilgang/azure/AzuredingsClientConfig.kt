@@ -1,8 +1,8 @@
 package no.nav.sosialhjelp.modia.tilgang.azure
 
+import no.nav.sosialhjelp.modia.app.client.ClientProperties
+import no.nav.sosialhjelp.modia.app.exceptions.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.app.maskinporten.WellKnown
-import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
-import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

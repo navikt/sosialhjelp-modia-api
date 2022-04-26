@@ -7,9 +7,9 @@ import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.slot
 import io.mockk.verify
-import no.nav.sosialhjelp.modia.common.ManglendeModiaSosialhjelpTilgangException
-import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
-import no.nav.sosialhjelp.modia.config.ClientProperties
+import no.nav.sosialhjelp.modia.app.client.ClientProperties
+import no.nav.sosialhjelp.modia.app.exceptions.ManglendeModiaSosialhjelpTilgangException
+import no.nav.sosialhjelp.modia.app.exceptions.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.logging.AuditService
 import no.nav.sosialhjelp.modia.person.pdl.Adressebeskyttelse
 import no.nav.sosialhjelp.modia.person.pdl.Gradering

@@ -1,9 +1,9 @@
-package no.nav.sosialhjelp.modia.utils.mdc
+package no.nav.sosialhjelp.modia.app.mdc
 
+import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.clearCallId
+import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.generateCallId
+import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.setCallId
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
-import no.nav.sosialhjelp.modia.utils.mdc.MDCUtils.clearCallId
-import no.nav.sosialhjelp.modia.utils.mdc.MDCUtils.generateCallId
-import no.nav.sosialhjelp.modia.utils.mdc.MDCUtils.setCallId
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter

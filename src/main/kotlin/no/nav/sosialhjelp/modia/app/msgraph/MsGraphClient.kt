@@ -1,6 +1,6 @@
 package no.nav.sosialhjelp.modia.client.msgraph
 
-import no.nav.sosialhjelp.modia.common.MsGraphException
+import no.nav.sosialhjelp.modia.app.exceptions.MsGraphException
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE

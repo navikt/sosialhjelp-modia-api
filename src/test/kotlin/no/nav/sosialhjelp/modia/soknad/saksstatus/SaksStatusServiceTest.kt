@@ -11,7 +11,7 @@ import no.nav.sosialhjelp.modia.domain.SaksStatus
 import no.nav.sosialhjelp.modia.domain.UtfallVedtak
 import no.nav.sosialhjelp.modia.domain.Vedtak
 import no.nav.sosialhjelp.modia.event.EventService
-import no.nav.sosialhjelp.modia.soknad.saksstatus.SaksStatusService.Companion.DEFAULT_TITTEL
+import no.nav.sosialhjelp.modia.event.SAK_DEFAULT_TITTEL
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -116,7 +116,7 @@ internal class SaksStatusServiceTest {
             Sak(
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING, // overstyres når vedtak finnes
-                tittel = DEFAULT_TITTEL,
+                tittel = SAK_DEFAULT_TITTEL,
                 vedtak = mutableListOf(
                     Vedtak(
                         utfall = UtfallVedtak.DELVIS_INNVILGET,
@@ -135,7 +135,7 @@ internal class SaksStatusServiceTest {
         assertThat(response).isNotNull
         assertThat(response).hasSize(1)
         assertThat(response[0].status).isEqualTo(SaksStatus.FERDIGBEHANDLET)
-        assertThat(response[0].tittel).isEqualTo(DEFAULT_TITTEL)
+        assertThat(response[0].tittel).isEqualTo(SAK_DEFAULT_TITTEL)
         assertThat(response[0].datoOpprettet).isEqualTo(now)
         assertThat(response[0].datoAvsluttet).isEqualTo(now)
         assertThat(response[0].vedtak).hasSize(1)
@@ -169,7 +169,7 @@ internal class SaksStatusServiceTest {
                 Sak(
                     referanse = referanse,
                     saksStatus = SaksStatus.IKKE_INNSYN,
-                    tittel = DEFAULT_TITTEL,
+                    tittel = SAK_DEFAULT_TITTEL,
                     vedtak = mutableListOf(),
                     utbetalinger = mutableListOf(),
                     datoOpprettet = now
@@ -193,7 +193,7 @@ internal class SaksStatusServiceTest {
         assertThat(response[0].vedtak!![1].vedtakDato).isEqualTo(now.plusDays(2))
         assertThat(response[0].vedtak!![1].utfall).isEqualTo(UtfallVedtak.DELVIS_INNVILGET)
 
-        assertThat(response[1].tittel).isEqualTo(DEFAULT_TITTEL)
+        assertThat(response[1].tittel).isEqualTo(SAK_DEFAULT_TITTEL)
         assertThat(response[1].datoOpprettet).isEqualTo(now)
         assertThat(response[1].datoAvsluttet).isNull()
         assertThat(response[1].vedtak).isEmpty()

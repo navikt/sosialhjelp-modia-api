@@ -1,7 +1,6 @@
 package no.nav.sosialhjelp.modia.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonDokumentasjonEtterspurt
-import no.nav.sosialhjelp.modia.common.VIS_BREVET
 import no.nav.sosialhjelp.modia.domain.Hendelse
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.domain.Oppgave

@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.utils.mdc
+package no.nav.sosialhjelp.modia.app.mdc
 
 import org.slf4j.MDC
 import java.security.SecureRandom

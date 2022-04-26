@@ -4,6 +4,7 @@ import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.Sak
 import no.nav.sosialhjelp.modia.domain.SaksStatus
 import no.nav.sosialhjelp.modia.event.EventService
+import no.nav.sosialhjelp.modia.event.SAK_DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.logger
 import org.springframework.stereotype.Component
 
@@ -26,7 +27,7 @@ class SaksStatusService(
             .filter { it.saksStatus != SaksStatus.FEILREGISTRERT }
             .map { sak ->
                 SaksStatusResponse(
-                    tittel = sak.tittel ?: DEFAULT_TITTEL,
+                    tittel = sak.tittel ?: SAK_DEFAULT_TITTEL,
                     status = hentStatusNavn(sak),
                     vedtak = sak.vedtak.map {
                         SaksStatusResponse.Vedtak(
@@ -51,7 +52,5 @@ class SaksStatusService(
 
     companion object {
         private val log by logger()
-
-        const val DEFAULT_TITTEL: String = "Økonomisk sosialhjelp"
     }
 }

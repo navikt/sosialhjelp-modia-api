@@ -7,7 +7,8 @@ import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.ErrorMessage
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.domain.SaksStatus
-import no.nav.sosialhjelp.modia.soknad.saksstatus.SaksStatusService.Companion.DEFAULT_TITTEL
+import no.nav.sosialhjelp.modia.event.SAK_DEFAULT_TITTEL
+import no.nav.sosialhjelp.modia.event.SOKNAD_DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -23,8 +24,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import kotlin.reflect.full.companionObject
-
-const val SOKNAD_DEFAULT_TITTEL = "Søknad om økonomisk sosialhjelp"
 
 inline fun <reified T : Any> typeRef(): ParameterizedTypeReference<T> = object : ParameterizedTypeReference<T>() {}
 
@@ -61,7 +60,7 @@ fun hentSoknadTittel(digisosSak: DigisosSak, model: InternalDigisosSoker): Strin
         else ->
             model.saker
                 .filter { SaksStatus.FEILREGISTRERT != it.saksStatus }
-                .joinToString { it.tittel ?: DEFAULT_TITTEL }
+                .joinToString { it.tittel ?: SAK_DEFAULT_TITTEL }
     }
 }
 
