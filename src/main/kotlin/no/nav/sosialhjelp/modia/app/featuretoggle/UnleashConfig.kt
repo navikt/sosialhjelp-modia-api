@@ -4,8 +4,8 @@ import no.finn.unleash.DefaultUnleash
 import no.finn.unleash.FakeUnleash
 import no.finn.unleash.Unleash
 import no.finn.unleash.util.UnleashConfig
+import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.app.featuretoggle.strategy.ByInstanceIdStrategy
-import no.nav.sosialhjelp.modia.config.ClientProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile

@@ -1,7 +1,7 @@
 package no.nav.sosialhjelp.modia.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonTildeltNavKontor
-import no.nav.sosialhjelp.modia.common.NorgException
+import no.nav.sosialhjelp.modia.app.exceptions.NorgException
 import no.nav.sosialhjelp.modia.domain.Hendelse
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.domain.NavKontorInformasjon
@@ -9,7 +9,6 @@ import no.nav.sosialhjelp.modia.domain.SendingType
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_VIDERESENDT
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.toLocalDateTime
-import no.nav.sosialhjelp.modia.utils.navenhetsnavnOrDefault
 
 fun InternalDigisosSoker.apply(
     hendelse: JsonTildeltNavKontor,

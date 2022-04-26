@@ -3,8 +3,8 @@ package no.nav.sosialhjelp.modia.tilgang.skjermedepersoner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
-import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
-import no.nav.sosialhjelp.modia.config.ClientProperties
+import no.nav.sosialhjelp.modia.app.client.ClientProperties
+import no.nav.sosialhjelp.modia.app.exceptions.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.redis.RedisKeyType.SKJERMEDE_PERSONER
 import no.nav.sosialhjelp.modia.redis.RedisService

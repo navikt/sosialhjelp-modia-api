@@ -3,7 +3,7 @@ package no.nav.sosialhjelp.modia.redis
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
-import no.nav.sosialhjelp.modia.common.DigisosSakTilhorerAnnenBrukerException
+import no.nav.sosialhjelp.modia.app.exceptions.DigisosSakTilhorerAnnenBrukerException
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.navkontor.norg.NavEnhet
 import no.nav.sosialhjelp.modia.utils.objectMapper

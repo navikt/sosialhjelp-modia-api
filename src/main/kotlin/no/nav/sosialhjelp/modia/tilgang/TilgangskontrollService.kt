@@ -1,9 +1,9 @@
 package no.nav.sosialhjelp.modia.tilgang
 
-import no.nav.sosialhjelp.modia.common.ManglendeModiaSosialhjelpTilgangException
-import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
-import no.nav.sosialhjelp.modia.common.PdlException
-import no.nav.sosialhjelp.modia.config.ClientProperties
+import no.nav.sosialhjelp.modia.app.client.ClientProperties
+import no.nav.sosialhjelp.modia.app.exceptions.ManglendeModiaSosialhjelpTilgangException
+import no.nav.sosialhjelp.modia.app.exceptions.ManglendeTilgangException
+import no.nav.sosialhjelp.modia.app.exceptions.PdlException
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.logging.Access
 import no.nav.sosialhjelp.modia.logging.AuditService

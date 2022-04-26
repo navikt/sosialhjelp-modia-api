@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.config
+package no.nav.sosialhjelp.modia.app.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component

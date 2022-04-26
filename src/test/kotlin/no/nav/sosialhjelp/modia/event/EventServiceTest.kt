@@ -12,7 +12,6 @@ import no.nav.sosialhjelp.modia.event.Titler.FORELOPIG_SVAR
 import no.nav.sosialhjelp.modia.event.Titler.SAK_FERDIGBEHANDLET
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_UNDER_BEHANDLING
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
-import no.nav.sosialhjelp.modia.soknad.saksstatus.SaksStatusService.Companion.DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
 import no.nav.sosialhjelp.modia.soknad.vedlegg.VEDLEGG_KREVES_STATUS
 import no.nav.sosialhjelp.modia.toLocalDateTime
@@ -226,7 +225,7 @@ internal class EventServiceTest {
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
             assertThat(sak.referanse).isEqualTo(referanse_1)
-            assertThat(sak.tittel).isEqualTo(DEFAULT_TITTEL)
+            assertThat(sak.tittel).isEqualTo(SAK_DEFAULT_TITTEL)
             assertThat(sak.vedtak).hasSize(1)
             assertThat(sak.utbetalinger).isEmpty()
 
@@ -236,7 +235,7 @@ internal class EventServiceTest {
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_3.toLocalDateTime())
             assertThat(hendelse.tittel).isEqualTo(SAK_FERDIGBEHANDLET)
-            assertThat(hendelse.beskrivelse).contains("$DEFAULT_TITTEL er ferdigbehandlet")
+            assertThat(hendelse.beskrivelse).contains("$SAK_DEFAULT_TITTEL er ferdigbehandlet")
         }
 
         @Test
@@ -266,7 +265,7 @@ internal class EventServiceTest {
             assertThat(sak.referanse).isEqualTo(referanse_1)
             assertThat(sak.tittel)
                 .isEqualTo(tittel_1)
-                .isNotEqualTo(DEFAULT_TITTEL)
+                .isNotEqualTo(SAK_DEFAULT_TITTEL)
             assertThat(sak.vedtak).hasSize(1)
 
             val vedtak = sak.vedtak.last()
@@ -275,7 +274,7 @@ internal class EventServiceTest {
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_3.toLocalDateTime())
             assertThat(hendelse.tittel).isEqualTo(SAK_FERDIGBEHANDLET)
-            assertThat(hendelse.beskrivelse).contains("$DEFAULT_TITTEL er ferdigbehandlet")
+            assertThat(hendelse.beskrivelse).contains("$SAK_DEFAULT_TITTEL er ferdigbehandlet")
         }
 
         @Test
@@ -348,7 +347,7 @@ internal class EventServiceTest {
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_4.toLocalDateTime())
             assertThat(hendelse.tittel).isEqualTo(SAK_FERDIGBEHANDLET)
-            assertThat(hendelse.beskrivelse).contains("$DEFAULT_TITTEL er ferdigbehandlet")
+            assertThat(hendelse.beskrivelse).contains("$SAK_DEFAULT_TITTEL er ferdigbehandlet")
         }
     }
 

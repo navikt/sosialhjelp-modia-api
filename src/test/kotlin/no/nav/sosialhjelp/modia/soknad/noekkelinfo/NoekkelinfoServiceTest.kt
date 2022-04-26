@@ -4,7 +4,6 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.modia.SOKNAD_DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.ForelopigSvar
 import no.nav.sosialhjelp.modia.domain.Hendelse
@@ -13,6 +12,7 @@ import no.nav.sosialhjelp.modia.domain.NavKontorInformasjon
 import no.nav.sosialhjelp.modia.domain.SendingType
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus.MOTTATT
 import no.nav.sosialhjelp.modia.event.EventService
+import no.nav.sosialhjelp.modia.event.SOKNAD_DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.event.Titler.SOKNAD_SENDT
 import no.nav.sosialhjelp.modia.kommune.KommuneService
 import no.nav.sosialhjelp.modia.kommune.KommunenavnService

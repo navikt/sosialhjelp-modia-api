@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.config
+package no.nav.sosialhjelp.modia.app.cors
 
 import no.nav.sosialhjelp.modia.utils.MiljoUtils
 import org.springframework.stereotype.Component

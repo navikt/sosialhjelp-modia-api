@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.config
+package no.nav.sosialhjelp.modia.app.client
 
 import no.nav.sosialhjelp.modia.utils.getProxiedReactorClientHttpConnector
 import no.nav.sosialhjelp.modia.utils.getUnproxiedReactorClientHttpConnector

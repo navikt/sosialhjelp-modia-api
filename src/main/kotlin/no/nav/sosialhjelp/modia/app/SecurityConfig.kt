@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.config
+package no.nav.sosialhjelp.modia.app
 
 import no.nav.security.token.support.client.spring.oauth2.EnableOAuth2Client
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation

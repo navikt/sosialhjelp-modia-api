@@ -1,10 +1,10 @@
 package no.nav.sosialhjelp.modia.app.health.checks
 
-import no.nav.sosialhjelp.modia.common.NorgException
-import no.nav.sosialhjelp.modia.config.ClientProperties
+import no.nav.sosialhjelp.modia.app.client.ClientProperties
+import no.nav.sosialhjelp.modia.app.exceptions.NorgException
+import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.getCallId
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
-import no.nav.sosialhjelp.modia.utils.mdc.MDCUtils.getCallId
 import no.nav.sosialhjelp.selftest.DependencyCheck
 import no.nav.sosialhjelp.selftest.DependencyType
 import no.nav.sosialhjelp.selftest.Importance
