@@ -6,8 +6,7 @@
   ],
   "envsecret": [
     "redis-password-modia-api",
-    "fiks-integrasjon-secret",
-    "serviceuser-srvsosialhjelp-mod"
+    "fiks-integrasjon-secret"
   ],
   "env": {
     "SPRING_PROFILES_ACTIVE": "prod-fss,log-kibana,log-audit",
@@ -17,9 +16,9 @@
     "NORG_ENDPOINT_URL": "https://norg2.nais.adeo.no/norg2/api/v1",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.nais.adeo.no/#/startsok?enhetNr=",
     "PDL_ENDPOINT_URL": "https://pdl-api.nais.adeo.no/graphql",
+    "PDL_SCOPE": "api://prod-fss.pdl.pdl-api/.default",
     "SKJERMEDE_PERSONER_ENDPOINT_URL": "https://skjermede-personer-pip.intern.nav.no",
     "SKJERMEDE_PERSONER_SCOPE": "api://prod-gcp.nom.skjermede-personer-pip/.default",
-    "STS_TOKEN_ENDPOINT_URL": "https://security-token-service.nais.adeo.no/rest/v1/sts/token",
     "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local",
     "CACHE_TIME_TO_LIVE_SECONDS": "180",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",

@@ -7,7 +7,7 @@ import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.ErrorMessage
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.domain.SaksStatus
-import no.nav.sosialhjelp.modia.service.saksstatus.DEFAULT_TITTEL
+import no.nav.sosialhjelp.modia.soknad.saksstatus.SaksStatusService.Companion.DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

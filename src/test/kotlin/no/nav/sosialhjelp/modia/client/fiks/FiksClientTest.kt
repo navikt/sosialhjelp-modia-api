@@ -16,7 +16,7 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
-import no.nav.sosialhjelp.modia.client.maskinporten.MaskinportenClient
+import no.nav.sosialhjelp.modia.app.maskinporten.MaskinportenClient
 import no.nav.sosialhjelp.modia.client.unleash.BERGEN_ENABLED
 import no.nav.sosialhjelp.modia.client.unleash.FIKS_CACHE_ENABLED
 import no.nav.sosialhjelp.modia.client.unleash.STAVANGER_ENABLED

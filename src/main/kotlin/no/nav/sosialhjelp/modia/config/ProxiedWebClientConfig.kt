@@ -40,3 +40,13 @@ class MockProxiedWebClientConfig {
             .clientConnector(getUnproxiedReactorClientHttpConnector())
             .build()
 }
+
+@Configuration
+class UnproxiedWebClientConfig {
+
+    @Bean
+    fun webClient(webClientBuilder: WebClient.Builder): WebClient =
+        webClientBuilder
+            .clientConnector(getUnproxiedReactorClientHttpConnector())
+            .build()
+}

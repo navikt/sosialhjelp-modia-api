@@ -15,8 +15,7 @@ class ClientProperties {
     lateinit var norgEndpointUrl: String
 
     lateinit var pdlEndpointUrl: String
-
-    lateinit var stsTokenEndpointUrl: String
+    lateinit var pdlScope: String
 
     lateinit var veilederGruppeId: String
 
