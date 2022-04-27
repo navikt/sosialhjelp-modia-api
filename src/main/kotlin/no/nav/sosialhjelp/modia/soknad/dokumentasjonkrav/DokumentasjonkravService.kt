@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.service.dokumentasjonkrav
+package no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav
 
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.Dokumentasjonkrav
