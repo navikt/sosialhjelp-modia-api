@@ -1,8 +1,8 @@
 package no.nav.sosialhjelp.modia.logging
 
+import no.nav.sosialhjelp.modia.app.mdc.MDCUtils
 import no.nav.sosialhjelp.modia.utils.Miljo.SRVSOSIALHJELP_MOD
 import no.nav.sosialhjelp.modia.utils.TokenUtils
-import no.nav.sosialhjelp.modia.utils.mdc.MDCUtils
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 

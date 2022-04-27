@@ -7,15 +7,15 @@ import no.nav.sosialhjelp.api.fiks.exceptions.FiksClientException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
 import no.nav.sosialhjelp.kotlin.utils.retry
+import no.nav.sosialhjelp.modia.app.client.ClientProperties
+import no.nav.sosialhjelp.modia.app.exceptions.ManglendeTilgangException
+import no.nav.sosialhjelp.modia.app.maskinporten.MaskinportenClient
 import no.nav.sosialhjelp.modia.client.fiks.FiksPaths.PATH_ALLE_DIGISOSSAKER
 import no.nav.sosialhjelp.modia.client.fiks.FiksPaths.PATH_DIGISOSSAK
 import no.nav.sosialhjelp.modia.client.fiks.FiksPaths.PATH_DOKUMENT
-import no.nav.sosialhjelp.modia.client.maskinporten.MaskinportenClient
 import no.nav.sosialhjelp.modia.client.unleash.BERGEN_ENABLED
 import no.nav.sosialhjelp.modia.client.unleash.FIKS_CACHE_ENABLED
 import no.nav.sosialhjelp.modia.client.unleash.STAVANGER_ENABLED
-import no.nav.sosialhjelp.modia.common.ManglendeTilgangException
-import no.nav.sosialhjelp.modia.config.ClientProperties
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.logging.AuditService
 import no.nav.sosialhjelp.modia.maskerFnr
@@ -23,12 +23,15 @@ import no.nav.sosialhjelp.modia.messageUtenFnr
 import no.nav.sosialhjelp.modia.redis.RedisKeyType
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.typeRef
+import no.nav.sosialhjelp.modia.utils.IntegrationUtils
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
-import no.nav.sosialhjelp.modia.utils.IntegrationUtils.fiksHeaders
 import no.nav.sosialhjelp.modia.utils.RequestUtils
 import no.nav.sosialhjelp.modia.utils.objectMapper
+import org.joda.time.DateTime
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
@@ -96,6 +99,9 @@ class FiksClientImpl(
 
         if (!harKommunenTilgangTilModia(digisosSak.kommunenummer)) {
             throw ManglendeTilgangException("Fiks - DigisosSak tilhører en kommune uten tilgang!")
+        }
+        if (!isDigisosSakNewerThanMonths(digisosSak, 15)) {
+            throw FiksNotFoundException("Fiks - DigisosSak er for gammel!", null)
         }
         log.info("Hentet DigisosSak $digisosId fra Fiks")
         return digisosSak
@@ -167,6 +173,7 @@ class FiksClientImpl(
         }
         log.info("Hentet ${digisosSaker.size} saker fra Fiks (før filter.)")
         return digisosSaker.filter { harKommunenTilgangTilModia(it.kommunenummer) }
+            .filter { isDigisosSakNewerThanMonths(it, 15) }
             .also { auditService.reportFiks(fnr, baseUrl + PATH_ALLE_DIGISOSSAKER, HttpMethod.POST, sporingsId) }
     }
 
@@ -179,6 +186,9 @@ class FiksClientImpl(
         }
         return false
     }
+
+    fun isDigisosSakNewerThanMonths(digisosSak: DigisosSak, months: Int): Boolean =
+        digisosSak.sistEndret >= DateTime.now().minusMonths(months).millis
 
     private fun genererSporingsId(): String = UUID.randomUUID().toString()
 
@@ -203,6 +213,15 @@ class FiksClientImpl(
 
         //        Query param navn
         private const val SPORINGSID = "sporingsId"
+
+        fun fiksHeaders(clientProperties: ClientProperties, token: String): HttpHeaders {
+            val headers = HttpHeaders()
+            headers.accept = listOf(MediaType.APPLICATION_JSON)
+            headers.set(IntegrationUtils.HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
+            headers.set(IntegrationUtils.HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
+            headers.set(HttpHeaders.AUTHORIZATION, token)
+            return headers
+        }
     }
 
     private data class Fnr(

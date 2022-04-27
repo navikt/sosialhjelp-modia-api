@@ -28,7 +28,6 @@ object Miljo {
     const val SRVSOSIALHJELP_MOD = "srvsosialhjelp-mod"
 
     private const val NAIS_APP_IMAGE = "NAIS_APP_IMAGE"
-    private const val TESTBRUKER_NATALIE = "TESTBRUKER_NATALIE"
 
     fun getAppImage(): String {
         return getEnvVariable(NAIS_APP_IMAGE, "version")
