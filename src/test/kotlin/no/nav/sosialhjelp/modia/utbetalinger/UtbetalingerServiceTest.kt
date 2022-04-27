@@ -204,7 +204,7 @@ internal class UtbetalingerServiceTest {
             null,
             null,
             null,
-            hendelse.saksreferanse
+            null
         )
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val utbetaling1 = Utbetaling(
