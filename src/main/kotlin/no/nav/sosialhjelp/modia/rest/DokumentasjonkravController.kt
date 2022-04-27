@@ -3,7 +3,8 @@ package no.nav.sosialhjelp.modia.rest
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.service.dokumentasjonkrav.DokumentasjonkravService
-import no.nav.sosialhjelp.modia.service.tilgangskontroll.TilgangskontrollService
+import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
+import no.nav.sosialhjelp.modia.utils.Ident
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
