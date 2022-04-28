@@ -1,11 +1,10 @@
 name: Deploy til prod-fss
 on:
-# uncomment when in prod
-#  workflow_run:
-#    workflows: ["Build image"]    # Venter på at bygget for prod er ferdig
-#    branches: [master]
-#    types:
-#      - completed
+  workflow_run:
+    workflows: ["Build image"]    # Venter på at bygget for prod er ferdig
+    branches: [master]
+    types:
+      - completed
   repository_dispatch:
     types: [deploy_prod_tag]
 
