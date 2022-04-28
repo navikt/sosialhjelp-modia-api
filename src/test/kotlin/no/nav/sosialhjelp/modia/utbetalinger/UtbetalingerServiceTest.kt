@@ -9,6 +9,7 @@ import no.nav.sosialhjelp.modia.client.fiks.FiksClient
 import no.nav.sosialhjelp.modia.domain.Dokumentasjonkrav
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.domain.NavKontorInformasjon
+import no.nav.sosialhjelp.modia.domain.OppgaveStatus
 import no.nav.sosialhjelp.modia.domain.SendingType
 import no.nav.sosialhjelp.modia.domain.Utbetaling
 import no.nav.sosialhjelp.modia.domain.UtbetalingsStatus
@@ -17,7 +18,6 @@ import no.nav.sosialhjelp.modia.event.EventService
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -193,11 +193,19 @@ internal class UtbetalingerServiceTest {
         assertThat(response[0].harVilkar).isTrue
     }
 
-    @Disabled("disabled frem til det blir bekreftet om dokumentasjonkrav skal være med i response")
     @Test
     fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med dokumentasjonkrav`() {
         val model = InternalDigisosSoker()
-        val dokumentasjonkrav = Dokumentasjonkrav("dokumentasjonskrav", "Skal hoppe", false)
+        val dokumentasjonkrav = Dokumentasjonkrav(
+            "dokumentasjonskrav",
+            "Dokumentasjonstittel",
+            "beskrivelse",
+            OppgaveStatus.RELEVANT,
+            null,
+            null,
+            null,
+            null
+        )
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val utbetaling1 = Utbetaling(
             "referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",

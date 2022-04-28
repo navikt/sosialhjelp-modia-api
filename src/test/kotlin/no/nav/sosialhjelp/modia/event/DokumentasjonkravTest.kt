@@ -5,6 +5,7 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.modia.domain.OppgaveStatus
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
@@ -52,7 +53,7 @@ internal class DokumentasjonkravTest {
                         SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3),
                         SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_4),
                         UTBETALING.withHendelsestidspunkt(tidspunkt_5),
-                        DOKUMENTASJONKRAV_OPPFYLT.withHendelsestidspunkt(tidspunkt_6)
+                        DOKUMENTASJONKRAV_RELEVANT.withHendelsestidspunkt(tidspunkt_6)
                     )
                 )
 
@@ -66,9 +67,9 @@ internal class DokumentasjonkravTest {
         assertThat(model.saker[0].utbetalinger).hasSize(1)
         val utbetaling = model.saker[0].utbetalinger[0]
         assertThat(utbetaling.dokumentasjonkrav).hasSize(1)
-        assertThat(utbetaling.dokumentasjonkrav[0].referanse).isEqualTo(dokumentasjonkrav_ref_1)
+        assertThat(utbetaling.dokumentasjonkrav[0].dokumentasjonkravId).isEqualTo(dokumentasjonkrav_ref_1)
         assertThat(utbetaling.dokumentasjonkrav[0].beskrivelse).isEqualTo("beskrivelse")
-        assertThat(utbetaling.dokumentasjonkrav[0].oppfyllt).isEqualTo(true)
+        assertThat(utbetaling.dokumentasjonkrav[0].status).isEqualTo(OppgaveStatus.RELEVANT)
     }
 
     @Test
@@ -145,6 +146,6 @@ internal class DokumentasjonkravTest {
         assertThat(model.saker[0].utbetalinger).hasSize(1)
         val utbetaling = model.saker[0].utbetalinger[0]
         assertThat(utbetaling.dokumentasjonkrav).hasSize(1)
-        assertThat(utbetaling.dokumentasjonkrav[0].referanse).isEqualTo(dokumentasjonkrav_ref_1)
+        assertThat(utbetaling.dokumentasjonkrav[0].dokumentasjonkravId).isEqualTo(dokumentasjonkrav_ref_1)
     }
 }

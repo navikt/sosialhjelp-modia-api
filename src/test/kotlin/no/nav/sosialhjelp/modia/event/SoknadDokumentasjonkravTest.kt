@@ -57,7 +57,8 @@ internal class SoknadDokumentasjonkravTest {
                 tilleggsinfo = "dokumentasjon",
                 innsendelsesfrist = null,
                 antallFiler = 1,
-                datoLagtTil = LocalDateTime.now()
+                datoLagtTil = LocalDateTime.now(),
+                null
             )
         )
 

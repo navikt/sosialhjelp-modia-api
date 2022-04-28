@@ -31,7 +31,8 @@ class SoknadVedleggService(
                     tilleggsinfo = vedlegg.tilleggsinfo,
                     innsendelsesfrist = null,
                     antallFiler = matchDokumentInfoOgJsonFiler(originalSoknadNAV.vedlegg, vedlegg.filer),
-                    datoLagtTil = unixToLocalDateTime(originalSoknadNAV.timestampSendt)
+                    datoLagtTil = unixToLocalDateTime(originalSoknadNAV.timestampSendt),
+                    unixToLocalDateTime(originalSoknadNAV.timestampSendt)
                 )
             }
         return kombinerAlleLikeVedlegg(alleVedlegg)
