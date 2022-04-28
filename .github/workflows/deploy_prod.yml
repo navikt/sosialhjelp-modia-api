@@ -31,4 +31,4 @@ jobs:
           VARS: nais/prod/prod-fss.json
           REF: ${{ steps.artifact-version.outputs.version }}
           PRINT_PAYLOAD: true
-          IMAGE: ${{ env.IMAGE }}
+          IMAGE: ${{ env.DOCKER_TAG }}
