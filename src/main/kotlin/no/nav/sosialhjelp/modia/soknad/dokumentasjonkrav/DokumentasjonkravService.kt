@@ -60,7 +60,7 @@ class DokumentasjonkravService(
         return vedleggListe
             .filter { it.type == dokumentasjonkrav.tittel }
             .filter { it.tilleggsinfo == dokumentasjonkrav.beskrivelse }
-            .any { dokumentasjonkrav.frist == null || it.datoLagtTil?.isAfter(dokumentasjonkrav.datoLagtTil) ?: false }
+            .any { dokumentasjonkrav.frist == null || it.tidspunktLastetOpp?.isAfter(dokumentasjonkrav.datoLagtTil) ?: false }
     }
 
     companion object {
