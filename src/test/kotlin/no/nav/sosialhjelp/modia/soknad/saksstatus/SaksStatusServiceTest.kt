@@ -10,8 +10,8 @@ import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
 import no.nav.sosialhjelp.modia.digisossak.domain.UtfallVedtak
 import no.nav.sosialhjelp.modia.digisossak.domain.Vedtak
 import no.nav.sosialhjelp.modia.digisossak.event.EventService
-import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.digisossak.event.SAK_DEFAULT_TITTEL
+import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

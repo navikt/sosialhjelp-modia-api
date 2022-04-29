@@ -1,6 +1,5 @@
 package no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav
 
-
 import no.nav.sosialhjelp.modia.digisossak.domain.Dokumentasjonkrav
 import no.nav.sosialhjelp.modia.digisossak.domain.OppgaveStatus
 import no.nav.sosialhjelp.modia.digisossak.domain.Sak
