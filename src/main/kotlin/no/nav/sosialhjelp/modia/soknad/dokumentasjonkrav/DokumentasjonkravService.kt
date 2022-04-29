@@ -40,7 +40,6 @@ class DokumentasjonkravService(
                     referanse = value[0].dokumentasjonkravId,
                     sakstittel = hentSakstittel(value[0].saksreferanse, model.saker),
                     status = value[0].status.toString(),
-                    antallVedlegg = hentAntallOpplastedeVedlegg(value[0], ettersendteVedlegg),
                     innsendelsesfrist = value[0].frist?.toLocalDate(),
                     datoLagtTil = value[0].datoLagtTil?.toLocalDate()
                 )
@@ -55,13 +54,6 @@ class DokumentasjonkravService(
             return "―"
         }
         return saker.firstOrNull { sak -> sak.referanse == saksreferanse }?.tittel ?: "―"
-    }
-
-    private fun hentAntallOpplastedeVedlegg(dokumentasjonkrav: Dokumentasjonkrav, vedleggListe: List<InternalVedlegg>): Int {
-        return vedleggListe
-            .filter { it.type == dokumentasjonkrav.tittel && it.tilleggsinfo == dokumentasjonkrav.beskrivelse }
-            .firstOrNull { it.datoLagtTil != null && it.datoLagtTil.isAfter(dokumentasjonkrav.datoLagtTil) }
-            ?.antallFiler ?: 0
     }
 
     private fun erAlleredeLastetOpp(dokumentasjonkrav: Dokumentasjonkrav, vedleggListe: List<InternalVedlegg>): Boolean {
