@@ -3,13 +3,17 @@ package no.nav.sosialhjelp.modia.soknad.vedlegg
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.slf4j.MDCContext
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.api.fiks.Ettersendelse
 import no.nav.sosialhjelp.modia.client.fiks.FiksClient
+import no.nav.sosialhjelp.modia.domain.Dokumentasjonkrav
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.flatMapParallel
+import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.hentSakstittel
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder.getRequestAttributes
@@ -37,7 +41,6 @@ class VedleggService(
 
     fun hentEttersendteVedlegg(digisosSak: DigisosSak, model: InternalDigisosSoker): List<InternalVedlegg> {
         val requestAttributes = getRequestAttributes()
-        val originalSoknadNAV = digisosSak.originalSoknadNAV ?: return emptyList()
 
         val alleVedlegg = runBlocking(Dispatchers.IO + MDCContext()) {
             digisosSak.ettersendtInfoNAV?.ettersendelser
@@ -47,9 +50,14 @@ class VedleggService(
                     jsonVedleggSpesifikasjon.vedlegg
                         .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
                         .map { vedlegg ->
+                            val kanViseTittel = vedlegg.hendelseType.value() == JsonHendelse.Type.DOKUMENTASJONKRAV.value()
+                            val sakstittel = hentSaksreferanse(vedlegg, ettersendelse, model.dokumentasjonkrav)
+                            val vedleggtittel = if (kanViseTittel) vedlegg.type else hentSakstittel(sakstittel, model.saker)
+                            val vedleggbeskrivelse = if (kanViseTittel) vedlegg.tilleggsinfo else hentSakstittel(sakstittel, model.saker)
+
                             InternalVedlegg(
-                                type = vedlegg.type,
-                                tilleggsinfo = vedlegg.tilleggsinfo,
+                                type = vedleggtittel,
+                                tilleggsinfo = vedleggbeskrivelse,
                                 innsendelsesfrist = hentInnsendelsesfristFraOppgave(model, vedlegg),
                                 antallFiler = matchDokumentInfoOgJsonFiler(ettersendelse.vedlegg, vedlegg.filer),
                                 datoLagtTil = unixToLocalDateTime(ettersendelse.timestampSendt),
@@ -60,6 +68,17 @@ class VedleggService(
         } ?: emptyList()
 
         return kombinerAlleLikeVedlegg(alleVedlegg)
+    }
+
+    private fun hentSaksreferanse(
+        vedlegg: JsonVedlegg,
+        ettersendelse: Ettersendelse,
+        dokumentasjonkrav: MutableList<Dokumentasjonkrav>
+    ): String? {
+        return dokumentasjonkrav
+            .filter { it.tittel == vedlegg.type && it.beskrivelse == vedlegg.tilleggsinfo }
+            .firstOrNull { it.datoLagtTil != null && it.datoLagtTil?.isBefore(unixToLocalDateTime(ettersendelse.timestampSendt)) ?: false }
+            ?.saksreferanse
     }
 
     private fun hentUtestaendeOppgaverSomManglendeVedlegg(model: InternalDigisosSoker, ettersendteVedlegg: List<InternalVedlegg>): List<InternalVedlegg> {

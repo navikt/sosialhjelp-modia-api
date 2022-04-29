@@ -188,7 +188,8 @@ internal class VedleggServiceTest {
                                 )
                             )
                             .withStatus(LASTET_OPP_STATUS)
-                            .withType(dokumenttype_3),
+                            .withType(dokumenttype_3)
+                            .withHendelseType(JsonVedlegg.HendelseType.DOKUMENTASJON_ETTERSPURT),
                         JsonVedlegg()
                             .withFiler(
                                 listOf(
@@ -198,6 +199,7 @@ internal class VedleggServiceTest {
                             )
                             .withStatus(LASTET_OPP_STATUS)
                             .withType(dokumenttype_4)
+                            .withHendelseType(JsonVedlegg.HendelseType.DOKUMENTASJON_ETTERSPURT)
                     )
                 )
         every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns listOf(
@@ -382,7 +384,8 @@ internal class VedleggServiceTest {
                             )
                         )
                         .withStatus(LASTET_OPP_STATUS)
-                        .withType(dokumenttype),
+                        .withType(dokumenttype)
+                        .withHendelseType(JsonVedlegg.HendelseType.DOKUMENTASJON_ETTERSPURT),
                     JsonVedlegg()
                         .withFiler(
                             listOf(
@@ -391,6 +394,7 @@ internal class VedleggServiceTest {
                         )
                         .withStatus(LASTET_OPP_STATUS)
                         .withType(dokumenttype_2)
+                        .withHendelseType(JsonVedlegg.HendelseType.DOKUMENTASJON_ETTERSPURT)
                 )
             )
 
@@ -404,11 +408,13 @@ internal class VedleggServiceTest {
                             )
                         )
                         .withStatus(LASTET_OPP_STATUS)
-                        .withType(dokumenttype),
+                        .withType(dokumenttype)
+                        .withHendelseType(JsonVedlegg.HendelseType.DOKUMENTASJON_ETTERSPURT),
                     JsonVedlegg()
                         .withFiler(listOf())
                         .withStatus("VedleggKreves")
                         .withType(dokumenttype_2)
+                        .withHendelseType(JsonVedlegg.HendelseType.DOKUMENTASJON_ETTERSPURT)
                 )
             )
 
@@ -422,7 +428,8 @@ internal class VedleggServiceTest {
                             )
                         )
                         .withStatus(LASTET_OPP_STATUS)
-                        .withType(dokumenttype_3),
+                        .withType(dokumenttype_3)
+                        .withHendelseType(JsonVedlegg.HendelseType.DOKUMENTASJON_ETTERSPURT),
                     JsonVedlegg()
                         .withFiler(
                             listOf(
@@ -431,6 +438,7 @@ internal class VedleggServiceTest {
                         )
                         .withStatus(LASTET_OPP_STATUS)
                         .withType(dokumenttype_4)
+                        .withHendelseType(JsonVedlegg.HendelseType.DOKUMENTASJON_ETTERSPURT)
                 )
             )
 
@@ -446,6 +454,7 @@ internal class VedleggServiceTest {
                         )
                         .withStatus(LASTET_OPP_STATUS)
                         .withType(dokumenttype_3)
+                        .withHendelseType(JsonVedlegg.HendelseType.DOKUMENTASJON_ETTERSPURT)
                 )
             )
 
@@ -460,6 +469,7 @@ internal class VedleggServiceTest {
                         )
                         .withStatus("VedleggAlleredeSendt")
                         .withType(dokumenttype_3)
+                        .withHendelseType(JsonVedlegg.HendelseType.DOKUMENTASJON_ETTERSPURT)
                 )
             )
 
@@ -474,6 +484,7 @@ internal class VedleggServiceTest {
                         )
                         .withStatus(LASTET_OPP_STATUS)
                         .withType(dokumenttype_3)
+                        .withHendelseType(JsonVedlegg.HendelseType.DOKUMENTASJON_ETTERSPURT)
                 )
             )
     }
