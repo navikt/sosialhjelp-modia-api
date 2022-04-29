@@ -50,7 +50,7 @@ class VedleggService(
                     jsonVedleggSpesifikasjon.vedlegg
                         .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
                         .map { vedlegg ->
-                            val kanViseTittel = vedlegg.hendelseType.value() == JsonHendelse.Type.DOKUMENTASJONKRAV.value()
+                            val kanViseTittel = vedlegg.hendelseType?.value() != JsonHendelse.Type.DOKUMENTASJONKRAV.value()
                             val sakstittel = hentSaksreferanse(vedlegg, ettersendelse, model.dokumentasjonkrav)
                             val vedleggtittel = if (kanViseTittel) vedlegg.type else hentSakstittel(sakstittel, model.saker)
                             val vedleggbeskrivelse = if (kanViseTittel) vedlegg.tilleggsinfo else hentSakstittel(sakstittel, model.saker)
