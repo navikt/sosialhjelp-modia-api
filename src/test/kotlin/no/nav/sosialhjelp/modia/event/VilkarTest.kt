@@ -5,22 +5,21 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.modia.client.norg.NorgClient
 import no.nav.sosialhjelp.modia.domain.SoknadsStatus
-import no.nav.sosialhjelp.modia.service.innsyn.InnsynService
-import no.nav.sosialhjelp.modia.service.vedlegg.SoknadVedleggService
-import no.nav.sosialhjelp.modia.service.vedlegg.VEDLEGG_KREVES_STATUS
+import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
+import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
+import no.nav.sosialhjelp.modia.soknad.vedlegg.VEDLEGG_KREVES_STATUS
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class VilkarTest {
 
-    private val innsynService: InnsynService = mockk()
+    private val jsonDigisosSokerService: JsonDigisosSokerService = mockk()
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
 
-    private val service = EventService(innsynService, norgClient, soknadVedleggService)
+    private val service = EventService(jsonDigisosSokerService, norgClient, soknadVedleggService)
 
     private val mockDigisosSak: DigisosSak = mockk()
 
@@ -42,7 +41,7 @@ internal class VilkarTest {
 
     @Test
     fun `vilkar ETTER utbetaling`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -74,7 +73,7 @@ internal class VilkarTest {
 
     @Test
     fun `vilkar UTEN utbetaling`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -96,7 +95,7 @@ internal class VilkarTest {
 
     @Test
     fun `vilkar FØR utbetaling - vilkar knyttes ikke til noen utbetaling`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -123,7 +122,7 @@ internal class VilkarTest {
 
     @Test
     fun `vilkar og utbetaling har samme hendelsestidspunkt`() {
-        every { innsynService.hentJsonDigisosSoker(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")

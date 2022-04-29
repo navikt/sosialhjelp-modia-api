@@ -26,7 +26,6 @@ Bygge og kjør tester ved å kjøre: `./gradlew test`
 
 ### Lokal kjøring mot mock-alt
 Kjør `Application.kt` med springprofilene `mock-alt,log-console,no-redis`.\
-Sett dummy env-variabel-verdier for `SRVSOSIALHJELP_MODIA_API_USERNAME` og `SRVSOSIALHJELP_MODIA_API_PASSWORD`
 
 #### Med redis
 Kjør `Application.kt` med springprofilene `mock-alt,log-console`\

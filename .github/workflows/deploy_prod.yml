@@ -1,11 +1,10 @@
 name: Deploy til prod-fss
 on:
-# uncomment when in prod
-#  workflow_run:
-#    workflows: ["Build image"]    # Venter på at bygget for prod er ferdig
-#    branches: [master]
-#    types:
-#      - completed
+  workflow_run:
+    workflows: ["Build image"]    # Venter på at bygget for prod er ferdig
+    branches: [master]
+    types:
+      - completed
   repository_dispatch:
     types: [deploy_prod_tag]
 
@@ -32,4 +31,4 @@ jobs:
           VARS: nais/prod/prod-fss.json
           REF: ${{ steps.artifact-version.outputs.version }}
           PRINT_PAYLOAD: true
-          IMAGE: ${{ env.IMAGE }}
+          IMAGE: ${{ env.DOCKER_TAG }}
