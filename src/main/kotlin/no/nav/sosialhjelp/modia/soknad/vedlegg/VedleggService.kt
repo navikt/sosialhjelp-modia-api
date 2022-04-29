@@ -53,7 +53,7 @@ class VedleggService(
                                 innsendelsesfrist = hentInnsendelsesfristFraOppgave(model, vedlegg),
                                 antallFiler = matchDokumentInfoOgJsonFiler(ettersendelse.vedlegg, vedlegg.filer),
                                 datoLagtTil = unixToLocalDateTime(ettersendelse.timestampSendt),
-                                unixToLocalDateTime(originalSoknadNAV.timestampSendt)
+                                tidspunktLastetOpp = unixToLocalDateTime(ettersendelse.timestampSendt)
                             )
                         }
                 }
