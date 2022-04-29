@@ -1,6 +1,6 @@
 package no.nav.sosialhjelp.modia.soknadoversikt
 
-import no.nav.sosialhjelp.modia.domain.SoknadsStatus
+import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
 
 data class SoknadDetaljerResponse(
     val fiksDigisosId: String,
