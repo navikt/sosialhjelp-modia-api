@@ -32,7 +32,7 @@ class UtbetalingerController(
     fun hentUtbetalinger(
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident,
-        @RequestParam(defaultValue = "3") antallManeder: Int,
+        @RequestParam(defaultValue = "3") months: Int,
         @RequestParam fom: String?,
         @RequestParam tom: String?
     ): ResponseEntity<List<UtbetalingerResponse>> {
@@ -41,7 +41,7 @@ class UtbetalingerController(
         return ResponseEntity.ok().body(
             utbetalingerService.hentAlleUtbetalinger(
                 ident.fnr,
-                antallManeder,
+                months,
                 fom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) },
                 tom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) }
             )
