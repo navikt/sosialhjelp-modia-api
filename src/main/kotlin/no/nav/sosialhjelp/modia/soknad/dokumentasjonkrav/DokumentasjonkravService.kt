@@ -2,11 +2,9 @@ package no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav
 
 import no.nav.sosialhjelp.modia.digisossak.domain.Dokumentasjonkrav
 import no.nav.sosialhjelp.modia.digisossak.domain.OppgaveStatus
-import no.nav.sosialhjelp.modia.digisossak.domain.Sak
 import no.nav.sosialhjelp.modia.digisossak.event.EventService
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.logger
-import no.nav.sosialhjelp.modia.rest.DokumentasjonkravController.DokumentasjonkravResponse
 import no.nav.sosialhjelp.modia.soknad.vedlegg.InternalVedlegg
 import no.nav.sosialhjelp.modia.soknad.vedlegg.VedleggService
 import org.springframework.stereotype.Component
@@ -47,13 +45,6 @@ class DokumentasjonkravService(
             .toList()
         log.info("Hentet ${dokumentasjonkravResponseList.size} dokumentasjonkrav")
         return dokumentasjonkravResponseList
-    }
-
-    private fun hentSakstittel(saksreferanse: String?, saker: MutableList<Sak>): String {
-        if (saksreferanse == null) {
-            return "―"
-        }
-        return saker.firstOrNull { sak -> sak.referanse == saksreferanse }?.tittel ?: "―"
     }
 
     private fun erAlleredeLastetOpp(dokumentasjonkrav: Dokumentasjonkrav, vedleggListe: List<InternalVedlegg>): Boolean {
