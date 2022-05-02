@@ -100,7 +100,7 @@ class VedleggService(
                     innsendelsesfrist = it.innsendelsesfrist,
                     antallFiler = 0,
                     datoLagtTil = null,
-                    tidspunktLastetOpp = null,
+                    tidspunktLastetOpp = null
                 )
             }
         return kombinerAlleLikeVedlegg(alleVedlegg)
