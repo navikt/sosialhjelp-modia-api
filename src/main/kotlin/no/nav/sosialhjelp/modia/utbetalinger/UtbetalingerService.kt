@@ -4,11 +4,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.slf4j.MDCContext
 import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.modia.client.fiks.FiksClient
-import no.nav.sosialhjelp.modia.domain.NavKontorInformasjon
-import no.nav.sosialhjelp.modia.domain.Utbetaling
-import no.nav.sosialhjelp.modia.domain.UtbetalingsStatus
-import no.nav.sosialhjelp.modia.event.EventService
+import no.nav.sosialhjelp.modia.digisossak.domain.NavKontorInformasjon
+import no.nav.sosialhjelp.modia.digisossak.domain.Utbetaling
+import no.nav.sosialhjelp.modia.digisossak.domain.UtbetalingsStatus
+import no.nav.sosialhjelp.modia.digisossak.event.EventService
+import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.flatMapParallel
 import no.nav.sosialhjelp.modia.logger
 import org.joda.time.DateTime

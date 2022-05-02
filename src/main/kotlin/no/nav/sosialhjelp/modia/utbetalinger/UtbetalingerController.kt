@@ -1,7 +1,7 @@
 package no.nav.sosialhjelp.modia.utbetalinger
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.sosialhjelp.modia.client.fiks.FiksClient
+import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import no.nav.sosialhjelp.modia.utils.Ident
 import org.springframework.http.HttpHeaders.AUTHORIZATION
@@ -30,7 +30,7 @@ class UtbetalingerController(
     fun hentUtbetalinger(
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident,
-        @RequestParam(defaultValue = "3") antallManeder: Int,
+        @RequestParam(defaultValue = "3") months: Int,
         @RequestParam fom: String?,
         @RequestParam tom: String?
     ): ResponseEntity<List<UtbetalingerResponse>> {
@@ -39,7 +39,7 @@ class UtbetalingerController(
         return ResponseEntity.ok().body(
             utbetalingerService.hentAlleUtbetalinger(
                 ident.fnr,
-                antallManeder,
+                months,
                 fom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) },
                 tom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) }
             )

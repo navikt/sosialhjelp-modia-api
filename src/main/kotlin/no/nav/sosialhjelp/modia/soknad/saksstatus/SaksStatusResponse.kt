@@ -1,8 +1,8 @@
 package no.nav.sosialhjelp.modia.soknad.saksstatus
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import no.nav.sosialhjelp.modia.domain.SaksStatus
-import no.nav.sosialhjelp.modia.domain.UtfallVedtak
+import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
+import no.nav.sosialhjelp.modia.digisossak.domain.UtfallVedtak
 import java.time.LocalDate
 
 data class SaksStatusResponse(
