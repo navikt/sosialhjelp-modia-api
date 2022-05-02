@@ -16,14 +16,12 @@ import no.nav.sosialhjelp.modia.domain.Oppgave
 import no.nav.sosialhjelp.modia.event.EventService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
-@Disabled
 internal class VedleggServiceTest {
 
     private val fiksClient: FiksClient = mockk()
