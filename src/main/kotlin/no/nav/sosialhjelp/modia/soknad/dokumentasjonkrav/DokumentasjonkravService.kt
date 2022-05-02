@@ -32,14 +32,13 @@ class DokumentasjonkravService(
             }
             .filter { !erAlleredeLastetOpp(it, ettersendteVedlegg) }
             .filter { it.status == OppgaveStatus.RELEVANT }
-            .groupBy { it.frist }
-            .map { (_, value) ->
+            .map {
                 DokumentasjonkravResponse(
-                    referanse = value[0].dokumentasjonkravId,
-                    sakstittel = hentSakstittel(value[0].saksreferanse, model.saker),
-                    status = value[0].status.toString(),
-                    innsendelsesfrist = value[0].frist?.toLocalDate(),
-                    datoLagtTil = value[0].datoLagtTil?.toLocalDate()
+                    referanse = it.dokumentasjonkravId,
+                    sakstittel = hentSakstittel(it.saksreferanse, model.saker),
+                    status = it.status.toString(),
+                    innsendelsesfrist = it.frist?.toLocalDate(),
+                    datoLagtTil = it.datoLagtTil?.toLocalDate()
                 )
             }
             .toList()
