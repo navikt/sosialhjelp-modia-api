@@ -13,6 +13,8 @@ import no.nav.sosialhjelp.modia.domain.Dokumentasjonkrav
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.flatMapParallel
+import no.nav.sosialhjelp.modia.logger
+import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.DOKUMENTASJONKRAV_UTEN_SAK_TITTEL
 import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.hentSakstittel
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import org.springframework.stereotype.Component
@@ -50,10 +52,15 @@ class VedleggService(
                     jsonVedleggSpesifikasjon.vedlegg
                         .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
                         .map { vedlegg ->
-                            val kanViseTittel = vedlegg.hendelseType?.value() != JsonHendelse.Type.DOKUMENTASJONKRAV.value()
-                            val sakstittel = hentSaksreferanse(vedlegg, ettersendelse, model.dokumentasjonkrav)
-                            val vedleggtittel = if (kanViseTittel) vedlegg.type else hentSakstittel(sakstittel, model.saker)
-                            val vedleggbeskrivelse = if (kanViseTittel) vedlegg.tilleggsinfo else hentSakstittel(sakstittel, model.saker)
+                            val kanViseTittel = vedlegg.hendelseType.value() != JsonHendelse.Type.DOKUMENTASJONKRAV.value()
+                            var vedleggtittel = vedlegg.type
+                            var vedleggbeskrivelse = vedlegg.tilleggsinfo
+                            log.debug("VEDLEGGSERVICE: Vedlegg.hendelseType = ${vedlegg.hendelseType.value()}")
+                            if (kanViseTittel) {
+                                val saksreferanse = hentSaksreferanse(vedlegg, ettersendelse, model.dokumentasjonkrav)
+                                vedleggtittel = hentSakstittel(saksreferanse, model.saker)
+                                vedleggbeskrivelse = DOKUMENTASJONKRAV_UTEN_SAK_TITTEL
+                            }
 
                             InternalVedlegg(
                                 type = vedleggtittel,
@@ -109,5 +116,9 @@ class VedleggService(
             .sortedByDescending { it.innsendelsesfrist }
             .firstOrNull { it.tittel == vedlegg.type && it.tilleggsinfo == vedlegg.tilleggsinfo }
             ?.innsendelsesfrist
+    }
+
+    companion object {
+        private val log by logger()
     }
 }
