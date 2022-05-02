@@ -13,7 +13,6 @@ import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.digisossak.event.EventService
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.flatMapParallel
-import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.DOKUMENTASJONKRAV_UTEN_SAK_TITTEL
 import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.hentSakstittel
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
@@ -52,8 +51,6 @@ class VedleggService(
                     jsonVedleggSpesifikasjon.vedlegg
                         .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
                         .map { vedlegg ->
-                            log.debug("DEBUG VEDLEGG.HENDELSETYPE: Vedlegg.hendelseType = ${vedlegg.hendelseType?.value()}")
-
                             var vedleggtittel = vedlegg.type
                             var vedleggbeskrivelse = vedlegg.tilleggsinfo
                             if (vedlegg.hendelseType?.value() == JsonHendelse.Type.DOKUMENTASJONKRAV.value()) {
@@ -118,9 +115,5 @@ class VedleggService(
             .sortedByDescending { it.innsendelsesfrist }
             .firstOrNull { it.tittel == vedlegg.type && it.tilleggsinfo == vedlegg.tilleggsinfo }
             ?.innsendelsesfrist
-    }
-
-    companion object {
-        private val log by logger()
     }
 }
