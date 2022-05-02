@@ -13,7 +13,6 @@ import no.nav.sosialhjelp.modia.domain.Dokumentasjonkrav
 import no.nav.sosialhjelp.modia.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.event.EventService
 import no.nav.sosialhjelp.modia.flatMapParallel
-import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.DOKUMENTASJONKRAV_UTEN_SAK_TITTEL
 import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.hentSakstittel
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
@@ -52,19 +51,19 @@ class VedleggService(
                     jsonVedleggSpesifikasjon.vedlegg
                         .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
                         .map { vedlegg ->
-                            val kanViseTittel = vedlegg.hendelseType?.value() != JsonHendelse.Type.DOKUMENTASJONKRAV.value()
                             var vedleggtittel = vedlegg.type
                             var vedleggbeskrivelse = vedlegg.tilleggsinfo
-                            log.debug("VEDLEGGSERVICE: Vedlegg.hendelseType = ${vedlegg.hendelseType?.value()}")
-                            if (kanViseTittel) {
+                            if (vedlegg.hendelseType?.value() != JsonHendelse.Type.DOKUMENTASJONKRAV.value()) {
                                 val saksreferanse = hentSaksreferanse(vedlegg, ettersendelse, model.dokumentasjonkrav)
                                 vedleggtittel = hentSakstittel(saksreferanse, model.saker)
                                 vedleggbeskrivelse = DOKUMENTASJONKRAV_UTEN_SAK_TITTEL
                             }
 
                             InternalVedlegg(
-                                type = vedleggtittel,
-                                tilleggsinfo = vedleggbeskrivelse,
+                                type = vedlegg.type,
+                                tilleggsinfo = vedlegg.tilleggsinfo,
+                                tittelForVeileder = vedleggtittel,
+                                beskrivelseForVeileder = vedleggbeskrivelse,
                                 innsendelsesfrist = hentInnsendelsesfristFraOppgave(model, vedlegg),
                                 antallFiler = matchDokumentInfoOgJsonFiler(ettersendelse.vedlegg, vedlegg.filer),
                                 datoLagtTil = unixToLocalDateTime(ettersendelse.timestampSendt),
@@ -101,7 +100,7 @@ class VedleggService(
                     innsendelsesfrist = it.innsendelsesfrist,
                     antallFiler = 0,
                     datoLagtTil = null,
-                    tidspunktLastetOpp = null
+                    tidspunktLastetOpp = null,
                 )
             }
         return kombinerAlleLikeVedlegg(alleVedlegg)
@@ -116,9 +115,5 @@ class VedleggService(
             .sortedByDescending { it.innsendelsesfrist }
             .firstOrNull { it.tittel == vedlegg.type && it.tilleggsinfo == vedlegg.tilleggsinfo }
             ?.innsendelsesfrist
-    }
-
-    companion object {
-        private val log by logger()
     }
 }

@@ -36,8 +36,8 @@ class VedleggController(
         val vedleggResponses = internalVedleggList
             .map { vedlegg ->
                 VedleggResponse(
-                    type = vedlegg.type,
-                    tilleggsinfo = vedlegg.tilleggsinfo,
+                    type = vedlegg.tittelForVeileder ?: vedlegg.type,
+                    tilleggsinfo = vedlegg.beskrivelseForVeileder ?: vedlegg.tilleggsinfo,
                     innsendelsesfrist = vedlegg.innsendelsesfrist,
                     datoLagtTil = vedlegg.datoLagtTil,
                     antallVedlegg = vedlegg.antallFiler

@@ -43,5 +43,7 @@ data class InternalVedlegg(
     val innsendelsesfrist: LocalDateTime?,
     var antallFiler: Int,
     val datoLagtTil: LocalDateTime?,
-    val tidspunktLastetOpp: LocalDateTime?
+    val tidspunktLastetOpp: LocalDateTime?,
+    val tittelForVeileder: String? = null,
+    val beskrivelseForVeileder: String? = null
 )
