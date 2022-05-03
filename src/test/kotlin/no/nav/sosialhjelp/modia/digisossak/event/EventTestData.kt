@@ -187,7 +187,7 @@ val VILKAR_OPPFYLT: JsonVilkar = JsonVilkar()
     .withVilkarreferanse(vilkar_ref_1)
     .withUtbetalingsreferanse(listOf(utbetaling_ref_1))
     .withBeskrivelse("beskrivelse")
-    .withStatus(JsonVilkar.Status.OPPFYLT)
+    .withStatus(JsonVilkar.Status.RELEVANT)
 
 val DOKUMENTASJONKRAV_OPPFYLT: JsonDokumentasjonkrav = JsonDokumentasjonkrav()
     .withType(JsonHendelse.Type.DOKUMENTASJONKRAV)
