@@ -19,10 +19,10 @@ internal fun kombinerAlleLikeVedlegg(alleVedlegg: List<InternalVedlegg>): List<I
     alleVedlegg.forEach {
         val funnet = kombinertListe.firstOrNull { kombinert ->
             (
-                areDatesEqual(it.datoLagtTil, kombinert.datoLagtTil) &&
+                areDatesWithinOneMinute(it.datoLagtTil, kombinert.datoLagtTil) &&
                     kombinert.type == it.type &&
                     kombinert.tilleggsinfo == it.tilleggsinfo &&
-                    areDatesEqual(it.innsendelsesfrist, kombinert.innsendelsesfrist)
+                    areDatesWithinOneMinute(it.innsendelsesfrist, kombinert.innsendelsesfrist)
                 )
         }
         if (funnet != null) {
@@ -34,7 +34,7 @@ internal fun kombinerAlleLikeVedlegg(alleVedlegg: List<InternalVedlegg>): List<I
     return kombinertListe
 }
 
-private fun areDatesEqual(firstDate: LocalDateTime?, secondDate: LocalDateTime?): Boolean {
+private fun areDatesWithinOneMinute(firstDate: LocalDateTime?, secondDate: LocalDateTime?): Boolean {
     return (firstDate == null && secondDate == null) ||
         ChronoUnit.MINUTES.between(firstDate, secondDate).absoluteValue < 1
 }
