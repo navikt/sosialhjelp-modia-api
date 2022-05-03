@@ -39,7 +39,7 @@ class CORSFilter(
 
     companion object {
         private val ALLOWED_ORIGINS = listOf(
-            "https://sosialhjelp-modia-api.intern.nav.no"
+            "https://sosialhjelp.intern.nav.no"
         )
     }
 }
