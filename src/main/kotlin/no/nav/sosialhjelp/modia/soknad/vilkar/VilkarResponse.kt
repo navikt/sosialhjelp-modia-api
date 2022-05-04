@@ -6,7 +6,7 @@ import java.time.LocalDate
 data class VilkarResponse(
     val referanse: String,
     val sakstittel: String?,
-    val utbetalingsreferanse: List<String>,
+    val vilkarUtbetalinger: List<VilkarUtbetalingResponse>,
     @JsonFormat(pattern = "yyyy-MM-dd")
     val datoLagtTil: LocalDate?,
 )

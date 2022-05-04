@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class VilkarController(
-    private val vilkarService: VilkarServive,
+    private val vilkarService: VilkarService,
     private val tilgangskontrollService: TilgangskontrollService
 ) {
 
