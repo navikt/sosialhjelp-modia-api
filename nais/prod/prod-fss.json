@@ -11,7 +11,7 @@
   "env": {
     "SPRING_PROFILES_ACTIVE": "prod-fss,log-kibana,log-audit",
     "AZURE_GRAPH_API_URL": "https://graph.microsoft.com/v1.0",
-    "VEILEDER_GRUPPE_ID": "2dc13d53-66ff-46a3-824a-b0ae9dd22c45",
+    "VEILEDER_GRUPPE_ID": "82efbcf9-7a99-4c60-9242-79c439ca3cdc",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.ks.no",
     "NORG_ENDPOINT_URL": "https://norg2.nais.adeo.no/norg2/api/v1",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.nais.adeo.no/#/startsok?enhetNr=",
