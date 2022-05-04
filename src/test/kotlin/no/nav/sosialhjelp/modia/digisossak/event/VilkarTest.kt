@@ -5,6 +5,7 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.modia.digisossak.domain.OppgaveStatus
 import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
@@ -68,7 +69,7 @@ internal class VilkarTest {
         assertThat(utbetaling.vilkar).hasSize(1)
         assertThat(utbetaling.vilkar[0].referanse).isEqualTo(vilkar_ref_1)
         assertThat(utbetaling.vilkar[0].beskrivelse).isEqualTo("beskrivelse")
-        assertThat(utbetaling.vilkar[0].oppfyllt).isEqualTo(true)
+        assertThat(utbetaling.vilkar[0].status).isEqualTo(OppgaveStatus.RELEVANT)
     }
 
     @Test

@@ -2,6 +2,7 @@ package no.nav.sosialhjelp.modia.digisossak.event
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVilkar
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.digisossak.domain.OppgaveStatus
 import no.nav.sosialhjelp.modia.digisossak.domain.Utbetaling
 import no.nav.sosialhjelp.modia.digisossak.domain.Vilkar
 import no.nav.sosialhjelp.modia.logger
@@ -15,18 +16,22 @@ fun InternalDigisosSoker.apply(hendelse: JsonVilkar) {
 
     fjernFraUtbetalingerSomIkkeLegereErReferertTilIVilkaret(hendelse)
 
+    val vilkar = Vilkar(
+        referanse = hendelse.vilkarreferanse,
+        beskrivelse = hendelse.beskrivelse,
+        saksreferanse = hendelse.saksreferanse,
+        status = OppgaveStatus.valueOf(hendelse.status.value()),
+        datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
+        datoSistEndret = hendelse.hendelsestidspunkt.toLocalDateTime(),
+        utbetalingsReferanse = hendelse.utbetalingsreferanse
+    )
+
+    this.vilkar.oppdaterEllerLeggTilVilkar(hendelse, vilkar)
+
     if (utbetalinger.isEmpty()) {
         log.warn("Fant ingen utbetalinger å knytte vilkår til. Utbetalingsreferanser: ${hendelse.utbetalingsreferanse}")
         return
     }
-
-    val vilkar = Vilkar(
-        referanse = hendelse.vilkarreferanse,
-        beskrivelse = hendelse.beskrivelse,
-        oppfyllt = hendelse.status == JsonVilkar.Status.OPPFYLT,
-        datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
-        datoSistEndret = hendelse.hendelsestidspunkt.toLocalDateTime()
-    )
 
     utbetalinger.forEach { it.vilkar.oppdaterEllerLeggTilVilkar(hendelse, vilkar) }
 }
@@ -68,5 +73,5 @@ private fun MutableList<Vilkar>.oppdaterEllerLeggTilVilkar(hendelse: JsonVilkar,
 private fun Vilkar.oppdaterFelter(hendelse: JsonVilkar) {
     datoSistEndret = hendelse.hendelsestidspunkt.toLocalDateTime()
     beskrivelse = hendelse.beskrivelse
-    oppfyllt = hendelse.status == JsonVilkar.Status.OPPFYLT
+    utbetalingsReferanse = hendelse.utbetalingsreferanse
 }

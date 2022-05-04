@@ -175,7 +175,7 @@ internal class UtbetalingerServiceTest {
     @Test
     fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med vilkar`() {
         val model = InternalDigisosSoker()
-        val vilkar = Vilkar("vilkar1", "Skal hoppe", false, LocalDateTime.now(), LocalDateTime.now())
+        val vilkar = Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val utbetaling1 = Utbetaling(
             "referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
@@ -358,7 +358,7 @@ internal class UtbetalingerServiceTest {
     @Test
     fun `hentAlleUtbetalinger skal filtrere ned til 0 utbetalinger`() {
         val model = InternalDigisosSoker()
-        val vilkar = Vilkar("vilkar1", "Skal hoppe", false, LocalDateTime.now(), LocalDateTime.now())
+        val vilkar = Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val utbetaling1 = Utbetaling(
             "referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
@@ -378,7 +378,7 @@ internal class UtbetalingerServiceTest {
     @Test
     fun `hentAlleUtbetalinger skal filtrere bort utbetalinger til gamle saker`() {
         val model = InternalDigisosSoker()
-        val vilkar = Vilkar("vilkar1", "Skal hoppe", false, LocalDateTime.now(), LocalDateTime.now())
+        val vilkar = Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val utbetaling1 = Utbetaling(
             "referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",

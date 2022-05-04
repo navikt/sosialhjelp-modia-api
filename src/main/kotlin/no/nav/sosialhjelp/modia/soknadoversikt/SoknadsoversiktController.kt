@@ -3,6 +3,7 @@ package no.nav.sosialhjelp.modia.soknadoversikt
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.digisossak.domain.OppgaveStatus
 import no.nav.sosialhjelp.modia.digisossak.event.EventService
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.hentSoknadTittel
@@ -85,7 +86,7 @@ class SoknadsoversiktController(
             .any { sak ->
                 sak.utbetalinger
                     .flatMap { utbetaling -> utbetaling.vilkar }
-                    .any { vilkar -> !vilkar.oppfyllt }
+                    .any { vilkar -> vilkar.status == OppgaveStatus.RELEVANT }
             }
     }
 

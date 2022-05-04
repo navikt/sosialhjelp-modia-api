@@ -9,6 +9,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.digisossak.domain.OppgaveStatus
 import no.nav.sosialhjelp.modia.digisossak.domain.Sak
 import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
 import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
@@ -124,12 +125,12 @@ internal class SoknadsoversiktControllerTest {
         every { sak1.tittel } returns "Livsopphold"
         every { sak1.saksStatus } returns SaksStatus.UNDER_BEHANDLING
         every { sak1.utbetalinger } returns mutableListOf(utbetaling1)
-        every { utbetaling1.vilkar } returns mutableListOf(Vilkar("referanse", "beskrivelse", true, LocalDateTime.now(), LocalDateTime.now()))
+        every { utbetaling1.vilkar } returns mutableListOf(Vilkar("referanse", "beskrivelse", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null))
 
         every { sak2.tittel } returns "Strøm"
         every { sak2.saksStatus } returns SaksStatus.UNDER_BEHANDLING
-        every { sak1.utbetalinger } returns mutableListOf(utbetaling2)
-        every { utbetaling2.vilkar } returns mutableListOf(Vilkar("referanse2", "beskrivelse2", false, LocalDateTime.now(), LocalDateTime.now()))
+        every { sak2.utbetalinger } returns mutableListOf(utbetaling2)
+        every { utbetaling2.vilkar } returns mutableListOf(Vilkar("referanse2", "beskrivelse2", OppgaveStatus.ANNULLERT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null))
 
         every { model1.saker } returns mutableListOf()
         every { model2.saker } returns mutableListOf(sak1, sak2)
