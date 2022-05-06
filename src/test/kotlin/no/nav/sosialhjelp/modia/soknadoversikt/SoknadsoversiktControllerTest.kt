@@ -111,6 +111,25 @@ internal class SoknadsoversiktControllerTest {
 
     @Test
     fun `getSoknadDetaljer - skal mappe fra DigisosSak til SoknadDetaljerResponse`() {
+        val vilkar1 = Vilkar(
+            "referanse",
+            "beskrivelse",
+            OppgaveStatus.ANNULLERT,
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            emptyList(),
+            null
+        )
+        val vilkar2 = Vilkar(
+            "referanse2",
+            "beskrivelse2",
+            OppgaveStatus.RELEVANT,
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            emptyList(),
+            null
+        )
+
         every { fiksClient.hentDigisosSak(id_1) } returns digisosSak1
         every { fiksClient.hentDigisosSak(id_2) } returns digisosSak2
         every { eventService.createSoknadsoversiktModel(digisosSak1) } returns model1
@@ -122,15 +141,19 @@ internal class SoknadsoversiktControllerTest {
         every { model1.oppgaver } returns mutableListOf(mockk())
         every { model2.oppgaver } returns mutableListOf(mockk())
 
+        every { model1.vilkar } returns mutableListOf(vilkar1)
+        every { model2.vilkar } returns mutableListOf(vilkar2)
+
         every { sak1.tittel } returns "Livsopphold"
         every { sak1.saksStatus } returns SaksStatus.UNDER_BEHANDLING
         every { sak1.utbetalinger } returns mutableListOf(utbetaling1)
-        every { utbetaling1.vilkar } returns mutableListOf(Vilkar("referanse", "beskrivelse", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null))
+
+        every { utbetaling1.vilkar } returns mutableListOf(vilkar1)
 
         every { sak2.tittel } returns "Strøm"
         every { sak2.saksStatus } returns SaksStatus.UNDER_BEHANDLING
         every { sak2.utbetalinger } returns mutableListOf(utbetaling2)
-        every { utbetaling2.vilkar } returns mutableListOf(Vilkar("referanse2", "beskrivelse2", OppgaveStatus.ANNULLERT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null))
+        every { utbetaling2.vilkar } returns mutableListOf(vilkar2)
 
         every { model1.saker } returns mutableListOf()
         every { model2.saker } returns mutableListOf(sak1, sak2)
@@ -163,6 +186,7 @@ internal class SoknadsoversiktControllerTest {
         every { model1.status } returns SoknadsStatus.MOTTATT
         every { model1.oppgaver } returns mutableListOf()
         every { model1.saker } returns mutableListOf()
+        every { model1.vilkar } returns mutableListOf()
 
         val response = controller.getSoknadDetaljer(id_1, "token", Ident(fnr))
         val sak = response.body
