@@ -81,13 +81,8 @@ class SoknadsoversiktController(
     }
 
     private fun harVilkar(model: InternalDigisosSoker): Boolean {
-        // forenkle?
-        return model.saker
-            .any { sak ->
-                sak.utbetalinger
-                    .flatMap { utbetaling -> utbetaling.vilkar }
-                    .any { vilkar -> vilkar.status == OppgaveStatus.RELEVANT }
-            }
+        return model.vilkar
+            .any { vilkar -> vilkar.status == OppgaveStatus.RELEVANT }
     }
 
     companion object {
