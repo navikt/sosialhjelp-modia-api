@@ -17,6 +17,7 @@ import no.nav.sosialhjelp.modia.digisossak.domain.Utbetaling
 import no.nav.sosialhjelp.modia.digisossak.domain.Vilkar
 import no.nav.sosialhjelp.modia.digisossak.event.EventService
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
+import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.DokumentasjonkravService
 import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveResponse
 import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
@@ -33,9 +34,10 @@ internal class SoknadsoversiktControllerTest {
     private val fiksClient: FiksClient = mockk()
     private val eventService: EventService = mockk()
     private val oppgaveService: OppgaveService = mockk()
+    private val dokumentasjonkravService: DokumentasjonkravService = mockk()
     private val tilgangskontrollService: TilgangskontrollService = mockk()
 
-    private val controller = SoknadsoversiktController(fiksClient, eventService, oppgaveService, tilgangskontrollService)
+    private val controller = SoknadsoversiktController(fiksClient, eventService, oppgaveService, dokumentasjonkravService, tilgangskontrollService)
 
     private val digisosSak1: DigisosSak = mockk()
     private val digisosSak2: DigisosSak = mockk()
@@ -164,7 +166,7 @@ internal class SoknadsoversiktControllerTest {
         assertThat(response1.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(digisosSak1).isNotNull
         assertThat(digisosSak1?.soknadTittel).isEqualTo("Søknad om økonomisk sosialhjelp")
-        assertThat(digisosSak1?.harNyeOppgaver).isTrue
+        assertThat(digisosSak1?.manglerOpplysninger).isTrue
         assertThat(digisosSak1?.harVilkar).isFalse
 
         val response2 = controller.getSoknadDetaljer(id_2, "token", Ident(fnr))
@@ -174,7 +176,7 @@ internal class SoknadsoversiktControllerTest {
         assertThat(digisosSak2).isNotNull
         assertThat(digisosSak2?.soknadTittel).contains("Livsopphold", "Strøm")
         assertThat(digisosSak2?.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
-        assertThat(digisosSak2?.harNyeOppgaver).isTrue
+        assertThat(digisosSak2?.manglerOpplysninger).isTrue
         assertThat(digisosSak2?.harVilkar).isTrue
     }
 
@@ -196,6 +198,6 @@ internal class SoknadsoversiktControllerTest {
 
         verify { oppgaveService wasNot Called }
 
-        assertThat(sak?.harNyeOppgaver).isFalse
+        assertThat(sak?.manglerOpplysninger).isFalse
     }
 }

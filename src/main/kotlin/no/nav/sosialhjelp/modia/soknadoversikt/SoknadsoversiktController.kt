@@ -78,7 +78,7 @@ class SoknadsoversiktController(
     private fun manglerOpplysninger(model: InternalDigisosSoker, fiksDigisosId: String): Boolean {
         return when {
             model.oppgaver.isEmpty() && model.dokumentasjonkrav.isEmpty() -> false
-            else -> oppgaveService.hentOppgaver(fiksDigisosId).isNotEmpty()  || dokumentasjonkravService.hentDokumentasjonkrav(fiksDigisosId).isNotEmpty();
+            else -> oppgaveService.hentOppgaver(fiksDigisosId).isNotEmpty() || dokumentasjonkravService.hentDokumentasjonkrav(fiksDigisosId).isNotEmpty()
         }
     }
 
