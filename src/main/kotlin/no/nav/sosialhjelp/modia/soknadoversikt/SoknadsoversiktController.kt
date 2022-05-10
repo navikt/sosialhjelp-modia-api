@@ -8,6 +8,7 @@ import no.nav.sosialhjelp.modia.digisossak.event.EventService
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.hentSoknadTittel
 import no.nav.sosialhjelp.modia.logger
+import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.DokumentasjonkravService
 import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import no.nav.sosialhjelp.modia.unixTimestampToDate
@@ -30,6 +31,7 @@ class SoknadsoversiktController(
     private val fiksClient: FiksClient,
     private val eventService: EventService,
     private val oppgaveService: OppgaveService,
+    private val dokumentasjonkravService: DokumentasjonkravService,
     private val tilgangskontrollService: TilgangskontrollService
 ) {
     @PostMapping("/soknader")
@@ -67,16 +69,16 @@ class SoknadsoversiktController(
             fiksDigisosId = sak.fiksDigisosId,
             soknadTittel = hentSoknadTittel(sak, model),
             status = model.status,
-            harNyeOppgaver = harNyeOppgaver(model, sak.fiksDigisosId),
+            manglerOpplysninger = manglerOpplysninger(model, sak.fiksDigisosId),
             harVilkar = harVilkar(model)
         )
         return ResponseEntity.ok().body(saksDetaljerResponse)
     }
 
-    private fun harNyeOppgaver(model: InternalDigisosSoker, fiksDigisosId: String): Boolean {
+    private fun manglerOpplysninger(model: InternalDigisosSoker, fiksDigisosId: String): Boolean {
         return when {
-            model.oppgaver.isEmpty() -> false
-            else -> oppgaveService.hentOppgaver(fiksDigisosId).isNotEmpty()
+            model.oppgaver.isEmpty() && model.dokumentasjonkrav.isEmpty() -> false
+            else -> oppgaveService.hentOppgaver(fiksDigisosId).isNotEmpty()  || dokumentasjonkravService.hentDokumentasjonkrav(fiksDigisosId).isNotEmpty();
         }
     }
 
