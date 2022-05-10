@@ -69,5 +69,5 @@ private fun MutableList<Dokumentasjonkrav>.oppdaterEllerLeggTilDokumentasjonkrav
 
 private fun Dokumentasjonkrav.oppdaterFelter(hendelse: JsonDokumentasjonkrav) {
     beskrivelse = hendelse.beskrivelse
-    status = OppgaveStatus.valueOf(hendelse.status.value())
+    status = hendelse.status?.let { OppgaveStatus.valueOf(it.value()) }
 }
