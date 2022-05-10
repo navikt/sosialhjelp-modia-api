@@ -85,7 +85,7 @@ data class Dokumentasjonkrav(
     var dokumentasjonkravId: String,
     var tittel: String?,
     var beskrivelse: String?,
-    var status: OppgaveStatus,
+    var status: OppgaveStatus?,
     var utbetalingsReferanse: List<String>?,
     var datoLagtTil: LocalDateTime?,
     var frist: LocalDateTime?,
