@@ -189,6 +189,7 @@ internal class SoknadsoversiktControllerTest {
         every { model1.oppgaver } returns mutableListOf()
         every { model1.saker } returns mutableListOf()
         every { model1.vilkar } returns mutableListOf()
+        every { model1.dokumentasjonkrav } returns mutableListOf()
 
         val response = controller.getSoknadDetaljer(id_1, "token", Ident(fnr))
         val sak = response.body
