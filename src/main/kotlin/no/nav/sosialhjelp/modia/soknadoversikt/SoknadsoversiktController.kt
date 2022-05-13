@@ -8,6 +8,7 @@ import no.nav.sosialhjelp.modia.digisossak.event.EventService
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.hentSoknadTittel
 import no.nav.sosialhjelp.modia.logger
+import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.DokumentasjonkravService
 import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import no.nav.sosialhjelp.modia.unixTimestampToDate
@@ -30,6 +31,7 @@ class SoknadsoversiktController(
     private val fiksClient: FiksClient,
     private val eventService: EventService,
     private val oppgaveService: OppgaveService,
+    private val dokumentasjonkravService: DokumentasjonkravService,
     private val tilgangskontrollService: TilgangskontrollService
 ) {
     @PostMapping("/soknader")
@@ -68,6 +70,7 @@ class SoknadsoversiktController(
             soknadTittel = hentSoknadTittel(sak, model),
             status = model.status,
             harNyeOppgaver = harNyeOppgaver(model, sak.fiksDigisosId),
+            harDokumentasjonkrav = harDokumentasjonkrav(model, sak.fiksDigisosId),
             harVilkar = harVilkar(model)
         )
         return ResponseEntity.ok().body(saksDetaljerResponse)
@@ -77,6 +80,12 @@ class SoknadsoversiktController(
         return when {
             model.oppgaver.isEmpty() -> false
             else -> oppgaveService.hentOppgaver(fiksDigisosId).isNotEmpty()
+        }
+    }
+
+    private fun harDokumentasjonkrav(model: InternalDigisosSoker, fiksDigisosId: String): Boolean{
+        return when { model.dokumentasjonkrav.isEmpty() -> false
+            else -> dokumentasjonkravService.hentDokumentasjonkrav(fiksDigisosId).isNotEmpty()
         }
     }
 
