@@ -7,7 +7,7 @@ data class SoknadDetaljerResponse(
     val soknadTittel: String,
     val status: SoknadsStatus,
     val manglerOpplysninger: Boolean,
-    val harNyeOppgaver: Boolean,
+    val harOppgaver: Boolean,
     val harDokumentasjonkrav: Boolean,
     val harVilkar: Boolean
 )
