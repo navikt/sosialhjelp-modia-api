@@ -84,8 +84,9 @@ class SoknadsoversiktController(
         }
     }
 
-    private fun harDokumentasjonkrav(model: InternalDigisosSoker, fiksDigisosId: String): Boolean{
-        return when { model.dokumentasjonkrav.isEmpty() -> false
+    private fun harDokumentasjonkrav(model: InternalDigisosSoker, fiksDigisosId: String): Boolean {
+        return when {
+            model.dokumentasjonkrav.isEmpty() -> false
             else -> dokumentasjonkravService.hentDokumentasjonkrav(fiksDigisosId).isNotEmpty()
         }
     }
