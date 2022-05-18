@@ -89,6 +89,13 @@ class SoknadsoversiktController(
             else -> dokumentasjonkravService.hentDokumentasjonkrav(fiksDigisosId).isNotEmpty()
         }
     }
+    
+    private fun harNyeOppgaver(model: InternalDigisosSoker, fiksDigisosId: String): Boolean {
+        return when {
+            model.oppgaver.isEmpty() -> false
+            else -> oppgaveService.hentOppgaver(fiksDigisosId).isNotEmpty()
+        }
+    }
 
     private fun harVilkar(model: InternalDigisosSoker): Boolean {
         return model.vilkar
