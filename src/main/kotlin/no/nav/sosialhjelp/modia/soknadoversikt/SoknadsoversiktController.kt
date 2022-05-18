@@ -69,7 +69,6 @@ class SoknadsoversiktController(
             fiksDigisosId = sak.fiksDigisosId,
             soknadTittel = hentSoknadTittel(sak, model),
             status = model.status,
-            manglerOpplysninger = manglerOpplysninger(model, sak.fiksDigisosId),
             harOppgaver = harOppgaver(model, sak.fiksDigisosId),
             harDokumentasjonkrav = harDokumentasjonkrav(model, sak.fiksDigisosId),
             harVilkar = harVilkar(model)
@@ -77,10 +76,10 @@ class SoknadsoversiktController(
         return ResponseEntity.ok().body(saksDetaljerResponse)
     }
 
-    private fun manglerOpplysninger(model: InternalDigisosSoker, fiksDigisosId: String): Boolean {
+    private fun harOppgaver(model: InternalDigisosSoker, fiksDigisosId: String): Boolean {
         return when {
-            model.oppgaver.isEmpty() && model.dokumentasjonkrav.isEmpty() -> false
-            else -> oppgaveService.hentOppgaver(fiksDigisosId).isNotEmpty() || dokumentasjonkravService.hentDokumentasjonkrav(fiksDigisosId).isNotEmpty()
+            model.oppgaver.isEmpty() -> false
+            else -> oppgaveService.hentOppgaver(fiksDigisosId).isNotEmpty()
         }
     }
 
@@ -88,13 +87,6 @@ class SoknadsoversiktController(
         return when {
             model.dokumentasjonkrav.isEmpty() -> false
             else -> dokumentasjonkravService.hentDokumentasjonkrav(fiksDigisosId).isNotEmpty()
-        }
-    }
-
-    private fun harOppgaver(model: InternalDigisosSoker, fiksDigisosId: String): Boolean {
-        return when {
-            model.oppgaver.isEmpty() -> false
-            else -> oppgaveService.hentOppgaver(fiksDigisosId).isNotEmpty()
         }
     }
 

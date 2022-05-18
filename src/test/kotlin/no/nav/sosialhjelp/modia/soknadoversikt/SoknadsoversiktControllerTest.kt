@@ -143,6 +143,9 @@ internal class SoknadsoversiktControllerTest {
         every { model1.oppgaver } returns mutableListOf(mockk())
         every { model2.oppgaver } returns mutableListOf(mockk())
 
+        every { model1.dokumentasjonkrav } returns mutableListOf()
+        every { model2.dokumentasjonkrav } returns mutableListOf()
+
         every { model1.vilkar } returns mutableListOf(vilkar1)
         every { model2.vilkar } returns mutableListOf(vilkar2)
 
@@ -166,7 +169,7 @@ internal class SoknadsoversiktControllerTest {
         assertThat(response1.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(digisosSak1).isNotNull
         assertThat(digisosSak1?.soknadTittel).isEqualTo("Søknad om økonomisk sosialhjelp")
-        assertThat(digisosSak1?.manglerOpplysninger).isTrue
+        assertThat(digisosSak1?.harOppgaver).isTrue
         assertThat(digisosSak1?.harVilkar).isFalse
 
         val response2 = controller.getSoknadDetaljer(id_2, "token", Ident(fnr))
@@ -176,7 +179,7 @@ internal class SoknadsoversiktControllerTest {
         assertThat(digisosSak2).isNotNull
         assertThat(digisosSak2?.soknadTittel).contains("Livsopphold", "Strøm")
         assertThat(digisosSak2?.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
-        assertThat(digisosSak2?.manglerOpplysninger).isTrue
+        assertThat(digisosSak2?.harOppgaver).isTrue
         assertThat(digisosSak2?.harVilkar).isTrue
     }
 
@@ -199,6 +202,6 @@ internal class SoknadsoversiktControllerTest {
 
         verify { oppgaveService wasNot Called }
 
-        assertThat(sak?.manglerOpplysninger).isFalse
+        assertThat(sak?.harOppgaver).isFalse
     }
 }
