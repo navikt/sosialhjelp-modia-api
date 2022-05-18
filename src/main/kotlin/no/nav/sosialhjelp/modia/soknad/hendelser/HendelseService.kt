@@ -2,6 +2,7 @@ package no.nav.sosialhjelp.modia.soknad.hendelser
 
 import no.nav.sosialhjelp.modia.digisossak.domain.Hendelse
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
+import no.nav.sosialhjelp.modia.digisossak.domain.UtbetalingsStatus
 import no.nav.sosialhjelp.modia.digisossak.event.EventService
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.logger
@@ -51,7 +52,7 @@ class HendelseService(
 
     private fun InternalDigisosSoker.leggTilHendelserForUtbetalinger() {
         utbetalinger
-//                .filterNot { it.status == UtbetalingsStatus.ANNULLERT } // TODO - Finn ut om annullert skal gi melding i historikk
+            .filter { it.status == UtbetalingsStatus.UTBETALT }
             .groupBy { it.datoHendelse.rundNedTilNaermeste5Minutt() }
             .forEach { (_, grupperteVilkar) ->
                 historikk.add(
