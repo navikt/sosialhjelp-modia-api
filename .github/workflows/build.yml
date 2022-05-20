@@ -25,13 +25,8 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_githubUser: x-access-token
           ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run tests
-        run: ./gradlew test
-        env:
-          ORG_GRADLE_PROJECT_githubUser: x-access-token
-          ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build JAR
-        run: ./gradlew clean shadowJar -x test
+      - name: compile and run tests
+        run: ./gradlew build
         env:
           ORG_GRADLE_PROJECT_githubUser: x-access-token
           ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.GITHUB_TOKEN }}
