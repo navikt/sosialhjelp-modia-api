@@ -7,10 +7,13 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @Component
 class KommunenavnClient(
-    private val proxiedWebClient: WebClient,
+    private val proxiedWebClientBuilder: WebClient.Builder,
 ) {
+    private val kommunenavnWebClient: WebClient
+        get() = proxiedWebClientBuilder.build()
+
     fun getAll(): KommunenavnProperties {
-        return proxiedWebClient.get()
+        return kommunenavnWebClient.get()
             .uri("https://register.geonorge.no/api/subregister/sosi-kodelister/kartverket/kommunenummer-alle.json")
             .retrieve()
             .bodyToMono(typeRef<KommunenavnProperties>())

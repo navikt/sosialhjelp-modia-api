@@ -12,14 +12,18 @@ import org.springframework.web.reactive.function.client.awaitBody
 
 @Component
 class AzureGraphClient(
-    private val proxiedWebClient: WebClient,
+    private val proxiedWebClientBuilder: WebClient.Builder,
     private val azuredingsService: AzuredingsService,
     private val clientProperties: ClientProperties,
 ) {
+
+    private val azureGraphWebClient: WebClient
+        get() = proxiedWebClientBuilder.build()
+
     fun hentInnloggetVeilederSineGrupper(token: String): AzureAdGrupper {
         return runBlocking(Dispatchers.IO) {
             val excangedToken = azuredingsService.exchangeToken(token, "https://graph.microsoft.com/.default")
-            proxiedWebClient.get()
+            azureGraphWebClient.get()
                 .uri("${clientProperties.azureGraphUrl}/me/memberOf")
                 .header(HttpHeaders.AUTHORIZATION, BEARER + excangedToken)
                 .retrieve()

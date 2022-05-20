@@ -19,9 +19,12 @@ interface AzureAppTokenUtils {
 @Profile("!(mock-alt | local | test)")
 @Component
 class AzureAppTokenUtilsImpl(
-    private val proxiedWebClient: WebClient,
+    private val proxiedWebClientBuilder: WebClient.Builder,
     private val clientProperties: ClientProperties,
 ) : AzureAppTokenUtils {
+
+    private val azureAppTokenWebClient: WebClient
+        get() = proxiedWebClientBuilder.build()
 
     override fun hentTokenMedSkjermedePersonerScope(): String {
         return runBlocking(Dispatchers.IO) {
@@ -31,7 +34,7 @@ class AzureAppTokenUtilsImpl(
             params.add("client_secret", clientProperties.azureClientSecret)
             params.add("grant_type", "client_credentials")
 
-            val tokenResponse: AzuredingsResponse = proxiedWebClient.post()
+            val tokenResponse: AzuredingsResponse = azureAppTokenWebClient.post()
                 .uri(clientProperties.azureTokenEndpointUrl)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(params))

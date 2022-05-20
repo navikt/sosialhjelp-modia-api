@@ -28,11 +28,14 @@ interface SkjermedePersonerClient {
 @Profile("!test")
 @Component
 class SkjermedePersonerClientImpl(
-    private val webClient: WebClient,
+    private val nonProxiedWebClientBuilder: WebClient.Builder,
     private val azuredingsService: AzuredingsService,
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
 ) : SkjermedePersonerClient {
+
+    private val skjermedePersonerWebClient: WebClient
+        get() = nonProxiedWebClientBuilder.build()
 
     override fun erPersonSkjermet(ident: String, veilederToken: String): Boolean {
         hentFraCache(ident)?.let { return it }
@@ -55,7 +58,7 @@ class SkjermedePersonerClientImpl(
 
         val response: String = runBlocking(Dispatchers.IO) {
             val azureAdToken = azuredingsService.exchangeToken(veilederToken, clientProperties.skjermedePersonerScope)
-            webClient.post()
+            skjermedePersonerWebClient.post()
                 .uri("${clientProperties.skjermedePersonerEndpointUrl}/skjermet")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, BEARER + azureAdToken)
