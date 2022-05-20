@@ -89,6 +89,11 @@ dependencies {
     implementation("no.nav.sosialhjelp:sosialhjelp-common-kotlin-utils:${Versions.sosialhjelpCommon}")
 
 //    Micrometer/prometheus
+    implementation("io.micrometer:micrometer-core") {
+        version {
+            strictly(Versions.micrometerRegistry)
+        }
+    }
     implementation("io.micrometer:micrometer-registry-prometheus:${Versions.micrometerRegistry}")
     implementation("io.prometheus:simpleclient_common:${Versions.prometheus}")
     implementation("io.prometheus:simpleclient_hotspot:${Versions.prometheus}")
@@ -151,6 +156,9 @@ dependencies {
         }
         implementation("org.apache.logging.log4j:log4j-to-slf4j:${Versions.log4j}") {
             because("0-day exploit i version 2.0.0-2.14.1")
+        }
+
+        implementation("io.micrometer:micrometer-core:${Versions.micrometerRegistry}") {
         }
     }
 }
