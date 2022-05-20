@@ -15,10 +15,10 @@ import java.time.ZoneId
 import java.util.Date
 
 class MaskinportenClient(
-    private val proxiedWebClient: WebClient,
+    private val maskinPortenWebClient: WebClient,
     maskinportenProperties: MaskinportenProperties,
     private val wellKnown: WellKnown,
-    private val miljoUtils: MiljoUtils
+    miljoUtils: MiljoUtils
 ) {
     private var cachedToken: SignedJWT? = null
 
@@ -33,7 +33,7 @@ class MaskinportenClient(
     }
 
     private fun getTokenFraMaskinporten(): String {
-        val response = proxiedWebClient.post()
+        val response = maskinPortenWebClient.post()
             .uri(wellKnown.token_endpoint)
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(BodyInserters.fromFormData(params))
