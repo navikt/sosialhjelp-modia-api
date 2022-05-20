@@ -10,7 +10,7 @@ object Versions {
     const val logstash = "7.2"
     const val sosialhjelpCommon = "1.19b9ab6"
     const val filformat = "1.2022.04.29-13.11-459bee049a7a"
-    const val micrometerRegistry = "1.9.0"
+    const val micrometerRegistry = "1.8.6"
     const val prometheus = "0.15.0"
     const val tokenValidation = "2.0.20"
     const val jackson = "2.13.3"
