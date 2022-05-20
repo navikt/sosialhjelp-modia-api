@@ -15,21 +15,24 @@ class MaskinportenClientConfig(
     @Value("\${maskinporten_scopes}") private val scopes: String,
     @Value("\${maskinporten_well_known_url}") private val wellKnownUrl: String,
     @Value("\${maskinporten_client_jwk}") private val clientJwk: String,
-    private val proxiedWebClient: WebClient,
+    private val proxiedWebClientBuilder: WebClient.Builder,
     private val miljoUtils: MiljoUtils
 ) {
 
     @Bean
     @Profile("!test")
     fun maskinportenClient(): MaskinportenClient {
-        return MaskinportenClient(proxiedWebClient, maskinportenProperties, wellknown, miljoUtils)
+        return MaskinportenClient(maskinPortenWebClient, maskinportenProperties, wellknown, miljoUtils)
     }
 
     @Bean
     @Profile("test")
     fun maskinportenClientTest(): MaskinportenClient {
-        return MaskinportenClient(proxiedWebClient, maskinportenProperties, WellKnown("iss", "token_url"), miljoUtils)
+        return MaskinportenClient(maskinPortenWebClient, maskinportenProperties, WellKnown("iss", "token_url"), miljoUtils)
     }
+
+    private val maskinPortenWebClient: WebClient
+        get() = proxiedWebClientBuilder.build()
 
     private val maskinportenProperties: MaskinportenProperties
         get() = MaskinportenProperties(
@@ -40,7 +43,7 @@ class MaskinportenClientConfig(
         )
 
     private val wellknown: WellKnown
-        get() = proxiedWebClient.get()
+        get() = maskinPortenWebClient.get()
             .uri(wellKnownUrl)
             .retrieve()
             .bodyToMono<WellKnown>()

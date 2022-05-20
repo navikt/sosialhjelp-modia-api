@@ -11,13 +11,13 @@ import org.springframework.web.reactive.function.client.WebClient
 @Profile("!local")
 @Configuration
 class PdlConfig(
-    private val webClient: WebClient,
+    private val nonProxiedWebClientBuilder: WebClient.Builder,
     private val clientProperties: ClientProperties
 ) {
 
     @Bean
     fun pdlWebClient(): WebClient =
-        webClient.mutate()
+        nonProxiedWebClientBuilder
             .baseUrl(clientProperties.pdlEndpointUrl)
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .build()

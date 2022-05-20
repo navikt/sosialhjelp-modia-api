@@ -7,15 +7,12 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
 class NorgConfig(
-    private val webClient: WebClient,
+    private val nonProxiedWebClientBuilder: WebClient.Builder,
     private val clientProperties: ClientProperties,
 ) {
 
     @Bean
-    fun norgWebClient(): WebClient = webClient.mutate()
+    fun norgWebClient(): WebClient = nonProxiedWebClientBuilder
         .baseUrl(clientProperties.norgEndpointUrl)
-        .codecs {
-            it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-        }
         .build()
 }

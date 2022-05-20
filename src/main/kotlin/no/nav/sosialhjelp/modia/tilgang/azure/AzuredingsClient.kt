@@ -12,9 +12,12 @@ import org.springframework.web.reactive.function.client.awaitBody
 
 @Component
 class AzuredingsClient(
-    private val proxiedWebClient: WebClient,
+    private val proxiedWebClientBuilder: WebClient.Builder,
     private val azuredingsWebConfig: AzuredingsWebConfig,
 ) {
+
+    private val azuredingsWebClient: WebClient
+        get() = proxiedWebClientBuilder.build()
 
     suspend fun exchangeToken(subjectToken: String, clientAssertion: String, clientId: String, scope: String): AzuredingsResponse {
         return withContext(Dispatchers.IO) {
@@ -27,7 +30,7 @@ class AzuredingsClient(
             params.add("requested_token_use", "on_behalf_of")
             params.add("scope", scope)
 
-            proxiedWebClient
+            azuredingsWebClient
                 .post()
                 .uri(azuredingsWebConfig.tokenEndpoint)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
