@@ -5,12 +5,12 @@ group = "no.nav.sosialhjelp"
 object Versions {
     const val kotlin = "1.6.21"
     const val coroutines = "1.6.1"
-    const val springBoot = "2.7.0"
+    const val springBoot = "2.6.8"
     const val logback = "1.2.11"
     const val logstash = "7.2"
     const val sosialhjelpCommon = "1.19b9ab6"
     const val filformat = "1.2022.04.29-13.11-459bee049a7a"
-    const val micrometerRegistry = "1.9.0"
+    const val micrometerRegistry = "1.8.6"
     const val prometheus = "0.15.0"
     const val tokenValidation = "2.0.20"
     const val jackson = "2.13.3"
@@ -36,7 +36,7 @@ object Versions {
 plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
-    id("org.springframework.boot") version "2.7.0"
+    id("org.springframework.boot") version "2.6.8"
     id("com.github.ben-manes.versions") version "0.42.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
@@ -151,6 +151,9 @@ dependencies {
         }
         implementation("org.apache.logging.log4j:log4j-to-slf4j:${Versions.log4j}") {
             because("0-day exploit i version 2.0.0-2.14.1")
+        }
+
+        implementation("io.micrometer:micrometer-core:${Versions.micrometerRegistry}") {
         }
     }
 }
