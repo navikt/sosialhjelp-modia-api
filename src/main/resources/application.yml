@@ -2,6 +2,7 @@ spring:
   main:
     banner-mode: 'off'
     allow-circular-references: true # bør endres
+    web-application-type: none
   application:
     name: "sosialhjelp-modia-api"
   redis:
