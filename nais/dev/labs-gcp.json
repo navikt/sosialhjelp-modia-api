@@ -36,6 +36,7 @@
   "cpuRequest": "10m",
   "memoryRequest": "512Mi",
   "prometheusEnabled": false,
+  "wonderwallEnabled": false,
   "webProxyEnabled": false,
   "isGcp": true,
   "isLabsGcp": true,
