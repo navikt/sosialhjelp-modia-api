@@ -6,19 +6,27 @@ import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.tilgang.azure.model.AzureAdGrupper
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import org.springframework.http.HttpHeaders
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
+import reactor.netty.http.client.HttpClient
 
 @Component
 class AzureGraphClient(
-    private val proxiedWebClientBuilder: WebClient.Builder,
+    private val webClientBuilder: WebClient.Builder,
+    private val proxiedHttpClient: HttpClient,
     private val azuredingsService: AzuredingsService,
     private val clientProperties: ClientProperties,
 ) {
 
     private val azureGraphWebClient: WebClient
-        get() = proxiedWebClientBuilder.build()
+        get() = webClientBuilder
+            .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
+            .codecs {
+                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+            }
+            .build()
 
     fun hentInnloggetVeilederSineGrupper(token: String): AzureAdGrupper {
         return runBlocking(Dispatchers.IO) {
