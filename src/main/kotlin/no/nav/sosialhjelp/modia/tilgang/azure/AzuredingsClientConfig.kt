@@ -7,13 +7,16 @@ import no.nav.sosialhjelp.modia.logger
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.netty.http.client.HttpClient
 
 class AzuredingsWebConfig(val tokenEndpoint: String)
 
 @Configuration
 class AzuredingsClientConfig(
-    private val proxiedWebClientBuilder: WebClient.Builder,
+    private val webClientBuilder: WebClient.Builder,
+    private val proxiedHttpClient: HttpClient,
     private val clientProperties: ClientProperties,
 ) {
     @Bean
@@ -25,7 +28,12 @@ class AzuredingsClientConfig(
     }
 
     private val azuredingsWebClient: WebClient
-        get() = proxiedWebClientBuilder.build()
+        get() = webClientBuilder
+            .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
+            .codecs {
+                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+            }
+            .build()
 
     fun downloadWellKnown(url: String): WellKnown =
         azuredingsWebClient
