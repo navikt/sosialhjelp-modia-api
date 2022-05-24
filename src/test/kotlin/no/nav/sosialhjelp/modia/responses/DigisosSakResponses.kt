@@ -1,15 +1,17 @@
 package no.nav.sosialhjelp.modia.responses
 
-import org.joda.time.DateTime
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
-fun ok_digisossak_response_string(sistEndret: DateTime = DateTime.now().minusMonths(1)): String {
+
+fun ok_digisossak_response_string(sistEndret: LocalDateTime = LocalDateTime.now().minusMonths(1)): String {
     return """
 {
   "fiksDigisosId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "sokerFnr": "11111111111",
   "fiksOrgId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "kommunenummer": "1111",
-  "sistEndret": ${sistEndret.millis},
+  "sistEndret": ${sistEndret.toInstant(ZoneOffset.UTC).toEpochMilli()},
   "originalSoknadNAV": {
     "navEksternRefId": "11000001",
     "metadata": "3fa85f64-5717-4562-b3fc-2c963f66afa0",
