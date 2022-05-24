@@ -3,7 +3,6 @@ package no.nav.sosialhjelp.modia.responses
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-
 fun ok_digisossak_response_string(sistEndret: LocalDateTime = LocalDateTime.now().minusMonths(1)): String {
     return """
 {
