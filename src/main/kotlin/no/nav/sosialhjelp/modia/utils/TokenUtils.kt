@@ -2,7 +2,7 @@ package no.nav.sosialhjelp.modia.utils
 
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
-import no.nav.sosialhjelp.modia.client.msgraph.MsGraphClient
+import no.nav.sosialhjelp.modia.app.msgraph.MsGraphClient
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
