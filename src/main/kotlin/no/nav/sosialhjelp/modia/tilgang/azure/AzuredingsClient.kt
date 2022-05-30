@@ -14,18 +14,17 @@ import reactor.netty.http.client.HttpClient
 
 @Component
 class AzuredingsClient(
-    private val webClientBuilder: WebClient.Builder,
-    private val proxiedHttpClient: HttpClient,
+    webClientBuilder: WebClient.Builder,
+    proxiedHttpClient: HttpClient,
     private val azuredingsWebConfig: AzuredingsWebConfig,
 ) {
 
-    private val azuredingsWebClient: WebClient
-        get() = webClientBuilder
-            .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
-            .codecs {
-                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }
-            .build()
+    private val azuredingsWebClient: WebClient = webClientBuilder
+        .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
+        .codecs {
+            it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+        }
+        .build()
 
     suspend fun exchangeToken(subjectToken: String, clientAssertion: String, clientId: String, scope: String): AzuredingsResponse {
         return withContext(Dispatchers.IO) {

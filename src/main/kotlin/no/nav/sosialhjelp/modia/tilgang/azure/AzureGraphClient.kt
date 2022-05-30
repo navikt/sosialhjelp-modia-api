@@ -14,14 +14,14 @@ import reactor.netty.http.client.HttpClient
 
 @Component
 class AzureGraphClient(
-    private val webClientBuilder: WebClient.Builder,
-    private val proxiedHttpClient: HttpClient,
+    webClientBuilder: WebClient.Builder,
+    proxiedHttpClient: HttpClient,
     private val azuredingsService: AzuredingsService,
     private val clientProperties: ClientProperties,
 ) {
 
-    private val azureGraphWebClient: WebClient
-        get() = webClientBuilder
+    private val azureGraphWebClient: WebClient =
+        webClientBuilder
             .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
