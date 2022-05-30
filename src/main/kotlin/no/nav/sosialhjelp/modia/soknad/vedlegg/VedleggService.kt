@@ -55,13 +55,13 @@ class VedleggService(
                             var vedleggbeskrivelse = vedlegg.tilleggsinfo
                             if (vedlegg.hendelseType?.value() == JsonHendelse.Type.DOKUMENTASJONKRAV.value()) {
                                 val saksreferanse = hentSaksreferanse(vedlegg, ettersendelse, model.dokumentasjonkrav)
-                                var sakstittel = hentSakstittel(saksreferanse, model.saker);
-                                if(sakstittel == DOKUMENTASJONKRAV_UTEN_SAK_TITTEL){
-                                    vedleggtittel ="Dokumentasjonskrav for stønaden"
+                                val sakstittel = hentSakstittel(saksreferanse, model.saker)
+                                vedleggtittel = if (sakstittel == DOKUMENTASJONKRAV_UTEN_SAK_TITTEL) {
+                                    "Dokumentasjonskrav for stønaden"
                                 } else {
-                                    vedleggtittel = "Dokumentasjonskrav for saken " + sakstittel;
+                                    "Dokumentasjonskrav for saken " + sakstittel
                                 }
-                                vedleggbeskrivelse = "";
+                                vedleggbeskrivelse = ""
                             }
 
                             InternalVedlegg(
