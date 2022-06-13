@@ -84,7 +84,7 @@ no.nav.security.jwt:
         scope: https://graph.microsoft.com/.default
         authentication:
           client-id: ${AZURE_APP_CLIENT_ID}
-          client-secret: ${AZURE_APP_CLIENT_SECRET}
-          client-auth-method: client_secret_basic
+          client-jwk: ${AZURE_APP_JWK}
+          client-auth-method: private_key_jwt
 
 loginurl: ${LOGINURL:http://localhost:8383/sosialhjelp/modia-api/local/cookie} # TODO: må fikses når vi finner ut url i miljø.
