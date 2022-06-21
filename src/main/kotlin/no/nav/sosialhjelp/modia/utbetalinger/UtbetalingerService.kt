@@ -87,7 +87,7 @@ class UtbetalingerService(
         val utbetalingTom = utbetaling.tom
         return if (utbetalingFom != null && utbetalingTom != null) {
             range.contains(utbetalingFom) || range.contains(utbetalingTom) ||
-                    (utbetalingFom.isBefore(range.start) && utbetalingTom.isAfter(range.endInclusive))
+                (utbetalingFom.isBefore(range.start) && utbetalingTom.isAfter(range.endInclusive))
         } else {
             val utbetalingsDatoInnenfor = utbetaling.utbetalingsDato?.let { range.contains(it) } ?: false
             val forfallsDatoInnenfor = utbetaling.forfallsDato?.let { range.contains(it) } ?: false
