@@ -16,7 +16,7 @@
     "AZURE_APP_JWK": "generateRSA",
     "AZURE_OPENID_CONFIG_TOKEN_ENDPOINT": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/azuretoken/selvbetjening",
     "AZURE_APP_CLIENT_SECRET": "secret",
-    "VEILEDER_GRUPPE_ID": "0000-MOCK-sosialhjelp-dialog-veileder",
+    "VEILEDER_GRUPPE_ID": "0000-MOCK-sosialhjelp-modia-veileder",
     "FIKS_DIGISOS_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/fiks",
     "NORG_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/norg_endpoint_url",
     "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.adeo.no/#/startsok?enhetNr=",
