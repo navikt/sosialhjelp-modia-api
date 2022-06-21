@@ -76,17 +76,23 @@ class UtbetalingerService(
             .toInstant(ZoneOffset.UTC).toEpochMilli()
     }
 
-    private fun isUtbetalingOrForfallInnenforIntervall(utbetaling: Utbetaling, fom: LocalDate?, tom: LocalDate?): Boolean {
+    private fun skalUtbetalingVisesInnenforPeriode(utbetaling: Utbetaling, fom: LocalDate?, tom: LocalDate?): Boolean {
         val range = when {
             fom != null && tom != null && (fom.isBefore(tom) || fom.isEqual(tom)) -> fom.rangeTo(tom)
             fom != null && tom == null -> fom.rangeTo(LocalDate.now())
             fom == null && tom != null -> LocalDate.now().minusYears(1).rangeTo(tom)
             else -> throw IllegalStateException("Fom og tom kan ikke begge være null")
         }
-
-        val utbetalingsDatoInnenfor = utbetaling.utbetalingsDato?.let { range.contains(it) } ?: false
-        val forfallsDatoInnenfor = utbetaling.forfallsDato?.let { range.contains(it) } ?: false
-        return utbetalingsDatoInnenfor || forfallsDatoInnenfor
+        val utbetalingFom = utbetaling.fom
+        val utbetalingTom = utbetaling.tom
+        return if (utbetalingFom != null && utbetalingTom != null) {
+            range.contains(utbetalingFom) || range.contains(utbetalingTom) ||
+                (utbetalingFom.isBefore(range.start) && utbetalingTom.isAfter(range.endInclusive))
+        } else {
+            val utbetalingsDatoInnenfor = utbetaling.utbetalingsDato?.let { range.contains(it) } ?: false
+            val forfallsDatoInnenfor = utbetaling.forfallsDato?.let { range.contains(it) } ?: false
+            utbetalingsDatoInnenfor || forfallsDatoInnenfor
+        }
     }
 
     private fun getUtbetalinger(digisosSak: DigisosSak): List<UtbetalingerResponse> {
@@ -107,7 +113,7 @@ class UtbetalingerService(
 
         return model.utbetalinger
             .filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
-            .filter { isUtbetalingOrForfallInnenforIntervall(it, fom, tom) }
+            .filter { skalUtbetalingVisesInnenforPeriode(it, fom, tom) }
             .map { utbetaling ->
                 utbetaling.infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(digisosSak.kommunenummer)
                 toUtbetalingResponse(utbetaling, digisosSak.fiksDigisosId, behandlendeNavKontor)
