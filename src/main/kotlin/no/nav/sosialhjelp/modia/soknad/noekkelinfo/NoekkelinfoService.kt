@@ -7,6 +7,7 @@ import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.hentSoknadTittel
 import no.nav.sosialhjelp.modia.kommune.KommuneService
 import no.nav.sosialhjelp.modia.kommune.KommunenavnService
+import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import org.springframework.stereotype.Component
 
@@ -24,7 +25,7 @@ class NoekkelinfoService(
         val kommunenavn = hentBehandlendekommune(digisosSak.kommunenummer)
 
         val behandlendeNavKontor: NavKontorInformasjon? = model.navKontorHistorikk.lastOrNull()
-
+        log.info("Søknadsstatus=${model.status.name} for $fiksDigisosId")
         return SoknadNoekkelinfoResponse(
             tittel = hentSoknadTittel(digisosSak, model),
             status = model.status,
@@ -52,5 +53,9 @@ class NoekkelinfoService(
                     )
                 }
         else null
+    }
+
+    companion object {
+        private val log by logger()
     }
 }

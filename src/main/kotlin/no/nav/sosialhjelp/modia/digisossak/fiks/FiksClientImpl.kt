@@ -27,7 +27,6 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import no.nav.sosialhjelp.modia.utils.RequestUtils
 import no.nav.sosialhjelp.modia.utils.objectMapper
-import org.joda.time.DateTime
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
@@ -37,6 +36,8 @@ import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.reactive.function.client.bodyToMono
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.UUID
 
 @Component
@@ -188,7 +189,8 @@ class FiksClientImpl(
     }
 
     fun isDigisosSakNewerThanMonths(digisosSak: DigisosSak, months: Int): Boolean =
-        digisosSak.sistEndret >= DateTime.now().minusMonths(months).millis
+        digisosSak.sistEndret >= LocalDateTime.now().minusMonths(months.toLong())
+            .toInstant(ZoneOffset.UTC).toEpochMilli()
 
     private fun genererSporingsId(): String = UUID.randomUUID().toString()
 

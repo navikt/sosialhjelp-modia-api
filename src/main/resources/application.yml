@@ -46,7 +46,7 @@ client:
   fiks_integrasjonid: ${INTEGRASJONSID_FIKS}
   fiks_integrasjonpassord: ${INTEGRASJONPASSORD_FIKS}
   norg_endpoint_url: ${NORG_ENDPOINT_URL}
-  norg_oppslag_url: ${NORG_OPPSLAG_URL:https://norg2-frontend.nais.adeo.no/#/startsok?enhetNr=}
+  norg_oppslag_url: ${NORG_OPPSLAG_URL}
   pdl_endpoint_url: ${PDL_ENDPOINT_URL}
   pdl_scope: ${PDL_SCOPE}
   veileder_gruppe_id: ${VEILEDER_GRUPPE_ID}
@@ -54,7 +54,7 @@ client:
   stavanger_kommunenummer: ${STAVANGER_KOMMUNENUMMER}
   azure_token_endpoint_url: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
   azuredings_url: ${AZURE_APP_WELL_KNOWN_URL}
-  azuredings_jwt_audience: ${AZURE_OPENID_CONFIG_ISSUER:dummyAudience}
+  azuredings_jwt_audience: ${AZURE_OPENID_CONFIG_ISSUER}
   azuredings_jwt_client_id: ${AZURE_APP_CLIENT_ID}
   azuredings_private_jwk: ${AZURE_APP_JWK}
   azure_client_id: ${AZURE_APP_CLIENT_ID}
@@ -84,7 +84,7 @@ no.nav.security.jwt:
         scope: https://graph.microsoft.com/.default
         authentication:
           client-id: ${AZURE_APP_CLIENT_ID}
-          client-secret: ${AZURE_APP_CLIENT_SECRET}
-          client-auth-method: client_secret_basic
+          client-jwk: ${AZURE_APP_JWK}
+          client-auth-method: private_key_jwt
 
 loginurl: ${LOGINURL:http://localhost:8383/sosialhjelp/modia-api/local/cookie} # TODO: må fikses når vi finner ut url i miljø.

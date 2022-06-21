@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
+import no.nav.sosialhjelp.modia.app.client.unproxiedHttpClient
 import no.nav.sosialhjelp.modia.app.exceptions.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.redis.RedisKeyType.SKJERMEDE_PERSONER
@@ -15,6 +16,7 @@ import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientRequestException
@@ -28,11 +30,19 @@ interface SkjermedePersonerClient {
 @Profile("!test")
 @Component
 class SkjermedePersonerClientImpl(
-    private val webClient: WebClient,
+    webClientBuilder: WebClient.Builder,
     private val azuredingsService: AzuredingsService,
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
 ) : SkjermedePersonerClient {
+
+    private val skjermedePersonerWebClient: WebClient =
+        webClientBuilder
+            .clientConnector(ReactorClientHttpConnector(unproxiedHttpClient()))
+            .codecs {
+                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+            }
+            .build()
 
     override fun erPersonSkjermet(ident: String, veilederToken: String): Boolean {
         hentFraCache(ident)?.let { return it }
@@ -55,7 +65,7 @@ class SkjermedePersonerClientImpl(
 
         val response: String = runBlocking(Dispatchers.IO) {
             val azureAdToken = azuredingsService.exchangeToken(veilederToken, clientProperties.skjermedePersonerScope)
-            webClient.post()
+            skjermedePersonerWebClient.post()
                 .uri("${clientProperties.skjermedePersonerEndpointUrl}/skjermet")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, BEARER + azureAdToken)

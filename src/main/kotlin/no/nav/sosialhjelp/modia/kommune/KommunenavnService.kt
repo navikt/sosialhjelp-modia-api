@@ -2,18 +2,18 @@ package no.nav.sosialhjelp.modia.kommune
 
 import no.nav.sosialhjelp.modia.kommune.kartverket.KommunenavnClient
 import no.nav.sosialhjelp.modia.logger
-import org.joda.time.DateTime
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class KommunenavnService(
     private val kommunenavnClient: KommunenavnClient
 ) {
     private var kommunenavnMap: Map<String, String> = HashMap()
-    private var sistOppdatert = DateTime.now().minusDays(2)
+    private var sistOppdatert = LocalDateTime.now().minusDays(2)
 
     fun hentKommunenavnFor(kommunenummer: String): String {
-        if (sistOppdatert.isBefore(DateTime.now().minusDays(1))) {
+        if (sistOppdatert.isBefore(LocalDateTime.now().minusDays(1))) {
             oppdaterKommunenavnMap()
         }
         return kommunenavnMap[kommunenummer] ?: "[Kan ikke hente kommune]"
@@ -24,7 +24,7 @@ class KommunenavnService(
             val svar = kommunenavnClient.getAll()
             val nyMap = svar.containeditems.associateBy({ it.codevalue }, { it.description })
             kommunenavnMap = nyMap
-            sistOppdatert = DateTime.now()
+            sistOppdatert = LocalDateTime.now()
         } catch (e: Exception) {
             log.warn("Feil under oppdatering av kommunenavnMap", e)
         }

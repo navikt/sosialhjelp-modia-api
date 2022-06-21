@@ -31,7 +31,6 @@ import no.nav.sosialhjelp.modia.utils.RequestUtils
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
-import org.joda.time.DateTime
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -39,6 +38,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.WebClient
+import java.time.LocalDateTime
 
 internal class FiksClientTest {
 
@@ -96,8 +96,8 @@ internal class FiksClientTest {
                 .setBody(
                     listOf(
                         ok_digisossak_response_string(),
-                        ok_digisossak_response_string(DateTime.now().minusMonths(1)),
-                        ok_digisossak_response_string(DateTime.now().minusMonths(2)),
+                        ok_digisossak_response_string(LocalDateTime.now().minusMonths(1)),
+                        ok_digisossak_response_string(LocalDateTime.now().minusMonths(2)),
                     ).toString()
                 )
         )
@@ -117,8 +117,8 @@ internal class FiksClientTest {
                 .setBody(
                     listOf(
                         ok_digisossak_response_string(),
-                        ok_digisossak_response_string(DateTime.now().minusMonths(1)),
-                        ok_digisossak_response_string(DateTime.now().minusMonths(16)),
+                        ok_digisossak_response_string(LocalDateTime.now().minusMonths(1)),
+                        ok_digisossak_response_string(LocalDateTime.now().minusMonths(16)),
                     ).toString()
                 )
         )
@@ -149,7 +149,7 @@ internal class FiksClientTest {
             MockResponse()
                 .setResponseCode(200)
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setBody(ok_digisossak_response_string(DateTime.now().minusMonths(16)))
+                .setBody(ok_digisossak_response_string(LocalDateTime.now().minusMonths(16)))
         )
 
         assertThatExceptionOfType(FiksNotFoundException::class.java)

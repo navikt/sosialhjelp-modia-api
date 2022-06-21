@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
+import reactor.netty.http.client.HttpClient
 
 @Configuration
 class MaskinportenClientConfig(
@@ -15,32 +17,45 @@ class MaskinportenClientConfig(
     @Value("\${maskinporten_scopes}") private val scopes: String,
     @Value("\${maskinporten_well_known_url}") private val wellKnownUrl: String,
     @Value("\${maskinporten_client_jwk}") private val clientJwk: String,
-    private val proxiedWebClient: WebClient,
-    private val miljoUtils: MiljoUtils
+    webClientBuilder: WebClient.Builder,
+    proxiedHttpClient: HttpClient,
+    private val miljoUtils: MiljoUtils,
 ) {
 
     @Bean
     @Profile("!test")
     fun maskinportenClient(): MaskinportenClient {
-        return MaskinportenClient(proxiedWebClient, maskinportenProperties, wellknown, miljoUtils)
+        return MaskinportenClient(maskinPortenWebClient, maskinportenProperties, wellknown, miljoUtils)
     }
 
     @Bean
     @Profile("test")
     fun maskinportenClientTest(): MaskinportenClient {
-        return MaskinportenClient(proxiedWebClient, maskinportenProperties, WellKnown("iss", "token_url"), miljoUtils)
+        return MaskinportenClient(
+            maskinPortenWebClient,
+            maskinportenProperties,
+            WellKnown("iss", "token_url"),
+            miljoUtils
+        )
     }
 
-    private val maskinportenProperties: MaskinportenProperties
-        get() = MaskinportenProperties(
-            clientId = clientId,
-            clientJwk = clientJwk,
-            scope = scopes,
-            wellKnownUrl = wellKnownUrl
-        )
+    private val maskinPortenWebClient: WebClient =
+        webClientBuilder
+            .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
+            .codecs {
+                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+            }
+            .build()
+
+    private val maskinportenProperties = MaskinportenProperties(
+        clientId = clientId,
+        clientJwk = clientJwk,
+        scope = scopes,
+        wellKnownUrl = wellKnownUrl
+    )
 
     private val wellknown: WellKnown
-        get() = proxiedWebClient.get()
+        get() = maskinPortenWebClient.get()
             .uri(wellKnownUrl)
             .retrieve()
             .bodyToMono<WellKnown>()

@@ -11,11 +11,12 @@ import no.nav.sosialhjelp.modia.digisossak.event.EventService
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.flatMapParallel
 import no.nav.sosialhjelp.modia.logger
-import org.joda.time.DateTime
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder.getRequestAttributes
 import org.springframework.web.context.request.RequestContextHolder.setRequestAttributes
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 @Component
 class UtbetalingerService(
@@ -71,7 +72,8 @@ class UtbetalingerService(
     }
 
     private fun isDigisosSakNewerThanMonths(digisosSak: DigisosSak, months: Int): Boolean {
-        return digisosSak.sistEndret >= DateTime.now().minusMonths(months).millis
+        return digisosSak.sistEndret >= LocalDateTime.now().minusMonths(months.toLong())
+            .toInstant(ZoneOffset.UTC).toEpochMilli()
     }
 
     private fun isUtbetalingOrForfallInnenforIntervall(utbetaling: Utbetaling, fom: LocalDate?, tom: LocalDate?): Boolean {
@@ -125,7 +127,7 @@ class UtbetalingerService(
             annenMottaker = utbetaling.annenMottaker,
             kontonummer = utbetaling.kontonummer,
             utbetalingsmetode = utbetaling.utbetalingsmetode,
-            harVilkar = !utbetaling.vilkar.isNullOrEmpty(),
+            harVilkar = utbetaling.vilkar.isNotEmpty(),
             navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }
         )
     }

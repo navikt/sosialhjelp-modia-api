@@ -1,6 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer
-import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "no.nav.sosialhjelp"
@@ -8,15 +5,15 @@ group = "no.nav.sosialhjelp"
 object Versions {
     const val kotlin = "1.6.21"
     const val coroutines = "1.6.1"
-    const val springBoot = "2.6.7"
+    const val springBoot = "2.7.0"
     const val logback = "1.2.11"
-    const val logstash = "7.1.1"
-    const val sosialhjelpCommon = "1.19b9ab6"
-    const val filformat = "1.2022.03.31-14.09-4daafcd63deb"
-    const val micrometerRegistry = "1.8.5"
+    const val logstash = "7.2"
+    const val sosialhjelpCommon = "1.3f8acf5"
+    const val filformat = "1.2022.04.29-13.11-459bee049a7a"
+    const val micrometerRegistry = "1.9.0"
     const val prometheus = "0.15.0"
-    const val tokenValidation = "2.0.15"
-    const val jackson = "2.13.2"
+    const val tokenValidation = "2.0.20"
+    const val jackson = "2.13.3"
     const val guava = "31.1-jre"
     const val logbackSyslog4j = "1.0.0"
     const val javaJwt = "3.19.1"
@@ -32,23 +29,16 @@ object Versions {
 
     // Test only
     const val junitJupiter = "5.8.2"
-    const val mockk = "1.12.3"
+    const val mockk = "1.12.4"
     const val mockwebserver = "5.0.0-alpha.2"
 }
 
 plugins {
-    application
     kotlin("jvm") version "1.6.21"
-
-    id("org.jetbrains.kotlin.plugin.spring") version "1.6.21"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    kotlin("plugin.spring") version "1.6.21"
+    id("org.springframework.boot") version "2.7.0"
     id("com.github.ben-manes.versions") version "0.42.0"
-    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
-}
-
-application {
-    applicationName = "sosialhjelp-modia-api"
-    mainClass.set("no.nav.sosialhjelp.modia.ApplicationKt")
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
 
 java {
@@ -162,6 +152,9 @@ dependencies {
         implementation("org.apache.logging.log4j:log4j-to-slf4j:${Versions.log4j}") {
             because("0-day exploit i version 2.0.0-2.14.1")
         }
+
+        implementation("io.micrometer:micrometer-core:${Versions.micrometerRegistry}") {
+        }
     }
 }
 
@@ -180,33 +173,17 @@ repositories {
     }
 }
 
-tasks {
-    withType<KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = "17"
-            freeCompilerArgs = listOf("-Xjsr305=strict", "-XXLanguage:+InlineClasses")
-        }
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xjsr305=strict")
+        jvmTarget = "17"
     }
+}
 
-    withType<Test> {
-        useJUnitPlatform {
-            includeEngines("junit-jupiter")
-        }
-        testLogging {
-            events("skipped", "failed")
-        }
-    }
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
 
-    withType<ShadowJar> {
-        archiveClassifier.set("")
-        transform(ServiceFileTransformer::class.java) {
-            setPath("META-INF/cxf")
-            include("bus-extensions.txt")
-        }
-        transform(PropertiesFileTransformer::class.java) {
-            paths = listOf("META-INF/spring.factories")
-            mergeStrategy = "append"
-        }
-        mergeServiceFiles()
-    }
+tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    this.archiveFileName.set("app.jar")
 }
