@@ -26,12 +26,12 @@ object Versions {
     const val springdoc = "1.6.9"
     const val jsonSmart = "2.4.8"
     const val gson = "2.9.0"
-    const val junit = "4.13.2"
     const val log4j = "2.17.2"
 
     // Test only
     const val junitJupiter = "5.8.2"
     const val mockk = "1.12.4"
+    const val junit = "4.13.2"
     const val mockwebserver = "5.0.0-alpha.2"
 }
 
