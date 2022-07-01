@@ -2,11 +2,9 @@ package no.nav.sosialhjelp.modia.app.cors
 
 import no.nav.sosialhjelp.modia.utils.MiljoUtils
 import org.springframework.stereotype.Component
-import java.io.IOException
 import javax.servlet.Filter
 import javax.servlet.FilterChain
 import javax.servlet.FilterConfig
-import javax.servlet.ServletException
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
@@ -17,11 +15,9 @@ class CORSFilter(
     private val miljoUtils: MiljoUtils
 ) : Filter {
 
-    @Throws(ServletException::class)
     override fun init(filterConfig: FilterConfig?) {
     }
 
-    @Throws(IOException::class, ServletException::class)
     override fun doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain) {
         val httpResponse = servletResponse as HttpServletResponse
         val origin = if (servletRequest is HttpServletRequest) (servletRequest.getHeader("Origin")) else null
