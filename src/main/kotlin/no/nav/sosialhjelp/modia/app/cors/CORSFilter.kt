@@ -1,7 +1,6 @@
 package no.nav.sosialhjelp.modia.app.cors
 
 import no.nav.sosialhjelp.modia.utils.MiljoUtils
-import org.springframework.stereotype.Component
 import javax.servlet.Filter
 import javax.servlet.FilterChain
 import javax.servlet.FilterConfig
@@ -10,7 +9,7 @@ import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-@Component
+// @Component
 class CORSFilter(
     private val miljoUtils: MiljoUtils
 ) : Filter {
