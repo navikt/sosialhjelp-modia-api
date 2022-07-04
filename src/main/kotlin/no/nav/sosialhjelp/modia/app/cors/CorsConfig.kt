@@ -1,9 +1,7 @@
 package no.nav.sosialhjelp.modia.app.cors
 
 import no.nav.sosialhjelp.modia.utils.MiljoUtils
-import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
-import org.springframework.core.Ordered
 import org.springframework.stereotype.Component
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -15,9 +13,9 @@ class CorsConfig(
 ) {
 
     @Bean
-    fun corsFilter(): FilterRegistrationBean<CorsFilter> {
+    fun corsFilter(): CorsFilter {
         val source = UrlBasedCorsConfigurationSource()
-        val bean = FilterRegistrationBean<CorsFilter>()
+//        val bean = FilterRegistrationBean<CorsFilter>()
         val config = CorsConfiguration()
         config.allowedOrigins = allowedOrigins
         config.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
@@ -25,10 +23,11 @@ class CorsConfig(
 //        config.allowCredentials = true
         config.maxAge = 3600L
         source.registerCorsConfiguration("/**", config)
-        val corsFilter = CorsFilter(source)
-        bean.filter = corsFilter
-        bean.order = Ordered.HIGHEST_PRECEDENCE
-        return bean
+//        val corsFilter = CorsFilter(source)
+//        bean.filter = corsFilter
+//        bean.order = Ordered.HIGHEST_PRECEDENCE
+//        return bean
+        return CorsFilter(source)
     }
 
     private val allowedOrigins: List<String>
