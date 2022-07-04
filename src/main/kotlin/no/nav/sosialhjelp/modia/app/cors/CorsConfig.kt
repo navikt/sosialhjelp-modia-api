@@ -20,7 +20,7 @@ class CorsConfig(
         config.allowedOrigins = allowedOrigins
         config.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
         config.allowedHeaders = listOf("Origin", "Content-Type", "Accept", "X-XSRF-TOKEN", "Authorization", "Nav-Call-Id")
-//        config.allowCredentials = true
+        config.allowCredentials = true
         config.maxAge = 3600L
         source.registerCorsConfiguration("/**", config)
 //        val corsFilter = CorsFilter(source)
