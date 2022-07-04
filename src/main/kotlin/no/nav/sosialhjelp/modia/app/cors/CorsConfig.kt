@@ -22,7 +22,7 @@ class CorsConfig(
         config.allowedOrigins = allowedOrigins
         config.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
         config.allowedHeaders = listOf("Origin", "Content-Type", "Accept", "X-XSRF-TOKEN", "Authorization", "Nav-Call-Id")
-        config.allowCredentials = isRunningInProd
+        config.allowCredentials = true
         config.maxAge = 3600L
         config.addAllowedHeader("Content-type")
         source.registerCorsConfiguration("/**", config)
@@ -41,6 +41,10 @@ class CorsConfig(
         private val ALLOWED_ORIGINS_PROD = listOf(
             "https://sosialhjelp-modia-api.intern.nav.no"
         )
-        private val ALLOWED_ORIGINS_NON_PROD = listOf("*")
+        private val ALLOWED_ORIGINS_NON_PROD = listOf(
+            "https://sosialhjelp-modia-api.dev.intern.nav.no",
+            "https://sosialhjelp-modia-api-mock.dev.nav.no",
+            "https://sosialhjelp-modia-api.labs.nais.io"
+        )
     }
 }
