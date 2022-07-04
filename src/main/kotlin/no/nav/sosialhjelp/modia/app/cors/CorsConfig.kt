@@ -19,7 +19,7 @@ class CorsConfig(
         val source = UrlBasedCorsConfigurationSource()
         val bean = FilterRegistrationBean<CorsFilter>()
         val config = CorsConfiguration()
-        config.allowedOrigins = allowedOrigins()
+        config.allowedOrigins = allowedOrigins
         config.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
         config.allowedHeaders = listOf("Origin", "Content-Type", "Accept", "X-XSRF-TOKEN", "Authorization", "Nav-Call-Id")
         config.allowCredentials = isRunningInProd
@@ -32,9 +32,8 @@ class CorsConfig(
         return bean
     }
 
-    private fun allowedOrigins(): List<String> {
-        return if (isRunningInProd) ALLOWED_ORIGINS_PROD else ALLOWED_ORIGINS_NON_PROD
-    }
+    private val allowedOrigins: List<String>
+        get() = if (isRunningInProd) ALLOWED_ORIGINS_PROD else ALLOWED_ORIGINS_NON_PROD
 
     private val isRunningInProd get() = miljoUtils.isRunningInProd()
 
