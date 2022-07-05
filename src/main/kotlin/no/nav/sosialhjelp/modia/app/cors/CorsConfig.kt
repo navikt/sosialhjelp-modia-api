@@ -32,9 +32,7 @@ class CorsConfig(
     }
 
     private val allowedOrigins: List<String>
-        get() = if (isRunningInProd) ALLOWED_ORIGINS_PROD else ALLOWED_ORIGINS_NON_PROD
-
-    private val isRunningInProd get() = miljoUtils.isRunningInProd()
+        get() = if (miljoUtils.isRunningInProd()) ALLOWED_ORIGINS_PROD else ALLOWED_ORIGINS_NON_PROD
 
     companion object {
         private val ALLOWED_ORIGINS_PROD = listOf(
