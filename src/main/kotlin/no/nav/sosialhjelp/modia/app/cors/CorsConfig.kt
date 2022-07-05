@@ -36,15 +36,11 @@ class CorsConfig(
 
     companion object {
         private val ALLOWED_ORIGINS_PROD = listOf(
-            "https://sosialhjelp-modia-api.intern.nav.no",
             "https://sosialhjelp-modia.intern.nav.no"
         )
         private val ALLOWED_ORIGINS_NON_PROD = listOf(
-            "https://sosialhjelp-modia-api.dev.intern.nav.no",
             "https://sosialhjelp-modia.dev.intern.nav.no",
-            "https://sosialhjelp-modia-api-mock.dev.nav.no",
             "https://sosialhjelp-modia-mock.dev.nav.no",
-            "https://sosialhjelp-modia-api.labs.nais.io",
             "https://sosialhjelp-modia.labs.nais.io"
         )
     }
