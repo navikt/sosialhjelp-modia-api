@@ -19,7 +19,7 @@
     "PDL_SCOPE": "api://dev-fss.pdl.pdl-api/.default",
     "SKJERMEDE_PERSONER_ENDPOINT_URL": "https://skjermede-personer-pip.dev.intern.nav.no",
     "SKJERMEDE_PERSONER_SCOPE": "api://dev-gcp.nom.skjermede-personer-pip/.default",
-    "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local",
+    "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.cluster.local",
     "CACHE_TIME_TO_LIVE_SECONDS": "60",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
     "UNLEASH_INSTANCE_ID": "dev-gcp",
