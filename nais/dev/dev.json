@@ -9,7 +9,7 @@
     "fiks-integrasjon-secret"
   ],
   "env": {
-    "SPRING_PROFILES_ACTIVE": "dev|log-kibana,log-audit",
+    "SPRING_PROFILES_ACTIVE": "dev,log-kibana,log-audit",
     "AZURE_GRAPH_API_URL": "https://graph.microsoft.com/v1.0",
     "VEILEDER_GRUPPE_ID": "55f10d2b-f3ac-4d85-b989-655145ab5f30",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.test.ks.no",
