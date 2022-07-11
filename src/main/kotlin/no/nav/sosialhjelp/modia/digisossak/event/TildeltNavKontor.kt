@@ -27,7 +27,7 @@ fun InternalDigisosSoker.apply(
 
     val destinasjon = try {
         val navn = norgClient.hentNavEnhet(hendelse.navKontor)?.navn
-        navenhetsnavnOrDefault(navn)
+        if (navn.isNullOrEmpty()) "[Kan ikke hente NAV-kontor for \"${hendelse.navKontor}\"]" else navn
     } catch (e: NorgException) {
         "et annet NAV-kontor"
     }
