@@ -106,11 +106,11 @@ internal class TildeltNavKontorTest {
         assertThat(last.type).isEqualTo(SendingType.VIDERESENDT)
         assertThat(last.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
         assertThat(last.navEnhetsnummer).isEqualTo("")
-        assertThat(last.navEnhetsnavn).isEqualTo(DEFAULT_NAVENHETSNAVN)
+        assertThat(last.navEnhetsnavn).isEqualTo("[Kan ikke hente NAV-kontor for \"\"]")
 
         val hendelse = model.historikk.last()
         assertThat(hendelse.tittel).isEqualTo(SOKNAD_VIDERESENDT)
-        assertThat(hendelse.beskrivelse).contains(DEFAULT_NAVENHETSNAVN)
+        assertThat(hendelse.beskrivelse).contains("[Kan ikke hente NAV-kontor for \"\"]")
     }
 
     @Test
