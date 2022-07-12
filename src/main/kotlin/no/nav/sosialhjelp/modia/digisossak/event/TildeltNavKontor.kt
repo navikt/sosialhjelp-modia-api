@@ -6,6 +6,7 @@ import no.nav.sosialhjelp.modia.digisossak.domain.Hendelse
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.digisossak.domain.NavKontorInformasjon
 import no.nav.sosialhjelp.modia.digisossak.domain.SendingType
+import no.nav.sosialhjelp.modia.digisossak.domain.Soknadsmottaker
 import no.nav.sosialhjelp.modia.digisossak.event.Titler.SOKNAD_VIDERESENDT
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.toLocalDateTime
@@ -31,7 +32,8 @@ fun InternalDigisosSoker.apply(
     } catch (e: NorgException) {
         "et annet NAV-kontor"
     }
-    val beskrivelse = "Søknaden med vedlegg er videresendt og mottatt ved $destinasjon, {{kommunenavn}}. Videresendingen vil ikke påvirke saksbehandlingstiden."
+    soknadsmottaker = Soknadsmottaker(hendelse.navKontor, destinasjon)
+    val beskrivelse = "Søknaden med vedlegg er videresendt og mottatt ved $destinasjon. Videresendingen vil ikke påvirke saksbehandlingstiden."
     historikk.add(Hendelse(SOKNAD_VIDERESENDT, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
     navKontorHistorikk.add(NavKontorInformasjon(SendingType.VIDERESENDT, hendelse.hendelsestidspunkt.toLocalDateTime(), hendelse.navKontor, destinasjon))
 }

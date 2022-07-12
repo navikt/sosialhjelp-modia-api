@@ -43,7 +43,7 @@ class EventService(
             val navenhetsnavn = getNavenhetsnavnOrDefault(enhetsnummer)
 
             model.soknadsmottaker = Soknadsmottaker(enhetsnummer, navenhetsnavn)
-            model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til $navenhetsnavn, {{kommunenavn}}.", unixToLocalDateTime(timestampSendt), VIS_SOKNADEN))
+            model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til $navenhetsnavn.", unixToLocalDateTime(timestampSendt), VIS_SOKNADEN))
             model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, unixToLocalDateTime(timestampSendt), enhetsnummer, navenhetsnavn))
         }
 
