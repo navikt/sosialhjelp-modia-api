@@ -74,4 +74,6 @@ private fun Vilkar.oppdaterFelter(hendelse: JsonVilkar) {
     datoSistEndret = hendelse.hendelsestidspunkt.toLocalDateTime()
     beskrivelse = hendelse.beskrivelse
     utbetalingsReferanse = hendelse.utbetalingsreferanse
+    saksreferanse = hendelse.saksreferanse
+    status = OppgaveStatus.valueOf(hendelse.status.value())
 }
