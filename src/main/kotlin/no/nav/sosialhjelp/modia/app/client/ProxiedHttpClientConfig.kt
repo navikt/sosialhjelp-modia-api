@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import reactor.netty.http.client.HttpClient
 
-@Profile("!(mock-alt|local)")
+@Profile("!(dev|mock-alt|local)")
 @Configuration
 class ProxiedHttpClientConfig {
 
@@ -17,7 +17,7 @@ class ProxiedHttpClientConfig {
     fun proxiedHttpClient(): HttpClient = proxiedHttpClient(proxyUrl)
 }
 
-@Profile("mock-alt|local")
+@Profile("dev|mock-alt|local")
 @Configuration
 class MockProxiedHttpClientConfig {
 

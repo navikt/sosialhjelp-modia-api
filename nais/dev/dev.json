@@ -1,0 +1,42 @@
+{
+  "applicationName": "sosialhjelp-modia-api-dev",
+  "namespace": "teamdigisos",
+  "ingress": [
+    "https://sosialhjelp-modia-api-dev.dev.nav.no/sosialhjelp/modia-api"
+  ],
+  "envsecret": [
+    "redis-password-modia-api",
+    "fiks-integrasjon-secret"
+  ],
+  "env": {
+    "SPRING_PROFILES_ACTIVE": "dev,log-console,log-audit",
+    "AZURE_GRAPH_API_URL": "https://graph.microsoft.com/v1.0",
+    "VEILEDER_GRUPPE_ID": "55f10d2b-f3ac-4d85-b989-655145ab5f30",
+    "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.test.ks.no",
+    "NORG_ENDPOINT_URL": "https://norg2.dev.adeo.no/norg2/api/v1",
+    "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.adeo.no/#/startsok?enhetNr=",
+    "PDL_ENDPOINT_URL": "https://pdl-api.nais.preprod.local/graphql",
+    "PDL_SCOPE": "api://dev-fss.pdl.pdl-api/.default",
+    "SKJERMEDE_PERSONER_ENDPOINT_URL": "https://skjermede-personer-pip.dev.intern.nav.no",
+    "SKJERMEDE_PERSONER_SCOPE": "api://dev-gcp.nom.skjermede-personer-pip/.default",
+    "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.cluster.local",
+    "CACHE_TIME_TO_LIVE_SECONDS": "60",
+    "UNLEASH_API_URL": "https://unleash.nais.io/api",
+    "UNLEASH_INSTANCE_ID": "dev-gcp",
+    "SWAGGER_ENABLED": "true",
+    "BERGEN_KOMMUNENUMMER": "3002",
+    "STAVANGER_KOMMUNENUMMER": "1103"
+  },
+  "minReplicas": "1",
+  "maxReplicas": "1",
+  "cpuLimit": "500m",
+  "memoryLimit": "1Gi",
+  "cpuRequest": "10m",
+  "memoryRequest": "512Mi",
+  "prometheusEnabled": true,
+  "webProxyEnabled": false,
+  "isLabsGcp": false,
+  "dev": true,
+  "azureEnabled": true,
+  "maskinportenEnabled": true
+}
