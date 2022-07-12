@@ -16,7 +16,7 @@ class KommunenavnService(
         if (sistOppdatert.isBefore(LocalDateTime.now().minusDays(1))) {
             oppdaterKommunenavnMap()
         }
-        return kommunenavnMap[kommunenummer] ?: "[Kan ikke hente kommune]"
+        return kommunenavnMap[kommunenummer] ?: "[Kan ikke hente kommune for kommunenummer \"$kommunenummer\"]"
     }
 
     private fun oppdaterKommunenavnMap() {
