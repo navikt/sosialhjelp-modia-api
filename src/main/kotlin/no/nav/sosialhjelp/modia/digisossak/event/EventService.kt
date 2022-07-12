@@ -43,7 +43,7 @@ class EventService(
             val navenhetsnavn = getNavenhetsnavnOrDefault(enhetsnummer)
 
             model.soknadsmottaker = Soknadsmottaker(enhetsnummer, navenhetsnavn)
-            model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til $navenhetsnavn, {{kommunenavn}}.", unixToLocalDateTime(timestampSendt), VIS_SOKNADEN))
+            model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til $navenhetsnavn.", unixToLocalDateTime(timestampSendt), VIS_SOKNADEN))
             model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, unixToLocalDateTime(timestampSendt), enhetsnummer, navenhetsnavn))
         }
 
@@ -59,9 +59,9 @@ class EventService(
     }
 
     private fun getNavenhetsnavnOrDefault(enhetsnummer: String): String {
-        if (enhetsnummer.isEmpty()) return DEFAULT_NAVENHETSNAVN
+        if (enhetsnummer.isEmpty()) return "[Kan ikke hente NAV-kontor uten enhetsnummer]"
         val navn = norgClient.hentNavEnhet(enhetsnummer)?.navn
-        return navenhetsnavnOrDefault(navn)
+        return if (navn.isNullOrEmpty()) "[Kan ikke hente NAV-kontor for enhetsnummer: \"$enhetsnummer]\"" else navn
     }
 
     fun createSoknadsoversiktModel(digisosSak: DigisosSak): InternalDigisosSoker {

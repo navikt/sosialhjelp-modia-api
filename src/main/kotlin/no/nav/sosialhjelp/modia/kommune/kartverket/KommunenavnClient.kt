@@ -9,11 +9,11 @@ import reactor.netty.http.client.HttpClient
 
 @Component
 class KommunenavnClient(
-    private val webClientBuilder: WebClient.Builder,
-    private val proxiedHttpClient: HttpClient
+    webClientBuilder: WebClient.Builder,
+    proxiedHttpClient: HttpClient
 ) {
-    private val kommunenavnWebClient: WebClient
-        get() = webClientBuilder
+    private val kommunenavnWebClient: WebClient =
+        webClientBuilder
             .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)

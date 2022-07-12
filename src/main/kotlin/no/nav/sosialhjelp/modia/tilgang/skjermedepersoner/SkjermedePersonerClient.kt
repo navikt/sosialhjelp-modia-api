@@ -30,14 +30,14 @@ interface SkjermedePersonerClient {
 @Profile("!test")
 @Component
 class SkjermedePersonerClientImpl(
-    private val webClientBuilder: WebClient.Builder,
+    webClientBuilder: WebClient.Builder,
     private val azuredingsService: AzuredingsService,
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
 ) : SkjermedePersonerClient {
 
-    private val skjermedePersonerWebClient: WebClient
-        get() = webClientBuilder
+    private val skjermedePersonerWebClient: WebClient =
+        webClientBuilder
             .clientConnector(ReactorClientHttpConnector(unproxiedHttpClient()))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)

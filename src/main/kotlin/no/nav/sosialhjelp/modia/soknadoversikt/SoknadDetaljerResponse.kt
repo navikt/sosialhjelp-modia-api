@@ -6,6 +6,7 @@ data class SoknadDetaljerResponse(
     val fiksDigisosId: String,
     val soknadTittel: String,
     val status: SoknadsStatus,
-    val manglerOpplysninger: Boolean,
+    val harOppgaver: Boolean,
+    val harDokumentasjonkrav: Boolean,
     val harVilkar: Boolean
 )

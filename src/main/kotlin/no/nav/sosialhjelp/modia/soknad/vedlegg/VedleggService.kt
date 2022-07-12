@@ -55,8 +55,13 @@ class VedleggService(
                             var vedleggbeskrivelse = vedlegg.tilleggsinfo
                             if (vedlegg.hendelseType?.value() == JsonHendelse.Type.DOKUMENTASJONKRAV.value()) {
                                 val saksreferanse = hentSaksreferanse(vedlegg, ettersendelse, model.dokumentasjonkrav)
-                                vedleggtittel = hentSakstittel(saksreferanse, model.saker)
-                                vedleggbeskrivelse = DOKUMENTASJONKRAV_UTEN_SAK_TITTEL
+                                val sakstittel = hentSakstittel(saksreferanse, model.saker)
+                                vedleggtittel = if (sakstittel == DOKUMENTASJONKRAV_UTEN_SAK_TITTEL) {
+                                    "Dokumentasjonskrav for stønaden"
+                                } else {
+                                    "Dokumentasjonskrav for saken " + sakstittel
+                                }
+                                vedleggbeskrivelse = ""
                             }
 
                             InternalVedlegg(

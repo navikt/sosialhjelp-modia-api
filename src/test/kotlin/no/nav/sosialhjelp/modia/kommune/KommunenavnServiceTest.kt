@@ -64,11 +64,11 @@ internal class KommunenavnServiceTest {
 
         val kommunenavn = service.hentKommunenavnFor(kommuneNr)
 
-        assertThat(kommunenavn).isEqualTo("[Kan ikke hente kommune]")
+        assertThat(kommunenavn).isEqualTo("[Kan ikke hente kommune for kommunenummer \"$kommuneNr\"]")
     }
 
     @Test
-    fun `Skal brukce cache på andre oppslag`() {
+    fun `Skal brukce cache pa andre oppslag`() {
         val containedItems: List<ContainedItem> = listOf(osloContainedItem)
         every { kommunenavnProperties.containeditems } returns containedItems
         every { kommunenavnClient.getAll() } returns kommunenavnProperties

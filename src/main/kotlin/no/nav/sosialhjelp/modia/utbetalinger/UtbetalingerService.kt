@@ -11,11 +11,12 @@ import no.nav.sosialhjelp.modia.digisossak.event.EventService
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.flatMapParallel
 import no.nav.sosialhjelp.modia.logger
-import org.joda.time.DateTime
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder.getRequestAttributes
 import org.springframework.web.context.request.RequestContextHolder.setRequestAttributes
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 @Component
 class UtbetalingerService(
@@ -71,20 +72,27 @@ class UtbetalingerService(
     }
 
     private fun isDigisosSakNewerThanMonths(digisosSak: DigisosSak, months: Int): Boolean {
-        return digisosSak.sistEndret >= DateTime.now().minusMonths(months).millis
+        return digisosSak.sistEndret >= LocalDateTime.now().minusMonths(months.toLong())
+            .toInstant(ZoneOffset.UTC).toEpochMilli()
     }
 
-    private fun isUtbetalingOrForfallInnenforIntervall(utbetaling: Utbetaling, fom: LocalDate?, tom: LocalDate?): Boolean {
+    private fun skalUtbetalingVisesInnenforPeriode(utbetaling: Utbetaling, fom: LocalDate?, tom: LocalDate?): Boolean {
         val range = when {
             fom != null && tom != null && (fom.isBefore(tom) || fom.isEqual(tom)) -> fom.rangeTo(tom)
             fom != null && tom == null -> fom.rangeTo(LocalDate.now())
             fom == null && tom != null -> LocalDate.now().minusYears(1).rangeTo(tom)
             else -> throw IllegalStateException("Fom og tom kan ikke begge være null")
         }
-
-        val utbetalingsDatoInnenfor = utbetaling.utbetalingsDato?.let { range.contains(it) } ?: false
-        val forfallsDatoInnenfor = utbetaling.forfallsDato?.let { range.contains(it) } ?: false
-        return utbetalingsDatoInnenfor || forfallsDatoInnenfor
+        val utbetalingFom = utbetaling.fom
+        val utbetalingTom = utbetaling.tom
+        return if (utbetalingFom != null && utbetalingTom != null) {
+            range.contains(utbetalingFom) || range.contains(utbetalingTom) ||
+                (utbetalingFom.isBefore(range.start) && utbetalingTom.isAfter(range.endInclusive))
+        } else {
+            val utbetalingsDatoInnenfor = utbetaling.utbetalingsDato?.let { range.contains(it) } ?: false
+            val forfallsDatoInnenfor = utbetaling.forfallsDato?.let { range.contains(it) } ?: false
+            utbetalingsDatoInnenfor || forfallsDatoInnenfor
+        }
     }
 
     private fun getUtbetalinger(digisosSak: DigisosSak): List<UtbetalingerResponse> {
@@ -105,7 +113,7 @@ class UtbetalingerService(
 
         return model.utbetalinger
             .filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
-            .filter { isUtbetalingOrForfallInnenforIntervall(it, fom, tom) }
+            .filter { skalUtbetalingVisesInnenforPeriode(it, fom, tom) }
             .map { utbetaling ->
                 utbetaling.infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(digisosSak.kommunenummer)
                 toUtbetalingResponse(utbetaling, digisosSak.fiksDigisosId, behandlendeNavKontor)
@@ -125,7 +133,7 @@ class UtbetalingerService(
             annenMottaker = utbetaling.annenMottaker,
             kontonummer = utbetaling.kontonummer,
             utbetalingsmetode = utbetaling.utbetalingsmetode,
-            harVilkar = !utbetaling.vilkar.isNullOrEmpty(),
+            harVilkar = utbetaling.vilkar.isNotEmpty(),
             navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }
         )
     }

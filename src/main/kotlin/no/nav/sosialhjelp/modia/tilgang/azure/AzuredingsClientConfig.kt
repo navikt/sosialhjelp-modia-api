@@ -15,8 +15,8 @@ class AzuredingsWebConfig(val tokenEndpoint: String)
 
 @Configuration
 class AzuredingsClientConfig(
-    private val webClientBuilder: WebClient.Builder,
-    private val proxiedHttpClient: HttpClient,
+    webClientBuilder: WebClient.Builder,
+    proxiedHttpClient: HttpClient,
     private val clientProperties: ClientProperties,
 ) {
     @Bean
@@ -27,8 +27,8 @@ class AzuredingsClientConfig(
         return AzuredingsWebConfig(wellKnown.token_endpoint)
     }
 
-    private val azuredingsWebClient: WebClient
-        get() = webClientBuilder
+    private val azuredingsWebClient: WebClient =
+        webClientBuilder
             .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)

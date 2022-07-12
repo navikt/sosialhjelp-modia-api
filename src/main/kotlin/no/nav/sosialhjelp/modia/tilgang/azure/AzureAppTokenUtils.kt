@@ -21,13 +21,13 @@ interface AzureAppTokenUtils {
 @Profile("!(mock-alt | local | test)")
 @Component
 class AzureAppTokenUtilsImpl(
-    private val webClientBuilder: WebClient.Builder,
-    private val proxiedHttpClient: HttpClient,
+    webClientBuilder: WebClient.Builder,
+    proxiedHttpClient: HttpClient,
     private val clientProperties: ClientProperties,
 ) : AzureAppTokenUtils {
 
-    private val azureAppTokenWebClient: WebClient
-        get() = webClientBuilder
+    private val azureAppTokenWebClient: WebClient =
+        webClientBuilder
             .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)

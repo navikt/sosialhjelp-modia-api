@@ -1,4 +1,4 @@
-package no.nav.sosialhjelp.modia.client.msgraph
+package no.nav.sosialhjelp.modia.app.msgraph
 
 import no.nav.sosialhjelp.modia.app.exceptions.MsGraphException
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
@@ -12,8 +12,8 @@ import reactor.netty.http.client.HttpClient
 
 @Component
 class MsGraphClient(
-    private val webClientBuilder: WebClient.Builder,
-    private val proxiedHttpClient: HttpClient
+    webClientBuilder: WebClient.Builder,
+    proxiedHttpClient: HttpClient
 ) {
 
     fun hentOnPremisesSamAccountName(accessToken: String): OnPremisesSamAccountName {
@@ -29,8 +29,8 @@ class MsGraphClient(
             .block()!!
     }
 
-    private val msGraphWebClient: WebClient
-        get() = webClientBuilder
+    private val msGraphWebClient: WebClient =
+        webClientBuilder
             .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)

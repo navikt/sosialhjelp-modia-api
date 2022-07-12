@@ -1,43 +1,45 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "no.nav.sosialhjelp"
 
 object Versions {
-    const val kotlin = "1.6.21"
-    const val coroutines = "1.6.1"
-    const val springBoot = "2.7.0"
+    const val kotlin = "1.7.0"
+    const val coroutines = "1.6.3"
+    const val springBoot = "2.7.1"
     const val logback = "1.2.11"
     const val logstash = "7.2"
-    const val sosialhjelpCommon = "1.3f8acf5"
+    const val sosialhjelpCommon = "1.0454405"
     const val filformat = "1.2022.04.29-13.11-459bee049a7a"
-    const val micrometerRegistry = "1.9.0"
-    const val prometheus = "0.15.0"
-    const val tokenValidation = "2.0.20"
+    const val micrometerRegistry = "1.9.1"
+    const val prometheus = "0.16.0"
+    const val tokenValidation = "2.1.1"
     const val jackson = "2.13.3"
     const val guava = "31.1-jre"
     const val logbackSyslog4j = "1.0.0"
-    const val javaJwt = "3.19.1"
+    const val javaJwt = "4.0.0"
     const val jwksRsa = "0.21.1"
     const val syslog4j = "0.9.46"
     const val lettuce = "6.1.8.RELEASE"
     const val unleash = "4.4.1"
-    const val springdoc = "1.6.8"
+    const val springdoc = "1.6.9"
     const val jsonSmart = "2.4.8"
     const val gson = "2.9.0"
-    const val junit = "4.13.2"
     const val log4j = "2.17.2"
 
     // Test only
     const val junitJupiter = "5.8.2"
     const val mockk = "1.12.4"
+    const val junit = "4.13.2"
     const val mockwebserver = "5.0.0-alpha.2"
 }
 
 plugins {
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.spring") version "1.6.21"
-    id("org.springframework.boot") version "2.7.0"
-    id("com.github.ben-manes.versions") version "0.42.0"
+    kotlin("jvm") version "1.7.0"
+    kotlin("plugin.spring") version "1.7.0"
+    id("org.springframework.boot") version "2.7.1"
+    id("com.github.ben-manes.versions") version "0.42.0" // ./gradlew dependencyUpdates
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
 
@@ -182,6 +184,13 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    testLogging {
+        events = setOf(TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+        exceptionFormat = TestExceptionFormat.FULL
+        showCauses = true
+        showExceptions = true
+        showStackTraces = true
+    }
 }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
