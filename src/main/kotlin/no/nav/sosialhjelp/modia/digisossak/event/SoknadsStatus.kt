@@ -25,9 +25,9 @@ fun InternalDigisosSoker.apply(hendelse: JsonSoknadsStatus) {
     val beskrivelse: String? = if (tittel == SOKNAD_MOTTATT) {
         val navEnhetsnavn = soknadsmottaker?.navEnhetsnavn
         if (navEnhetsnavn.isNullOrEmpty()) {
-            "Søknaden med vedlegg er mottatt ved [Kan ikke hente NAV-kontor for navEnhetsnavn \"$navEnhetsnavn\"], {{kommunenavn}}"
+            "Søknaden med vedlegg er mottatt ved [Kan ikke hente NAV-kontor]"
         } else {
-            "Søknaden med vedlegg er mottatt ved $navEnhetsnavn, {{kommunenavn}}."
+            "Søknaden med vedlegg er mottatt ved $navEnhetsnavn."
         }
     } else {
         null
