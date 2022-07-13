@@ -40,6 +40,7 @@ class CorsConfig(
         )
         private val ALLOWED_ORIGINS_NON_PROD = listOf(
             "https://sosialhjelp-modia-dev.dev.nav.no",
+            "https://digisos.dev.nav.no",
             "https://sosialhjelp-modia-mock.dev.nav.no",
             "https://sosialhjelp-modia.labs.nais.io"
         )
