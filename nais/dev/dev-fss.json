@@ -28,7 +28,7 @@
     "STAVANGER_KOMMUNENUMMER": "1103"
   },
   "minReplicas": "1",
-  "maxReplicas": "1",
+  "maxReplicas": "2",
   "cpuLimit": "500m",
   "memoryLimit": "1Gi",
   "cpuRequest": "10m",
