@@ -11,9 +11,6 @@ spec:
   azure:
     application:
       enabled: {{azureEnabled}}
-{{#if dev}}
-      tenant: trygdeetaten.no
-{{/if}}
 {{#if wonderwallEnabled}}
     sidecar:
       enabled: true

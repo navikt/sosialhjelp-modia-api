@@ -37,7 +37,6 @@
   "wonderwallEnabled": true,
   "webProxyEnabled": false,
   "isLabsGcp": false,
-  "dev": true,
   "azureEnabled": true,
   "maskinportenEnabled": true
 }
