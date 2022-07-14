@@ -40,12 +40,10 @@ spec:
       consumes:
         - name: "ks:fiks"
 {{/if}}
-{{#unless isLabsGcp}}
   envFrom:
 {{#each envsecret}}
     - secret: "{{this}}"
 {{/each}}
-{{/unless}}
   accessPolicy:
     inbound:
       rules:
