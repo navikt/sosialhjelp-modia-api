@@ -26,7 +26,7 @@
     "SKJERMEDE_PERSONER_SCOPE": "dummyScope",
     "MASKINPORTEN_WELL_KNOWN_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/well-known/maskinporten",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
-    "UNLEASH_INSTANCE_ID": "dev-mock",
+    "UNLEASH_INSTANCE_ID": "mock",
     "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.cluster.local",
     "SWAGGER_ENABLED": "true",
     "BERGEN_KOMMUNENUMMER": "0301",
