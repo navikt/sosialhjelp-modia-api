@@ -11,9 +11,6 @@ spec:
   azure:
     application:
       enabled: {{azureEnabled}}
-{{#if dev}}
-      tenant: trygdeetaten.no
-{{/if}}
 {{#if wonderwallEnabled}}
     sidecar:
       enabled: true
@@ -43,12 +40,10 @@ spec:
       consumes:
         - name: "ks:fiks"
 {{/if}}
-{{#unless isLabsGcp}}
   envFrom:
 {{#each envsecret}}
     - secret: "{{this}}"
 {{/each}}
-{{/unless}}
   accessPolicy:
     inbound:
       rules:
@@ -59,6 +54,7 @@ spec:
         - host: "register.geonorge.no"
         - host: "login.microsoftonline.com"
         - host: "unleash.nais.io"
+        - host: "api.fiks.test.ks.no"
       rules:
         - application: sosialhjelp-mock-alt-api-mock
         - application: sosialhjelp-modia-api-redis

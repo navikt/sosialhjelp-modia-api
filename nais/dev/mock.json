@@ -41,9 +41,6 @@
   "prometheusEnabled": true,
   "wonderwallEnabled": false,
   "webProxyEnabled": false,
-  "isGcp": true,
-  "isLabsGcp": false,
-  "dev": true,
   "azureEnabled": false,
   "maskinportenEnabled": false
 }
