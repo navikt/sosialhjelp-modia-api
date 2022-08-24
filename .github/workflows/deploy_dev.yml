@@ -12,15 +12,6 @@ on:
           - 'dev'
           - 'mock'
           - 'labs-gcp'
-      cluster:
-        description: 'Cluster å deploye til'
-        required: true
-        default: 'dev-fss'
-        type: choice
-        options:
-          - 'dev-gcp'
-          - 'dev-fss'
-          - 'labs-gcp'
 
 jobs:
   deploy:
@@ -45,7 +36,16 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         run: |
           echo "CLUSTER_NAME=${{ github.event.inputs.cluster }}" >> $GITHUB_ENV
-          echo "CONFIG_FILE=${{ github.event.inputs.config-file-name }}" >> $GITHUB_ENV
+      - name: Sett cluster basert på config-file
+        run: |
+          if [[ ${{ github.event.inputs.config-file-name }} = 'dev-fss' ]]; then
+            echo "CLUSTER_NAME=dev-fss" >> $GITHUB_ENV
+          elif [[ ${{ github.event.inputs.config-file-name }} = 'labs-gcp' ]]; then
+            echo "CLUSTER_NAME=labs-gcp" >> $GITHUB_ENV
+          else
+            echo "CLUSTER_NAME=dev-gcp" >> $GITHUB_ENV
+          fi
+          echo "Deployer til ${{ env.CLUSTER_NAME }}"
       - name: Deploy til dev
         uses: nais/deploy/actions/deploy@v1
         env:
