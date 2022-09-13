@@ -49,9 +49,19 @@ internal class FiksClientTest {
     private val auditService: AuditService = mockk()
     private val redisService: RedisService = mockk()
     private val unleash: Unleash = mockk()
-    private val retryProperties: FiksRetryProperties = mockk()
+    private val maxRetryAttempts = 2L
+    private val initialDelay = 2L
 
-    private val fiksClient = FiksClientImpl(fiksWebClient, clientProperties, maskinportenClient, auditService, redisService, unleash, retryProperties)
+    private val fiksClient = FiksClientImpl(
+        fiksWebClient = fiksWebClient,
+        clientProperties = clientProperties,
+        maskinportenClient = maskinportenClient,
+        auditService = auditService,
+        redisService = redisService,
+        unleash = unleash,
+        maxAttempts = maxRetryAttempts,
+        initialDelay = initialDelay
+    )
 
     private val id = "123"
 
@@ -69,10 +79,6 @@ internal class FiksClientTest {
         every { redisService.get(any(), any(), any()) } returns null
         every { redisService.set(any(), any(), any(), any()) } just Runs
         every { redisService.defaultTimeToLiveSeconds } returns 1
-
-        every { retryProperties.attempts } returns 2
-        every { retryProperties.initialDelay } returns 5
-        every { retryProperties.maxDelay } returns 10
 
         every { clientProperties.bergenKommunenummer } returns "1234"
         every { clientProperties.stavangerKommunenummer } returns "1111"
@@ -170,16 +176,17 @@ internal class FiksClientTest {
     }
 
     @Test
-    fun `GET DigisosSak feiler hvis Fiks gir 500`() {
-        every { retryProperties.attempts } returns 1
-
-        mockWebServer.enqueue(
-            MockResponse()
-                .setResponseCode(500)
-        )
+    fun `GET DigisosSak skal bruke retry hvis Fiks gir 5xx-feil`() {
+        repeat(maxRetryAttempts.toInt() + 1) {
+            mockWebServer.enqueue(
+                MockResponse()
+                    .setResponseCode(500)
+            )
+        }
 
         assertThatExceptionOfType(FiksServerException::class.java)
             .isThrownBy { fiksClient.hentDigisosSak(id) }
+        assertThat(mockWebServer.requestCount).isEqualTo(maxRetryAttempts + 1)
     }
 
     @Test
