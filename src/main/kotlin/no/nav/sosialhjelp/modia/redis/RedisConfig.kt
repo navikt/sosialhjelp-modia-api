@@ -2,7 +2,6 @@ package no.nav.sosialhjelp.modia.redis
 
 import io.lettuce.core.RedisClient
 import io.lettuce.core.RedisURI
-import no.nav.sosialhjelp.modia.logger
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -16,13 +15,10 @@ class RedisConfig {
 
     @Bean
     fun redisClient(properties: RedisProperties): RedisClient {
-        val redisUri = RedisURI.create(properties.host, properties.port)
-        redisUri.setPassword(properties.password as CharSequence)
+        val redisUri = RedisURI.Builder.redis(properties.host, properties.port)
+            .withPassword(properties.password as CharSequence)
+            .build()
 
         return RedisClient.create(redisUri)
-    }
-
-    companion object {
-        private val log by logger()
     }
 }
