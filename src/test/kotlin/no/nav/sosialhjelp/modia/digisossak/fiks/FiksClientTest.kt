@@ -9,8 +9,6 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import io.mockk.verify
-import mockwebserver3.MockResponse
-import mockwebserver3.MockWebServer
 import no.finn.unleash.Unleash
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
@@ -29,6 +27,8 @@ import no.nav.sosialhjelp.modia.responses.ok_digisossak_response_string
 import no.nav.sosialhjelp.modia.responses.ok_minimal_jsondigisossoker_response_string
 import no.nav.sosialhjelp.modia.utils.RequestUtils
 import no.nav.sosialhjelp.modia.utils.objectMapper
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.AfterEach
@@ -68,7 +68,6 @@ internal class FiksClientTest {
     @BeforeEach
     fun init() {
         clearAllMocks()
-        mockWebServer.start()
 
         mockkObject(RequestUtils)
         every { RequestUtils.getSosialhjelpModiaSessionId() } returns "abcdefghijkl"

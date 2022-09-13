@@ -34,7 +34,6 @@ object Versions {
     const val junitJupiter = "5.9.0"
     const val mockk = "1.12.7"
     const val junit = "4.13.2"
-    const val mockwebserver = "5.0.0-alpha.2"
 }
 
 plugins {
@@ -90,7 +89,6 @@ dependencies {
 //    Sosialhjelp-common
     implementation("no.nav.sosialhjelp:sosialhjelp-common-selftest:${Versions.sosialhjelpCommon}")
     implementation("no.nav.sosialhjelp:sosialhjelp-common-api:${Versions.sosialhjelpCommon}")
-    implementation("no.nav.sosialhjelp:sosialhjelp-common-kotlin-utils:${Versions.sosialhjelpCommon}")
 
 //    Micrometer/prometheus
     implementation("io.micrometer:micrometer-registry-prometheus:${Versions.micrometerRegistry}")
@@ -114,7 +112,6 @@ dependencies {
 
 //    Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jackson}")
-    implementation("com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}")
 
 //    Token-validation
     implementation("no.nav.security:token-validation-spring:${Versions.tokenValidation}")
@@ -134,7 +131,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junitJupiter}")
     testImplementation("io.mockk:mockk:${Versions.mockk}")
     testImplementation("no.nav.security:token-validation-spring-test:${Versions.tokenValidation}")
-    testImplementation("com.squareup.okhttp3:mockwebserver3-junit5:${Versions.mockwebserver}")
 
 //    Spesifikke versjoner oppgradert etter ønske fra snyk
     constraints {
