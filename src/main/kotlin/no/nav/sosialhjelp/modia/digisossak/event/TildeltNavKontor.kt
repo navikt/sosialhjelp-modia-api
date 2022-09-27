@@ -27,13 +27,26 @@ fun InternalDigisosSoker.apply(
     }
 
     val destinasjon = try {
-        val navn = norgClient.hentNavEnhet(hendelse.navKontor)?.navn
-        if (navn.isNullOrEmpty()) "[Kan ikke hente NAV-kontor for \"${hendelse.navKontor}\"]" else navn
+        norgClient.hentNavEnhet(hendelse.navKontor)?.navn?.takeUnless { it.isEmpty() }
+            ?: "[Kan ikke hente NAV-kontor for \"${hendelse.navKontor}\"]"
     } catch (e: NorgException) {
         "et annet NAV-kontor"
     }
-    soknadsmottaker = Soknadsmottaker(hendelse.navKontor, destinasjon)
+    soknadsmottaker = Soknadsmottaker(navEnhetsnummer = hendelse.navKontor, navEnhetsnavn = destinasjon)
     val beskrivelse = "Søknaden med vedlegg er videresendt og mottatt ved $destinasjon. Videresendingen vil ikke påvirke saksbehandlingstiden."
-    historikk.add(Hendelse(SOKNAD_VIDERESENDT, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
-    navKontorHistorikk.add(NavKontorInformasjon(SendingType.VIDERESENDT, hendelse.hendelsestidspunkt.toLocalDateTime(), hendelse.navKontor, destinasjon))
+    historikk.add(
+        Hendelse(
+            tittel = SOKNAD_VIDERESENDT,
+            beskrivelse = beskrivelse,
+            tidspunkt = hendelse.hendelsestidspunkt.toLocalDateTime()
+        )
+    )
+    navKontorHistorikk.add(
+        NavKontorInformasjon(
+            type = SendingType.VIDERESENDT,
+            tidspunkt = hendelse.hendelsestidspunkt.toLocalDateTime(),
+            navEnhetsnummer = hendelse.navKontor,
+            navEnhetsnavn = destinasjon
+        )
+    )
 }
