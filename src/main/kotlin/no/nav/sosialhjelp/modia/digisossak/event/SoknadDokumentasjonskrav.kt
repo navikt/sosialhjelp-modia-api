@@ -16,6 +16,14 @@ fun InternalDigisosSoker.applySoknadKrav(
 
     oppgaver = vedleggKreves
         .filterNot { it.type == "annet" && it.tilleggsinfo == "annet" }
-        .map { Oppgave(it.type, it.tilleggsinfo, null, unixToLocalDateTime(timestampSendt), false) }
+        .map {
+            Oppgave(
+                it.type,
+                it.tilleggsinfo,
+                null,
+                unixToLocalDateTime(timestampSendt),
+                false
+            )
+        }
         .toMutableList()
 }
