@@ -24,6 +24,7 @@ import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 
 @Component
 class EventService(
@@ -51,7 +52,8 @@ class EventService(
             ?.sortedWith(hendelseComparator)
             ?.forEach { model.applyHendelse(it) }
 
-        if (digisosSak.originalSoknadNAV != null && model.oppgaver.isEmpty()) {
+        val originalSoknadNAV = digisosSak.originalSoknadNAV
+        if (originalSoknadNAV != null && model.oppgaver.isEmpty() && soknadSendtForMindreEnn30DagerSiden(originalSoknadNAV.timestampSendt)) {
             model.applySoknadKrav(digisosSak, soknadVedleggService, timestampSendt!!)
         }
 
@@ -79,7 +81,8 @@ class EventService(
             .sortedWith(hendelseComparator)
             .forEach { model.applyHendelse(it) }
 
-        if (digisosSak.originalSoknadNAV != null && model.oppgaver.isEmpty()) {
+        val originalSoknadNAV = digisosSak.originalSoknadNAV
+        if (originalSoknadNAV != null && model.oppgaver.isEmpty() && soknadSendtForMindreEnn30DagerSiden(originalSoknadNAV.timestampSendt)) {
             model.applySoknadKrav(digisosSak, soknadVedleggService, timestampSendt!!)
         }
 
@@ -101,6 +104,9 @@ class EventService(
             else -> throw RuntimeException("Hendelsetype ${hendelse.type.value()} mangler mapping")
         }
     }
+
+    private fun soknadSendtForMindreEnn30DagerSiden(timestampSendt: Long) =
+        unixToLocalDateTime(timestampSendt).toLocalDate().isAfter(LocalDate.now().minusDays(30))
 
     companion object {
 
