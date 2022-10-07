@@ -79,6 +79,10 @@ class EventService(
             .sortedWith(hendelseComparator)
             .forEach { model.applyHendelse(it) }
 
+        if (digisosSak.originalSoknadNAV != null && model.oppgaver.isEmpty()) {
+            model.applySoknadKrav(digisosSak, soknadVedleggService, timestampSendt!!)
+        }
+
         return model
     }
 
