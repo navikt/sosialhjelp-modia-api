@@ -7,11 +7,8 @@ import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.app.client.RetryUtils.retryBackoffSpec
-import no.nav.sosialhjelp.modia.app.exceptions.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.app.maskinporten.MaskinportenClient
-import no.nav.sosialhjelp.modia.client.unleash.BERGEN_ENABLED
 import no.nav.sosialhjelp.modia.client.unleash.FIKS_CACHE_ENABLED
-import no.nav.sosialhjelp.modia.client.unleash.STAVANGER_ENABLED
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksPaths.PATH_ALLE_DIGISOSSAKER
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksPaths.PATH_DIGISOSSAK
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksPaths.PATH_DOKUMENT
@@ -114,9 +111,6 @@ class FiksClientImpl(
             }
             .block() ?: throw FiksServerException(500, "Fiks - DigisosSak nedlasting feilet!", null)
 
-        if (!harKommunenTilgangTilModia(digisosSak.kommunenummer)) {
-            throw ManglendeTilgangException("Fiks - DigisosSak tilhører en kommune uten tilgang!")
-        }
         if (!isDigisosSakNewerThanMonths(digisosSak, 15)) {
             throw FiksNotFoundException("Fiks - DigisosSak er for gammel!", null)
         }
@@ -195,19 +189,9 @@ class FiksClientImpl(
             .block() ?: throw FiksServerException(500, "Fiks - AlleDigisosSaker nedlasting feilet!", null)
 
         log.info("Hentet ${digisosSaker.size} saker fra Fiks (før filter.)")
-        return digisosSaker.filter { harKommunenTilgangTilModia(it.kommunenummer) }
+        return digisosSaker
             .filter { isDigisosSakNewerThanMonths(it, 15) }
             .also { auditService.reportFiks(fnr, baseUrl + PATH_ALLE_DIGISOSSAKER, HttpMethod.POST, sporingsId) }
-    }
-
-    private fun harKommunenTilgangTilModia(kommunenummer: String): Boolean {
-        if (unleash.isEnabled(BERGEN_ENABLED, false) && kommunenummer == clientProperties.bergenKommunenummer) {
-            return true
-        }
-        if (unleash.isEnabled(STAVANGER_ENABLED, false) && kommunenummer == clientProperties.stavangerKommunenummer) {
-            return true
-        }
-        return false
     }
 
     fun isDigisosSakNewerThanMonths(digisosSak: DigisosSak, months: Int): Boolean =
