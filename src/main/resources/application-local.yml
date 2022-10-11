@@ -23,8 +23,6 @@ client:
   pdl_endpoint_url: ${PDL_ENDPOINT_URL:pdl_endpoint_url}
   pdl_scope: ${PDL_SCOPE:pdl_scope}
   veileder_gruppe_id: ${VEILEDER_GRUPPE_ID:0000-MOCK-sosialhjelp-modia-veileder}
-  bergen_kommunenummer: ${BERGEN_KOMMUNENUMMER:0301}
-  stavanger_kommunenummer: ${STAVANGER_KOMMUNENUMMER:1103}
   azuredings_jwt_audience: ${AZURE_OPENID_CONFIG_ISSUER:dummyAudience}
   azuredings_url: ${AZURE_APP_WELL_KNOWN_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/azure-well-known/selvbetjening}
   azure_token_endpoint_url: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/azuretoken/selvbetjening}

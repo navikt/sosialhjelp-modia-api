@@ -47,8 +47,6 @@ client:
   pdl_endpoint_url: ${PDL_ENDPOINT_URL}
   pdl_scope: ${PDL_SCOPE}
   veileder_gruppe_id: ${VEILEDER_GRUPPE_ID}
-  bergen_kommunenummer: ${BERGEN_KOMMUNENUMMER}
-  stavanger_kommunenummer: ${STAVANGER_KOMMUNENUMMER}
   azure_token_endpoint_url: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
   azuredings_url: ${AZURE_APP_WELL_KNOWN_URL}
   azuredings_jwt_audience: ${AZURE_OPENID_CONFIG_ISSUER}

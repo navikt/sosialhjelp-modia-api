@@ -18,8 +18,6 @@ client:
   fiks_integrasjonpassord: "pwd"
   fiks_integrasjonpassord_kommune: "pwdcom"
   pdl_endpoint_url: 'http://localhost:56666'
-  bergen_kommunenummer: '4601'
-  stavanger_kommunenummer: '1103'
   unleash_url: "http://localhost:58888"
   unleash_instance_id: "local"
 

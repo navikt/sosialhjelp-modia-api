@@ -19,9 +19,6 @@ class ClientProperties {
 
     lateinit var veilederGruppeId: String
 
-    lateinit var bergenKommunenummer: String
-    lateinit var stavangerKommunenummer: String
-
     lateinit var azureTokenEndpointUrl: String
     lateinit var azureClientId: String
     lateinit var azureClientSecret: String
