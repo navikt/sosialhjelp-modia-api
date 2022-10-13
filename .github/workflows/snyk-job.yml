@@ -26,3 +26,5 @@ jobs:
         run: snyk monitor --org=teamdigisos --project-name=${{ env.REPOSITORY_NAME }} --remote-repo-url=${{ env.REPOSITORY_NAME }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          ORG_GRADLE_PROJECT_githubUser: x-access-token
+          ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.GITHUB_TOKEN }}

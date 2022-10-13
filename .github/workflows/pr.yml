@@ -17,3 +17,5 @@ jobs:
         run: snyk test --org=teamdigisos --project-name=${{ github.event.repository.name }} --remote-repo-url=${{ github.event.repository.name }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          ORG_GRADLE_PROJECT_githubUser: x-access-token
+          ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.GITHUB_TOKEN }}
