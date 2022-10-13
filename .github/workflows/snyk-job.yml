@@ -14,12 +14,16 @@ jobs:
       - name: Get repository-name
         run: echo "REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
         shell: bash
-      - uses: actions/checkout@v2
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/gradle-jdk11@master
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
-          command: monitor
-          args: --org=teamdigisos --project-name=${{ env.REPOSITORY_NAME }} --remote-repo-url=${{ env.REPOSITORY_NAME }}
+          java-version: "17"
+          distribution: "temurin"
+          cache: "gradle"
+      - name: Install Snyk CLI
+        uses: snyk/actions/setup@master
+      - name: Run Snyk to check for vulnerabilities
+        run: snyk monitor --org=teamdigisos --project-name=${{ env.REPOSITORY_NAME }} --remote-repo-url=${{ env.REPOSITORY_NAME }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           ORG_GRADLE_PROJECT_githubUser: x-access-token
