@@ -13,6 +13,10 @@ class MiljoUtils {
         return activeProfile.contains(MOCK_ALT) || activeProfile.contains(LOCAL)
     }
 
+    fun isProfileLocal(): Boolean {
+        return activeProfile.contains(LOCAL)
+    }
+
     fun isRunningInProd(): Boolean {
         return activeProfile.contains(PROD_FSS)
     }
