@@ -12,7 +12,7 @@ data class SoknadNoekkelinfoResponse(
     @JsonFormat(pattern = "yyyy-MM-dd")
     val sistOppdatert: LocalDate,
     @JsonFormat(pattern = "yyyy-MM-dd")
-    val sendtEllerMottattTidspunkt: LocalDate,
+    val sendtEllerMottattTidspunkt: LocalDate?,
     val navKontor: NavKontor?,
     val kommunenavn: String,
     val videresendtHistorikk: List<VideresendtInfo>?,
