@@ -49,7 +49,7 @@ class UtbetalingerService(
     private fun loggMuligeDuplikater(utbetalingList: List<UtbetalingerResponse>) {
         utbetalingList.groupBy { it.belop }.values.filter { it.size > 1 }.forEach { list ->
             val strings = list.joinToString {
-                "DigisosId=${it.fiksDigisosId} status=${it.status} utbetalingEllerForfallsdato=${it.utbetalingEllerForfallDigisosSoker} fom=${it.fom} tom=${it.tom}"
+                "DigisosId=${it.fiksDigisosId} status=${it.status} tittel=${it.tittel} utbetalingEllerForfallsdato=${it.utbetalingEllerForfallDigisosSoker} fom=${it.fom} tom=${it.tom}"
             }
             log.info("Mulig duplikate utbetalinger: [$strings]")
         }
