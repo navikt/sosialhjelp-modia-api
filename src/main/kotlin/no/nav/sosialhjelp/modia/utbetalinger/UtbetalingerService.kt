@@ -47,7 +47,7 @@ class UtbetalingerService(
     }
 
     private fun loggMuligeDuplikater(utbetalingList: List<UtbetalingerResponse>) {
-        utbetalingList.groupBy { it.belop }.values.filter { it.size > 1 }.forEach { list ->
+        utbetalingList.groupBy { "${it.belop}_${it.utbetalingEllerForfallDigisosSoker}_${it.fom}_${it.tom}" }.values.filter { it.size > 1 }.forEach { list ->
             val strings = list.joinToString {
                 "DigisosId=${it.fiksDigisosId} status=${it.status} tittel=${it.tittel} utbetalingEllerForfallsdato=${it.utbetalingEllerForfallDigisosSoker} fom=${it.fom} tom=${it.tom}"
             }
