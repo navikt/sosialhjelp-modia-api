@@ -32,15 +32,27 @@ class UtbetalingerService(
             return emptyList()
         }
 
-        return when {
+        val utbetalingList = when {
             fom == null && tom == null -> utbetalingerSisteManeder(digisosSaker, months)
             else -> hentUtbetalingerForIntervall(digisosSaker, fom, tom)
         }
+        loggMuligeDuplikater(utbetalingList)
+        return utbetalingList
     }
 
     fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
-        return getUtbetalinger(digisosSak)
-            .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
+        val utbetalingList = getUtbetalinger(digisosSak).sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
+        loggMuligeDuplikater(utbetalingList)
+        return utbetalingList
+    }
+
+    private fun loggMuligeDuplikater(utbetalingList: List<UtbetalingerResponse>) {
+        utbetalingList.groupBy { "${it.belop}_${it.utbetalingEllerForfallDigisosSoker}_${it.fom}_${it.tom}" }.values.filter { it.size > 1 }.forEach { list ->
+            val strings = list.joinToString {
+                "DigisosId=${it.fiksDigisosId} status=${it.status} tittel=${it.tittel} utbetalingEllerForfallsdato=${it.utbetalingEllerForfallDigisosSoker} fom=${it.fom} tom=${it.tom}"
+            }
+            log.info("Mulig duplikate utbetalinger: [$strings]")
+        }
     }
 
     private fun utbetalingerSisteManeder(digisosSaker: List<DigisosSak>, months: Int): List<UtbetalingerResponse> {
