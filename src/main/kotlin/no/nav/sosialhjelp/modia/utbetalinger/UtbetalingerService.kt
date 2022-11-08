@@ -83,16 +83,10 @@ class UtbetalingerService(
             fom == null && tom != null -> LocalDate.now().minusYears(1).rangeTo(tom)
             else -> throw IllegalStateException("Fom og tom kan ikke begge være null")
         }
-        val utbetalingFom = utbetaling.fom
-        val utbetalingTom = utbetaling.tom
-        return if (utbetalingFom != null && utbetalingTom != null) {
-            range.contains(utbetalingFom) || range.contains(utbetalingTom) ||
-                (utbetalingFom.isBefore(range.start) && utbetalingTom.isAfter(range.endInclusive))
-        } else {
-            val utbetalingsDatoInnenfor = utbetaling.utbetalingsDato?.let { range.contains(it) } ?: false
-            val forfallsDatoInnenfor = utbetaling.forfallsDato?.let { range.contains(it) } ?: false
-            utbetalingsDatoInnenfor || forfallsDatoInnenfor
-        }
+
+        val utbetalingsDatoInnenfor = utbetaling.utbetalingsDato?.let { range.contains(it) } ?: false
+        val forfallsDatoInnenfor = utbetaling.forfallsDato?.let { range.contains(it) } ?: false
+        return utbetalingsDatoInnenfor || forfallsDatoInnenfor
     }
 
     private fun getUtbetalinger(digisosSak: DigisosSak): List<UtbetalingerResponse> {
