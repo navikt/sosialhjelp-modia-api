@@ -29,7 +29,7 @@
   "maxReplicas": "4",
   "cpuLimit": "500m",
   "memoryLimit": "1Gi",
-  "cpuRequest": "10m",
+  "cpuRequest": "25m",
   "memoryRequest": "512Mi",
   "prometheusEnabled": true,
   "wonderwallEnabled": false,
