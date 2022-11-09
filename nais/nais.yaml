@@ -30,6 +30,7 @@ spec:
     enabled: {{prometheusEnabled}}
     path: /sosialhjelp/modia-api/internal/prometheus
   replicas:
+    cpuThresholdPercentage: 70
     min: {{minReplicas}}
     max: {{maxReplicas}}
   webproxy: {{webProxyEnabled}}
