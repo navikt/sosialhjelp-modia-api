@@ -3,13 +3,16 @@ package no.nav.sosialhjelp.modia.responses
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-fun ok_digisossak_response_string(sistEndret: LocalDateTime = LocalDateTime.now().minusMonths(1)): String {
+fun ok_digisossak_response_string(
+    sistEndret: LocalDateTime = LocalDateTime.now().minusMonths(1),
+    kommunenummer: String = "1111"
+): String {
     return """
 {
   "fiksDigisosId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "sokerFnr": "11111111111",
   "fiksOrgId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "kommunenummer": "1111",
+  "kommunenummer": $kommunenummer,
   "sistEndret": ${sistEndret.toInstant(ZoneOffset.UTC).toEpochMilli()},
   "originalSoknadNAV": {
     "navEksternRefId": "11000001",

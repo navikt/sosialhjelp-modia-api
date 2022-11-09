@@ -12,6 +12,7 @@ import no.nav.sosialhjelp.modia.client.unleash.FIKS_CACHE_ENABLED
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksPaths.PATH_ALLE_DIGISOSSAKER
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksPaths.PATH_DIGISOSSAK
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksPaths.PATH_DOKUMENT
+import no.nav.sosialhjelp.modia.kommune.KommuneService
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.logging.AuditService
 import no.nav.sosialhjelp.modia.maskerFnr
@@ -41,6 +42,7 @@ class FiksClientImpl(
     private val fiksWebClient: WebClient,
     private val clientProperties: ClientProperties,
     private val maskinportenClient: MaskinportenClient,
+    private val kommuneService: KommuneService,
     private val auditService: AuditService,
     private val redisService: RedisService,
     private val unleash: Unleash,
@@ -191,12 +193,17 @@ class FiksClientImpl(
         log.info("Hentet ${digisosSaker.size} saker fra Fiks (før filter.)")
         return digisosSaker
             .filter { isDigisosSakNewerThanMonths(it, 15) }
+            .filter { kommuneHasActivatedInnsynNKS(it) }
             .also { auditService.reportFiks(fnr, baseUrl + PATH_ALLE_DIGISOSSAKER, HttpMethod.POST, sporingsId) }
     }
 
-    fun isDigisosSakNewerThanMonths(digisosSak: DigisosSak, months: Int): Boolean =
+    private fun isDigisosSakNewerThanMonths(digisosSak: DigisosSak, months: Int): Boolean =
         digisosSak.sistEndret >= LocalDateTime.now().minusMonths(months.toLong())
             .toInstant(ZoneOffset.UTC).toEpochMilli()
+
+    private fun kommuneHasActivatedInnsynNKS(digisosSak: DigisosSak): Boolean {
+        return kommuneService.get(digisosSak.kommunenummer).harNksTilgang
+    }
 
     private fun genererSporingsId(): String = UUID.randomUUID().toString()
 

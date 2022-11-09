@@ -17,6 +17,7 @@ import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.app.maskinporten.MaskinportenClient
 import no.nav.sosialhjelp.modia.client.unleash.FIKS_CACHE_ENABLED
+import no.nav.sosialhjelp.modia.kommune.KommuneService
 import no.nav.sosialhjelp.modia.logging.AuditService
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.responses.ok_digisossak_response_string
@@ -42,6 +43,7 @@ internal class FiksClientTest {
     private val fiksWebClient = WebClient.create(mockWebServer.url("/").toString())
     private val clientProperties: ClientProperties = mockk(relaxed = true)
     private val maskinportenClient: MaskinportenClient = mockk()
+    private val kommuneService: KommuneService = mockk()
     private val auditService: AuditService = mockk()
     private val redisService: RedisService = mockk()
     private val unleash: Unleash = mockk()
@@ -52,6 +54,7 @@ internal class FiksClientTest {
         fiksWebClient = fiksWebClient,
         clientProperties = clientProperties,
         maskinportenClient = maskinportenClient,
+        kommuneService = kommuneService,
         auditService = auditService,
         redisService = redisService,
         unleash = unleash,
@@ -76,6 +79,8 @@ internal class FiksClientTest {
         every { redisService.defaultTimeToLiveSeconds } returns 1
 
         every { unleash.isEnabled(FIKS_CACHE_ENABLED, false) } returns true
+
+        every { kommuneService.get("1111").harNksTilgang } returns true
     }
 
     @AfterEach
@@ -124,6 +129,30 @@ internal class FiksClientTest {
 
         assertThat(result).isNotNull
         assertThat(result).hasSize(2)
+    }
+
+    @Test
+    internal fun `GET hent alle DigisosSaker filtrer bort DigisosSaker sendt til kommune uten innsyn NKS aktivert`() {
+        every { kommuneService.get("2222").harNksTilgang } returns false
+        every { kommuneService.get("3333").harNksTilgang } returns true
+
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(
+                    listOf(
+                        ok_digisossak_response_string(kommunenummer = "2222"),
+                        ok_digisossak_response_string(kommunenummer = "3333"),
+                    ).toString()
+                )
+        )
+
+        val result = fiksClient.hentAlleDigisosSaker(id)
+
+        assertThat(result).isNotNull
+        assertThat(result).hasSize(1)
+        assertThat(result[0].kommunenummer).isEqualTo("3333")
     }
 
     @Test
