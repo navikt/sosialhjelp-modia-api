@@ -5,20 +5,28 @@ import java.security.SecureRandom
 
 object MDCUtils {
 
-    private const val CALL_ID = "callId"
+    const val CALL_ID = "callId"
+    const val DIGISOS_ID = "digisosId"
+    const val PATH = "path"
 
     private val RANDOM = SecureRandom()
+
+    fun get(key: String): String? {
+        return MDC.get(key)
+    }
+
+    fun put(key: String, value: String) {
+        MDC.put(key, value)
+    }
 
     fun getCallId(): String? {
         return MDC.get(CALL_ID)
     }
 
-    fun setCallId(callId: String) {
-        MDC.put(CALL_ID, callId)
-    }
-
-    fun clearCallId() {
+    fun clearMDC() {
         MDC.remove(CALL_ID)
+        MDC.remove(DIGISOS_ID)
+        MDC.remove(PATH)
     }
 
     fun generateCallId(): String {
