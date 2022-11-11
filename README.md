@@ -44,5 +44,4 @@ Kjør `TestApplication.kt` med springprofilene `local,log-console` for integrasj
 - Redis: Endringer i `redis-config.yml` eller `redisexporter.yml` i andre brancher enn `master` gir autodeploy til dev-fss, og endringer på `master` gir autodeploy til prod-fss.
 
 ## Hvordan komme i gang
-### [Felles dokumentasjon for våre backend apper](https://github.com/navikt/digisos/blob/main/oppsett-devmiljo.md#backend-gradle)
-
+[Felles dokumentasjon for våre backend apper](https://teamdigisos.intern.nav.no/docs/utviklerdokumentasjon/kom%20igang%20med%20utvikling#backend-gradle)
