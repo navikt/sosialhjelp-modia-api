@@ -10,13 +10,13 @@ import java.util.UUID
 class FodselsnummerService(
     private val redisService: RedisService
 ) {
-    fun set(fnr: String): String {
+    fun setFnrForSalesforce(fnr: String): String {
         val fnrId = UUID.randomUUID().toString()
         lagreTilCache(fnrId, fnr)
         return fnrId
     }
 
-    fun get(fnrId: String): String? {
+    fun getFnr(fnrId: String): String? {
         return hentFraCache(fnrId)
     }
 

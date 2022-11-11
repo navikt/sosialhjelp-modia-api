@@ -25,11 +25,11 @@ internal class FodselsnummerControllerTest {
 
     @Test
     fun `setFodselsnummer - skal lagre fodselsnummer og returnere modia url med fodselsnummer id`() {
-        every { fodselsnummerService.set(ident.fnr) } returns fnrId
+        every { fodselsnummerService.setFnrForSalesforce(ident.fnr) } returns fnrId
         val response = controller.setFodselsnummer(ident)
 
         assertThat(response.body).isNotNull
-        assertThat(response.body?.melding).isEqualTo("$modiaBaseUrl/$fnrId")
+        assertThat(response.body).isEqualTo("$modiaBaseUrl/$fnrId")
     }
 
     @Test
@@ -37,21 +37,21 @@ internal class FodselsnummerControllerTest {
         val response = controller.setFodselsnummer(Ident(" "))
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
-        assertThat(response.body?.melding).isEqualTo("Mangler fødselsnummer!")
+        assertThat(response.body).isEqualTo("Mangler fødselsnummer!")
     }
 
     @Test
     fun `hentFodselsnummer - skal returnere fodselsnummer fra cachen`() {
-        every { fodselsnummerService.get(fnrId) } returns ident.fnr
+        every { fodselsnummerService.getFnr(fnrId) } returns ident.fnr
         val response = controller.hentFodselsnummer(fnrId)
 
         assertThat(response.body).isNotNull
-        assertThat(response.body?.melding).isEqualTo(ident.fnr)
+        assertThat(response.body).isEqualTo(ident.fnr)
     }
 
     @Test
     fun `hentFodselsnummer - finne ikke fodselsnummer og returnere not found`() {
-        every { fodselsnummerService.get(fnrId) } returns null
+        every { fodselsnummerService.getFnr(fnrId) } returns null
         val response = controller.hentFodselsnummer(fnrId)
 
         assertThat(response.body).isNull()

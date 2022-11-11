@@ -20,21 +20,21 @@ class FodselsnummerController(
 ) {
 
     @PostMapping("/fodselsnummer")
-    fun setFodselsnummer(@RequestBody ident: Ident): ResponseEntity<FodselsnummerResponse> {
+    fun setFodselsnummer(@RequestBody ident: Ident): ResponseEntity<String> {
         val fnr = ident.fnr.trim()
         if (fnr.isEmpty()) {
-            return ResponseEntity.badRequest().body(FodselsnummerResponse("Mangler fødselsnummer!"))
+            return ResponseEntity.badRequest().body("Mangler fødselsnummer!")
         }
-        val fnrId = fodselsnummerService.set(fnr)
-        return ResponseEntity.ok(FodselsnummerResponse("$modiaBaseurl/$fnrId"))
+        val fnrId = fodselsnummerService.setFnrForSalesforce(fnr)
+        return ResponseEntity.ok("$modiaBaseurl/$fnrId")
     }
 
     @GetMapping("/fodselsnummer/{fnrId}")
-    fun hentFodselsnummer(@PathVariable fnrId: String): ResponseEntity<FodselsnummerResponse> {
-        val fnr = fodselsnummerService.get(fnrId)
+    fun hentFodselsnummer(@PathVariable fnrId: String): ResponseEntity<String> {
+        val fnr = fodselsnummerService.getFnr(fnrId)
         if (fnr.isNullOrEmpty()) {
             return ResponseEntity.notFound().build()
         }
-        return ResponseEntity.ok(FodselsnummerResponse(fnr))
+        return ResponseEntity.ok(fnr)
     }
 }
