@@ -28,7 +28,8 @@
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
     "UNLEASH_INSTANCE_ID": "mock",
     "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.cluster.local",
-    "SWAGGER_ENABLED": "true"
+    "SWAGGER_ENABLED": "true",
+    "MODIA_BASEURL": "https://digisos.ekstern.dev.nav.no/sosialhjelp/modia"
   },
   "minReplicas": "1",
   "maxReplicas": "1",

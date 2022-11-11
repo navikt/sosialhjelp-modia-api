@@ -36,6 +36,8 @@ client:
   unleash_url: ${UNLEASH_API_URL:https://unleash.nais.io/api}
   unleash_instance_id: ${UNLEASH_INSTANCE_ID:local}
 
+modia_baseurl: ${MODIA_BASEURL:http://localhost:3000/sosialhjelp/modia}
+
 #Maskinporten
 maskinporten_clientid: maskinporten_clientid
 maskinporten_scopes: scopes
