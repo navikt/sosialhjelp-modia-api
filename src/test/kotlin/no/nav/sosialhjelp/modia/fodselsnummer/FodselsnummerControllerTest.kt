@@ -29,7 +29,10 @@ internal class FodselsnummerControllerTest {
         val response = controller.setFodselsnummer(ident)
 
         assertThat(response.body).isNotNull
-        assertThat(response.body).isEqualTo("$modiaBaseUrl/$fnrId")
+        assertThat(response.body).isInstanceOf(SetFodselsnummerResponse::class.java)
+        val setFodselsnummerResponse = response.body as SetFodselsnummerResponse
+        assertThat(setFodselsnummerResponse.modiaSosialhjelpUrl).isEqualTo(modiaBaseUrl)
+        assertThat(setFodselsnummerResponse.modiaSosialFnrUuid).isEqualTo(fnrId)
     }
 
     @Test

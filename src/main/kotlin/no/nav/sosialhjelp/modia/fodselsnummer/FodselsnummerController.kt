@@ -1,6 +1,7 @@
 package no.nav.sosialhjelp.modia.fodselsnummer
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.utils.Ident
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
@@ -20,13 +21,19 @@ class FodselsnummerController(
 ) {
 
     @PostMapping("/fodselsnummer")
-    fun setFodselsnummer(@RequestBody ident: Ident): ResponseEntity<String> {
+    fun setFodselsnummer(@RequestBody ident: Ident): ResponseEntity<*> {
         val fnr = ident.fnr.trim()
         if (fnr.isEmpty()) {
+            log.error("Request mangler fnr")
             return ResponseEntity.badRequest().body("Mangler fødselsnummer!")
         }
         val fnrId = fodselsnummerService.setFnrForSalesforce(fnr)
-        return ResponseEntity.ok("$modiaBaseurl/$fnrId")
+        return ResponseEntity.ok(
+            SetFodselsnummerResponse(
+                modiaSosialhjelpUrl = modiaBaseurl,
+                modiaSosialFnrUuid = fnrId
+            )
+        )
     }
 
     @GetMapping("/fodselsnummer/{fnrId}")
@@ -36,5 +43,9 @@ class FodselsnummerController(
             return ResponseEntity.notFound().build()
         }
         return ResponseEntity.ok(fnr)
+    }
+
+    companion object {
+        private val log by logger()
     }
 }
