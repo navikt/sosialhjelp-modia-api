@@ -6,9 +6,7 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import no.nav.sosialhjelp.modia.redis.RedisService
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertNull
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -31,14 +29,14 @@ internal class FodselsnummerServiceTest {
     internal fun `hent fodselsnummer ved fnrId, returnere fodselsnummer`() {
         every { redisService.get(any(), any(), any()) } returns fnr
         val result = service.getFnr(fnrId)
-        assertNotNull(result)
-        assertEquals(fnr, result)
+        assertThat(result).isNotNull
+        assertThat(result).isEqualTo(fnr)
     }
 
     @Test
     internal fun `hent fodselsnummer ved fnrId, skal ikke finnes og returnere null`() {
         every { redisService.get(any(), any(), any()) } returns null
         val result = service.getFnr(fnrId)
-        assertNull(result)
+        assertThat(result).isNull()
     }
 }
