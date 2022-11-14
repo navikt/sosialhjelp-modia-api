@@ -31,7 +31,7 @@ class FodselsnummerController(
         return ResponseEntity.ok(
             SetFodselsnummerResponse(
                 modiaSosialhjelpUrl = modiaBaseurl,
-                modiaSosialFnrUuid = fnrId
+                modiaSosialhjelpFnrUuid = fnrId
             )
         )
     }
