@@ -30,8 +30,7 @@ class FodselsnummerController(
         val fnrId = fodselsnummerService.setFnrForSalesforce(fnr)
         return ResponseEntity.ok(
             SetFodselsnummerResponse(
-                modiaSosialhjelpUrl = modiaBaseurl,
-                modiaSosialhjelpFnrUuid = fnrId
+                modiaSosialhjelpUrl = "$modiaBaseurl/uuid/$fnrId"
             )
         )
     }
