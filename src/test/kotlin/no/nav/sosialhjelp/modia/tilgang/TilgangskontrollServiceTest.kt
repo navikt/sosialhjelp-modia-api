@@ -86,7 +86,7 @@ internal class TilgangskontrollServiceTest {
 
         assertThatThrownBy { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) }
             .isInstanceOf(ManglendeModiaSosialhjelpTilgangException::class.java)
-            .hasMessage("Veileder er ikke i riktig azure gruppe til å bruke dialogløsningen.")
+            .hasMessage("Veileder er ikke i riktig azure gruppe til å bruke modia sosialhjelp.")
     }
 
     @Test
@@ -95,7 +95,7 @@ internal class TilgangskontrollServiceTest {
 
         assertThatThrownBy { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) }
             .isInstanceOf(ManglendeModiaSosialhjelpTilgangException::class.java)
-            .hasMessage("Veileder er ikke i riktig azure gruppe til å bruke dialogløsningen.")
+            .hasMessage("Veileder er ikke i riktig azure gruppe til å bruke modia sosialhjelp.")
     }
 
     @Test
