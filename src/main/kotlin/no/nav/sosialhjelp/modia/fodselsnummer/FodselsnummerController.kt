@@ -29,12 +29,12 @@ class FodselsnummerController(
     fun setFodselsnummer(
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
         @RequestBody ident: Ident
-    ): ResponseEntity<*> {
+    ): ResponseEntity<SetFodselsnummerResponse> {
         tilgangskontrollService.harVeilederTilgangTilTjenesten(token, "/fodselsnummer", HttpMethod.POST)
         val fnr = ident.fnr.trim()
         if (fnr.isEmpty()) {
             log.error("Request mangler fnr")
-            return ResponseEntity.badRequest().body("Mangler fødselsnummer!")
+            return ResponseEntity.badRequest().build()
         }
         val fnrId = fodselsnummerService.setFnrForSalesforce(fnr)
         return ResponseEntity.ok(
