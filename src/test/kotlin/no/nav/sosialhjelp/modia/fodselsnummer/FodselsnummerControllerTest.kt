@@ -63,7 +63,7 @@ internal class FodselsnummerControllerTest {
     @Test
     fun `hentFodselsnummer - skal returnere fodselsnummer fra cachen`() {
         every { fodselsnummerService.getFnr(fnrId) } returns ident.fnr
-        val response = controller.hentFodselsnummer(fnrId)
+        val response = controller.hentFodselsnummer("token", fnrId)
 
         assertThat(response.body).isNotNull
         assertThat(response.body).isEqualTo(ident.fnr)
@@ -72,7 +72,7 @@ internal class FodselsnummerControllerTest {
     @Test
     fun `hentFodselsnummer - finne ikke fodselsnummer og returnere not found`() {
         every { fodselsnummerService.getFnr(fnrId) } returns null
-        val response = controller.hentFodselsnummer(fnrId)
+        val response = controller.hentFodselsnummer("token", fnrId)
 
         assertThat(response.body).isNull()
         assertThat(response.statusCode).isEqualTo(HttpStatus.NOT_FOUND)

@@ -45,7 +45,11 @@ class FodselsnummerController(
     }
 
     @GetMapping("/fodselsnummer/{fnrId}")
-    fun hentFodselsnummer(@PathVariable fnrId: String): ResponseEntity<String> {
+    fun hentFodselsnummer(
+        @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
+        @PathVariable fnrId: String
+    ): ResponseEntity<String> {
+        tilgangskontrollService.harVeilederTilgangTilTjenesten(token, "/fodselsnummer/$fnrId", HttpMethod.GET)
         val fnr = fodselsnummerService.getFnr(fnrId)
         if (fnr.isNullOrEmpty()) {
             return ResponseEntity.notFound().build()
