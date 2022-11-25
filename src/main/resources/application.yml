@@ -60,6 +60,8 @@ client:
   unleash_url: ${UNLEASH_API_URL}
   unleash_instance_id: ${UNLEASH_INSTANCE_ID}
 
+modia_baseurl: ${MODIA_BASEURL}
+
 #Maskinporten
 maskinporten_clientid: ${MASKINPORTEN_CLIENT_ID}
 maskinporten_scopes: ${MASKINPORTEN_SCOPES}

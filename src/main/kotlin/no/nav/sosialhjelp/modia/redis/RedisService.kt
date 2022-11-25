@@ -17,7 +17,8 @@ enum class RedisKeyType {
     SKJERMEDE_PERSONER,
     FIKS_CLIENT,
     NORG_CLIENT,
-    KOMMUNE_SERVICE
+    KOMMUNE_SERVICE,
+    FNR_SERVICE
 }
 
 interface RedisService {

@@ -21,6 +21,8 @@ client:
   unleash_url: "http://localhost:58888"
   unleash_instance_id: "local"
 
+modia_baseurl: "http://localhost:3000/sosialhjelp/modia"
+
 #Maskinporten
 maskinporten_clientid: clientid
 maskinporten_scopes: scopes

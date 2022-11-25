@@ -23,7 +23,8 @@
     "CACHE_TIME_TO_LIVE_SECONDS": "60",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
     "UNLEASH_INSTANCE_ID": "dev",
-    "SWAGGER_ENABLED": "true"
+    "SWAGGER_ENABLED": "true",
+    "MODIA_BASEURL": "https://sosialhjelp-modia-dev.dev.nav.no/sosialhjelp/modia"
   },
   "minReplicas": "1",
   "maxReplicas": "2",
