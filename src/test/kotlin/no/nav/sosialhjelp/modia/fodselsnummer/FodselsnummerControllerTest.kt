@@ -47,7 +47,6 @@ internal class FodselsnummerControllerTest {
         val response = controller.setFodselsnummer("token", Ident(" "))
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
-        assertThat(response.body).isEqualTo("Mangler fødselsnummer!")
     }
 
     @Test
