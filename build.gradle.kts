@@ -14,7 +14,7 @@ object Versions {
     const val filformat = "1.2022.10.21-12.33-ed1a97d500e4"
     const val micrometerRegistry = "1.10.0"
     const val prometheus = "0.16.0"
-    const val tokenValidation = "2.1.7"
+    const val tokenValidation = "2.1.4"
     const val jackson = "2.14.0"
     const val guava = "31.1-jre"
     const val logbackSyslog4j = "1.0.0"
@@ -91,7 +91,7 @@ dependencies {
     implementation("no.nav.sosialhjelp:sosialhjelp-common-api:${Versions.sosialhjelpCommon}")
 
 //    Micrometer/prometheus
-    implementation("io.micrometer:micrometer-registry-prometheus:1.10.0")
+    implementation("io.micrometer:micrometer-registry-prometheus:${Versions.micrometerRegistry}")
     implementation("io.prometheus:simpleclient_common:${Versions.prometheus}")
     implementation("io.prometheus:simpleclient_hotspot:${Versions.prometheus}")
 
