@@ -8,17 +8,17 @@ object Versions {
     const val kotlin = "1.7.20"
     const val coroutines = "1.6.4"
     const val springBoot = "2.7.5"
-    const val logback = "1.2.11"
+    const val logback = "1.4.4"
     const val logstash = "7.2"
     const val sosialhjelpCommon = "1.20221019.1049-614783b"
     const val filformat = "1.2022.10.21-12.33-ed1a97d500e4"
-    const val micrometerRegistry = "1.9.5"
+    const val micrometerRegistry = "1.10.0"
     const val prometheus = "0.16.0"
-    const val tokenValidation = "2.1.4"
-    const val jackson = "2.13.4"
+    const val tokenValidation = "2.1.7"
+    const val jackson = "2.14.0"
     const val guava = "31.1-jre"
     const val logbackSyslog4j = "1.0.0"
-    const val javaJwt = "4.2.0"
+    const val javaJwt = "4.2.1"
     const val jwksRsa = "0.21.2"
     const val syslog4j = "0.9.46"
     const val lettuce = "6.2.1.RELEASE"
@@ -91,7 +91,7 @@ dependencies {
     implementation("no.nav.sosialhjelp:sosialhjelp-common-api:${Versions.sosialhjelpCommon}")
 
 //    Micrometer/prometheus
-    implementation("io.micrometer:micrometer-registry-prometheus:${Versions.micrometerRegistry}")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.10.0")
     implementation("io.prometheus:simpleclient_common:${Versions.prometheus}")
     implementation("io.prometheus:simpleclient_hotspot:${Versions.prometheus}")
 
