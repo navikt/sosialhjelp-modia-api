@@ -36,5 +36,6 @@
   "wonderwallEnabled": false,
   "webProxyEnabled": true,
   "azureEnabled": true,
-  "maskinportenEnabled": true
+  "maskinportenEnabled": true,
+  "salesforceEnabled": false
 }
