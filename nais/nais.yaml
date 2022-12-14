@@ -49,6 +49,11 @@ spec:
     inbound:
       rules:
         - application: sosialhjelp-modia-oidc-auth-proxy
+        {{#if salesforceEnabled}}
+        - application: salesforce
+          namespace: teamcrm
+          cluster: {{salesforceCluster}}
+        {{/if}}
     outbound:
       external:
         - host: "oidc-ver2.difi.no"
