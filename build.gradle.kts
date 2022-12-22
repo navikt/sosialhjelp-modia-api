@@ -31,6 +31,7 @@ object Versions {
     const val snakeyaml = "1.33"
     const val jakartaActivationApi = "2.1.0"
     const val jakartaXmlBindApi = "4.0.0"
+    const val jakartaServletApi = "5.0.0"
 
     // Test only
     const val junitJupiter = "5.9.1"
@@ -162,6 +163,9 @@ dependencies {
         // jakarta
         implementation("jakarta.activation:jakarta.activation-api") {
             version { strictly(Versions.jakartaActivationApi) }
+        }
+        implementation("jakarta.servlet:jakarta.servlet-api") {
+            version { strictly(Versions.jakartaServletApi) }
         }
         implementation("jakarta.xml.bind:jakarta.xml.bind-api") {
             version { strictly(Versions.jakartaXmlBindApi) }
