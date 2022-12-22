@@ -161,7 +161,7 @@ class UtbetalingerService(
     }
 
     private fun Utbetaling.infoLoggVedManglendeMottakerNavn(kommunenummer: String) {
-        if (mottaker == null || mottaker!!.isEmpty()) log.info("Utbetaling ($referanse) har ikke mottaker. Kommune=$kommunenummer")
+        if (mottaker.isNullOrBlank()) log.info("Utbetaling ($referanse) har ikke mottaker. Kommune=$kommunenummer")
     }
 
     companion object {
