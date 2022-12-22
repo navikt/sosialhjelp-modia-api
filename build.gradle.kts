@@ -29,6 +29,7 @@ object Versions {
     const val gson = "2.10"
     const val log4j = "2.19.0"
     const val snakeyaml = "1.33"
+    const val slf4j = "1.7.36"
 
     // Test only
     const val junitJupiter = "5.9.1"
@@ -155,6 +156,10 @@ dependencies {
 
         implementation("org.yaml:snakeyaml:${Versions.snakeyaml}") {
             because("Snyk ønsker 1.31 eller høyere")
+        }
+
+        implementation("org.slf4j:slf4j-api") {
+            version { strictly(Versions.slf4j) }
         }
     }
 }
