@@ -105,8 +105,8 @@ class FiksClientImpl(
                 log.warn("Fiks - hentDigisosSak feilet - ${messageUtenFnr(e)}", e)
                 when {
                     e.statusCode == HttpStatus.NOT_FOUND -> FiksNotFoundException(e.message?.maskerFnr, e)
-                    e.statusCode.is4xxClientError -> FiksClientException(e.rawStatusCode, e.message?.maskerFnr, e)
-                    else -> FiksServerException(e.rawStatusCode, e.message?.maskerFnr, e)
+                    e.statusCode.is4xxClientError -> FiksClientException(e.statusCode.value(), e.message?.maskerFnr, e)
+                    else -> FiksServerException(e.statusCode.value(), e.message?.maskerFnr, e)
                 }
             }
             .block() ?: throw FiksServerException(500, "Fiks - DigisosSak nedlasting feilet!", null)
@@ -152,8 +152,8 @@ class FiksClientImpl(
             .onErrorMap(WebClientResponseException::class.java) { e ->
                 log.warn("Fiks - hentDokument feilet - ${messageUtenFnr(e)}", e)
                 when {
-                    e.statusCode.is4xxClientError -> FiksClientException(e.rawStatusCode, e.message?.maskerFnr, e)
-                    else -> FiksServerException(e.rawStatusCode, e.message?.maskerFnr, e)
+                    e.statusCode.is4xxClientError -> FiksClientException(e.statusCode.value(), e.message?.maskerFnr, e)
+                    else -> FiksServerException(e.statusCode.value(), e.message?.maskerFnr, e)
                 }
             }
             .block() ?: throw FiksServerException(500, "Fiks - Dokument nedlasting feilet!", null)
@@ -182,8 +182,8 @@ class FiksClientImpl(
             .onErrorMap(WebClientResponseException::class.java) { e ->
                 log.warn("Fiks - hentAlleDigisosSaker feilet - ${messageUtenFnr(e)}", e)
                 when {
-                    e.statusCode.is4xxClientError -> FiksClientException(e.rawStatusCode, e.message?.maskerFnr, e)
-                    else -> FiksServerException(e.rawStatusCode, e.message?.maskerFnr, e)
+                    e.statusCode.is4xxClientError -> FiksClientException(e.statusCode.value(), e.message?.maskerFnr, e)
+                    else -> FiksServerException(e.statusCode.value(), e.message?.maskerFnr, e)
                 }
             }
             .block() ?: throw FiksServerException(500, "Fiks - AlleDigisosSaker nedlasting feilet!", null)

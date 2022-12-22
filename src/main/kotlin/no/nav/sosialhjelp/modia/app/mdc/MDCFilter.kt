@@ -1,5 +1,8 @@
 package no.nav.sosialhjelp.modia.app.mdc
 
+import jakarta.servlet.FilterChain
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.clearMDC
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.generateCallId
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.put
@@ -7,9 +10,6 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import javax.servlet.FilterChain
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 @Component
 class MDCFilter : OncePerRequestFilter() {
@@ -27,7 +27,7 @@ class MDCFilter : OncePerRequestFilter() {
     }
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
-        return HttpMethod.valueOf(request.method) == HttpMethod.OPTIONS
+        return request.method == HttpMethod.OPTIONS.name()
     }
 
     private fun addCallId(request: HttpServletRequest) {

@@ -1,5 +1,7 @@
 package no.nav.sosialhjelp.modia.login
 
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletResponse
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.utils.MiljoUtils
 import no.nav.sosialhjelp.modia.utils.TokenUtils
@@ -7,8 +9,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.servlet.http.Cookie
-import javax.servlet.http.HttpServletResponse
 
 @ProtectedWithClaims(issuer = "azuread")
 @RestController

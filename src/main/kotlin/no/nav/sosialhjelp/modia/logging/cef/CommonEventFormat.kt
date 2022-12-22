@@ -43,7 +43,7 @@ data class Extension(
     val fiks: Fiks?
 ) {
     override fun toString(): String {
-        return "end=${System.currentTimeMillis()} suid=$navIdent duid=$brukerFnr sproc=$callId dproc=$consumerId request=$url requestMethod=${httpMethod.name}"
+        return "end=${System.currentTimeMillis()} suid=$navIdent duid=$brukerFnr sproc=$callId dproc=$consumerId request=$url requestMethod=${httpMethod.name()}"
             .plus(fiks?.toString() ?: "")
     }
 }
