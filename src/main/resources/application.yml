@@ -73,7 +73,7 @@ maskinporten_client_jwk: ${MASKINPORTEN_CLIENT_JWK}
 no.nav.security.jwt:
   issuer.azuread:
     discoveryurl: ${AZURE_APP_WELL_KNOWN_URL}
-    accepted_audience: ${AZURE_APP_CLIENT_ID}, api://${AZURE_APP_CLIENT_ID}
+    accepted_audience: ${AZURE_APP_CLIENT_ID}
   client:
     registration:
       onbehalfof:
