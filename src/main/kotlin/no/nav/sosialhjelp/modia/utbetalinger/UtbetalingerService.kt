@@ -109,6 +109,7 @@ class UtbetalingerService(
             .filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
             .map { utbetaling ->
                 utbetaling.infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(digisosSak.kommunenummer)
+                utbetaling.infoLoggVedManglendeMottakerNavn(digisosSak.kommunenummer)
                 toUtbetalingResponse(utbetaling, digisosSak.fiksDigisosId, behandlendeNavKontor)
             }
     }
@@ -122,6 +123,7 @@ class UtbetalingerService(
             .filter { skalUtbetalingVisesInnenforPeriode(it, fom, tom) }
             .map { utbetaling ->
                 utbetaling.infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(digisosSak.kommunenummer)
+                utbetaling.infoLoggVedManglendeMottakerNavn(digisosSak.kommunenummer)
                 toUtbetalingResponse(utbetaling, digisosSak.fiksDigisosId, behandlendeNavKontor)
             }
     }
@@ -156,6 +158,10 @@ class UtbetalingerService(
                 log.info("Utbetaling ($referanse) med status=${UtbetalingsStatus.STOPPET} mangler forfallsDato eller utbetalingsDato. Kommune=$kommunenummer")
             }
         }
+    }
+
+    private fun Utbetaling.infoLoggVedManglendeMottakerNavn(kommunenummer: String) {
+        if (mottaker.isNullOrBlank()) log.info("Utbetaling ($referanse) har ikke mottaker. Kommune=$kommunenummer")
     }
 
     companion object {

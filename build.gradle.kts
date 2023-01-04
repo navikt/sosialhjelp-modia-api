@@ -5,43 +5,44 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav.sosialhjelp"
 
 object Versions {
-    const val kotlin = "1.7.20"
+    const val kotlin = "1.7.22"
     const val coroutines = "1.6.4"
-    const val springBoot = "2.7.5"
+    const val springBoot = "2.7.6"
     const val logback = "1.2.11"
     const val logstash = "7.2"
-    const val sosialhjelpCommon = "1.20221019.1049-614783b"
-    const val filformat = "1.2022.10.21-12.33-ed1a97d500e4"
-    const val micrometerRegistry = "1.9.5"
+    const val sosialhjelpCommon = "1.20221214.0749-b633a3e"
+    const val filformat = "1.2022.12.02-08.47-423f51003cee"
+    const val micrometerRegistry = "1.10.2"
     const val prometheus = "0.16.0"
-    const val tokenValidation = "2.1.4"
-    const val jackson = "2.13.4"
+    const val tokenValidation = "2.1.9"
+    const val jackson = "2.14.1"
     const val guava = "31.1-jre"
     const val logbackSyslog4j = "1.0.0"
-    const val javaJwt = "4.2.0"
+    const val javaJwt = "4.2.1"
     const val jwksRsa = "0.21.2"
     const val syslog4j = "0.9.46"
-    const val lettuce = "6.2.1.RELEASE"
+    const val lettuce = "6.2.2.RELEASE"
     const val unleash = "4.4.1"
-    const val springdoc = "1.6.12"
+    const val springdoc = "1.6.14"
 
     const val jsonSmart = "2.4.8"
-    const val gson = "2.9.1"
+    const val gson = "2.10"
     const val log4j = "2.19.0"
     const val snakeyaml = "1.33"
+    const val slf4j = "1.7.36"
 
     // Test only
     const val junitJupiter = "5.9.1"
-    const val mockk = "1.13.2"
+    const val mockk = "1.13.3"
     const val junit = "4.13.2"
 }
 
 plugins {
-    kotlin("jvm") version "1.7.20"
-    kotlin("plugin.spring") version "1.7.20"
-    id("org.springframework.boot") version "2.7.5"
-    id("com.github.ben-manes.versions") version "0.42.0" // ./gradlew dependencyUpdates
-    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    kotlin("jvm") version "1.7.22"
+    kotlin("plugin.spring") version "1.7.22"
+    id("org.springframework.boot") version "2.7.6"
+    id("com.github.ben-manes.versions") version "0.44.0" // ./gradlew dependencyUpdates
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
 }
 
 java {
@@ -155,6 +156,10 @@ dependencies {
 
         implementation("org.yaml:snakeyaml:${Versions.snakeyaml}") {
             because("Snyk ønsker 1.31 eller høyere")
+        }
+
+        implementation("org.slf4j:slf4j-api") {
+            version { strictly(Versions.slf4j) }
         }
     }
 }
