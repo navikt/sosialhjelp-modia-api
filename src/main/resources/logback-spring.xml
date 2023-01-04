@@ -11,6 +11,7 @@
         </appender>
 
         <logger name="no.nav.sosialhjelp.modia" level="INFO"/>
+        <logger name="no.nav.security.token.support" level="debug"/>
 
         <root level="INFO">
             <appender-ref ref="stdout_json"/>
