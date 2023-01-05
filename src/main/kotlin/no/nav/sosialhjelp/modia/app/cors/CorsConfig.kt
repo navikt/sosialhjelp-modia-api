@@ -37,7 +37,7 @@ class CorsConfig(
     companion object {
         private val ALLOWED_ORIGINS_PROD = listOf(
             "https://sosialhjelp-modia.intern.nav.no",
-            "https://some-salesforce-domain.nav.no"
+            "https://navdialog.lightning.force.com"
         )
         private val ALLOWED_ORIGINS_NON_PROD = listOf(
             "https://sosialhjelp-modia.dev.intern.nav.no",
