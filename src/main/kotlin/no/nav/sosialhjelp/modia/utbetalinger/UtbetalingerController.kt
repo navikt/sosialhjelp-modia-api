@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
 @ProtectedWithClaims(issuer = "azuread")
 @RestController
@@ -40,8 +40,8 @@ class UtbetalingerController(
             utbetalingerService.hentAlleUtbetalinger(
                 ident.fnr,
                 months,
-                fom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) },
-                tom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) }
+                fom?.let { LocalDateTime.parse(it, ISO_DATE_TIME).toLocalDate() },
+                tom?.let { LocalDateTime.parse(it, ISO_DATE_TIME).toLocalDate() }
             )
         )
     }
