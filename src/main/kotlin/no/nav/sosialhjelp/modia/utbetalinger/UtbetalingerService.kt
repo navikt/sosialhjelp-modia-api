@@ -98,7 +98,10 @@ class UtbetalingerService(
 
         val utbetalingsDatoInnenfor = utbetaling.utbetalingsDato?.let { range.contains(it) } ?: false
         val forfallsDatoInnenfor = utbetaling.forfallsDato?.let { range.contains(it) } ?: false
-        return utbetalingsDatoInnenfor || forfallsDatoInnenfor
+
+        return if (utbetaling.utbetalingsDato !== null) {
+            utbetalingsDatoInnenfor
+        } else forfallsDatoInnenfor
     }
 
     private fun getUtbetalinger(digisosSak: DigisosSak): List<UtbetalingerResponse> {
