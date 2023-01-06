@@ -9,14 +9,12 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import io.mockk.verify
-import no.finn.unleash.Unleash
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.app.maskinporten.MaskinportenClient
-import no.nav.sosialhjelp.modia.client.unleash.FIKS_CACHE_ENABLED
 import no.nav.sosialhjelp.modia.logging.AuditService
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.responses.ok_digisossak_response_string
@@ -44,7 +42,6 @@ internal class FiksClientTest {
     private val maskinportenClient: MaskinportenClient = mockk()
     private val auditService: AuditService = mockk()
     private val redisService: RedisService = mockk()
-    private val unleash: Unleash = mockk()
     private val maxRetryAttempts = 2L
     private val initialDelay = 2L
 
@@ -54,7 +51,6 @@ internal class FiksClientTest {
         maskinportenClient = maskinportenClient,
         auditService = auditService,
         redisService = redisService,
-        unleash = unleash,
         maxAttempts = maxRetryAttempts,
         initialDelay = initialDelay
     )
@@ -74,8 +70,6 @@ internal class FiksClientTest {
         every { redisService.get(any(), any(), any()) } returns null
         every { redisService.set(any(), any(), any(), any()) } just Runs
         every { redisService.defaultTimeToLiveSeconds } returns 1
-
-        every { unleash.isEnabled(FIKS_CACHE_ENABLED, false) } returns true
     }
 
     @AfterEach
