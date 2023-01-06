@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test
 
 internal class RedisServiceTest {
 
+    private val cacheTimeToLiveSeconds = 1L
     private val redisStore: RedisStore = mockk()
-    private val cacheProperties: CacheProperties = mockk(relaxed = true)
 
-    private val service = RedisServiceImpl(redisStore, cacheProperties)
+    private val service = RedisServiceImpl(cacheTimeToLiveSeconds, redisStore)
 
     @Test
     internal fun `skal hente fra store`() {

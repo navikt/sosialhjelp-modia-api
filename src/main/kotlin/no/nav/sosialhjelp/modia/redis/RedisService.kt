@@ -7,6 +7,7 @@ import no.nav.sosialhjelp.modia.app.exceptions.DigisosSakTilhorerAnnenBrukerExce
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.navkontor.norg.NavEnhet
 import no.nav.sosialhjelp.modia.utils.objectMapper
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.io.IOException
@@ -31,11 +32,11 @@ interface RedisService {
 @Profile("!no-redis")
 @Component
 class RedisServiceImpl(
+    @Value("\${cache_time_to_live_seconds}") private val cacheTimeToLiveSeconds: Long,
     private val redisStore: RedisStore,
-    cacheProperties: CacheProperties,
 ) : RedisService {
 
-    override val defaultTimeToLiveSeconds = cacheProperties.timeToLiveSeconds
+    override val defaultTimeToLiveSeconds = cacheTimeToLiveSeconds
 
     override fun get(type: RedisKeyType, key: String, requestedClass: Class<out Any>): Any? {
         val bytes: ByteArray? = redisStore.get("${type.name}_$key") // Redis har konfigurert timout for disse.
