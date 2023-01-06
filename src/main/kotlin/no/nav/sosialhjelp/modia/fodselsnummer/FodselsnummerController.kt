@@ -37,6 +37,7 @@ class FodselsnummerController(
             return ResponseEntity.badRequest().build()
         }
         val fnrId = fodselsnummerService.setFnrForSalesforce(fnr)
+        log.info("Generert lenke til modia sosialhjelp - /uuid/$fnrId")
         return ResponseEntity.ok(
             SetFodselsnummerResponse(
                 modiaSosialhjelpUrl = "$modiaBaseurl/uuid/$fnrId"
@@ -54,6 +55,7 @@ class FodselsnummerController(
         if (fnr.isNullOrEmpty()) {
             return ResponseEntity.notFound().build()
         }
+        log.info("Hentet fnr fra $fnrId")
         return ResponseEntity.ok(fnr)
     }
 
