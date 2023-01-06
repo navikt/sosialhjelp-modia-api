@@ -1,6 +1,5 @@
 package no.nav.sosialhjelp.modia.digisossak.fiks
 
-import no.finn.unleash.Unleash
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksClientException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
@@ -8,7 +7,6 @@ import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.app.client.RetryUtils.retryBackoffSpec
 import no.nav.sosialhjelp.modia.app.maskinporten.MaskinportenClient
-import no.nav.sosialhjelp.modia.client.unleash.FIKS_CACHE_ENABLED
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksPaths.PATH_ALLE_DIGISOSSAKER
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksPaths.PATH_DIGISOSSAK
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksPaths.PATH_DOKUMENT
@@ -43,7 +41,6 @@ class FiksClientImpl(
     private val maskinportenClient: MaskinportenClient,
     private val auditService: AuditService,
     private val redisService: RedisService,
-    private val unleash: Unleash,
     @Value("\${retry_fiks_max_attempts}") private val maxAttempts: Long,
     @Value("\${retry_fiks_initial_delay}") private val initialDelay: Long,
 ) : FiksClient {
@@ -75,7 +72,7 @@ class FiksClientImpl(
     }
 
     private fun skalBrukeCache(): Boolean {
-        return unleash.isEnabled(FIKS_CACHE_ENABLED, false) && RequestUtils.getSosialhjelpModiaSessionId() != null
+        return RequestUtils.getSosialhjelpModiaSessionId() != null
     }
 
     private fun hentDigisosSakFraCache(digisosId: String): DigisosSak? {

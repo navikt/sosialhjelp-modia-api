@@ -37,5 +37,5 @@
   "webProxyEnabled": true,
   "azureEnabled": true,
   "maskinportenEnabled": true,
-  "salesforceEnabled": false
+  "salesforceEnabled": true
 }
