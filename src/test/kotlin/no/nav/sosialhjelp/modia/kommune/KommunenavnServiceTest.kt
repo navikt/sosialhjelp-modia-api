@@ -1,43 +1,27 @@
 package no.nav.sosialhjelp.modia.kommune
 
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import no.nav.sosialhjelp.modia.kommune.kartverket.ContainedItem
 import no.nav.sosialhjelp.modia.kommune.kartverket.KommunenavnClient
 import no.nav.sosialhjelp.modia.kommune.kartverket.KommunenavnProperties
+import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class KommunenavnServiceTest {
 
-    private val kommunenavnProperties: KommunenavnProperties = mockk()
-
     private val kommunenavnClient: KommunenavnClient = mockk()
-
     private val service = KommunenavnService(kommunenavnClient)
 
-    private val kommuneNr = "1234"
+    private val kommuneNr = "0301"
     private val kommunenavn = "Oslo"
-    private val osloContainedItem = ContainedItem(
-//        "",
-//        "",
-        kommuneNr,
-//        "",
-//        "",
-        kommunenavn,
-//        "",
-//        "",
-//        "",
-//        "",
-//        "",
-//        "",
-//        "",
-//        "",
-//        "",
-//        1
+
+    private val response = objectMapper.readValue<KommunenavnProperties>(
+        ClassLoader.getSystemResourceAsStream("kartverket-response.json")!!
     )
 
     @BeforeEach
@@ -47,9 +31,7 @@ internal class KommunenavnServiceTest {
 
     @Test
     fun `Skal returnere kommunenavn nar kommunenummer er kjent`() {
-        val containedItems: List<ContainedItem> = listOf(osloContainedItem)
-        every { kommunenavnProperties.containeditems } returns containedItems
-        every { kommunenavnClient.getAll() } returns kommunenavnProperties
+        every { kommunenavnClient.getAll() } returns response
 
         val kommunenavn = service.hentKommunenavnFor(kommuneNr)
 
@@ -58,9 +40,7 @@ internal class KommunenavnServiceTest {
 
     @Test
     fun `Skal returnere feiltekst nar kommunenummer er ukjent`() {
-        every { kommunenavnClient.getAll() } returns kommunenavnProperties
-        val containedItems: List<ContainedItem> = ArrayList()
-        every { kommunenavnProperties.containeditems } returns containedItems
+        every { kommunenavnClient.getAll() } returns response.copy(containeditems = listOf())
 
         val kommunenavn = service.hentKommunenavnFor(kommuneNr)
 
@@ -69,9 +49,7 @@ internal class KommunenavnServiceTest {
 
     @Test
     fun `Skal brukce cache pa andre oppslag`() {
-        val containedItems: List<ContainedItem> = listOf(osloContainedItem)
-        every { kommunenavnProperties.containeditems } returns containedItems
-        every { kommunenavnClient.getAll() } returns kommunenavnProperties
+        every { kommunenavnClient.getAll() } returns response
 
         val kommunenavn1 = service.hentKommunenavnFor(kommuneNr)
         assertThat(kommunenavn1).isEqualTo(kommunenavn)
