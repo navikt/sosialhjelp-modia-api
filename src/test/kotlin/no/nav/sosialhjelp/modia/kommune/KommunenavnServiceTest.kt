@@ -22,22 +22,22 @@ internal class KommunenavnServiceTest {
     private val kommuneNr = "1234"
     private val kommunenavn = "Oslo"
     private val osloContainedItem = ContainedItem(
-        "",
-        "",
+//        "",
+//        "",
         kommuneNr,
-        "",
-        "",
+//        "",
+//        "",
         kommunenavn,
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        1
+//        "",
+//        "",
+//        "",
+//        "",
+//        "",
+//        "",
+//        "",
+//        "",
+//        "",
+//        1
     )
 
     @BeforeEach

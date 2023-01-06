@@ -5,20 +5,20 @@ data class KommunenavnProperties(
 )
 
 data class ContainedItem(
-    val ValidFrom: String?,
-    val ValidTo: String?,
+//    val ValidFrom: String?,
+//    val ValidTo: String?,
     val codevalue: String,
-    val dateAccepted: String?,
-    val dateSubmitted: String,
+//    val dateAccepted: String?,
+//    val dateSubmitted: String,
     val description: String,
-    val id: String,
-    val itemclass: String,
-    val label: String,
-    val lang: String,
-    val lastUpdated: String,
-    val owner: String,
-    val seoname: String,
-    val status: String,
-    val uuid: String,
-    val versionNumber: Int
+//    val id: String,
+//    val itemclass: String,
+//    val label: String,
+//    val lang: String,
+//    val lastUpdated: String,
+//    val owner: String,
+//    val seoname: String,
+//    val status: String,
+//    val uuid: String,
+//    val versionNumber: Int
 )
