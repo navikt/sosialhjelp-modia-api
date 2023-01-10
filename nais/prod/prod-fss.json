@@ -37,5 +37,6 @@
   "webProxyEnabled": true,
   "azureEnabled": true,
   "maskinportenEnabled": true,
-  "salesforceEnabled": true
+  "salesforceEnabled": true,
+  "salesforceCluster": "prod-external"
 }
