@@ -1,0 +1,36 @@
+{
+  "ContainedItemsResult": {
+    "Count": 768,
+    "Offset": 0,
+    "Limit": 0,
+    "Total": 0
+  },
+  "id": "https://register.geonorge.no/sosi-kodelister/kommunenummer-alle",
+  "label": "Kommunenummer alle",
+  "lang": "no",
+  "contentsummary": "Nummerering av kommuner i henhold til SSB sin offisielle liste. Inneholder fremtidige, gyldige og utgåtte kommunenummer.",
+  "owner": "Kartverket",
+  "status": "Sendt inn",
+  "manager": "Kartverket",
+  "containedItemClass": "CodelistValue",
+  "uuid": "uuid",
+  "containeditems": [
+    {
+      "id": "https://register.geonorge.no/sosi-kodelister/kommunenummer-alle/0301",
+      "label": "0301",
+      "lang": "no",
+      "itemclass": "CodelistValue",
+      "uuid": "uuid",
+      "status": "Gyldig",
+      "description": "Oslo",
+      "seoname": "0301",
+      "owner": "Kartverket",
+      "versionNumber": 1,
+      "lastUpdated": "2017-11-29T19:32:49.97",
+      "dateSubmitted": "2017-11-29T19:32:49.97",
+      "codevalue": "0301"
+    }
+  ],
+  "containedSubRegisters": [ ],
+  "lastUpdated": "2021-06-17T15:17:22.22"
+}
