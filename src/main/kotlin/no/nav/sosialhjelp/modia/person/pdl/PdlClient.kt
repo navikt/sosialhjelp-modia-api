@@ -50,7 +50,7 @@ class PdlClientImpl(
                     .awaitBody<PdlPersonResponse>()
             }
         } catch (e: WebClientResponseException) {
-            log.error("PDL - ${e.rawStatusCode} ${e.statusText} feil ved henting av navn fra PDL", e)
+            log.error("PDL - ${e.statusCode} ${e.statusText} feil ved henting av navn fra PDL", e)
             throw PdlException(e.message)
         }
 

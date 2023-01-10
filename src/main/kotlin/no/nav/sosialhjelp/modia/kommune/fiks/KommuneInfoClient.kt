@@ -36,8 +36,8 @@ class KommuneInfoClient(
             .onErrorMap(WebClientResponseException::class.java) { e ->
                 log.warn("Fiks - hentKommuneInfoForAlle feilet", e)
                 when {
-                    e.statusCode.is4xxClientError -> FiksClientException(e.rawStatusCode, e.message, e)
-                    else -> FiksServerException(e.rawStatusCode, e.message, e)
+                    e.statusCode.is4xxClientError -> FiksClientException(e.statusCode.value(), e.message, e)
+                    else -> FiksServerException(e.statusCode.value(), e.message, e)
                 }
             }
             .block()
@@ -56,8 +56,8 @@ class KommuneInfoClient(
             .onErrorMap(WebClientResponseException::class.java) { e ->
                 log.warn("Fiks - hentKommuneInfoForAlle feilet", e)
                 when {
-                    e.statusCode.is4xxClientError -> FiksClientException(e.rawStatusCode, e.message, e)
-                    else -> FiksServerException(e.rawStatusCode, e.message, e)
+                    e.statusCode.is4xxClientError -> FiksClientException(e.statusCode.value(), e.message, e)
+                    else -> FiksServerException(e.statusCode.value(), e.message, e)
                 }
             }
             .block()

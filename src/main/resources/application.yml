@@ -3,10 +3,11 @@ spring:
     banner-mode: 'off'
   application:
     name: "sosialhjelp-modia-api"
-  redis:
-    host: ${REDIS_HOST}
-    port: 6379
-    password: ${REDIS_PASSWORD}
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
+      password: ${REDIS_PASSWORD}
   codec:
     max-in-memory-size: 10MB
 
