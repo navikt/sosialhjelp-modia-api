@@ -43,6 +43,7 @@ class FiksClientImpl(
     private val redisService: RedisService,
     @Value("\${retry_fiks_max_attempts}") private val maxAttempts: Long,
     @Value("\${retry_fiks_initial_delay}") private val initialDelay: Long,
+    @Value("\${dokument_cache_time_to_live_seconds}") private val documentTTL: Long
 ) : FiksClient {
 
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
@@ -61,14 +62,9 @@ class FiksClientImpl(
             ?: hentDigisosSakFraFiks(digisosId)
     }
 
-    override fun hentDokument(
-        fnr: String,
-        digisosId: String,
-        dokumentlagerId: String,
-        requestedClass: Class<out Any>
-    ): Any {
-        return hentDokumentFraCache(dokumentlagerId, requestedClass)?.also { log.info("Hentet dokument=$dokumentlagerId fra cache") }
-            ?: hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass)
+    override fun <T : Any> hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out T>, cacheKey: String?): T {
+        return hentDokumentFraCache(cacheKey ?: dokumentlagerId, requestedClass)?.also { log.info("Hentet dokument=$dokumentlagerId fra cache") }
+            ?: hentDokumentFraFiks(fnr, digisosId, dokumentlagerId, requestedClass, cacheKey ?: dokumentlagerId)
     }
 
     private fun skalBrukeCache(): Boolean {
@@ -119,25 +115,25 @@ class FiksClientImpl(
             }
     }
 
-    private fun lagreTilCache(id: String, any: Any) {
+    private fun lagreTilCache(id: String, content: Any, timeToLive: Long = redisService.defaultTimeToLiveSeconds) {
         if (skalBrukeCache()) {
             log.info("Lagret digisossak/dokument id=$id til cache")
-            redisService.set(RedisKeyType.FIKS_CLIENT, cacheKeyFor(id), objectMapper.writeValueAsBytes(any))
+            redisService.set(RedisKeyType.FIKS_CLIENT, cacheKeyFor(id), objectMapper.writeValueAsBytes(content), timeToLive)
         }
     }
 
-    private fun hentDokumentFraCache(dokumentlagerId: String, requestedClass: Class<out Any>): Any? {
+    private fun <T : Any> hentDokumentFraCache(cacheKey: String, requestedClass: Class<out T>): T? {
         if (skalBrukeCache()) {
             log.debug("Forsøker å hente dokument fra cache")
-            return redisService.get(RedisKeyType.FIKS_CLIENT, cacheKeyFor(dokumentlagerId), requestedClass)
+            return redisService.get(RedisKeyType.FIKS_CLIENT, cacheKeyFor(cacheKey), requestedClass)
         }
         return null
     }
 
-    private fun hentDokumentFraFiks(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any {
+    private fun <T : Any> hentDokumentFraFiks(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out T>, cacheKey: String): T {
         val sporingsId = genererSporingsId()
 
-        val dokument: Any = fiksWebClient.get()
+        val dokument = fiksWebClient.get()
             .uri(PATH_DOKUMENT.plus(sporingsIdQuery), digisosId, dokumentlagerId, sporingsId)
             .accept(MediaType.APPLICATION_JSON)
             .header(IntegrationUtils.HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
@@ -159,7 +155,7 @@ class FiksClientImpl(
         return dokument
             .also {
                 auditService.reportFiks(fnr, "$baseUrl/digisos/api/v1/nav/soknader/$digisosId/dokumenter/$dokumentlagerId", HttpMethod.GET, sporingsId)
-                lagreTilCache(dokumentlagerId, it)
+                lagreTilCache(cacheKey, it, documentTTL)
             }
     }
 

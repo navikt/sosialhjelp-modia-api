@@ -36,7 +36,7 @@ internal class SoknadVedleggServiceTest {
 
         every { mockJsonVedleggSpesifikasjon.vedlegg } returns emptyList()
 
-        every { fiksClient.hentDokument(any(), any(), vedleggMetadata_soknad_2, any()) } returns soknadVedleggSpesifikasjonMedStatusKrevesOgLastetOpp
+        every { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_soknad_2, any()) } returns soknadVedleggSpesifikasjonMedStatusKrevesOgLastetOpp
     }
 
     @Test

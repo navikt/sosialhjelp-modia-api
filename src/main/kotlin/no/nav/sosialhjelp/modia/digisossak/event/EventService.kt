@@ -34,7 +34,7 @@ class EventService(
 ) {
 
     fun createModel(digisosSak: DigisosSak): InternalDigisosSoker {
-        val jsonDigisosSoker: JsonDigisosSoker? = jsonDigisosSokerService.get(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata)
+        val jsonDigisosSoker: JsonDigisosSoker? = jsonDigisosSokerService.get(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata, digisosSak.digisosSoker?.timestampSistOppdatert)
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
 
         val model = InternalDigisosSoker()
@@ -67,7 +67,7 @@ class EventService(
     }
 
     fun createSoknadsoversiktModel(digisosSak: DigisosSak): InternalDigisosSoker {
-        val jsonDigisosSoker: JsonDigisosSoker? = jsonDigisosSokerService.get(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata)
+        val jsonDigisosSoker: JsonDigisosSoker? = jsonDigisosSokerService.get(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata, digisosSak.digisosSoker?.timestampSistOppdatert)
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
 
         val model = InternalDigisosSoker()

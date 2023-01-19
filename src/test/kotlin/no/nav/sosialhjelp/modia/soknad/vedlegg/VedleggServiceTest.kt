@@ -47,12 +47,12 @@ internal class VedleggServiceTest {
 
         every { mockJsonVedleggSpesifikasjon.vedlegg } returns emptyList()
 
-        every { fiksClient.hentDokument(any(), any(), vedleggMetadata_soknad_1, any()) } returns soknadVedleggSpesifikasjon
-        every { fiksClient.hentDokument(any(), any(), vedleggMetadata_soknad_2, any()) } returns soknadVedleggSpesifikasjonMedStatusKrevesOgLastetOpp
-        every { fiksClient.hentDokument(any(), any(), vedleggMetadata_ettersendelse_1, any()) } returns ettersendteVedleggSpesifikasjon_1
-        every { fiksClient.hentDokument(any(), any(), vedleggMetadata_ettersendelse_2, any()) } returns ettersendteVedleggSpesifikasjon_2
-        every { fiksClient.hentDokument(any(), any(), vedleggMetadata_ettersendelse_3, any()) } returns ettersendteVedleggSpesifikasjon_3
-        every { fiksClient.hentDokument(any(), any(), vedleggMetadata_ettersendelse_4, any()) } returns ettersendteVedleggSpesifikasjon_4
+        every { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_soknad_1, any()) } returns soknadVedleggSpesifikasjon
+        every { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_soknad_2, any()) } returns soknadVedleggSpesifikasjonMedStatusKrevesOgLastetOpp
+        every { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_ettersendelse_1, any()) } returns ettersendteVedleggSpesifikasjon_1
+        every { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_ettersendelse_2, any()) } returns ettersendteVedleggSpesifikasjon_2
+        every { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_ettersendelse_3, any()) } returns ettersendteVedleggSpesifikasjon_3
+        every { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_ettersendelse_4, any()) } returns ettersendteVedleggSpesifikasjon_4
     }
 
     @Test
@@ -60,7 +60,7 @@ internal class VedleggServiceTest {
         val model = InternalDigisosSoker()
 
         every { eventService.createModel(any()) } returns model
-        every { fiksClient.hentDokument(any(), any(), vedleggMetadata_soknad_1, any()) } returns mockJsonVedleggSpesifikasjon
+        every { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_soknad_1, any()) } returns mockJsonVedleggSpesifikasjon
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns emptyList()
 
         every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns emptyList()
@@ -92,7 +92,7 @@ internal class VedleggServiceTest {
         val model = InternalDigisosSoker()
 
         every { eventService.createModel(any()) } returns model
-        every { fiksClient.hentDokument(any(), any(), vedleggMetadata_soknad_1, any()) } returns mockJsonVedleggSpesifikasjon
+        every { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_soknad_1, any()) } returns mockJsonVedleggSpesifikasjon
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns emptyList()
 
         every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns listOf(
@@ -114,7 +114,7 @@ internal class VedleggServiceTest {
         val model = InternalDigisosSoker()
 
         every { eventService.createModel(any()) } returns model
-        every { fiksClient.hentDokument(any(), any(), vedleggMetadata_soknad_1, any()) } returns mockJsonVedleggSpesifikasjon
+        every { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_soknad_1, any()) } returns mockJsonVedleggSpesifikasjon
 
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns emptyList()
 
@@ -175,8 +175,8 @@ internal class VedleggServiceTest {
         val model = InternalDigisosSoker()
 
         every { eventService.createModel(any()) } returns model
-        every { fiksClient.hentDokument(any(), any(), vedleggMetadata_soknad_1, any()) } returns mockJsonVedleggSpesifikasjon
-        every { fiksClient.hentDokument(any(), any(), vedleggMetadata_ettersendelse_5, any()) } returns
+        every { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_soknad_1, any()) } returns mockJsonVedleggSpesifikasjon
+        every { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_ettersendelse_5, any()) } returns
             JsonVedleggSpesifikasjon()
                 .withVedlegg(
                     listOf(
@@ -279,7 +279,7 @@ internal class VedleggServiceTest {
                 timestampSendt = tid_1.toEpochMilli()
             )
         )
-        every { fiksClient.hentDokument(any(), any(), vedleggMetadata_soknad_1, any()) } returns mockJsonVedleggSpesifikasjon
+        every { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_soknad_1, any()) } returns mockJsonVedleggSpesifikasjon
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), LASTET_OPP_STATUS) } returns emptyList()
 
         val list = service.hentAlleOpplastedeVedlegg(id)
