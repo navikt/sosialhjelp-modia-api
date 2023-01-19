@@ -30,6 +30,8 @@ internal class VilkarTest {
         every { mockDigisosSak.fiksDigisosId } returns "123"
         every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
+        every { mockDigisosSak.digisosSoker?.timestampSistOppdatert } returns 123L
+        every { mockDigisosSak.digisosSoker?.timestampSistOppdatert } returns 123L
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
@@ -42,7 +44,7 @@ internal class VilkarTest {
 
     @Test
     fun `vilkar ETTER utbetaling`() {
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -74,7 +76,7 @@ internal class VilkarTest {
 
     @Test
     fun `vilkar UTEN utbetaling`() {
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -96,7 +98,7 @@ internal class VilkarTest {
 
     @Test
     fun `vilkar FØR utbetaling - vilkar knyttes ikke til noen utbetaling`() {
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -123,7 +125,7 @@ internal class VilkarTest {
 
     @Test
     fun `vilkar og utbetaling har samme hendelsestidspunkt`() {
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")

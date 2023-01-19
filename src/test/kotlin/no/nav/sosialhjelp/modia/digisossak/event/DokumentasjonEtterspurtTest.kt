@@ -35,6 +35,7 @@ internal class DokumentasjonEtterspurtTest {
         every { mockDigisosSak.fiksDigisosId } returns "123"
         every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
+        every { mockDigisosSak.digisosSoker?.timestampSistOppdatert } returns 123L
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
@@ -47,7 +48,7 @@ internal class DokumentasjonEtterspurtTest {
 
     @Test
     fun `dokumentliste er satt OG vedtaksbrev er satt - skal gi oppgaver og historikk`() {
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -80,7 +81,7 @@ internal class DokumentasjonEtterspurtTest {
 
     @Test
     internal fun `dokumentliste er satt OG forvaltningsbrev mangler - skal gi oppgaver men ikke historikk`() {
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -109,7 +110,7 @@ internal class DokumentasjonEtterspurtTest {
 
     @Test
     fun `dokumentliste er tom OG forvaltningsbrev er satt - skal verken gi oppgaver eller historikk`() {
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -133,7 +134,7 @@ internal class DokumentasjonEtterspurtTest {
     @Disabled("fixme - oppgaver fra søknad ikke inkludert (enda)")
     @Test
     fun `oppgaver skal hentes fra soknaden dersom det ikke finnes dokumentasjonEtterspurt`() {
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")

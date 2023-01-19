@@ -35,6 +35,7 @@ internal class SoknadsStatusTest {
         every { mockDigisosSak.fiksDigisosId } returns "123"
         every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
+        every { mockDigisosSak.digisosSoker?.timestampSistOppdatert } returns 123L
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
@@ -47,7 +48,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus SENDT`() {
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns null
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns null
 
         val model = service.createModel(mockDigisosSak)
 
@@ -63,7 +64,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus MOTTATT`() {
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -89,7 +90,7 @@ internal class SoknadsStatusTest {
     fun `soknadsStatus MOTTATT papirsoknad`() {
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns null
         every { mockDigisosSak.originalSoknadNAV } returns null
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -113,7 +114,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus UNDER_BEHANDLING`() {
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -139,7 +140,7 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus FERDIGBEHANDLET`() {
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
