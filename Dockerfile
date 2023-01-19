@@ -3,6 +3,7 @@ FROM ghcr.io/navikt/baseimages/temurin:17
 ENV LC_ALL="no_NB.UTF-8"
 ENV LANG="no_NB.UTF-8"
 ENV TZ="Europe/Oslo"
+ENV APPD_ENABLED=true
 
 COPY build/libs/app.jar app.jar
 
