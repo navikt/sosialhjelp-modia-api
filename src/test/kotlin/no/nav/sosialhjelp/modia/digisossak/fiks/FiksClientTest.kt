@@ -44,6 +44,7 @@ internal class FiksClientTest {
     private val redisService: RedisService = mockk()
     private val maxRetryAttempts = 2L
     private val initialDelay = 2L
+    private val documentTTL = 360L
 
     private val fiksClient = FiksClientImpl(
         fiksWebClient = fiksWebClient,
@@ -52,7 +53,8 @@ internal class FiksClientTest {
         auditService = auditService,
         redisService = redisService,
         maxAttempts = maxRetryAttempts,
-        initialDelay = initialDelay
+        initialDelay = initialDelay,
+        documentTTL = documentTTL
     )
 
     private val id = "123"
@@ -67,7 +69,7 @@ internal class FiksClientTest {
         every { maskinportenClient.getToken() } returns "token"
         every { auditService.reportFiks(any(), any(), any(), any()) } just Runs
 
-        every { redisService.get(any(), any(), any()) } returns null
+        every { redisService.get<Any>(any(), any(), any()) } returns null
         every { redisService.set(any(), any(), any(), any()) } just Runs
         every { redisService.defaultTimeToLiveSeconds } returns 1
     }
@@ -194,7 +196,7 @@ internal class FiksClientTest {
         val result = fiksClient.hentDigisosSak(id)
 
         assertThat(result).isNotNull
-        verify(exactly = 2) { redisService.get(any(), any(), any()) }
+        verify(exactly = 2) { redisService.get<DigisosSak>(any(), any(), any()) }
         verify(exactly = 1) { redisService.set(any(), any(), any(), any()) }
     }
 
@@ -216,7 +218,7 @@ internal class FiksClientTest {
         val result = fiksClient.hentDigisosSak(id)
 
         assertThat(result).isNotNull
-        verify(exactly = 1) { redisService.get(any(), any(), any()) }
+        verify(exactly = 1) { redisService.get<DigisosSak>(any(), any(), any()) }
         verify(exactly = 1) { redisService.set(any(), any(), any(), any()) }
     }
 
@@ -235,7 +237,7 @@ internal class FiksClientTest {
 
         assertThat(result).isNotNull
 
-        verify(exactly = 0) { redisService.get(any(), any(), any()) }
+        verify(exactly = 0) { redisService.get<DigisosSak>(any(), any(), any()) }
     }
 
     @Test

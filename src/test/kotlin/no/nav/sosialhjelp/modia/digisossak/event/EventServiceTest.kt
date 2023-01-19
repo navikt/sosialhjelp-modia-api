@@ -36,6 +36,7 @@ internal class EventServiceTest {
         every { mockDigisosSak.fiksDigisosId } returns "123"
         every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
+        every { mockDigisosSak.digisosSoker?.timestampSistOppdatert } returns 123L
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
@@ -46,31 +47,31 @@ internal class EventServiceTest {
         resetHendelser()
     }
 
-/* Test-caser:
- [x] ingen innsyn, ingen sendt soknad
- [x] ingen innsyn, sendt soknad -> status SENDT
- [x] status mottatt
- [x] status under behandling
- [x] status ferdigbehandlet
- [x] saksStatus uten vedtakFattet
- [x] saksStatus før vedtakFattet
- [x] vedtakFattet uten saksStatus
- [x] vedtakFattet før saksStatus
- [x] saksStatus med 2 vedtakFattet
- [x] dokumentasjonEtterspurt
- [x] dokumentasjonEtterspurt med tom dokumentliste
- [x] ingen dokumentasjonEtterspurt-hendelser
- [x] forelopigSvar
- [ ] forelopigSvar - flere caser?
- [ ] utbetaling
- [ ] utbetaling - flere caser?
- ...
- [ ] komplett case
-*/
+    /* Test-caser:
+     [x] ingen innsyn, ingen sendt soknad
+     [x] ingen innsyn, sendt soknad -> status SENDT
+     [x] status mottatt
+     [x] status under behandling
+     [x] status ferdigbehandlet
+     [x] saksStatus uten vedtakFattet
+     [x] saksStatus før vedtakFattet
+     [x] vedtakFattet uten saksStatus
+     [x] vedtakFattet før saksStatus
+     [x] saksStatus med 2 vedtakFattet
+     [x] dokumentasjonEtterspurt
+     [x] dokumentasjonEtterspurt med tom dokumentliste
+     [x] ingen dokumentasjonEtterspurt-hendelser
+     [x] forelopigSvar
+     [ ] forelopigSvar - flere caser?
+     [ ] utbetaling
+     [ ] utbetaling - flere caser?
+     ...
+     [ ] komplett case
+    */
 
     @Test
     fun `ingen innsyn OG ingen soknad`() {
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns null
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns null
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns null
 
         val model = service.createModel(mockDigisosSak)
@@ -84,7 +85,7 @@ internal class EventServiceTest {
     @Test
     fun `ingen innsyn `() {
         every { mockDigisosSak.digisosSoker } returns null
-        every { jsonDigisosSokerService.get(any(), any(), null) } returns null
+        every { jsonDigisosSokerService.get(any(), any(), null, any()) } returns null
 
         val model = service.createModel(mockDigisosSak)
 
@@ -97,7 +98,7 @@ internal class EventServiceTest {
 
         @Test
         fun `saksStatus UTEN vedtakFattet`() {
-            every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+            every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
                 JsonDigisosSoker()
                     .withAvsender(avsender)
                     .withVersion("123")
@@ -131,7 +132,7 @@ internal class EventServiceTest {
 
         @Test
         fun `saksStatus UTEN tittel eller status`() {
-            every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+            every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
                 JsonDigisosSoker()
                     .withAvsender(avsender)
                     .withVersion("123")
@@ -165,7 +166,7 @@ internal class EventServiceTest {
 
         @Test
         fun `saksStatus FOER vedtakFattet`() {
-            every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+            every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
                 JsonDigisosSoker()
                     .withAvsender(avsender)
                     .withVersion("123")
@@ -203,7 +204,7 @@ internal class EventServiceTest {
 
         @Test
         fun `vedtakFattet UTEN saksStatus`() {
-            every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+            every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
                 JsonDigisosSoker()
                     .withAvsender(avsender)
                     .withVersion("123")
@@ -240,7 +241,7 @@ internal class EventServiceTest {
 
         @Test
         fun `vedtakFattet FOER saksStatus`() {
-            every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+            every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
                 JsonDigisosSoker()
                     .withAvsender(avsender)
                     .withVersion("123")
@@ -279,7 +280,7 @@ internal class EventServiceTest {
 
         @Test
         fun `saksStatus med 2 vedtakFattet`() {
-            every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+            every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
                 JsonDigisosSoker()
                     .withAvsender(avsender)
                     .withVersion("123")
@@ -315,7 +316,7 @@ internal class EventServiceTest {
 
         @Test
         fun `saksStatus uten tittel eller status med vedtakFattet uten utfall`() {
-            every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+            every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
                 JsonDigisosSoker()
                     .withAvsender(avsender)
                     .withVersion("123")
@@ -353,7 +354,7 @@ internal class EventServiceTest {
 
     @Test
     fun `forelopigSvar skal gi historikk`() {
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")

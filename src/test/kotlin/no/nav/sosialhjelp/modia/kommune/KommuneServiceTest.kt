@@ -34,7 +34,7 @@ internal class KommuneServiceTest {
         clearAllMocks()
 
         every { mockDigisosSak.kommunenummer } returns kommuneNr
-        every { redisService.get(any(), any(), any()) } returns null
+        every { redisService.get<Any>(any(), any(), any()) } returns null
         every { redisService.set(any(), any(), any(), any()) } just Runs
         every { redisService.defaultTimeToLiveSeconds } returns 1
     }
@@ -42,12 +42,12 @@ internal class KommuneServiceTest {
     @Test
     internal fun `hent KommuneInfo fra cache`() {
         val kommuneInfo: KommuneInfo = objectMapper.readValue(ok_kommuneinfo_response_string)
-        every { redisService.get(any(), any(), any()) } returns kommuneInfo
+        every { redisService.get<KommuneInfo>(any(), any(), any()) } returns kommuneInfo
 
         val result = service.get(kommuneNr)
 
         assertThat(result).isNotNull
-        verify(exactly = 1) { redisService.get(any(), any(), any()) }
+        verify(exactly = 1) { redisService.get<KommuneInfo>(any(), any(), any()) }
         verify(exactly = 0) { kommuneInfoClient.getKommuneInfo(any()) }
         verify(exactly = 0) { redisService.set(any(), any(), any(), any()) }
     }
@@ -59,7 +59,7 @@ internal class KommuneServiceTest {
         val result = service.get(kommuneNr)
 
         assertThat(result).isNotNull
-        verify(exactly = 1) { redisService.get(any(), any(), any()) }
+        verify(exactly = 1) { redisService.get<KommuneInfo>(any(), any(), any()) }
         verify(exactly = 1) { kommuneInfoClient.getKommuneInfo(any()) }
         verify(exactly = 1) { redisService.set(any(), any(), any(), any()) }
     }

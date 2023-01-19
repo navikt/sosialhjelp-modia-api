@@ -23,16 +23,16 @@ internal class JsonDigisosSokerServiceTest {
     fun `Should gather innsyn data`() {
         val mockJsonDigisosSoker: JsonDigisosSoker = mockk()
 
-        every { fiksClient.hentDokument(any(), any(), any(), JsonDigisosSoker::class.java) } returns mockJsonDigisosSoker
+        every { fiksClient.hentDokument(any(), any(), any(), JsonDigisosSoker::class.java, "abc_123") } returns mockJsonDigisosSoker
 
-        val jsonDigisosSoker: JsonDigisosSoker? = jsonDigisosSokerService.get("fnr", "123", "abc")
+        val jsonDigisosSoker: JsonDigisosSoker? = jsonDigisosSokerService.get("fnr", "123", "abc", 123L)
 
         assertThat(jsonDigisosSoker).isNotNull
     }
 
     @Test
     fun `Should return null if DigisosSoker is null`() {
-        val jsonDigisosSoker = jsonDigisosSokerService.get("fnr", "123", null)
+        val jsonDigisosSoker = jsonDigisosSokerService.get("fnr", "123", null, 123L)
 
         assertThat(jsonDigisosSoker).isNull()
     }

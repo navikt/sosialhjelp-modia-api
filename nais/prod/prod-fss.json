@@ -21,6 +21,7 @@
     "SKJERMEDE_PERSONER_SCOPE": "api://prod-gcp.nom.skjermede-personer-pip/.default",
     "REDIS_HOST": "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local",
     "CACHE_TIME_TO_LIVE_SECONDS": "180",
+    "DOKUMENT_CACHE_TIME_TO_LIVE_SECONDS": "360",
     "UNLEASH_API_URL": "https://unleash.nais.io/api",
     "UNLEASH_INSTANCE_ID": "prod-fss",
     "SWAGGER_ENABLED": "false",

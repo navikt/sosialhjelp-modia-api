@@ -8,5 +8,5 @@ interface FiksClient {
 
     fun hentAlleDigisosSaker(fnr: String): List<DigisosSak>
 
-    fun hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out Any>): Any
+    fun <T : Any> hentDokument(fnr: String, digisosId: String, dokumentlagerId: String, requestedClass: Class<out T>, cacheKey: String? = null): T
 }
