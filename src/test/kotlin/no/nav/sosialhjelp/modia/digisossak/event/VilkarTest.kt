@@ -31,7 +31,6 @@ internal class VilkarTest {
         every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
         every { mockDigisosSak.digisosSoker?.timestampSistOppdatert } returns 123L
-        every { mockDigisosSak.digisosSoker?.timestampSistOppdatert } returns 123L
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
