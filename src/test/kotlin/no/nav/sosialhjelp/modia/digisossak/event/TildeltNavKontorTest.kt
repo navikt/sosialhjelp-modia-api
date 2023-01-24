@@ -37,6 +37,7 @@ internal class TildeltNavKontorTest {
         every { mockDigisosSak.fiksDigisosId } returns "123"
         every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
+        every { mockDigisosSak.digisosSoker?.timestampSistOppdatert } returns 123L
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
@@ -50,7 +51,7 @@ internal class TildeltNavKontorTest {
     @Test
     fun `tildeltNavKontor skal hente navenhets navn fra Norg`() {
         every { norgClient.hentNavEnhet(navKontor)!!.navn } returns enhetNavn
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -83,7 +84,7 @@ internal class TildeltNavKontorTest {
     @Test
     fun `tildeltNavKontor med tom navenhetsnummer skal gi default navenhetsnavn`() {
         every { norgClient.hentNavEnhet("") } returns null
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -116,7 +117,7 @@ internal class TildeltNavKontorTest {
     @Test
     fun `tildeltNavKontor skal gi generell melding hvis NorgClient kaster FiksException`() {
         every { norgClient.hentNavEnhet(navKontor) } throws NorgException("noe feilet", null)
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -145,7 +146,7 @@ internal class TildeltNavKontorTest {
     fun `tildeltNavKontor til samme navKontor som soknad ble sendt til - gir ingen hendelse`() {
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns navKontor
         every { norgClient.hentNavEnhet(navKontor)!!.navn } returns enhetNavn
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -170,7 +171,7 @@ internal class TildeltNavKontorTest {
     @Test
     fun `flere identiske tildeltNavKontor-hendelser skal kun gi en hendelse i historikk`() {
         every { norgClient.hentNavEnhet(navKontor)!!.navn } returns enhetNavn
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -198,7 +199,7 @@ internal class TildeltNavKontorTest {
     fun `tildeltNavKontor til ulike kontor gir like mange hendelser`() {
         every { norgClient.hentNavEnhet(navKontor)!!.navn } returns enhetNavn
         every { norgClient.hentNavEnhet(navKontor2)!!.navn } returns enhetNavn2
-        every { jsonDigisosSokerService.get(any(), any(), any()) } returns
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")

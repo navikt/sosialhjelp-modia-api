@@ -24,7 +24,7 @@ enum class RedisKeyType {
 
 interface RedisService {
     val defaultTimeToLiveSeconds: Long
-    fun get(type: RedisKeyType, key: String, requestedClass: Class<out Any>): Any?
+    fun <T : Any> get(type: RedisKeyType, key: String, requestedClass: Class<out T>): T?
     fun set(type: RedisKeyType, key: String, value: ByteArray, timeToLive: Long = defaultTimeToLiveSeconds)
     fun getAlleNavEnheter(): List<NavEnhet>?
 }
@@ -38,26 +38,22 @@ class RedisServiceImpl(
 
     override val defaultTimeToLiveSeconds = cacheTimeToLiveSeconds
 
-    override fun get(type: RedisKeyType, key: String, requestedClass: Class<out Any>): Any? {
-        val bytes: ByteArray? = redisStore.get("${type.name}_$key") // Redis har konfigurert timout for disse.
-        return if (bytes != null) {
-            try {
-                if (requestedClass == String::class.java) {
-                    log.debug("Hentet ${requestedClass.simpleName} fra cache, type=${type.name}")
-                    String(bytes, StandardCharsets.UTF_8)
-                } else {
-                    objectMapper.readValue(bytes, requestedClass)
-                        .also { valider(it) }
-                        .also { log.debug("Hentet ${requestedClass.simpleName} fra cache, type=${type.name}") }
-                }
-            } catch (e: IOException) {
-                log.warn("Fant type=${type.name} i cache, men value var ikke ${requestedClass.simpleName}")
-                null
-            } catch (e: DigisosSakTilhorerAnnenBrukerException) {
-                log.warn("DigisosSak i cache tilhører en annen bruker enn brukeren fra token.")
-                return null
+    override fun <T : Any> get(type: RedisKeyType, key: String, requestedClass: Class<out T>): T? {
+        val bytes: ByteArray = redisStore.get("${type.name}_$key") ?: return null // Redis har konfigurert timout for disse.
+        return try {
+            if (requestedClass == String::class.java) {
+                log.debug("Hentet ${requestedClass.simpleName} fra cache, type=${type.name}")
+                String(bytes, StandardCharsets.UTF_8) as T
+            } else {
+                objectMapper.readValue(bytes, requestedClass)
+                    .also { valider(it) }
+                    .also { log.debug("Hentet ${requestedClass.simpleName} fra cache, type=${type.name}") } as T
             }
-        } else {
+        } catch (e: IOException) {
+            log.warn("Fant type=${type.name} i cache, men value var ikke ${requestedClass.simpleName}")
+            null
+        } catch (e: DigisosSakTilhorerAnnenBrukerException) {
+            log.warn("DigisosSak i cache tilhører en annen bruker enn brukeren fra token.")
             null
         }
     }
@@ -105,7 +101,7 @@ class RedisServiceMock : RedisService {
 
     override val defaultTimeToLiveSeconds: Long = 1L
 
-    override fun get(type: RedisKeyType, key: String, requestedClass: Class<out Any>): Any? {
+    override fun <T : Any> get(type: RedisKeyType, key: String, requestedClass: Class<out T>): T? {
         return null
     }
 
