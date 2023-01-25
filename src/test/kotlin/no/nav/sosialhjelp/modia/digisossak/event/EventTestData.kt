@@ -17,6 +17,11 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonUtbetaling
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtakFattet
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtaksfil
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVilkar
+import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.api.fiks.DigisosSoker
+import no.nav.sosialhjelp.api.fiks.DokumentInfo
+import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
+import no.nav.sosialhjelp.api.fiks.Tilleggsinformasjon
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -223,3 +228,32 @@ fun resetHendelser() {
     DOKUMENTASJONKRAV_OPPFYLT.withHendelsestidspunkt(null)
     VILKAR_OPPFYLT.withHendelsestidspunkt(null)
 }
+
+val defaultDigisosSak = DigisosSak(
+    fiksDigisosId = "123",
+    sokerFnr = "fnr",
+    fiksOrgId = "",
+    kommunenummer = "0301",
+    sistEndret = 1L,
+    originalSoknadNAV = OriginalSoknadNAV(
+        navEksternRefId = "eksternRef",
+        metadata = "some other id",
+        vedleggMetadata = "",
+        soknadDokument = DokumentInfo(
+            filnavn = "soknad.json",
+            dokumentlagerDokumentId = "soknaddokumentlagerid",
+            storrelse = 99L
+        ),
+        vedlegg = emptyList(),
+        timestampSendt = tidspunkt_soknad
+    ),
+    ettersendtInfoNAV = null,
+    digisosSoker = DigisosSoker(
+        metadata = "some id",
+        dokumenter = emptyList(),
+        timestampSistOppdatert = 123L
+    ),
+    tilleggsinformasjon = Tilleggsinformasjon(
+        enhetsnummer = enhetsnr
+    )
+)
