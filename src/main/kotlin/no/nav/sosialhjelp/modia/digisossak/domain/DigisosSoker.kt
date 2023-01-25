@@ -5,21 +5,19 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class InternalDigisosSoker(
-    var referanse: String?,
-    var status: SoknadsStatus,
-    var saker: MutableList<Sak>,
-    var utbetalinger: MutableList<Utbetaling>,
-    var forvaltningsbrev: MutableList<Forvaltningsbrev>,
-    var soknadsmottaker: Soknadsmottaker?,
-    var navKontorHistorikk: MutableList<NavKontorInformasjon>,
-    var oppgaver: MutableList<Oppgave>,
-    var dokumentasjonkrav: MutableList<Dokumentasjonkrav>,
-    var vilkar: MutableList<Vilkar>,
-    var historikk: MutableList<Hendelse>,
-    var forelopigSvar: ForelopigSvar?
-) {
-    constructor() : this(null, SoknadsStatus.SENDT, mutableListOf(), mutableListOf(), mutableListOf(), null, mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf(), null)
-}
+    var referanse: String? = null,
+    var status: SoknadsStatus = SoknadsStatus.SENDT,
+    var saker: MutableList<Sak> = mutableListOf(),
+    var utbetalinger: MutableList<Utbetaling> = mutableListOf(),
+    var forvaltningsbrev: MutableList<Forvaltningsbrev> = mutableListOf(),
+    var soknadsmottaker: Soknadsmottaker? = null,
+    var navKontorHistorikk: MutableList<NavKontorInformasjon> = mutableListOf(),
+    var oppgaver: MutableList<Oppgave> = mutableListOf(),
+    var dokumentasjonkrav: MutableList<Dokumentasjonkrav> = mutableListOf(),
+    var vilkar: MutableList<Vilkar> = mutableListOf(),
+    var historikk: MutableList<Hendelse> = mutableListOf(),
+    var forelopigSvar: ForelopigSvar? = null
+)
 
 data class Forvaltningsbrev(
     var referanse: String,
