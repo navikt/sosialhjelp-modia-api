@@ -4,7 +4,7 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
-import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.api.fiks.Tilleggsinformasjon
 import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
 import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.digisossak.domain.UtfallVedtak
@@ -28,19 +28,10 @@ internal class EventServiceTest {
 
     private val service = EventService(jsonDigisosSokerService, norgClient, soknadVedleggService)
 
-    private val mockDigisosSak: DigisosSak = mockk()
-
     @BeforeEach
     fun init() {
         clearAllMocks()
-        every { mockDigisosSak.fiksDigisosId } returns "123"
-        every { mockDigisosSak.sokerFnr } returns "fnr"
-        every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
-        every { mockDigisosSak.digisosSoker?.timestampSistOppdatert } returns 123L
-        every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
-        every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
-        every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
-        every { mockDigisosSak.kommunenummer } returns "0301"
+
         every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
 
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
@@ -73,9 +64,10 @@ internal class EventServiceTest {
     @Test
     fun `ingen innsyn OG ingen soknad`() {
         every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns null
-        every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns null
 
-        val model = service.createModel(mockDigisosSak)
+        val digisosSak = defaultDigisosSak.copy(tilleggsinformasjon = Tilleggsinformasjon(null))
+
+        val model = service.createModel(digisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.SENDT)
@@ -85,10 +77,10 @@ internal class EventServiceTest {
 
     @Test
     fun `ingen innsyn `() {
-        every { mockDigisosSak.digisosSoker } returns null
+        val digisosSak = defaultDigisosSak.copy(digisosSoker = null)
         every { jsonDigisosSokerService.get(any(), any(), null, any()) } returns null
 
-        val model = service.createModel(mockDigisosSak)
+        val model = service.createModel(digisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.historikk).hasSize(1)
@@ -111,7 +103,7 @@ internal class EventServiceTest {
                         )
                     )
 
-            val model = service.createModel(mockDigisosSak)
+            val model = service.createModel(defaultDigisosSak)
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -145,7 +137,7 @@ internal class EventServiceTest {
                         )
                     )
 
-            val model = service.createModel(mockDigisosSak)
+            val model = service.createModel(defaultDigisosSak)
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -180,7 +172,7 @@ internal class EventServiceTest {
                         )
                     )
 
-            val model = service.createModel(mockDigisosSak)
+            val model = service.createModel(defaultDigisosSak)
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -217,7 +209,7 @@ internal class EventServiceTest {
                         )
                     )
 
-            val model = service.createModel(mockDigisosSak)
+            val model = service.createModel(defaultDigisosSak)
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -255,7 +247,7 @@ internal class EventServiceTest {
                         )
                     )
 
-            val model = service.createModel(mockDigisosSak)
+            val model = service.createModel(defaultDigisosSak)
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -295,7 +287,7 @@ internal class EventServiceTest {
                         )
                     )
 
-            val model = service.createModel(mockDigisosSak)
+            val model = service.createModel(defaultDigisosSak)
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -330,7 +322,7 @@ internal class EventServiceTest {
                         )
                     )
 
-            val model = service.createModel(mockDigisosSak)
+            val model = service.createModel(defaultDigisosSak)
 
             assertThat(model).isNotNull
             assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -367,7 +359,7 @@ internal class EventServiceTest {
                     )
                 )
 
-        val model = service.createModel(mockDigisosSak)
+        val model = service.createModel(defaultDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)

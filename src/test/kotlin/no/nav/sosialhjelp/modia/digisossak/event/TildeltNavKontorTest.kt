@@ -4,7 +4,7 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
-import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.api.fiks.Tilleggsinformasjon
 import no.nav.sosialhjelp.modia.app.exceptions.NorgException
 import no.nav.sosialhjelp.modia.digisossak.domain.SendingType
 import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
@@ -26,22 +26,13 @@ internal class TildeltNavKontorTest {
 
     private val service = EventService(jsonDigisosSokerService, norgClient, soknadVedleggService)
 
-    private val mockDigisosSak: DigisosSak = mockk()
-
     private val enhetNavn = "NAV Holmenkollen"
     private val enhetNavn2 = "NAV Longyearbyen"
 
     @BeforeEach
     fun init() {
         clearAllMocks()
-        every { mockDigisosSak.fiksDigisosId } returns "123"
-        every { mockDigisosSak.sokerFnr } returns "fnr"
-        every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
-        every { mockDigisosSak.digisosSoker?.timestampSistOppdatert } returns 123L
-        every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
-        every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
-        every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
-        every { mockDigisosSak.kommunenummer } returns "0301"
+
         every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
 
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
@@ -63,7 +54,7 @@ internal class TildeltNavKontorTest {
                     )
                 )
 
-        val model = service.createModel(mockDigisosSak)
+        val model = service.createModel(defaultDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
@@ -96,7 +87,7 @@ internal class TildeltNavKontorTest {
                     )
                 )
 
-        val model = service.createModel(mockDigisosSak)
+        val model = service.createModel(defaultDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
@@ -129,7 +120,7 @@ internal class TildeltNavKontorTest {
                     )
                 )
 
-        val model = service.createModel(mockDigisosSak)
+        val model = service.createModel(defaultDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
@@ -145,7 +136,7 @@ internal class TildeltNavKontorTest {
 
     @Test
     fun `tildeltNavKontor til samme navKontor som soknad ble sendt til - gir ingen hendelse`() {
-        every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns navKontor
+        val digisosSak = defaultDigisosSak.copy(tilleggsinformasjon = Tilleggsinformasjon(enhetsnummer = navKontor))
         every { norgClient.hentNavEnhet(navKontor)!!.navn } returns enhetNavn
         every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
@@ -158,7 +149,7 @@ internal class TildeltNavKontorTest {
                     )
                 )
 
-        val model = service.createModel(mockDigisosSak)
+        val model = service.createModel(digisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
@@ -184,7 +175,7 @@ internal class TildeltNavKontorTest {
                     )
                 )
 
-        val model = service.createModel(mockDigisosSak)
+        val model = service.createModel(defaultDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)
@@ -212,7 +203,7 @@ internal class TildeltNavKontorTest {
                     )
                 )
 
-        val model = service.createModel(mockDigisosSak)
+        val model = service.createModel(defaultDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.MOTTATT)

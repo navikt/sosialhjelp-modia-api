@@ -4,7 +4,6 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
-import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.digisossak.domain.UtbetalingsStatus
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
@@ -22,19 +21,10 @@ internal class UtbetalingTest {
 
     private val service = EventService(jsonDigisosSokerService, norgClient, soknadVedleggService)
 
-    private val mockDigisosSak: DigisosSak = mockk()
-
     @BeforeEach
     fun init() {
         clearAllMocks()
-        every { mockDigisosSak.fiksDigisosId } returns "123"
-        every { mockDigisosSak.sokerFnr } returns "fnr"
-        every { mockDigisosSak.digisosSoker?.metadata } returns "some id"
-        every { mockDigisosSak.digisosSoker?.timestampSistOppdatert } returns 123L
-        every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
-        every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
-        every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
-        every { mockDigisosSak.kommunenummer } returns "0301"
+
         every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
 
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
@@ -59,7 +49,7 @@ internal class UtbetalingTest {
                     )
                 )
 
-        val model = service.createModel(mockDigisosSak)
+        val model = service.createModel(defaultDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.FERDIGBEHANDLET)
@@ -99,7 +89,7 @@ internal class UtbetalingTest {
                     )
                 )
 
-        val model = service.createModel(mockDigisosSak)
+        val model = service.createModel(defaultDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
@@ -121,7 +111,7 @@ internal class UtbetalingTest {
                     )
                 )
 
-        val model = service.createModel(mockDigisosSak)
+        val model = service.createModel(defaultDigisosSak)
 
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.UNDER_BEHANDLING)
