@@ -43,8 +43,8 @@ class EventService(
         if (timestampSendt != null) {
             val enhetsnummer: String = digisosSak.tilleggsinformasjon?.enhetsnummer ?: ""
             val navenhetsnavn = getNavenhetsnavnOrDefault(enhetsnummer)
-            if (digisosSak.kommunenummer == "3007") {
-                log.info("Søknad sendt til kommunenummer 3007 (NAV Ringerike) - enhetsnummer=$enhetsnummer, navenhetsnavn=$navenhetsnavn")
+            if (digisosSak.kommunenummer == "3007" || digisosSak.kommunenummer == "0605") {
+                log.info("Søknad sendt til kommunenummer ${digisosSak.kommunenummer} - Ringerike kommune - enhetsnummer=$enhetsnummer, navenhetsnavn=$navenhetsnavn")
             }
 
             model.soknadsmottaker = Soknadsmottaker(enhetsnummer, navenhetsnavn)
