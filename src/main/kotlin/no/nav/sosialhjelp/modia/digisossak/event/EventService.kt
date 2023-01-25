@@ -20,6 +20,7 @@ import no.nav.sosialhjelp.modia.digisossak.domain.SendingType
 import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.digisossak.domain.Soknadsmottaker
 import no.nav.sosialhjelp.modia.digisossak.event.Titler.SOKNAD_SENDT
+import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
@@ -42,6 +43,9 @@ class EventService(
         if (timestampSendt != null) {
             val enhetsnummer: String = digisosSak.tilleggsinformasjon?.enhetsnummer ?: ""
             val navenhetsnavn = getNavenhetsnavnOrDefault(enhetsnummer)
+            if (digisosSak.kommunenummer == "3007") {
+                log.info("Søknad sendt til kommunenummer 3007 (NAV Ringerike) - enhetsnummer=$enhetsnummer, navenhetsnavn=$navenhetsnavn")
+            }
 
             model.soknadsmottaker = Soknadsmottaker(enhetsnummer, navenhetsnavn)
             model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til $navenhetsnavn.", unixToLocalDateTime(timestampSendt), VIS_SOKNADEN))
@@ -109,6 +113,7 @@ class EventService(
         unixToLocalDateTime(timestampSendt).toLocalDate().isAfter(LocalDate.now().minusDays(30))
 
     companion object {
+        private val log by logger()
 
         /**
          * Sorter hendelser på hendelsestidspunkt.
