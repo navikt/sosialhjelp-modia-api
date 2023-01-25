@@ -1,6 +1,5 @@
 package no.nav.sosialhjelp.modia.login
 
-import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.utils.MiljoUtils
@@ -20,19 +19,18 @@ class LoginController(
 
     @GetMapping("/login")
     fun login(response: HttpServletResponse): ResponseEntity<LoginResponse> {
-
-        val msgraphAccessToken = tokenUtils.hentTokenMedGraphScope()
-        val msgraphCookie = Cookie(MSGRAPH_COOKIE_NAME, msgraphAccessToken)
-        msgraphCookie.isHttpOnly = true
-        msgraphCookie.secure = !miljoUtils.isProfileMockAltOrLocal()
-        msgraphCookie.path = "/"
-        response.addCookie(msgraphCookie)
+//        val msgraphAccessToken = tokenUtils.hentTokenMedGraphScope()
+//        val msgraphCookie = Cookie(MSGRAPH_COOKIE_NAME, msgraphAccessToken)
+//        msgraphCookie.isHttpOnly = true
+//        msgraphCookie.secure = !miljoUtils.isProfileMockAltOrLocal()
+//        msgraphCookie.path = "/"
+//        response.addCookie(msgraphCookie)
         return ResponseEntity.ok(LoginResponse("ok"))
     }
 
-    companion object {
-        const val MSGRAPH_COOKIE_NAME = "isso-accesstoken" // NB: Navnet "isso-accesstoken" kreves av modiacontextholder.
-    }
+//    companion object {
+//        const val MSGRAPH_COOKIE_NAME = "isso-accesstoken" // NB: Navnet "isso-accesstoken" kreves av modiacontextholder.
+//    }
 
     data class LoginResponse(
         val melding: String,
