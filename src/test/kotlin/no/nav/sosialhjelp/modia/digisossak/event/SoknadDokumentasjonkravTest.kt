@@ -34,6 +34,7 @@ internal class SoknadDokumentasjonkravTest {
         every { mockDigisosSak.originalSoknadNAV?.metadata } returns "some other id"
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunkt_soknad
         every { mockDigisosSak.tilleggsinformasjon?.enhetsnummer } returns enhetsnr
+        every { mockDigisosSak.kommunenummer } returns "0301"
         every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
 
         resetHendelser()
