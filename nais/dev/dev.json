@@ -14,7 +14,7 @@
     "VEILEDER_GRUPPE_ID": "55f10d2b-f3ac-4d85-b989-655145ab5f30",
     "FIKS_DIGISOS_ENDPOINT_URL": "https://api.fiks.test.ks.no",
     "NORG_ENDPOINT_URL": "https://norg2.dev-fss-pub.nais.io/norg2/api/v1",
-    "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.adeo.no/#/startsok?enhetNr=",
+    "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.intern.nav.no/#/startsok?enhetNr=",
     "PDL_ENDPOINT_URL": "https://pdl-api.dev-fss-pub.nais.io/graphql",
     "PDL_SCOPE": "api://dev-fss.pdl.pdl-api/.default",
     "SKJERMEDE_PERSONER_ENDPOINT_URL": "https://skjermede-personer-pip.dev.intern.nav.no",

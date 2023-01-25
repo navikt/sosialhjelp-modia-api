@@ -19,7 +19,7 @@
     "VEILEDER_GRUPPE_ID": "0000-MOCK-sosialhjelp-modia-veileder",
     "FIKS_DIGISOS_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/fiks",
     "NORG_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/norg_endpoint_url",
-    "NORG_OPPSLAG_URL": "https://norg2-frontend.dev.adeo.no/#/startsok?enhetNr=",
+    "NORG_OPPSLAG_URL": "https://digisos.ekstern.dev.nav.no/sosialhjelp/modia",
     "PDL_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/pdl_endpoint_url",
     "PDL_SCOPE": "dummyScope",
     "SKJERMEDE_PERSONER_ENDPOINT_URL": "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/skjermede-personer",
