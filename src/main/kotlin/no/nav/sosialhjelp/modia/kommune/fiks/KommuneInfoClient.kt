@@ -26,7 +26,7 @@ class KommuneInfoClient(
 
     fun getKommuneInfo(kommunenummer: String): KommuneInfo {
         return fiksWebClient.get()
-            .uri(PATH_KOMMUNEINFO, kommunenummer)
+            .uri(clientProperties.fiksDigisosEndpointUrl.plus(PATH_KOMMUNEINFO), kommunenummer)
             .accept(MediaType.APPLICATION_JSON)
             .header(AUTHORIZATION, BEARER + maskinportenClient.getToken())
             .header(HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
@@ -46,7 +46,7 @@ class KommuneInfoClient(
 
     fun getAll(): List<KommuneInfo> {
         return fiksWebClient.get()
-            .uri(PATH_ALLE_KOMMUNEINFO)
+            .uri(clientProperties.fiksDigisosEndpointUrl.plus(PATH_ALLE_KOMMUNEINFO))
             .accept(MediaType.APPLICATION_JSON)
             .header(AUTHORIZATION, BEARER + maskinportenClient.getToken())
             .header(HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)

@@ -1,5 +1,7 @@
 package no.nav.sosialhjelp.modia.navkontor.norg
 
+import no.nav.sosialhjelp.modia.app.client.ClientProperties
+import no.nav.sosialhjelp.modia.app.client.unproxiedHttpClient
 import no.nav.sosialhjelp.modia.app.exceptions.NorgException
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.getCallId
 import no.nav.sosialhjelp.modia.logger
@@ -11,6 +13,7 @@ import no.nav.sosialhjelp.modia.typeRef
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.springframework.context.annotation.Profile
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
@@ -24,15 +27,23 @@ interface NorgClient {
 @Profile("!local")
 @Component
 class NorgClientImpl(
-    private val norgWebClient: WebClient,
+    webClientBuilder: WebClient.Builder,
+    private val clientProperties: ClientProperties,
     private val redisService: RedisService
 ) : NorgClient {
+
+    private val norgWebClient = webClientBuilder
+        .clientConnector(ReactorClientHttpConnector(unproxiedHttpClient()))
+        .codecs {
+            it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+        }
+        .build()
 
     override fun hentNavEnhet(enhetsnr: String): NavEnhet? {
         if (enhetsnr == "") return null
 
         return norgWebClient.get()
-            .uri("/enhet/{enhetsnr}", enhetsnr)
+            .uri("${clientProperties.norgEndpointUrl}/enhet/{enhetsnr}", enhetsnr)
             .header(HEADER_CALL_ID, getCallId())
             .retrieve()
             .bodyToMono<NavEnhet>()
@@ -49,7 +60,7 @@ class NorgClientImpl(
 
     override fun hentAlleNavEnheter(): List<NavEnhet> {
         return norgWebClient.get()
-            .uri("/enhet?enhetStatusListe=AKTIV")
+            .uri("${clientProperties.norgEndpointUrl}/enhet?enhetStatusListe=AKTIV")
             .header(HEADER_CALL_ID, getCallId())
             .retrieve()
             .bodyToMono(typeRef<List<NavEnhet>>())

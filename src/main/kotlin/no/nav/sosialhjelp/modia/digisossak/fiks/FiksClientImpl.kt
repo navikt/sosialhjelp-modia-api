@@ -86,7 +86,7 @@ class FiksClientImpl(
         val sporingsId = genererSporingsId()
 
         val digisosSak: DigisosSak = fiksWebClient.get()
-            .uri(PATH_DIGISOSSAK.plus(sporingsIdQuery), digisosId, sporingsId)
+            .uri(baseUrl.plus(PATH_DIGISOSSAK).plus(sporingsIdQuery), digisosId, sporingsId)
             .accept(MediaType.APPLICATION_JSON)
             .header(IntegrationUtils.HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
             .header(IntegrationUtils.HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
@@ -134,7 +134,7 @@ class FiksClientImpl(
         val sporingsId = genererSporingsId()
 
         val dokument = fiksWebClient.get()
-            .uri(PATH_DOKUMENT.plus(sporingsIdQuery), digisosId, dokumentlagerId, sporingsId)
+            .uri(baseUrl.plus(PATH_DOKUMENT).plus(sporingsIdQuery), digisosId, dokumentlagerId, sporingsId)
             .accept(MediaType.APPLICATION_JSON)
             .header(IntegrationUtils.HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
             .header(IntegrationUtils.HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
@@ -163,7 +163,7 @@ class FiksClientImpl(
         val sporingsId = genererSporingsId()
 
         val digisosSaker: List<DigisosSak> = fiksWebClient.post()
-            .uri(PATH_ALLE_DIGISOSSAKER.plus(sporingsIdQuery), sporingsId)
+            .uri(baseUrl.plus(PATH_ALLE_DIGISOSSAKER).plus(sporingsIdQuery), sporingsId)
             .accept(MediaType.APPLICATION_JSON)
             .header(IntegrationUtils.HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
             .header(IntegrationUtils.HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
