@@ -7,12 +7,12 @@ group = "no.nav.sosialhjelp"
 object Versions {
     const val kotlin = "1.7.22"
     const val coroutines = "1.6.4"
-    const val springBoot = "3.0.1"
+    const val springBoot = "3.0.2"
     const val logback = "1.2.11"
     const val logstash = "7.2"
     const val sosialhjelpCommon = "1.20221214.0749-b633a3e"
     const val filformat = "1.2022.12.02-08.47-423f51003cee"
-    const val micrometerRegistry = "1.10.2"
+    const val micrometerRegistry = "1.10.3"
     const val prometheus = "0.16.0"
     const val tokenValidation = "3.0.2"
     const val jackson = "2.14.1"
@@ -23,7 +23,7 @@ object Versions {
     const val syslog4j = "0.9.46"
     const val lettuce = "6.2.2.RELEASE"
     const val unleash = "4.4.1"
-    const val springdoc = "1.6.14"
+    const val springdoc = "2.0.2"
 
     const val jsonSmart = "2.4.8"
     const val gson = "2.10"
@@ -42,7 +42,7 @@ object Versions {
 plugins {
     kotlin("jvm") version "1.7.22"
     kotlin("plugin.spring") version "1.7.22"
-    id("org.springframework.boot") version "3.0.1"
+    id("org.springframework.boot") version "3.0.2"
     id("com.github.ben-manes.versions") version "0.44.0" // ./gradlew dependencyUpdates
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
 }
@@ -121,7 +121,8 @@ dependencies {
     implementation("no.nav.security:token-client-spring:${Versions.tokenValidation}")
 
 //    Springdoc
-    implementation("org.springdoc:springdoc-openapi-ui:${Versions.springdoc}")
+    implementation("org.springdoc:springdoc-openapi-starter-common:${Versions.springdoc}")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${Versions.springdoc}")
 
 //    Unleash
     implementation("no.finn.unleash:unleash-client-java:${Versions.unleash}")
