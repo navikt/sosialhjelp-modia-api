@@ -5,7 +5,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import no.nav.sosialhjelp.modia.navkontor.norg.NavEnhet
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
-import no.nav.sosialhjelp.modia.redis.RedisKeyType
 import no.nav.sosialhjelp.modia.redis.RedisService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -28,7 +27,6 @@ internal class NavKontorServiceTest {
 
     @Test
     internal fun skalHenteNavEnhet() {
-        every { redisService.get(RedisKeyType.NORG_CLIENT, any(), NavEnhet::class.java) } returns null
         every { norgClient.hentNavEnhet(enhetsnr) } returns navEnhet
 
         val navKontorinfo = navKontorService.hentNavKontorinfo(enhetsnr)
@@ -40,24 +38,11 @@ internal class NavKontorServiceTest {
 
     @Test
     internal fun `skal returnere null hvis sosialTjenester er null eller tom`() {
-        every { redisService.get(RedisKeyType.NORG_CLIENT, any(), NavEnhet::class.java) } returns null
         every { norgClient.hentNavEnhet(enhetsnr) } returns navEnhetUtenSosialTjenesterInformasjon
 
         val navKontorinfo = navKontorService.hentNavKontorinfo(enhetsnr)
 
         assertThat(navKontorinfo).isNull()
-    }
-
-    @Test
-    internal fun skalHenteNavEnhetFraCache() {
-        every { redisService.get(RedisKeyType.NORG_CLIENT, any(), NavEnhet::class.java) } returns navEnhet
-
-        val navKontorinfo = navKontorService.hentNavKontorinfo(enhetsnr)
-
-        assertThat(navKontorinfo).isNotNull
-        assertThat(navKontorinfo?.enhetsnr).isEqualTo(enhetsnr)
-
-        verify(exactly = 0) { norgClient.hentNavEnhet(enhetsnr) }
     }
 
     @Test

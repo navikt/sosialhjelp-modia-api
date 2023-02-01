@@ -3,8 +3,6 @@ package no.nav.sosialhjelp.modia.navkontor
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.navkontor.norg.NavEnhet
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
-import no.nav.sosialhjelp.modia.redis.NAVENHET_CACHE_KEY_PREFIX
-import no.nav.sosialhjelp.modia.redis.RedisKeyType
 import no.nav.sosialhjelp.modia.redis.RedisService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -17,7 +15,7 @@ class NavKontorService(
 ) {
 
     fun hentNavKontorinfo(enhetsnr: String): KontorinfoResponse? {
-        val enhet = hentNavEnhetFraCache(enhetsnr) ?: norgClient.hentNavEnhet(enhetsnr)
+        val enhet = norgClient.hentNavEnhet(enhetsnr)
         if (enhet == null || enhet.sosialeTjenester.isNullOrBlank()) {
             return null
         }
@@ -44,11 +42,6 @@ class NavKontorService(
 
     private fun hentNavEnhetListeFraCache(): List<NavEnhet>? {
         return redisService.getAlleNavEnheter()
-    }
-
-    private fun hentNavEnhetFraCache(enhetsnr: String): NavEnhet? {
-        return redisService.get(RedisKeyType.NORG_CLIENT, "$NAVENHET_CACHE_KEY_PREFIX$enhetsnr", NavEnhet::class.java)
-            ?.also { log.info("Hentet NavEnhet fra cache") }
     }
 
     private fun lagNorgUrl(enhetNr: String): String {

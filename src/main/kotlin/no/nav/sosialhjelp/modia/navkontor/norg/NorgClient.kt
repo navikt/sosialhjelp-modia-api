@@ -32,6 +32,15 @@ class NorgClientImpl(
     override fun hentNavEnhet(enhetsnr: String): NavEnhet? {
         if (enhetsnr.isEmpty()) return null
 
+        return hentNavEnhetFraCache(enhetsnr) ?: hentNavEnhetFraServer(enhetsnr)
+    }
+
+    private fun hentNavEnhetFraCache(enhetsnr: String): NavEnhet? {
+        return redisService.get(RedisKeyType.NORG_CLIENT, "$NAVENHET_CACHE_KEY_PREFIX$enhetsnr", NavEnhet::class.java)
+            ?.also { log.info("Hentet NavEnhet fra cache") }
+    }
+
+    private fun hentNavEnhetFraServer(enhetsnr: String): NavEnhet {
         return norgWebClient.get()
             .uri("/enhet/{enhetsnr}", enhetsnr)
             .header(HEADER_CALL_ID, getCallId())
