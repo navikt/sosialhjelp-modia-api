@@ -34,7 +34,7 @@ class AzuredingsService(
     suspend fun exchangeToken(token: String, scope: String): String {
         val redisKey = "$token$scope"
         redisService.get(RedisKeyType.AZUREDINGS, redisKey, (String::class.java))
-            ?.let { return (it as String) }
+            ?.let { return it }
 
         val jwt = createSignedAssertion(clientProperties.azuredingsJwtClientId, clientProperties.azuredingsJwtAudience, privateRsaKey)
 
