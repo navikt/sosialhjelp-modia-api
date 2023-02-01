@@ -78,6 +78,7 @@ class NorgClientImpl(
     }
 
     private fun lagreNavEnhetTilCache(enhetsnr: String, navEnhet: NavEnhet) {
+        log.info("Lagrer NavEnhet=$enhetsnr til cache")
         redisService.set(
             type = RedisKeyType.NORG_CLIENT,
             key = "$NAVENHET_CACHE_KEY_PREFIX$enhetsnr",

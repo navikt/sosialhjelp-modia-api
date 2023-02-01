@@ -1,5 +1,6 @@
 package no.nav.sosialhjelp.modia.navkontor
 
+import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.navkontor.norg.NavEnhet
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.redis.NAVENHET_CACHE_KEY_PREFIX
@@ -47,6 +48,7 @@ class NavKontorService(
 
     private fun hentNavEnhetFraCache(enhetsnr: String): NavEnhet? {
         return redisService.get(RedisKeyType.NORG_CLIENT, "$NAVENHET_CACHE_KEY_PREFIX$enhetsnr", NavEnhet::class.java)
+            ?.also { log.info("Hentet NavEnhet fra cache") }
     }
 
     private fun lagNorgUrl(enhetNr: String): String {
@@ -55,5 +57,6 @@ class NavKontorService(
 
     companion object {
         private const val TYPE_LOKAL = "LOKAL"
+        private val log by logger()
     }
 }
