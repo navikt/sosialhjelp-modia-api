@@ -27,7 +27,6 @@ internal class NavKontorServiceTest {
 
     @Test
     internal fun skalHenteNavEnhet() {
-        every { redisService.getAlleNavEnheter() } returns null
         every { norgClient.hentNavEnhet(enhetsnr) } returns navEnhet
 
         val navKontorinfo = navKontorService.hentNavKontorinfo(enhetsnr)
@@ -39,24 +38,11 @@ internal class NavKontorServiceTest {
 
     @Test
     internal fun `skal returnere null hvis sosialTjenester er null eller tom`() {
-        every { redisService.getAlleNavEnheter() } returns null
         every { norgClient.hentNavEnhet(enhetsnr) } returns navEnhetUtenSosialTjenesterInformasjon
 
         val navKontorinfo = navKontorService.hentNavKontorinfo(enhetsnr)
 
         assertThat(navKontorinfo).isNull()
-    }
-
-    @Test
-    internal fun skalHenteNavEnhetFraCache() {
-        every { redisService.getAlleNavEnheter() } returns listOf(annenNavEnhet, navEnhet)
-
-        val navKontorinfo = navKontorService.hentNavKontorinfo(enhetsnr)
-
-        assertThat(navKontorinfo).isNotNull
-        assertThat(navKontorinfo?.enhetsnr).isEqualTo(enhetsnr)
-
-        verify(exactly = 0) { norgClient.hentNavEnhet(enhetsnr) }
     }
 
     @Test
