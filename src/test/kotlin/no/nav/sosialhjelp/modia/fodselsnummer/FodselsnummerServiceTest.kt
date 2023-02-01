@@ -27,7 +27,7 @@ internal class FodselsnummerServiceTest {
 
     @Test
     internal fun `hent fodselsnummer ved fnrId, returnere fodselsnummer`() {
-        every { redisService.get<String>(any(), any(), any()) } returns fnr
+        every { redisService.getString(any(), any()) } returns fnr
         val result = service.getFnr(fnrId)
         assertThat(result).isNotNull
         assertThat(result).isEqualTo(fnr)
@@ -35,7 +35,7 @@ internal class FodselsnummerServiceTest {
 
     @Test
     internal fun `hent fodselsnummer ved fnrId, skal ikke finnes og returnere null`() {
-        every { redisService.get<String>(any(), any(), any()) } returns null
+        every { redisService.getString(any(), any()) } returns null
         val result = service.getFnr(fnrId)
         assertThat(result).isNull()
     }

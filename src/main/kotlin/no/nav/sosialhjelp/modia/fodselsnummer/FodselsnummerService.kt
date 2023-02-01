@@ -25,7 +25,7 @@ class FodselsnummerService(
     }
 
     private fun hentFraCache(fnrId: String): String? {
-        return redisService.get(RedisKeyType.FNR_SERVICE, fnrId, String::class.java)
+        return redisService.getString(RedisKeyType.FNR_SERVICE, fnrId)
     }
 
     companion object {
