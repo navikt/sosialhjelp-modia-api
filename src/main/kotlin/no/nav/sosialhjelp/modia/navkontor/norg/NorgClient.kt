@@ -47,7 +47,7 @@ class NorgClientImpl(
             .block()!!
             .also {
                 log.debug("Norg2 - GET enhet $enhetsnr OK")
-                lagreNavEnhetTilCache(it)
+                lagreNavEnhetTilCache(enhetsnr, it)
             }
     }
 
@@ -70,19 +70,19 @@ class NorgClientImpl(
 
     private fun lagreNavEnhetListeTilCache(list: List<NavEnhet>) {
         redisService.set(
-            RedisKeyType.NORG_CLIENT,
-            ALLE_NAVENHETER_CACHE_KEY,
-            objectMapper.writeValueAsBytes(list),
-            NAVENHET_CACHE_TIME_TO_LIVE_SECONDS
+            type = RedisKeyType.NORG_CLIENT,
+            key = ALLE_NAVENHETER_CACHE_KEY,
+            value = objectMapper.writeValueAsBytes(list),
+            timeToLive = NAVENHET_CACHE_TIME_TO_LIVE_SECONDS
         )
     }
 
-    private fun lagreNavEnhetTilCache(navEnhet: NavEnhet) {
+    private fun lagreNavEnhetTilCache(enhetsnr: String, navEnhet: NavEnhet) {
         redisService.set(
-            RedisKeyType.NORG_CLIENT,
-            NAVENHET_CACHE_KEY_PREFIX,
-            objectMapper.writeValueAsBytes(navEnhet),
-            NAVENHET_CACHE_TIME_TO_LIVE_SECONDS
+            type = RedisKeyType.NORG_CLIENT,
+            key = "$NAVENHET_CACHE_KEY_PREFIX$enhetsnr",
+            value = objectMapper.writeValueAsBytes(navEnhet),
+            timeToLive = NAVENHET_CACHE_TIME_TO_LIVE_SECONDS
         )
     }
 
