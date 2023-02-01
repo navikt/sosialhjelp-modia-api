@@ -37,7 +37,6 @@ class NorgClientImpl(
 
     private fun hentNavEnhetFraCache(enhetsnr: String): NavEnhet? {
         return redisService.get(RedisKeyType.NORG_CLIENT, "$NAVENHET_CACHE_KEY_PREFIX$enhetsnr", NavEnhet::class.java)
-            ?.also { log.info("Hentet NavEnhet fra cache") }
     }
 
     private fun hentNavEnhetFraServer(enhetsnr: String): NavEnhet {
