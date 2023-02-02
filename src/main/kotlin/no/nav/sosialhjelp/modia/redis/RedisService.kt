@@ -25,6 +25,7 @@ enum class RedisKeyType {
 interface RedisService {
     val defaultTimeToLiveSeconds: Long
     fun <T : Any> get(type: RedisKeyType, key: String, requestedClass: Class<out T>): T?
+    fun getString(type: RedisKeyType, key: String): String?
     fun set(type: RedisKeyType, key: String, value: ByteArray, timeToLive: Long = defaultTimeToLiveSeconds)
     fun getAlleNavEnheter(): List<NavEnhet>?
 }
@@ -39,21 +40,27 @@ class RedisServiceImpl(
     override val defaultTimeToLiveSeconds = cacheTimeToLiveSeconds
 
     override fun <T : Any> get(type: RedisKeyType, key: String, requestedClass: Class<out T>): T? {
-        val bytes: ByteArray = redisStore.get("${type.name}_$key") ?: return null // Redis har konfigurert timout for disse.
+        val bytes: ByteArray = getBytes(type, key) ?: return null
         return try {
-            if (requestedClass == String::class.java) {
-                log.debug("Hentet ${requestedClass.simpleName} fra cache, type=${type.name}")
-                String(bytes, StandardCharsets.UTF_8) as T
-            } else {
-                objectMapper.readValue(bytes, requestedClass)
-                    .also { valider(it) }
-                    .also { log.debug("Hentet ${requestedClass.simpleName} fra cache, type=${type.name}") } as T
-            }
+            objectMapper.readValue(bytes, requestedClass)
+                .also { valider(it) }
+                .also { log.debug("Hentet ${requestedClass.simpleName} fra cache, type=${type.name}") } as T
         } catch (e: IOException) {
             log.warn("Fant type=${type.name} i cache, men value var ikke ${requestedClass.simpleName}")
             null
         } catch (e: DigisosSakTilhorerAnnenBrukerException) {
             log.warn("DigisosSak i cache tilhører en annen bruker enn brukeren fra token.")
+            null
+        }
+    }
+
+    override fun getString(type: RedisKeyType, key: String): String? {
+        val bytes: ByteArray = getBytes(type, key) ?: return null
+        return try {
+            log.debug("Hentet String fra cache, type=${type.name}")
+            String(bytes, StandardCharsets.UTF_8)
+        } catch (e: IOException) {
+            log.warn("Fant type=${type.name} i cache, men value var ikke String")
             null
         }
     }
@@ -79,6 +86,10 @@ class RedisServiceImpl(
         } else null
     }
 
+    private fun getBytes(type: RedisKeyType, key: String): ByteArray? {
+        return redisStore.get("${type.name}_$key") // Redis har konfigurert timout for disse.
+    }
+
     /**
      * Kaster feil hvis det finnes additionalProperties på mappet objekt.
      * Tyder på at noe feil har skjedd ved mapping.
@@ -102,6 +113,10 @@ class RedisServiceMock : RedisService {
     override val defaultTimeToLiveSeconds: Long = 1L
 
     override fun <T : Any> get(type: RedisKeyType, key: String, requestedClass: Class<out T>): T? {
+        return null
+    }
+
+    override fun getString(type: RedisKeyType, key: String): String? {
         return null
     }
 
