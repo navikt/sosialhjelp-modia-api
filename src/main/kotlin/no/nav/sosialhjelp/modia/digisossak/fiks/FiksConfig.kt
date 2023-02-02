@@ -1,5 +1,6 @@
 package no.nav.sosialhjelp.modia.digisossak.fiks
 
+import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -13,6 +14,7 @@ import reactor.netty.http.client.HttpClient
 class FiksConfig(
     private val webClientBuilder: WebClient.Builder,
     private val proxiedHttpClient: HttpClient,
+    private val clientProperties: ClientProperties,
 ) {
 
     @Bean
@@ -24,5 +26,6 @@ class FiksConfig(
                 it.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(objectMapper))
                 it.defaultCodecs().jackson2JsonEncoder(Jackson2JsonEncoder(objectMapper))
             }
+            .baseUrl(clientProperties.fiksDigisosEndpointUrl)
             .build()
 }

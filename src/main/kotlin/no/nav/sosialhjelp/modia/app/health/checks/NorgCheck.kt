@@ -26,7 +26,7 @@ class NorgCheck(
 
     override fun doCheck() {
         norgWebClient.get()
-            .uri("$address/kodeverk/EnhetstyperNorg")
+            .uri("/kodeverk/EnhetstyperNorg")
             .header(HEADER_CALL_ID, getCallId())
             .retrieve()
             .bodyToMono<String>()
