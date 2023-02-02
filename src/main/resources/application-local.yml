@@ -20,7 +20,7 @@ client:
   fiks_integrasjonid: ${INTEGRASJONSID_FIKS}
   fiks_integrasjonpassord: ${INTEGRASJONPASSORD_FIKS}
   norg_endpoint_url: ${NORG_ENDPOINT_URL:norg_endpoint_url}
-  norg_oppslag_url: ${NORG_OPPSLAG_URL:https://norg2-frontend.nais.adeo.no/#/startsok?enhetNr=}
+  norg_oppslag_url: ${NORG_OPPSLAG_URL:https://norg2-frontend.dev.intern.nav.no/#/startsok?enhetNr=}
   pdl_endpoint_url: ${PDL_ENDPOINT_URL:pdl_endpoint_url}
   pdl_scope: ${PDL_SCOPE:pdl_scope}
   veileder_gruppe_id: ${VEILEDER_GRUPPE_ID:0000-MOCK-sosialhjelp-modia-veileder}

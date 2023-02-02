@@ -7,19 +7,19 @@ group = "no.nav.sosialhjelp"
 object Versions {
     const val kotlin = "1.7.22"
     const val coroutines = "1.6.4"
-    const val springBoot = "3.0.1"
+    const val springBoot = "3.0.2"
     const val logback = "1.2.11"
     const val logstash = "7.2"
     const val sosialhjelpCommon = "1.20221214.0749-b633a3e"
-    const val filformat = "1.2022.12.02-08.47-423f51003cee"
-    const val micrometerRegistry = "1.10.2"
+    const val filformat = "1.2022.12.22-12.23-e5a89d40cc3c"
+    const val micrometerRegistry = "1.10.3"
     const val prometheus = "0.16.0"
     const val tokenValidation = "3.0.2"
-    const val jackson = "2.14.1"
+    const val jackson = "2.14.2"
     const val guava = "31.1-jre"
     const val logbackSyslog4j = "1.0.0"
-    const val javaJwt = "4.2.1"
-    const val jwksRsa = "0.21.2"
+    const val javaJwt = "4.2.2"
+    const val jwksRsa = "0.21.3"
     const val syslog4j = "0.9.46"
     const val lettuce = "6.2.2.RELEASE"
     const val unleash = "4.4.1"
@@ -35,15 +35,15 @@ object Versions {
 
     // Test only
     const val junitJupiter = "5.9.1"
-    const val mockk = "1.13.3"
+    const val mockk = "1.13.4"
     const val junit = "4.13.2"
 }
 
 plugins {
     kotlin("jvm") version "1.7.22"
     kotlin("plugin.spring") version "1.7.22"
-    id("org.springframework.boot") version "3.0.1"
-    id("com.github.ben-manes.versions") version "0.44.0" // ./gradlew dependencyUpdates
+    id("org.springframework.boot") version "3.0.2"
+    id("com.github.ben-manes.versions") version "0.45.0" // ./gradlew dependencyUpdates
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
 }
 

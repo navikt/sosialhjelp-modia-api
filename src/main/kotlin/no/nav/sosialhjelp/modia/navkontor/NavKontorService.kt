@@ -1,5 +1,6 @@
 package no.nav.sosialhjelp.modia.navkontor
 
+import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.navkontor.norg.NavEnhet
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.redis.RedisService
@@ -8,13 +9,13 @@ import org.springframework.stereotype.Component
 
 @Component
 class NavKontorService(
-    @Value("\${client.norg_oppslag_url}") private val norg_oppslag_url: String,
+    @Value("\${client.norg_oppslag_url}") private val norgOppslagUrl: String,
     private val norgClient: NorgClient,
     private val redisService: RedisService
 ) {
 
     fun hentNavKontorinfo(enhetsnr: String): KontorinfoResponse? {
-        val enhet = hentFraCache()?.firstOrNull { it.enhetNr == enhetsnr } ?: norgClient.hentNavEnhet(enhetsnr)
+        val enhet = norgClient.hentNavEnhet(enhetsnr)
         if (enhet == null || enhet.sosialeTjenester.isNullOrBlank()) {
             return null
         }
@@ -22,7 +23,7 @@ class NavKontorService(
     }
 
     fun hentAlleNavKontorinfo(): List<KontorinfoResponse> {
-        val alleEnheter = hentFraCache() ?: norgClient.hentAlleNavEnheter()
+        val alleEnheter = hentNavEnhetListeFraCache() ?: norgClient.hentAlleNavEnheter()
 
         if (alleEnheter.isEmpty()) {
             return emptyList()
@@ -39,15 +40,16 @@ class NavKontorService(
             }
     }
 
-    private fun hentFraCache(): List<NavEnhet>? {
+    private fun hentNavEnhetListeFraCache(): List<NavEnhet>? {
         return redisService.getAlleNavEnheter()
     }
 
     private fun lagNorgUrl(enhetNr: String): String {
-        return norg_oppslag_url + enhetNr
+        return "$norgOppslagUrl$enhetNr"
     }
 
     companion object {
         private const val TYPE_LOKAL = "LOKAL"
+        private val log by logger()
     }
 }
