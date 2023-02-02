@@ -1,5 +1,7 @@
 package no.nav.sosialhjelp.modia.navkontor.norg
 
+import no.nav.sosialhjelp.modia.app.client.ClientProperties
+import no.nav.sosialhjelp.modia.app.client.unproxiedHttpClient
 import no.nav.sosialhjelp.modia.app.exceptions.NorgException
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.getCallId
 import no.nav.sosialhjelp.modia.logger
@@ -12,6 +14,7 @@ import no.nav.sosialhjelp.modia.typeRef
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import no.nav.sosialhjelp.modia.utils.objectMapper
 import org.springframework.context.annotation.Profile
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
@@ -20,14 +23,24 @@ import org.springframework.web.reactive.function.client.bodyToMono
 interface NorgClient {
     fun hentNavEnhet(enhetsnr: String): NavEnhet?
     fun hentAlleNavEnheter(): List<NavEnhet>
+    fun ping()
 }
 
 @Profile("!local")
 @Component
 class NorgClientImpl(
-    private val norgWebClient: WebClient,
+    webClientBuilder: WebClient.Builder,
+    private val clientProperties: ClientProperties,
     private val redisService: RedisService
 ) : NorgClient {
+
+    private val norgWebClient = webClientBuilder
+        .clientConnector(ReactorClientHttpConnector(unproxiedHttpClient()))
+        .codecs {
+            it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+        }
+        .baseUrl(clientProperties.norgEndpointUrl)
+        .build()
 
     override fun hentNavEnhet(enhetsnr: String): NavEnhet? {
         if (enhetsnr.isEmpty()) return null
@@ -74,6 +87,15 @@ class NorgClientImpl(
             }
             .block()!!
             .also { lagreNavEnhetListeTilCache(it) }
+    }
+
+    override fun ping() {
+        norgWebClient.get()
+            .uri("/kodeverk/EnhetstyperNorg")
+            .header(HEADER_CALL_ID, getCallId())
+            .retrieve()
+            .bodyToMono<String>()
+            .block()
     }
 
     private fun lagreNavEnhetListeTilCache(list: List<NavEnhet>) {
@@ -125,6 +147,10 @@ class NorgClientMock : NorgClient {
             NavEnhet(enhetId = 11, navn = "NAV Stavanger", enhetNr = "5002", antallRessurser = 11, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
             NavEnhet(enhetId = 12, navn = "NAV Tromsø", enhetNr = "6002", antallRessurser = 12, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
         )
+    }
+
+    override fun ping() {
+        // no-op
     }
 
     private fun defaultNavEnhet(enhetsnr: String): NavEnhet {

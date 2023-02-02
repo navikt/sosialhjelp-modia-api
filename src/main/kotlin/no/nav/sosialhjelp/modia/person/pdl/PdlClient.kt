@@ -3,6 +3,7 @@ package no.nav.sosialhjelp.modia.person.pdl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
+import no.nav.sosialhjelp.modia.app.client.unproxiedHttpClient
 import no.nav.sosialhjelp.modia.app.exceptions.PdlException
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.getCallId
 import no.nav.sosialhjelp.modia.logger
@@ -12,8 +13,11 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_TEMA
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.TEMA_KOM
 import org.springframework.context.annotation.Profile
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
@@ -28,10 +32,19 @@ interface PdlClient {
 @Profile("!local")
 @Component
 class PdlClientImpl(
-    private val pdlWebClient: WebClient,
+    webClientBuilder: WebClient.Builder,
     private val azuredingsService: AzuredingsService,
     private val clientProperties: ClientProperties,
 ) : PdlClient {
+
+    private val pdlWebClient = webClientBuilder
+        .clientConnector(ReactorClientHttpConnector(unproxiedHttpClient()))
+        .codecs {
+            it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+        }
+        .baseUrl(clientProperties.pdlEndpointUrl)
+        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        .build()
 
     override fun hentPerson(ident: String, veilederToken: String): PdlHentPerson? {
         val query = getResourceAsString("/pdl/hentPerson.graphql")
