@@ -51,7 +51,7 @@ class SkjermedePersonerClientImpl(
 
     private fun hentFraCache(ident: String): Boolean? {
         val skjermetStatus = redisService.get(SKJERMEDE_PERSONER, ident, Boolean::class.java)
-        return skjermetStatus?.let { return it as Boolean }
+        return skjermetStatus?.let { return it }
     }
 
     private fun lagreSkjermetStatus(skjermet: Boolean?, ident: String) {

@@ -35,6 +35,6 @@ class KommuneService(
     }
 
     private fun hentFraCache(kommunenummer: String): KommuneInfo? {
-        return redisService.get(RedisKeyType.KOMMUNE_SERVICE, kommunenummer, KommuneInfo::class.java) as KommuneInfo?
+        return redisService.get(RedisKeyType.KOMMUNE_SERVICE, kommunenummer, KommuneInfo::class.java)
     }
 }

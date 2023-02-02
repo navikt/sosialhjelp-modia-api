@@ -4,7 +4,8 @@ import no.nav.sosialhjelp.modia.app.exceptions.NorgException
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.getCallId
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.redis.ALLE_NAVENHETER_CACHE_KEY
-import no.nav.sosialhjelp.modia.redis.ALLE_NAVENHETER_CACHE_TIME_TO_LIVE_SECONDS
+import no.nav.sosialhjelp.modia.redis.NAVENHET_CACHE_KEY_PREFIX
+import no.nav.sosialhjelp.modia.redis.NAVENHET_CACHE_TIME_TO_LIVE_SECONDS
 import no.nav.sosialhjelp.modia.redis.RedisKeyType
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.typeRef
@@ -29,8 +30,16 @@ class NorgClientImpl(
 ) : NorgClient {
 
     override fun hentNavEnhet(enhetsnr: String): NavEnhet? {
-        if (enhetsnr == "") return null
+        if (enhetsnr.isEmpty()) return null
 
+        return hentNavEnhetFraCache(enhetsnr) ?: hentNavEnhetFraServer(enhetsnr)
+    }
+
+    private fun hentNavEnhetFraCache(enhetsnr: String): NavEnhet? {
+        return redisService.get(RedisKeyType.NORG_CLIENT, "$NAVENHET_CACHE_KEY_PREFIX$enhetsnr", NavEnhet::class.java)
+    }
+
+    private fun hentNavEnhetFraServer(enhetsnr: String): NavEnhet {
         return norgWebClient.get()
             .uri("/enhet/{enhetsnr}", enhetsnr)
             .header(HEADER_CALL_ID, getCallId())
@@ -44,7 +53,10 @@ class NorgClientImpl(
                 NorgException(e.message, e)
             }
             .block()!!
-            .also { log.debug("Norg2 - GET enhet $enhetsnr OK") }
+            .also {
+                log.debug("Norg2 - GET enhet $enhetsnr OK")
+                lagreNavEnhetTilCache(enhetsnr, it)
+            }
     }
 
     override fun hentAlleNavEnheter(): List<NavEnhet> {
@@ -61,11 +73,26 @@ class NorgClientImpl(
                 NorgException(e.message, e)
             }
             .block()!!
-            .also { lagreTilCache(it) }
+            .also { lagreNavEnhetListeTilCache(it) }
     }
 
-    private fun lagreTilCache(list: List<NavEnhet>) {
-        redisService.set(RedisKeyType.NORG_CLIENT, ALLE_NAVENHETER_CACHE_KEY, objectMapper.writeValueAsBytes(list), ALLE_NAVENHETER_CACHE_TIME_TO_LIVE_SECONDS)
+    private fun lagreNavEnhetListeTilCache(list: List<NavEnhet>) {
+        redisService.set(
+            type = RedisKeyType.NORG_CLIENT,
+            key = ALLE_NAVENHETER_CACHE_KEY,
+            value = objectMapper.writeValueAsBytes(list),
+            timeToLive = NAVENHET_CACHE_TIME_TO_LIVE_SECONDS
+        )
+    }
+
+    private fun lagreNavEnhetTilCache(enhetsnr: String, navEnhet: NavEnhet) {
+        log.info("Lagrer NavEnhet=$enhetsnr til cache")
+        redisService.set(
+            type = RedisKeyType.NORG_CLIENT,
+            key = "$NAVENHET_CACHE_KEY_PREFIX$enhetsnr",
+            value = objectMapper.writeValueAsBytes(navEnhet),
+            timeToLive = NAVENHET_CACHE_TIME_TO_LIVE_SECONDS
+        )
     }
 
     companion object {
