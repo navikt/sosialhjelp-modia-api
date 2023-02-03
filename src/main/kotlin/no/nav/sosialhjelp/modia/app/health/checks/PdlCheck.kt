@@ -7,7 +7,6 @@ import no.nav.sosialhjelp.selftest.DependencyCheck
 import no.nav.sosialhjelp.selftest.DependencyType
 import no.nav.sosialhjelp.selftest.Importance
 import org.springframework.stereotype.Component
-import org.springframework.web.client.RestClientException
 
 @Component
 class PdlCheck(
@@ -23,7 +22,7 @@ class PdlCheck(
     override fun doCheck() {
         try {
             pdlClient.ping()
-        } catch (e: RestClientException) {
+        } catch (e: Exception) {
             log.warn("Selftest - PDL - noe feilet", e)
             throw e
         }

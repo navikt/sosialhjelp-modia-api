@@ -23,7 +23,7 @@ object Versions {
     const val syslog4j = "0.9.46"
     const val lettuce = "6.2.2.RELEASE"
     const val unleash = "4.4.1"
-    const val springdoc = "1.6.14"
+    const val springdoc = "2.0.2"
 
     const val jsonSmart = "2.4.8"
     const val gson = "2.10"
@@ -121,7 +121,8 @@ dependencies {
     implementation("no.nav.security:token-client-spring:${Versions.tokenValidation}")
 
 //    Springdoc
-    implementation("org.springdoc:springdoc-openapi-ui:${Versions.springdoc}")
+    implementation("org.springdoc:springdoc-openapi-starter-common:${Versions.springdoc}")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${Versions.springdoc}")
 
 //    Unleash
     implementation("no.finn.unleash:unleash-client-java:${Versions.unleash}")
