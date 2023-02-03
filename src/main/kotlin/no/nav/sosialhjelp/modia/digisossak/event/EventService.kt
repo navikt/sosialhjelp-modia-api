@@ -49,6 +49,10 @@ class EventService(
             model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, unixToLocalDateTime(timestampSendt), enhetsnummer, navenhetsnavn))
         }
 
+        if (timestampSendt == null) { // papirsoknad
+            log.info("Papirsoknad ${digisosSak.fiksDigisosId} - Tilleggsinformasjon.enhetsnummer: ${digisosSak.tilleggsinformasjon?.enhetsnummer}")
+        }
+
         jsonDigisosSoker?.hendelser
             ?.sortedWith(hendelseComparator)
             ?.forEach { model.applyHendelse(it) }
