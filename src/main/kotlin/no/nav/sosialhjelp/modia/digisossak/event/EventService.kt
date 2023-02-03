@@ -50,7 +50,7 @@ class EventService(
         }
 
         if (timestampSendt == null) { // papirsoknad
-            log.info("Papirsoknad ${digisosSak.fiksDigisosId} - Tilleggsinformasjon.enhetsnummer: ${digisosSak.tilleggsinformasjon?.enhetsnummer}")
+            log.info("Papirsoknad ${digisosSak.fiksDigisosId} - Kommunenummer: ${digisosSak.kommunenummer}")
         }
 
         jsonDigisosSoker?.hendelser
