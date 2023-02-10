@@ -25,18 +25,12 @@ spec:
     cpuThresholdPercentage: 70
     min: 1
     max: 2
-  envFrom:
-    - secret: redis-password-modia-api
   accessPolicy:
-    inbound:
-      rules:
-        - application: sosialhjelp-modia-oidc-auth-proxy
     outbound:
       external:
         - host: "unleash.nais.io"
       rules:
         - application: sosialhjelp-mock-alt-api-mock
-        - application: sosialhjelp-modia-api-redis
   ingresses:
     - "https://sosialhjelp-modia-api-mock.dev.nav.no/sosialhjelp/modia-api"
   resources:
@@ -55,16 +49,8 @@ spec:
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/azuread/graph"
     - name: AZURE_APP_WELL_KNOWN_URL
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/azure-well-known/selvbetjening"
-    - name: AZURE_APP_CLIENT_ID
-      value: "someaudience"
-    - name: AZURE_APP_JWK
-      value: "generateRSA"
     - name: AZURE_OPENID_CONFIG_TOKEN_ENDPOINT
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/azuretoken/selvbetjening"
-    - name: AZURE_APP_CLIENT_SECRET
-      value: "secret"
-    - name: VEILEDER_GRUPPE_ID
-      value: "0000-MOCK-sosialhjelp-modia-veileder"
     - name: FIKS_DIGISOS_ENDPOINT_URL
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/fiks"
     - name: NORG_ENDPOINT_URL
@@ -73,21 +59,13 @@ spec:
       value: "https://digisos.ekstern.dev.nav.no/sosialhjelp/modia"
     - name: PDL_ENDPOINT_URL
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/pdl_endpoint_url"
-    - name: PDL_SCOPE
-      value: "dummyScope"
     - name: SKJERMEDE_PERSONER_ENDPOINT_URL
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/skjermede-personer"
-    - name: SKJERMEDE_PERSONER_SCOPE
-      value: "dummyScope"
     - name: MASKINPORTEN_WELL_KNOWN_URL
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/well-known/maskinporten"
     - name: UNLEASH_API_URL
       value: "https://unleash.nais.io/api"
     - name: UNLEASH_INSTANCE_ID
       value: "mock"
-    - name: REDIS_HOST
-      value: "sosialhjelp-modia-api-redis.teamdigisos.svc.cluster.local"
-    - name: SWAGGER_ENABLED
-      value: "true"
     - name: MODIA_BASEURL
       value: "https://digisos.ekstern.dev.nav.no/sosialhjelp/modia"
