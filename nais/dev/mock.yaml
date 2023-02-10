@@ -25,18 +25,12 @@ spec:
     cpuThresholdPercentage: 70
     min: 1
     max: 2
-  envFrom:
-    - secret: redis-password-modia-api
   accessPolicy:
-    inbound:
-      rules:
-        - application: sosialhjelp-modia-oidc-auth-proxy
     outbound:
       external:
         - host: "unleash.nais.io"
       rules:
         - application: sosialhjelp-mock-alt-api-mock
-        - application: sosialhjelp-modia-api-redis
   ingresses:
     - "https://sosialhjelp-modia-api-mock.dev.nav.no/sosialhjelp/modia-api"
   resources:
@@ -73,7 +67,5 @@ spec:
       value: "https://unleash.nais.io/api"
     - name: UNLEASH_INSTANCE_ID
       value: "mock"
-    - name: REDIS_HOST
-      value: "sosialhjelp-modia-api-redis.teamdigisos.svc.cluster.local"
     - name: MODIA_BASEURL
       value: "https://digisos.ekstern.dev.nav.no/sosialhjelp/modia"
