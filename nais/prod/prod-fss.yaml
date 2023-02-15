@@ -13,7 +13,7 @@ spec:
       enabled: true
       claims:
         groups:
-          - id: 82efbcf9-7a99-4c60-9242-79c439ca3cdc # 0000-GA-Modia_Sosialhjelp_NKS
+          - id: "82efbcf9-7a99-4c60-9242-79c439ca3cdc" # 0000-GA-Modia_Sosialhjelp_NKS
   liveness:
     path: /sosialhjelp/modia-api/internal/isAlive
     initialDelay: 20
