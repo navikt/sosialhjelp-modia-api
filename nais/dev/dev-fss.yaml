@@ -89,3 +89,5 @@ spec:
       value: "true"
     - name: MODIA_BASEURL
       value: "https://sosialhjelp-modia.dev.intern.nav.no/sosialhjelp/modia"
+    - name: MASKINPORTEN_WELL_KNOWN_URL
+      value: "https://ver2.maskinporten.no/.well-known/oauth-authorization-server"
