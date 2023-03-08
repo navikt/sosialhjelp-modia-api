@@ -27,7 +27,7 @@ object Versions {
     const val jsonSmart = "2.4.8"
     const val gson = "2.10"
     const val log4j = "2.19.0"
-    const val snakeyaml = "1.33"
+    const val snakeyaml = "2.0"
     const val jakartaActivationApi = "2.1.0"
     const val jakartaXmlBindApi = "4.0.0"
     const val jakartaServletApi = "5.0.0"
@@ -157,7 +157,7 @@ dependencies {
         }
 
         implementation("org.yaml:snakeyaml:${Versions.snakeyaml}") {
-            because("Snyk ønsker 1.31 eller høyere")
+            because("https://security.snyk.io/vuln/SNYK-JAVA-ORGYAML-3152153")
         }
 
         // jakarta
