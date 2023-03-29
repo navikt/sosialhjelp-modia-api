@@ -71,7 +71,7 @@ spec:
     - name: AZURE_GRAPH_API_URL
       value: "https://graph.microsoft.com/v1.0"
     - name: VEILEDER_GRUPPE_ID
-      value: "55f10d2b-f3ac-4d85-b989-655145ab5f30"
+      value: "7357bc5c-8389-435d-8311-46452d356a83"
     - name: FIKS_DIGISOS_ENDPOINT_URL
       value: "https://api.fiks.test.ks.no"
     - name: NORG_ENDPOINT_URL
