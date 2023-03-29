@@ -11,6 +11,9 @@ spec:
   azure:
     application:
       enabled: true
+      claims:
+        groups:
+          - id: "7357bc5c-8389-435d-8311-46452d356a83" # 0000-GA-Modia_Sosialhjelp_NKS
     sidecar:
       enabled: true
       autoLogin: false
@@ -42,11 +45,15 @@ spec:
   accessPolicy:
     outbound:
       external:
-        - host: "oidc-ver2.difi.no"
-        - host: "register.geonorge.no"
-        - host: "login.microsoftonline.com"
-        - host: "unleash.nais.io"
-        - host: "api.fiks.test.ks.no"
+        - host: oidc-ver2.difi.no
+        - host: register.geonorge.no
+        - host: login.microsoftonline.com
+        - host: unleash.nais.io
+        - host: api.fiks.test.ks.no
+        - host: graph.microsoft.com
+        - host: norg2.dev-fss-pub.nais.io
+        - host: pdl-api.dev-fss-pub.nais.io
+        - host: skjermede-personer-pip.dev.intern.nav.no
       rules:
         - application: sosialhjelp-modia-api-redis
   ingresses:
