@@ -29,6 +29,7 @@ spec:
     outbound:
       external:
         - host: "unleash.nais.io"
+        - host: digisos.ekstern.dev.nav.no
       rules:
         - application: sosialhjelp-mock-alt-api-mock
   ingresses:
