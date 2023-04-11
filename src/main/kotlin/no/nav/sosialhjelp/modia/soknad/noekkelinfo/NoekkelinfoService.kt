@@ -34,7 +34,8 @@ class NoekkelinfoService(
             navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }, // null hvis papirsøknad og ikke enda mottatt
             kommunenavn = kommunenavn,
             videresendtHistorikk = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
-            tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt
+            tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt,
+            originalSoknadNAV = digisosSak.originalSoknadNAV // null dersom kommunen har opprettet søknaden manuelt (papirsøknad)
         )
     }
 

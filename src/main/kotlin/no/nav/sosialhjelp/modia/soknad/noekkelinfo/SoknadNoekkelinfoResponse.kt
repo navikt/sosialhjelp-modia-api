@@ -1,6 +1,7 @@
 package no.nav.sosialhjelp.modia.soknad.noekkelinfo
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
 import no.nav.sosialhjelp.modia.digisossak.domain.SendingType
 import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
 import java.time.LocalDate
@@ -17,7 +18,8 @@ data class SoknadNoekkelinfoResponse(
     val kommunenavn: String,
     val videresendtHistorikk: List<VideresendtInfo>?,
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    val tidspunktForelopigSvar: LocalDateTime?
+    val tidspunktForelopigSvar: LocalDateTime?,
+    val originalSoknadNAV: OriginalSoknadNAV?
 )
 
 data class VideresendtInfo(
