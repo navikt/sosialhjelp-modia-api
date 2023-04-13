@@ -1,5 +1,6 @@
 package no.nav.sosialhjelp.modia.soknad.noekkelinfo
 
+import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.digisossak.domain.NavKontorInformasjon
 import no.nav.sosialhjelp.modia.digisossak.event.EventService
@@ -23,6 +24,7 @@ class NoekkelinfoService(
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
         val kommunenavn = hentBehandlendekommune(digisosSak.kommunenummer)
+        val erPapirSoknad = papirSoknad(digisosSak.originalSoknadNAV)
 
         val behandlendeNavKontor: NavKontorInformasjon? = model.navKontorHistorikk.lastOrNull()
         log.info("Søknadsstatus=${model.status.name} for $fiksDigisosId")
@@ -35,12 +37,19 @@ class NoekkelinfoService(
             kommunenavn = kommunenavn,
             videresendtHistorikk = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
             tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt,
-            originalSoknadNAV = digisosSak.originalSoknadNAV // null dersom kommunen har opprettet søknaden manuelt (papirsøknad)
+            papirSoknad =  erPapirSoknad
         )
     }
 
     private fun hentBehandlendekommune(kommunenummer: String): String {
         return kommuneService.getBehandlingsanvarligKommune(kommunenummer) ?: kommunenavnService.hentKommunenavnFor(kommunenummer)
+    }
+
+    private fun papirSoknad(originalSoknadNav: OriginalSoknadNAV?): Boolean{
+        if(originalSoknadNav == null){
+            return true
+        }
+        return false
     }
 
     private fun leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model: InternalDigisosSoker): List<VideresendtInfo>? {
