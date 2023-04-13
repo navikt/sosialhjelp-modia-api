@@ -37,7 +37,7 @@ class NoekkelinfoService(
             kommunenavn = kommunenavn,
             videresendtHistorikk = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
             tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt,
-            papirSoknad =  erPapirSoknad
+            papirSoknad = erPapirSoknad
         )
     }
 
@@ -46,7 +46,7 @@ class NoekkelinfoService(
     }
 
     private fun papirSoknad(originalSoknadNav: OriginalSoknadNAV?): Boolean {
-        if ( originalSoknadNav == null ) {
+        if (originalSoknadNav == null) {
             return true
         }
         return false
