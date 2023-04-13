@@ -45,8 +45,8 @@ class NoekkelinfoService(
         return kommuneService.getBehandlingsanvarligKommune(kommunenummer) ?: kommunenavnService.hentKommunenavnFor(kommunenummer)
     }
 
-    private fun papirSoknad(originalSoknadNav: OriginalSoknadNAV?): Boolean{
-        if(originalSoknadNav == null){
+    private fun papirSoknad(originalSoknadNav: OriginalSoknadNAV?): Boolean {
+        if ( originalSoknadNav == null ) {
             return true
         }
         return false
