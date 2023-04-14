@@ -24,7 +24,7 @@ class NoekkelinfoService(
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
         val kommunenavn = hentBehandlendekommune(digisosSak.kommunenummer)
-        val erPapirSoknad = papirSoknad(digisosSak.originalSoknadNAV) // true hvis papirsøknad
+        val erPapirSoknad = papirSoknad(digisosSak.originalSoknadNAV)
 
         val behandlendeNavKontor: NavKontorInformasjon? = model.navKontorHistorikk.lastOrNull()
         log.info("Søknadsstatus=${model.status.name} for $fiksDigisosId")
