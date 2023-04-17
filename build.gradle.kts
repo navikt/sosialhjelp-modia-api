@@ -24,7 +24,7 @@ object Versions {
     const val unleash = "4.4.1"
     const val springdoc = "2.1.0"
 
-    const val jsonSmart = "2.4.8"
+    const val jsonSmart = "2.4.9"
     const val gson = "2.10"
     const val log4j = "2.19.0"
     const val snakeyaml = "2.0"
