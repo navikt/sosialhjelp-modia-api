@@ -20,7 +20,7 @@ object Versions {
     const val javaJwt = "4.2.2"
     const val jwksRsa = "0.21.3"
     const val syslog4j = "0.9.46"
-    const val lettuce = "6.2.2.RELEASE"
+    const val lettuce = "6.2.3.RELEASE"
     const val unleash = "4.4.1"
     const val springdoc = "2.1.0"
 
