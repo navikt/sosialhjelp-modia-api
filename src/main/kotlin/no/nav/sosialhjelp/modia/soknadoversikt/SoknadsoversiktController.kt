@@ -1,6 +1,8 @@
 package no.nav.sosialhjelp.modia.soknadoversikt
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.digisossak.domain.OppgaveStatus
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDate
 
 @ProtectedWithClaims(issuer = "azuread")
 @RestController
@@ -51,7 +54,9 @@ class SoknadsoversiktController(
                     soknadTittel = "Søknad om økonomisk sosialhjelp",
                     sistOppdatert = unixTimestampToDate(sak.sistEndret),
                     sendt = sak.originalSoknadNAV?.timestampSendt?.let { unixTimestampToDate(it) },
-                    kilde = IntegrationUtils.KILDE_INNSYN_API
+                    kilde = IntegrationUtils.KILDE_INNSYN_API,
+                    papirSoknad = erPapirSoknad(sak.originalSoknadNAV),
+                    papirSoknadRegistrerteDato = papirSoknadDato(sak),
                 )
             }
         log.info("Hentet alle (${responselist.size}) DigisosSaker for bruker.")
@@ -93,6 +98,20 @@ class SoknadsoversiktController(
     private fun harVilkar(model: InternalDigisosSoker): Boolean {
         return model.vilkar
             .any { vilkar -> vilkar.status == OppgaveStatus.RELEVANT }
+    }
+
+    private fun erPapirSoknad(originalSoknadNAV: OriginalSoknadNAV?): Boolean {
+        if (originalSoknadNAV == null){
+            return true
+        }
+        return false
+    }
+
+    private fun papirSoknadDato(saken: DigisosSak): LocalDate? {
+        val model = eventService.createModel(saken)
+        val forsteElement = model.historikk.takeIf { it.isNotEmpty() }?.get(0)?.tidspunkt?.toLocalDate()
+        return forsteElement
+
     }
 
     companion object {
