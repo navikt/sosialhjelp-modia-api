@@ -8,6 +8,7 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.modia.digisossak.domain.Hendelse
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.digisossak.domain.OppgaveStatus
 import no.nav.sosialhjelp.modia.digisossak.domain.Sak
@@ -93,6 +94,17 @@ internal class SoknadsoversiktControllerTest {
     @Test
     fun `getSoknader - skal mappe fra DigisosSak til SoknadResponse`() {
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1, digisosSak2)
+
+//        every { fiksClient.hentDigisosSak(id_1) } returns digisosSak1
+//        every { fiksClient.hentDigisosSak(id_2) } returns digisosSak2
+
+        val hendelse = Hendelse("Tittel", "Beskrivelse", LocalDateTime.now(),"fil")
+
+        every { eventService.createModel(digisosSak1) } returns model1
+        every { eventService.createModel(digisosSak2) } returns model2
+
+        every {model1.historikk} returns mutableListOf(hendelse)
+        every {model2.historikk} returns mutableListOf(hendelse)
 
         every { model1.status } returns SoknadsStatus.MOTTATT
         every { model2.status } returns SoknadsStatus.UNDER_BEHANDLING

@@ -38,7 +38,10 @@ class SoknadsoversiktController(
     private val tilgangskontrollService: TilgangskontrollService
 ) {
     @PostMapping("/soknader")
-    fun getSoknader(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<SoknadResponse>> {
+    fun getSoknader(
+        @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
+        @RequestBody ident: Ident
+    ): ResponseEntity<List<SoknadResponse>> {
         tilgangskontrollService.harTilgang(ident.fnr, token, "/soknader", HttpMethod.POST)
 
         val saker = try {
@@ -46,6 +49,7 @@ class SoknadsoversiktController(
         } catch (e: FiksException) {
             return ResponseEntity.status(503).build()
         }
+
 
         val responselist = saker
             .map { sak ->
@@ -65,7 +69,11 @@ class SoknadsoversiktController(
     }
 
     @PostMapping("/{fiksDigisosId}/soknadDetaljer")
-    fun getSoknadDetaljer(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadDetaljerResponse> {
+    fun getSoknadDetaljer(
+        @PathVariable fiksDigisosId: String,
+        @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
+        @RequestBody ident: Ident
+    ): ResponseEntity<SoknadDetaljerResponse> {
         tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/soknadDetaljer", HttpMethod.POST)
 
         val sak = fiksClient.hentDigisosSak(fiksDigisosId)
@@ -101,17 +109,27 @@ class SoknadsoversiktController(
     }
 
     private fun erPapirSoknad(originalSoknadNAV: OriginalSoknadNAV?): Boolean {
-        if (originalSoknadNAV == null){
+
+        if (originalSoknadNAV == null) {
             return true
         }
         return false
     }
 
     private fun papirSoknadDato(saken: DigisosSak): LocalDate? {
-        val model = eventService.createModel(saken)
-        val forsteElement = model.historikk.takeIf { it.isNotEmpty() }?.get(0)?.tidspunkt?.toLocalDate()
-        return forsteElement
 
+        if (erPapirSoknad((saken.originalSoknadNAV))) {
+
+            val model = eventService.createModel(saken)
+            val saksdato = model.saker.takeIf { it.isNotEmpty() }?.get(0)?.datoOpprettet
+            if (saksdato != null) {
+                return saksdato
+            } else {
+                return model.historikk.takeIf { it.isNotEmpty() }?.get(0)?.tidspunkt?.toLocalDate()
+            }
+        } else {
+            return null
+        }
     }
 
     companion object {
