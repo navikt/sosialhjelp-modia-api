@@ -90,13 +90,13 @@ internal class SoknadsoversiktControllerTest {
         every { digisosSak2.sistEndret } returns 1000L
         every { digisosSak2.digisosSoker } returns mockk()
         every { digisosSak2.originalSoknadNAV?.timestampSendt } returns System.currentTimeMillis()
-        every { eventService.createModel(digisosSak1) } returns model2
+        every { eventService.createModel(digisosSak2) } returns model2
 
         every { digisosSak3.fiksDigisosId } returns id_3
         every { digisosSak3.sistEndret } returns 2000L
         every { digisosSak3.digisosSoker } returns mockk()
         every { digisosSak3.originalSoknadNAV?.timestampSendt } returns System.currentTimeMillis()
-        every { eventService.createModel(digisosSak1) } returns model3
+        every { eventService.createModel(digisosSak3) } returns model3
 
         every { digisosSak4.fiksDigisosId } returns id_4
         every { digisosSak4.sistEndret } returns 2000L
@@ -112,7 +112,7 @@ internal class SoknadsoversiktControllerTest {
         every {model1.saker} returns mutableListOf()
 
         every {model2.saker} returns mutableListOf(Sak(
-            referanse = "vanlig",
+            referanse = "vanlig1",
             saksStatus = SaksStatus.UNDER_BEHANDLING,
             tittel = SAK_DEFAULT_TITTEL,
             vedtak = mutableListOf(
@@ -126,7 +126,7 @@ internal class SoknadsoversiktControllerTest {
         ))
 
         every {model3.saker} returns mutableListOf(Sak(
-            referanse = "vanlig",
+            referanse = "vanlig2",
             saksStatus = SaksStatus.UNDER_BEHANDLING,
             tittel = SAK_DEFAULT_TITTEL,
             vedtak = mutableListOf(
