@@ -73,7 +73,7 @@ internal class SoknadsoversiktControllerTest {
     private val id_2 = "456"
     private val id_3 = "789"
     private val id_4 = "101"
-    private val id_5 = "101"
+    private val id_5 = "112"
 
     private val hendelseTidspunktSoknad1 = LocalDateTime.now().minusDays(2)
     private val hendelseTidspunktSoknad2 = LocalDateTime.now().minusDays(2)
