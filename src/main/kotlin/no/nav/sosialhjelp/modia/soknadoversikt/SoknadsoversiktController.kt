@@ -118,12 +118,8 @@ class SoknadsoversiktController(
     fun papirSoknadDato(saken: DigisosSak): LocalDate? {
         val model = eventService.createModel(saken)
         if (erPapirSoknad(saken.originalSoknadNAV)) {
-            val saksdato = model.saker.takeIf { it.isNotEmpty() }?.get(0)?.datoOpprettet
-            if (saksdato != null) {
-                return saksdato
-            } else {
-                return model.historikk.takeIf { it.isNotEmpty() }?.get(0)?.tidspunkt?.toLocalDate()
-            }
+            return model.saker.takeIf { it.isNotEmpty() }?.get(0)?.datoOpprettet
+                ?: model.historikk.takeIf { it.isNotEmpty() }?.get(0)?.tidspunkt?.toLocalDate()
         }
         return null
     }
