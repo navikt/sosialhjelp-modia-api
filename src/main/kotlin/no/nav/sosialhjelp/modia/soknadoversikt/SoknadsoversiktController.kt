@@ -50,7 +50,6 @@ class SoknadsoversiktController(
             return ResponseEntity.status(503).build()
         }
 
-
         val responselist = saker
             .map { sak ->
                 SoknadResponse(
@@ -116,23 +115,17 @@ class SoknadsoversiktController(
         return false
     }
 
-    //fun papirSoknadDato(saken: DigisosSak): LocalDate? {
-    fun papirSoknadDato(saken: DigisosSak): String {
-
-        if (erPapirSoknad(saken.originalSoknadNAV)) { // HVIS PAPIRSØKNAD GÅ INN HER
-            val model = eventService.createModel(saken)
+    fun papirSoknadDato(saken: DigisosSak): LocalDate? {
+        val model = eventService.createModel(saken)
+        if (erPapirSoknad(saken.originalSoknadNAV)) {
             val saksdato = model.saker.takeIf { it.isNotEmpty() }?.get(0)?.datoOpprettet
-            if (saksdato != null) { // OM PAPIRSØKNAD HAR SAK GÅ INN HER
-                //return saksdato
-                return "saksDato"
-            } else { //OM PAPIRSØKNAD HAR INGEN SAK GÅ INN HER
-                //return model.historikk.takeIf { it.isNotEmpty() }?.get(0)?.tidspunkt?.toLocalDate()
-                return "hendelseDato"
+            if (saksdato != null) {
+                return saksdato
+            } else {
+                return model.historikk.takeIf { it.isNotEmpty() }?.get(0)?.tidspunkt?.toLocalDate()
             }
-        } else {//HVIS IKKE PAPIRSØKNAD GÅ INN HER
-            //return null
-            return "sendtDato"
         }
+        return null
     }
 
     companion object {

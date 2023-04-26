@@ -14,6 +14,5 @@ data class SoknadResponse(
     val kilde: String,
     val papirSoknad: Boolean,
     @JsonFormat(pattern = "yyyy-MM-dd")
-    //val papirSoknadRegistrerteDato: LocalDate?,
-    val papirSoknadRegistrerteDato: String,
+    val papirSoknadRegistrerteDato: LocalDate?,
 )

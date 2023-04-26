@@ -49,21 +49,21 @@ internal class SoknadsoversiktControllerTest {
     private val digisosSak2: DigisosSak = mockk()
     private val digisosSak3: DigisosSak = mockk()
     private val digisosSak4: DigisosSak = mockk()
+    private val digisosSak5: DigisosSak = mockk()
 
     private val model1: InternalDigisosSoker = mockk()
     private val model2: InternalDigisosSoker = mockk()
     private val model3: InternalDigisosSoker = mockk()
     private val model4: InternalDigisosSoker = mockk()
+    private val model5: InternalDigisosSoker = mockk()
 
     private val sak1: Sak = mockk()
     private val sak2: Sak = mockk()
     private val sak3: Sak = mockk()
-    private val sak4: Sak = mockk()
 
     private val utbetaling1: Utbetaling = mockk()
     private val utbetaling2: Utbetaling = mockk()
     private val utbetaling3: Utbetaling = mockk()
-    private val utbetaling4: Utbetaling = mockk()
 
     private val oppgaveResponseMock: OppgaveResponse = mockk()
     private val dokumentasjonkravMock: DokumentasjonkravResponse = mockk()
@@ -73,6 +73,18 @@ internal class SoknadsoversiktControllerTest {
     private val id_2 = "456"
     private val id_3 = "789"
     private val id_4 = "101"
+    private val id_5 = "101"
+
+    private val hendelseTidspunktSoknad1 = LocalDateTime.now().minusDays(2)
+    private val hendelseTidspunktSoknad2 = LocalDateTime.now().minusDays(2)
+    private val hendelseTidspunktSoknad3 = LocalDateTime.now().minusDays(4)
+    private val hendelseTidspunktSoknad4 = LocalDateTime.now().minusDays(6)
+    private val hendelseTidspunktSoknad5 = LocalDateTime.now().minusDays(2)
+
+    private val soknad3Sak1DatoOpprettet = LocalDate.now().minusDays(2)
+    private val soknad4Sak1DatoOpprettet = LocalDate.now().minusDays(4)
+    private val soknad4Sak2DatoOpprettet = LocalDate.now().minusDays(3)
+    private val soknad5Sak1DatoOpprettet = LocalDate.now().minusDays(2)
 
     @BeforeEach
     internal fun setUp() {
@@ -104,42 +116,55 @@ internal class SoknadsoversiktControllerTest {
         every { digisosSak4.originalSoknadNAV } returns null
         every { eventService.createModel(digisosSak4) } returns model4
 
+        every { digisosSak5.fiksDigisosId } returns id_5
+        every { digisosSak5.sistEndret } returns 2000L
+        every { digisosSak5.digisosSoker } returns mockk()
+        every { digisosSak5.originalSoknadNAV } returns null
+        every { eventService.createModel(digisosSak5) } returns model5
+
         every { oppgaveService.hentOppgaver(id_1) } returns listOf(oppgaveResponseMock, oppgaveResponseMock) // 2 oppgaver
         every { oppgaveService.hentOppgaver(id_2) } returns listOf(oppgaveResponseMock) // 1 oppgave
         every { dokumentasjonkravService.hentDokumentasjonkrav(id_3) } returns listOf(dokumentasjonkravMock) // 1 oppgave
         every { dokumentasjonkravService.hentDokumentasjonkrav(id_4) } returns listOf(dokumentasjonkravMock) // 1 oppgave
+        every { dokumentasjonkravService.hentDokumentasjonkrav(id_5) } returns listOf(dokumentasjonkravMock) // 1 oppgave
 
-        every {model1.saker} returns mutableListOf()
+        every { model1.historikk } returns mutableListOf(
+            Hendelse("Tittel", "Beskrivelse", hendelseTidspunktSoknad1, "fil")
+        )
+        every { model2.historikk } returns mutableListOf(
+            Hendelse("Tittel", "Beskrivelse", hendelseTidspunktSoknad2, "fil")
+        )
+        every { model3.historikk } returns mutableListOf(
+            Hendelse("Tittel", "Beskrivelse", hendelseTidspunktSoknad3, "fil")
+        )
+        every { model4.historikk } returns mutableListOf(
+            Hendelse("Tittel", "Beskrivelse", hendelseTidspunktSoknad4, "fil")
+        )
+        every { model5.historikk } returns mutableListOf(
+            Hendelse("Tittel", "Beskrivelse", hendelseTidspunktSoknad5, "fil")
+        )
 
-        every {model2.saker} returns mutableListOf(Sak(
-            referanse = "vanlig1",
-            saksStatus = SaksStatus.UNDER_BEHANDLING,
-            tittel = SAK_DEFAULT_TITTEL,
-            vedtak = mutableListOf(
-                Vedtak(
-                    utfall = UtfallVedtak.DELVIS_INNVILGET,
-                    datoFattet = LocalDate.now().plusDays(2)
-                )
-            ),
-            utbetalinger = mutableListOf(),
-            datoOpprettet = LocalDate.now().minusDays(2)
-        ))
+        every { model1.saker } returns mutableListOf()
 
-        every {model3.saker} returns mutableListOf(Sak(
-            referanse = "vanlig2",
-            saksStatus = SaksStatus.UNDER_BEHANDLING,
-            tittel = SAK_DEFAULT_TITTEL,
-            vedtak = mutableListOf(
-                Vedtak(
-                    utfall = UtfallVedtak.DELVIS_INNVILGET,
-                    datoFattet = LocalDate.now().plusDays(2)
-                )
-            ),
-            utbetalinger = mutableListOf(),
-            datoOpprettet = LocalDate.now().minusDays(2)
-        ))
+        every { model2.saker } returns mutableListOf()
 
-        every {model4.saker} returns mutableListOf(
+        every { model3.saker } returns mutableListOf(
+            Sak(
+                referanse = "vanlig2",
+                saksStatus = SaksStatus.UNDER_BEHANDLING,
+                tittel = SAK_DEFAULT_TITTEL,
+                vedtak = mutableListOf(
+                    Vedtak(
+                        utfall = UtfallVedtak.DELVIS_INNVILGET,
+                        datoFattet = LocalDate.now().plusDays(2)
+                    )
+                ),
+                utbetalinger = mutableListOf(),
+                datoOpprettet = soknad3Sak1DatoOpprettet
+            )
+        )
+
+        every { model4.saker } returns mutableListOf(
             Sak(
                 referanse = "papirsøknad med 2 sak",
                 saksStatus = SaksStatus.UNDER_BEHANDLING,
@@ -155,7 +180,7 @@ internal class SoknadsoversiktControllerTest {
                     )
                 ),
                 utbetalinger = mutableListOf(),
-                datoOpprettet = LocalDate.now().minusDays(2)
+                datoOpprettet = soknad4Sak1DatoOpprettet
             ),
             Sak(
                 referanse = "referanse",
@@ -163,8 +188,25 @@ internal class SoknadsoversiktControllerTest {
                 tittel = SAK_DEFAULT_TITTEL,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(),
-                datoOpprettet = LocalDate.now().plusDays(2)
-            ))
+                datoOpprettet = soknad4Sak2DatoOpprettet
+            )
+        )
+
+        every { model5.saker } returns mutableListOf(
+            Sak(
+                referanse = "papirsøknad med 1 sak",
+                saksStatus = SaksStatus.UNDER_BEHANDLING,
+                tittel = SAK_DEFAULT_TITTEL,
+                vedtak = mutableListOf(
+                    Vedtak(
+                        utfall = UtfallVedtak.DELVIS_INNVILGET,
+                        datoFattet = LocalDate.now().plusDays(2)
+                    )
+                ),
+                utbetalinger = mutableListOf(),
+                datoOpprettet = soknad5Sak1DatoOpprettet
+            )
+        )
     }
 
     @Test
@@ -174,13 +216,13 @@ internal class SoknadsoversiktControllerTest {
 //        every { fiksClient.hentDigisosSak(id_1) } returns digisosSak1
 //        every { fiksClient.hentDigisosSak(id_2) } returns digisosSak2
 
-        val hendelse = Hendelse("Tittel", "Beskrivelse", LocalDateTime.now(),"fil")
+        val hendelse = Hendelse("Tittel", "Beskrivelse", LocalDateTime.now(), "fil")
 
         every { eventService.createModel(digisosSak1) } returns model1
         every { eventService.createModel(digisosSak2) } returns model2
 
-        every {model1.historikk} returns mutableListOf(hendelse)
-        every {model2.historikk} returns mutableListOf(hendelse)
+        every { model1.historikk } returns mutableListOf(hendelse)
+        every { model2.historikk } returns mutableListOf(hendelse)
 
         every { model1.status } returns SoknadsStatus.MOTTATT
         every { model2.status } returns SoknadsStatus.UNDER_BEHANDLING
@@ -338,45 +380,62 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    fun `papirSoknadDato - hvis papirsøknad, ingen sak, vis søknadsdato (første element i historikk)`() {
-        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1, digisosSak2, digisosSak3, digisosSak4)
+    fun `papirSoknadDato - hvis papirsøknad, ingen sak, søknadsdato (første element i historikk) valgt`() {
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1)
 
         assertThat(digisosSak1).isNotNull
-        assertThat(digisosSak1.originalSoknadNAV).isNull() // papirsøknad, skal ha 0 sak
-
-        assertThat(digisosSak2.originalSoknadNAV).isNotNull // vannlig søknad
-
         assertThat(model1).isNotNull
         assertThat(model1.saker).isNotNull
         assertThat(model1.saker).isEmpty()
-        assertThat(model2.saker).isNotEmpty
+        assertThat(digisosSak1.originalSoknadNAV).isNull()
 
-        val dato1 = controller.papirSoknadDato(digisosSak1) //papirsøknad, ingen sak
-        val dato2 = controller.papirSoknadDato(digisosSak2) //vanlig søknad
-        val dato3 = controller.papirSoknadDato(digisosSak3) //vanlig søknad
-        val dato4 = controller.papirSoknadDato(digisosSak4) //papirsøknad, 2 sak
-
-
-        assertThat(dato1).isEqualTo("hendelseDato") //får "saksDato", vises at det er en sak her? hvordan?
-        assertThat(dato2).isEqualTo("sendtDato")
-        assertThat(dato3).isEqualTo("sendtDato")
-        assertThat(dato4).isEqualTo("saksDato")
+        val dato1 = controller.papirSoknadDato(digisosSak1)
+        assertThat(dato1).isEqualTo(hendelseTidspunktSoknad1.toLocalDate())
     }
-
 
     @Test
-    fun `papirSoknadDato - hvis papirsøknad, 1 sak, vis saksdato`() {
+    fun `papirSoknadDato - hvis papirsøknad, 1 sak, velg saksdato`() {
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak5)
+        assertThat(model5).isNotNull
+        assertThat(model5.saker).isNotNull
+        assertThat(model5.saker).isNotEmpty
 
+        val dato5 = controller.papirSoknadDato(digisosSak5)
+        assertThat(dato5).isEqualTo(soknad5Sak1DatoOpprettet)
     }
-
 
     @Test
-    fun `papirSoknadDato - hvis papirsøknad, 2 sak, vis saksdato til sak 1`() {
+    fun `papirSoknadDato - hvis papirsøknad, 2 sak, velg saksdato til sak 1`() {
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak4)
+        assertThat(model4).isNotNull
+        assertThat(model4.saker).isNotNull
+        assertThat(model4.saker).isNotEmpty
 
+        val dato4 = controller.papirSoknadDato(digisosSak4)
+        assertThat(dato4).isEqualTo(soknad4Sak1DatoOpprettet)
+        assertThat(dato4).isNotEqualTo(hendelseTidspunktSoknad4)
     }
 
+    @Test
+    fun `papirSoknadDato - ikke papirsøknad, 0 sak, returnerer null`() {
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak2)
+        assertThat(digisosSak2.originalSoknadNAV).isNotNull
+        assertThat(model2).isNotNull
+        assertThat(model2.saker).isNotNull
+        assertThat(model2.saker).isEmpty()
 
+        val dato2 = controller.papirSoknadDato(digisosSak2)
+        assertThat(dato2).isNull()
+    }
 
+    @Test
+    fun `papirSoknadDato - ikke papirsøknad, 1 sak, returnerer null`() {
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak3)
 
-
+        assertThat(model3).isNotNull
+        assertThat(model3.saker).isNotNull
+        assertThat(model3.saker).isNotEmpty
+        val dato3 = controller.papirSoknadDato(digisosSak3)
+        assertThat(dato3).isNull()
+    }
 }
