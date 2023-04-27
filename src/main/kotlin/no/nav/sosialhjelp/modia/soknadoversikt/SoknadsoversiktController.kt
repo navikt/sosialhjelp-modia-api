@@ -107,13 +107,7 @@ class SoknadsoversiktController(
             .any { vilkar -> vilkar.status == OppgaveStatus.RELEVANT }
     }
 
-    fun erPapirSoknad(originalSoknadNAV: OriginalSoknadNAV?): Boolean {
-
-        if (originalSoknadNAV == null) {
-            return true
-        }
-        return false
-    }
+    fun erPapirSoknad(originalSoknadNAV: OriginalSoknadNAV?): Boolean = originalSoknadNAV == null
 
     fun papirSoknadDato(saken: DigisosSak): LocalDate? {
         val model = eventService.createModel(saken)
