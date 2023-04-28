@@ -50,6 +50,7 @@ internal class NoekkelinfoServiceTest {
         every { mockDigisosSak.kommunenummer } returns kommunenr
         every { kommunenavnService.hentKommunenavnFor(any()) } returns kommunenavn
         every { kommuneService.getBehandlingsanvarligKommune(any()) } returns kommunenavn
+        every { mockDigisosSak.originalSoknadNAV } returns null
     }
 
     @Test
@@ -77,6 +78,7 @@ internal class NoekkelinfoServiceTest {
         assertThat(noekkelinfo.kommunenavn).isEqualTo(kommunenavn)
         assertThat(noekkelinfo.videresendtHistorikk).isNull()
         assertThat(noekkelinfo.tidspunktForelopigSvar).isNull()
+        assertThat(noekkelinfo.papirSoknad).isTrue
     }
 
     @Test
