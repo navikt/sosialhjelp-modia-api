@@ -77,7 +77,7 @@ spec:
     - name: NORG_ENDPOINT_URL
       value: "https://norg2.dev-fss-pub.nais.io/norg2/api/v1"
     - name: NORG_OPPSLAG_URL
-      value: "https://norg2-frontend.dev.intern.nav.no/#/startsok?enhetNr="
+      value: "https://norg2-frontend.ekstern.dev.nav.no/#/startsok?enhetNr="
     - name: PDL_ENDPOINT_URL
       value: "https://pdl-api.dev-fss-pub.nais.io/graphql"
     - name: PDL_SCOPE
