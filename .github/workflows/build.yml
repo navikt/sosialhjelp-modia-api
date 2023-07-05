@@ -2,9 +2,7 @@ name: Build image
 on:
   push:
     branches:
-      - 'master'      
-    branches-ignore:
-      - 'dependabot/**'
+      - 'master'
     tags-ignore:
       - '**'      # Don't build any tags
   workflow_dispatch:
