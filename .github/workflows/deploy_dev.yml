@@ -1,5 +1,5 @@
 name: 'Deploy til dev'
-run-name: Deploy '${{ github.ref_name }}' to '${{ github.event.inputs.config }}'
+run-name: Deploy '${{ github.ref_name }}' to '${{ github.event.inputs.config-file-name }}'
 on:
   workflow_dispatch:
     inputs:
