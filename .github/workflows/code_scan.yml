@@ -1,11 +1,18 @@
-name: Code Analysis and Dependency Submission
+name: 'Code Scanning with CodeQL'
 
 on:
   push:
     branches:
-      - master
-  schedule: ## Kjører kl. 05:00 mandag -> fredag (schedule kjører bare for Default branch)
-    - cron: '0 5 * * 1-5'
+      - 'master'
+    tags-ignore:
+      - '**' # Don't build any tags
+    paths-ignore:
+      - '.github/**'
+      - 'build.gradle.kts'
+  pull_request:
+    paths-ignore:
+      - '.github/**'
+      - 'build.gradle.kts'
 
 jobs:
   analyze_code:
@@ -14,10 +21,4 @@ jobs:
       actions: read
       security-events: write
       contents: read
-    uses: navikt/sosialhjelp-ci/.github/workflows/codeql_java.yml@master
-
-  dependency_submission:
-    name: Dependency Submission Gradle
-    permissions:
-      contents: write
-    uses: navikt/sosialhjelp-ci/.github/workflows/dependency_submission_gradle.yml@master
+    uses: navikt/sosialhjelp-ci/.github/workflows/codeql_java.yml@v2
