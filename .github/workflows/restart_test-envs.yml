@@ -1,7 +1,9 @@
-name: Nattlig restart i testmiljøer
+name: 'Restart Test Environments'
 on:
   schedule:
     - cron: '0 2 * * *'
+  workflow_dispatch:
+
 
 jobs:
   restart-testenvs:
