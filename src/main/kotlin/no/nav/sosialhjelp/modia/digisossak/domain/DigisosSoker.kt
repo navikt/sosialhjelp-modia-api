@@ -5,6 +5,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class InternalDigisosSoker(
+    var fagsystem: Fagsystem? = null,
     var referanse: String? = null,
     var status: SoknadsStatus = SoknadsStatus.SENDT,
     var saker: MutableList<Sak> = mutableListOf(),
@@ -17,6 +18,11 @@ data class InternalDigisosSoker(
     var vilkar: MutableList<Vilkar> = mutableListOf(),
     var historikk: MutableList<Hendelse> = mutableListOf(),
     var forelopigSvar: ForelopigSvar? = null
+)
+
+data class Fagsystem(
+    var systemnavn: String?,
+    var systemversjon: String?,
 )
 
 data class Forvaltningsbrev(

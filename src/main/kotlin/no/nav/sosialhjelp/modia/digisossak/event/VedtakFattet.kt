@@ -12,6 +12,9 @@ import no.nav.sosialhjelp.modia.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
 
+    if (fagsystem?.systemnavn == "Velferd") {
+        return
+    }
     val utfallString = hendelse.utfall?.name
     val utfall = if (utfallString == null) null else UtfallVedtak.valueOf(utfallString)
 

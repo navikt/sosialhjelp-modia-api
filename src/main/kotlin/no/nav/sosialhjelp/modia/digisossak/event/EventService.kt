@@ -13,6 +13,7 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonUtbetaling
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtakFattet
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVilkar
 import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.modia.digisossak.domain.Fagsystem
 import no.nav.sosialhjelp.modia.digisossak.domain.Hendelse
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.digisossak.domain.NavKontorInformasjon
@@ -31,14 +32,19 @@ import java.time.LocalDate
 class EventService(
     private val jsonDigisosSokerService: JsonDigisosSokerService,
     private val norgClient: NorgClient,
-    private val soknadVedleggService: SoknadVedleggService
+    private val soknadVedleggService: SoknadVedleggService,
 ) {
 
     fun createModel(digisosSak: DigisosSak): InternalDigisosSoker {
-        val jsonDigisosSoker: JsonDigisosSoker? = jsonDigisosSokerService.get(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata, digisosSak.digisosSoker?.timestampSistOppdatert)
+        val jsonDigisosSoker: JsonDigisosSoker? =
+            jsonDigisosSokerService.get(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata, digisosSak.digisosSoker?.timestampSistOppdatert)
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
 
         val model = InternalDigisosSoker()
+
+        jsonDigisosSoker?.avsender?.let {
+            model.fagsystem = Fagsystem(it.systemnavn, it.systemversjon)
+        }
 
         if (timestampSendt != null) {
             val enhetsnummer: String = digisosSak.tilleggsinformasjon?.enhetsnummer ?: ""
@@ -78,6 +84,8 @@ class EventService(
         if (jsonDigisosSoker == null) {
             return model
         }
+
+        model.fagsystem = Fagsystem(jsonDigisosSoker.avsender.systemnavn, jsonDigisosSoker.avsender.systemversjon)
         jsonDigisosSoker.hendelser
             .sortedWith(hendelseComparator)
             .forEach { model.applyHendelse(it) }
