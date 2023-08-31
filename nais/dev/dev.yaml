@@ -74,8 +74,10 @@ spec:
       value: "7357bc5c-8389-435d-8311-46452d356a83"
     - name: FIKS_DIGISOS_ENDPOINT_URL
       value: "https://api.fiks.test.ks.no"
-    - name: NORG_ENDPOINT_URL
+    - name: NORG_ENDPOINT_URL_V1
       value: "https://norg2.dev-fss-pub.nais.io/norg2/api/v1"
+    - name: NORG_ENDPOINT_URL
+      value: "https://norg2.dev-fss-pub.nais.io/norg2/api/v2"
     - name: NORG_OPPSLAG_URL
       value: "https://norg2-frontend.dev.intern.nav.no/#/startsok?enhetNr="
     - name: PDL_ENDPOINT_URL

@@ -54,7 +54,7 @@ class NorgClientImpl(
 
     private fun hentNavEnhetFraServer(enhetsnr: String): NavEnhet {
         return norgWebClient.get()
-            .uri("/enhet/{enhetsnr}", enhetsnr)
+            .uri("/enhet/{enhetsnr}/kontaktinformasjon", enhetsnr)
             .header(HEADER_CALL_ID, getCallId())
             .retrieve()
             .bodyToMono<NavEnhet>()
@@ -74,7 +74,7 @@ class NorgClientImpl(
 
     override fun hentAlleNavEnheter(): List<NavEnhet> {
         return norgWebClient.get()
-            .uri("/enhet?enhetStatusListe=AKTIV")
+            .uri("/navlokalkontor?statusFilter=AKTIV")
             .header(HEADER_CALL_ID, getCallId())
             .retrieve()
             .bodyToMono(typeRef<List<NavEnhet>>())
@@ -129,23 +129,23 @@ class NorgClientMock : NorgClient {
     private val innsynMap = mutableMapOf<String, NavEnhet>()
 
     override fun hentNavEnhet(enhetsnr: String): NavEnhet {
-        return innsynMap.getOrElse(enhetsnr, { defaultNavEnhet(enhetsnr) })
+        return innsynMap.getOrElse(enhetsnr) { lagNavEnhet("NAV Longyearbyen", enhetsnr) }
     }
 
     override fun hentAlleNavEnheter(): List<NavEnhet> {
         return listOf(
-            NavEnhet(enhetId = 1, navn = "NAV Longyearbyen", enhetNr = "1001", antallRessurser = 1, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-            NavEnhet(enhetId = 2, navn = "NAV Ny-Ålesund", enhetNr = "1002", antallRessurser = 2, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-            NavEnhet(enhetId = 3, navn = "NAV Spitsbergen", enhetNr = "1003", antallRessurser = 3, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-            NavEnhet(enhetId = 4, navn = "NAV Jan Mayen", enhetNr = "1004", antallRessurser = 4, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-            NavEnhet(enhetId = 5, navn = "NAV Bjørnøya", enhetNr = "1005", antallRessurser = 5, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-            NavEnhet(enhetId = 6, navn = "NAV Dronning Maud land", enhetNr = "1006", antallRessurser = 6, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-            NavEnhet(enhetId = 7, navn = "NAV Bouvetøya", enhetNr = "1007", antallRessurser = 7, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "Noe annet"),
-            NavEnhet(enhetId = 8, navn = "NAV Oslo", enhetNr = "2002", antallRessurser = 8, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-            NavEnhet(enhetId = 9, navn = "NAV Bergen", enhetNr = "3002", antallRessurser = 9, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-            NavEnhet(enhetId = 10, navn = "NAV Trondheim", enhetNr = "4002", antallRessurser = 10, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-            NavEnhet(enhetId = 11, navn = "NAV Stavanger", enhetNr = "5002", antallRessurser = 11, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-            NavEnhet(enhetId = 12, navn = "NAV Tromsø", enhetNr = "6002", antallRessurser = 12, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
+            lagNavEnhet(navn = "NAV Longyearbyen", enhetsnr = "1001"),
+            lagNavEnhet(navn = "NAV Ny-Ålesund", enhetsnr = "1002"),
+            lagNavEnhet(navn = "NAV Spitsbergen", enhetsnr = "1003"),
+            lagNavEnhet(navn = "NAV Jan Mayen", enhetsnr = "1004"),
+            lagNavEnhet(navn = "NAV Bjørnøya", enhetsnr = "1005"),
+            lagNavEnhet(navn = "NAV Dronning Maud land", enhetsnr = "1006"),
+            lagNavEnhet(navn = "NAV Bouvetøya", enhetsnr = "1007"),
+            lagNavEnhet( navn = "NAV Oslo", enhetsnr = "2002"),
+            lagNavEnhet(navn = "NAV Bergen", enhetsnr = "3002"),
+            lagNavEnhet(navn = "NAV Trondheim", enhetsnr = "4002"),
+            lagNavEnhet(navn = "NAV Stavanger", enhetsnr = "5002"),
+            lagNavEnhet(navn = "NAV Tromsø", enhetsnr = "6002")
         )
     }
 
@@ -153,19 +153,33 @@ class NorgClientMock : NorgClient {
         // no-op
     }
 
-    private fun defaultNavEnhet(enhetsnr: String): NavEnhet {
+    private fun lagNavEnhet(navn: String, enhetsnr: String): NavEnhet {
         return NavEnhet(
-            enhetId = 100000367,
-            navn = "NAV Longyearbyen",
+            navn = navn,
             enhetNr = enhetsnr,
-            antallRessurser = 20,
-            status = "AKTIV",
-            aktiveringsdato = "1982-04-21",
-            nedleggelsesdato = "null",
+            status = "Aktiv",
+            aktiveringsdato = "1999-10-10",
+            nedleggelsesdato = null,
             sosialeTjenester = sosialetjenesterInfo,
-            type = "LOKAL"
+            brukerKontakt = BrukerKontakt(
+                sosialhjelp = Sosialhelp(
+                    digitaleSoeknader = listOf(SosialhjelpDigitalSonad(
+                        lenke= "https://mock.kommune.no/sosialhjelpsoknad",
+                        lenketekst= "Digital søknad for sosialhjelp i kommunen"
+                    )),
+                    papirsoeknadInformasjon= "Papirsøknadsskjema finnes på kommunens nettside og ved inngangsdøren. Kan leveres i brevsprekk utenom åpningstidene."
+                ),
+                informasjonUtbetalinger = null,
+                publikumskanaler = listOf(PublikumsKanal(
+                    beskrivelse= "Beredskapstelefon",
+                    telefon= "11112222"
+                ), PublikumsKanal(
+                    beskrivelse= "Rus/psyk. (m/hovedutford. rus/psyk.)",
+                    telefon= "11112222"))
+            )
         )
     }
+
 
     private val sosialetjenesterInfo: String = """
         Til saksbehandler:

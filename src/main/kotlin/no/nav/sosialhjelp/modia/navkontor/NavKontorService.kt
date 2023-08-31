@@ -19,7 +19,7 @@ class NavKontorService(
         if (enhet == null || enhet.sosialeTjenester.isNullOrBlank()) {
             return null
         }
-        return KontorinfoResponse(enhet.enhetNr, enhet.navn, enhet.sosialeTjenester, lagNorgUrl(enhet.enhetNr))
+        return KontorinfoResponse(enhet.enhetNr, enhet.navn, enhet.sosialeTjenester, enhet.brukerKontakt, lagNorgUrl(enhet.enhetNr))
     }
 
     fun hentAlleNavKontorinfo(): List<KontorinfoResponse> {
@@ -29,12 +29,12 @@ class NavKontorService(
             return emptyList()
         }
         return alleEnheter
-            .filter { it.type == TYPE_LOKAL }
             .map {
                 KontorinfoResponse(
                     it.enhetNr,
                     it.navn,
                     it.sosialeTjenester ?: "",
+                    it.brukerKontakt,
                     lagNorgUrl(it.enhetNr)
                 )
             }
