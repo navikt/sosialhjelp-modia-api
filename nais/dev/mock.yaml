@@ -30,6 +30,7 @@ spec:
       external:
         - host: "unleash.nais.io"
         - host: digisos.ekstern.dev.nav.no
+        - host: teamdigisos-unleash-api.nav.cloud.nais.io
       rules:
         - application: sosialhjelp-mock-alt-api-mock
   ingresses:

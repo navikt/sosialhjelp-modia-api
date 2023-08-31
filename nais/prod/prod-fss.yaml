@@ -47,6 +47,9 @@ spec:
         - application: salesforce
           namespace: teamcrm
           cluster: prod-external
+    outbound:
+      external:
+        - host: teamdigisos-unleash-api.nav.cloud.nais.io
   ingresses:
     - "https://sosialhjelp-modia-api.intern.nav.no/sosialhjelp/modia-api"
   resources:
