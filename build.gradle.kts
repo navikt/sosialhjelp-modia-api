@@ -25,7 +25,6 @@ object Versions {
     const val springdoc = "2.0.2"
 
     const val jsonSmart = "2.4.10"
-    const val gson = "2.10"
     const val log4j = "2.19.0"
     const val snakeyaml = "2.0"
     const val jakartaActivationApi = "2.1.0"
