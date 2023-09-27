@@ -31,6 +31,8 @@ class ClientProperties {
     lateinit var skjermedePersonerScope: String
     lateinit var skjermedePersonerEndpointUrl: String
 
-    lateinit var unleashUrl: String
-    lateinit var unleashInstanceId: String
+    lateinit var unleash_instance_id: String
+    lateinit var unleash_env: String
+    lateinit var unleash_server_api_url: String
+    lateinit var unleash_server_api_token: String
 }

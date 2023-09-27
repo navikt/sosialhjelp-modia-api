@@ -57,8 +57,10 @@ client:
   azure_graph_url: ${AZURE_GRAPH_API_URL}
   skjermede_personer_scope: ${SKJERMEDE_PERSONER_SCOPE}
   skjermede_personer_endpoint_url: ${SKJERMEDE_PERSONER_ENDPOINT_URL}
-  unleash_url: ${UNLEASH_API_URL}
   unleash_instance_id: ${UNLEASH_INSTANCE_ID}
+  unleash_env: ${UNLEASH_ENV}
+  unleash_server_api_url: ${UNLEASH_SERVER_API_URL}
+  unleash_server_api_token: ${UNLEASH_SERVER_API_TOKEN}
 
 modia_baseurl: ${MODIA_BASEURL}
 
