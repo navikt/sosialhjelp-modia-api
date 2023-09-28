@@ -34,7 +34,7 @@ spec:
       rules:
         - application: sosialhjelp-mock-alt-api-mock
   ingresses:
-    - "https://sosialhjelp-modia-api-mock.ekstern.dev.nav.no/sosialhjelp/modia-api"
+    - "https://digisos.ekstern.dev.nav.no/sosialhjelp/modia-api"
   resources:
     limits:
       cpu: 500m
