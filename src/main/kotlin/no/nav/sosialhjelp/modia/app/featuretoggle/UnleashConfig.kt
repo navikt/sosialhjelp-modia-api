@@ -1,6 +1,5 @@
 package no.nav.sosialhjelp.modia.app.featuretoggle
 
-
 import io.getunleash.DefaultUnleash
 import io.getunleash.FakeUnleash
 import io.getunleash.Unleash
