@@ -2,6 +2,7 @@ package no.nav.sosialhjelp.modia.soknad.saksstatus
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
+import no.nav.sosialhjelp.modia.digisossak.domain.Utbetaling
 import no.nav.sosialhjelp.modia.digisossak.domain.UtfallVedtak
 import java.time.LocalDate
 
@@ -12,7 +13,8 @@ data class SaksStatusResponse(
     @JsonFormat(pattern = "yyyy-MM-dd")
     val datoOpprettet: LocalDate,
     @JsonFormat(pattern = "yyyy-MM-dd")
-    val datoAvsluttet: LocalDate?
+    val datoAvsluttet: LocalDate?,
+    val utbetalinger: List<Utbetaling> = emptyList()
 ) {
 
     data class Vedtak(

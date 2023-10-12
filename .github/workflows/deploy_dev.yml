@@ -1,4 +1,5 @@
-name: Deploy til dev
+name: 'Deploy til dev'
+run-name: Deploy '${{ github.ref_name }}' to '${{ github.event.inputs.config-file-name }}'
 on:
   workflow_dispatch:
     inputs:
@@ -13,33 +14,26 @@ on:
           - 'mock'
 
 jobs:
-  deploy:
-    name: Deploy to dev - ${{ github.event.inputs.config-file-name }}
+  set-cluster:
+    name: 'Sett cluster basert på config-file'
     runs-on: ubuntu-latest
-    env:
-      DOCKER_IMAGE: ghcr.io/${{ github.repository }}/${{ github.event.repository.name }}
+    outputs:
+      cluster-name: ${{ steps.set-cluster-name.outputs.cluster-name }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Create artifact version
-        id: artifact-version
-        uses: navikt/sosialhjelp-ci/actions/create-artifact-version@master
-      - name: Sett env variabler
-        run: |
-          echo "DOCKER_TAG=${{ env.DOCKER_IMAGE }}:${{ steps.artifact-version.outputs.version }}" >> $GITHUB_ENV
       - name: Sett cluster basert på config-file
-        run: |
-          if [[ ${{ github.event.inputs.config-file-name }} = 'dev-fss' ]]; then
-            echo "CLUSTER_NAME=dev-fss" >> $GITHUB_ENV
-          else
-            echo "CLUSTER_NAME=dev-gcp" >> $GITHUB_ENV
-          fi
-          echo "Deployer til ${{ env.CLUSTER_NAME }}"
-      - name: Deploy til dev
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          RESOURCE: nais/dev/${{ github.event.inputs.config-file-name }}.yaml
-          CLUSTER: ${{ env.CLUSTER_NAME }}
-          REF: ${{ github.sha }}
-          PRINT_PAYLOAD: true
-          IMAGE: ${{ env.DOCKER_TAG }}
+        id: set-cluster-name
+        uses: navikt/sosialhjelp-ci/actions/set-cluster-name@v2
+        with:
+          resource-name: ${{ inputs.config-file-name }}
+
+  deploy-to-dev:
+    name: 'Deploy to dev'
+    needs: set-cluster
+    permissions:
+      packages: write
+      contents: write
+    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@v2
+    with:
+      cluster-name: ${{ needs.set-cluster.outputs.cluster-name }}
+      resource-name: ${{ inputs.config-file-name }}
+    secrets: inherit

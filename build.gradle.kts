@@ -6,11 +6,11 @@ group = "no.nav.sosialhjelp"
 
 object Versions {
     const val coroutines = "1.6.4"
-    const val springBoot = "3.0.2"
+    const val springBoot = "3.1.1"
     const val logback = "1.2.11"
     const val logstash = "7.2"
     const val sosialhjelpCommon = "1.20230209.0920-45d9782"
-    const val filformat = "1.2023.02.09-08.34-aad9baa612d3"
+    const val filformat = "1.2023.06.21-14.54-583dfcc41d77"
     const val micrometerRegistry = "1.10.3"
     const val prometheus = "0.16.0"
     const val tokenValidation = "3.0.3"
@@ -24,13 +24,14 @@ object Versions {
     const val unleash = "4.4.1"
     const val springdoc = "2.0.2"
 
-    const val jsonSmart = "2.4.8"
+    const val jsonSmart = "2.4.10"
     const val gson = "2.10"
     const val log4j = "2.19.0"
     const val snakeyaml = "2.0"
     const val jakartaActivationApi = "2.1.0"
     const val jakartaXmlBindApi = "4.0.0"
     const val jakartaServletApi = "5.0.0"
+    const val netty = "4.1.94.Final"
 
     // Test only
     const val junitJupiter = "5.9.2"
@@ -39,11 +40,11 @@ object Versions {
 }
 
 plugins {
-    kotlin("jvm") version "1.8.10"
-    kotlin("plugin.spring") version "1.8.10"
-    id("org.springframework.boot") version "3.0.2"
-    id("com.github.ben-manes.versions") version "0.45.0" // ./gradlew dependencyUpdates
-    id("org.jlleitschuh.gradle.ktlint") version "11.1.0"
+    kotlin("jvm") version "1.9.0"
+    kotlin("plugin.spring") version "1.9.0"
+    id("org.springframework.boot") version "3.1.1"
+    id("com.github.ben-manes.versions") version "0.47.0" // ./gradlew dependencyUpdates
+    id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
 }
 
 java {
@@ -141,7 +142,7 @@ dependencies {
             because("Snyk ønsker 30.1.1-jre eller høyere.")
         }
         implementation("net.minidev:json-smart:${Versions.jsonSmart}") {
-            because("Snyk ønsker 2.4.5 eller høyere.")
+            because("https://github.com/advisories/GHSA-493p-pfq6-5258")
         }
         implementation("com.google.code.gson:gson:${Versions.gson}") {
             because("Snyk ønsker 2.8.9 eller høyere. Transitiv avhengighet dratt inn av unleash-client-java.")
@@ -158,6 +159,9 @@ dependencies {
 
         implementation("org.yaml:snakeyaml:${Versions.snakeyaml}") {
             because("https://security.snyk.io/vuln/SNYK-JAVA-ORGYAML-3152153")
+        }
+        implementation("io.netty:netty-handler:${Versions.netty}") {
+            because("https://github.com/advisories/GHSA-6mjq-h674-j845")
         }
 
         // jakarta

@@ -36,7 +36,8 @@ class SaksStatusService(
                         )
                     },
                     datoOpprettet = sak.datoOpprettet,
-                    datoAvsluttet = sak.vedtak.maxByOrNull { it.datoFattet }?.datoFattet
+                    datoAvsluttet = sak.vedtak.maxByOrNull { it.datoFattet }?.datoFattet,
+                    utbetalinger = sak.utbetalinger
                 )
             }
         log.info("Hentet ${responseList.size} sak(er) for $fiksDigisosId")

@@ -1,0 +1,15 @@
+name: 'Restart Test Environments'
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+
+jobs:
+  restart-testenvs:
+    name: 'Restart test-envs'
+    uses: navikt/sosialhjelp-ci/.github/workflows/restart_test-envs.yml@v2
+    secrets: inherit
+    with:
+      to-mock: true
+      to-dev-fss: true
