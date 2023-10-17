@@ -88,7 +88,7 @@ spec:
     - name: DOKUMENT_CACHE_TIME_TO_LIVE_SECONDS
       value: "360"
     - name: UNLEASH_INSTANCE_ID
-      value: "sosialhjelp-innsyn-api"
+      value: "sosialhjelp-modia-api"
     - name: UNLEASH_ENV
       value: "prod-fss"
     - name: SWAGGER_ENABLED

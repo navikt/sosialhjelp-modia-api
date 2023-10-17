@@ -68,7 +68,7 @@ spec:
     - name: MASKINPORTEN_WELL_KNOWN_URL
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/well-known/maskinporten"
     - name: UNLEASH_INSTANCE_ID
-      value: "sosialhjelp-innsyn-api"
+      value: "sosialhjelp-modia-api"
     - name: UNLEASH_ENV
       value: "mock"
     - name: MODIA_BASEURL
