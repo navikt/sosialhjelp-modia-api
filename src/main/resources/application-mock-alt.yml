@@ -29,8 +29,10 @@ client:
   azure_graph_url: ${AZURE_GRAPH_API_URL:http://${mock-alt-api-host}:8989/sosialhjelp/mock-alt-api/azuread/graph}
   skjermede_personer_scope: dummyScope
   skjermede_personer_endpoint_url: ${SKJERMEDE_PERSONER_ENDPOINT_URL:http://${mock-alt-api-host}:8989/sosialhjelp/mock-alt-api/skjermede-personer}
-  unleash_url: ${UNLEASH_API_URL:https://unleash.nais.io/api}
   unleash_instance_id: ${UNLEASH_INSTANCE_ID:local}
+  unleash_env: ${UNLEASH_ENV:mock}
+  unleash_server_api_url: ${UNLEASH_SERVER_API_URL:http://${mock-alt-api-host}:8989/sosialhjelp/mock-alt-api/internal/unleash}
+  unleash_server_api_token: ${UNLEASH_SERVER_API_TOKEN:token}
 
 modia_baseurl: ${MODIA_BASEURL:https://digisos.ekstern.dev.nav.no/sosialhjelp/modia}
 

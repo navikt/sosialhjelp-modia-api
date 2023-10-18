@@ -34,8 +34,10 @@ client:
   azure_graph_url: ${AZURE_GRAPH_API_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/azuread/graph}
   skjermede_personer_scope: ${SKJERMEDE_PERSONER_SCOPE:skjermede_personer_scope}
   skjermede_personer_endpoint_url: ${SKJERMEDE_PERSONER_ENDPOINT_URL:skjermede_personer_endpoint_url}
-  unleash_url: ${UNLEASH_API_URL:https://unleash.nais.io/api}
-  unleash_instance_id: ${UNLEASH_INSTANCE_ID:local}
+  unleash_instance_id: "local"
+  unleash_env: "local"
+  unleash_server_api_url: "http://localhost:58888"
+  unleash_server_api_token: "localtoken"
 
 modia_baseurl: ${MODIA_BASEURL:http://localhost:3000/sosialhjelp/modia}
 

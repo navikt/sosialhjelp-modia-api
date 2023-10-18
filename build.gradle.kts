@@ -21,11 +21,10 @@ object Versions {
     const val jwksRsa = "0.21.3"
     const val syslog4j = "0.9.46"
     const val lettuce = "6.2.2.RELEASE"
-    const val unleash = "4.4.1"
+    const val unleash = "8.3.0"
     const val springdoc = "2.0.2"
 
     const val jsonSmart = "2.4.10"
-    const val gson = "2.10"
     const val log4j = "2.19.0"
     const val snakeyaml = "2.0"
     const val jakartaActivationApi = "2.1.0"
@@ -125,7 +124,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${Versions.springdoc}")
 
 //    Unleash
-    implementation("no.finn.unleash:unleash-client-java:${Versions.unleash}")
+    implementation("io.getunleash:unleash-client-java:${Versions.unleash}")
 
 //    Redis
     implementation("io.lettuce:lettuce-core:${Versions.lettuce}")
@@ -143,9 +142,6 @@ dependencies {
         }
         implementation("net.minidev:json-smart:${Versions.jsonSmart}") {
             because("https://github.com/advisories/GHSA-493p-pfq6-5258")
-        }
-        implementation("com.google.code.gson:gson:${Versions.gson}") {
-            because("Snyk ønsker 2.8.9 eller høyere. Transitiv avhengighet dratt inn av unleash-client-java.")
         }
         testImplementation("junit:junit:${Versions.junit}") {
             because("Snyk ønsker 4.13.1 eller høyere. Transitiv avhengighet dratt inn av token-validation-spring-test.")

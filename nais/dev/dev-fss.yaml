@@ -40,6 +40,7 @@ spec:
   envFrom:
     - secret: redis-password-modia-api
     - secret: fiks-integrasjon-secret
+    - secret: sosialhjelp-modia-api-unleash-api-token
   accessPolicy:
     inbound:
       rules:
@@ -47,6 +48,9 @@ spec:
         - application: salesforce
           namespace: teamcrm
           cluster: dev-external
+    outbound:
+      external:
+        - host: teamdigisos-unleash-api.nav.cloud.nais.io
   ingresses:
     - "https://sosialhjelp-modia-api.dev.intern.nav.no/sosialhjelp/modia-api"
   resources:
@@ -81,9 +85,9 @@ spec:
       value: "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local"
     - name: CACHE_TIME_TO_LIVE_SECONDS
       value: "60"
-    - name: UNLEASH_API_URL
-      value: "https://unleash.nais.io/api"
     - name: UNLEASH_INSTANCE_ID
+      value: "sosialhjelp-modia-api"
+    - name: UNLEASH_ENV
       value: "dev-fss"
     - name: SWAGGER_ENABLED
       value: "true"

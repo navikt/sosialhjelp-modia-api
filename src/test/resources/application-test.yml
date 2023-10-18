@@ -18,8 +18,10 @@ client:
   fiks_integrasjonpassord: "pwd"
   fiks_integrasjonpassord_kommune: "pwdcom"
   pdl_endpoint_url: 'http://localhost:56666'
-  unleash_url: "http://localhost:58888"
   unleash_instance_id: "local"
+  unleash_env: "local"
+  unleash_server_api_url: "http://localhost:58888"
+  unleash_server_api_token: "localtoken"
 
 modia_baseurl: "http://localhost:3000/sosialhjelp/modia"
 
