@@ -39,11 +39,11 @@ object Versions {
 }
 
 plugins {
-    kotlin("jvm") version "1.9.0"
-    kotlin("plugin.spring") version "1.9.0"
-    id("org.springframework.boot") version "3.1.1"
-    id("com.github.ben-manes.versions") version "0.47.0" // ./gradlew dependencyUpdates
-    id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
+    kotlin("jvm") version "1.9.20"
+    kotlin("plugin.spring") version "1.9.20"
+    id("org.springframework.boot") version "3.1.5"
+    id("com.github.ben-manes.versions") version "0.49.0" // ./gradlew dependencyUpdates
+    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
 }
 
 java {
