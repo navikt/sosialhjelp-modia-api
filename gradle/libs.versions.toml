@@ -1,0 +1,92 @@
+[versions]
+kotlin = "1.9.20"
+coroutines = "1.6.4"
+spring-boot = "3.1.1"
+logback = "1.2.11"
+logstash = "7.2"
+sosialhjelpCommon = "1.20230209.0920-45d9782"
+filformat = "1.2023.06.21-14.54-583dfcc41d77"
+micrometerRegistry = "1.10.3"
+prometheus = "0.16.0"
+tokenValidation = "3.0.3"
+jackson = "2.14.2"
+logbackSyslog4j = "1.0.0"
+javaJwt = "4.2.2"
+jwksRsa = "0.21.3"
+syslog4j = "0.9.46"
+lettuce = "6.2.2.RELEASE"
+unleash = "8.3.0"
+springdoc = "2.0.2"
+junitJupiter = "5.9.2"
+mockk = "1.13.4"
+ktlint = "0.45.2"
+
+[libraries]
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-slf4j = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j", version.ref = "coroutines" }
+coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor", version.ref = "coroutines" }
+
+spring-boot-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
+spring-boot-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux", version.ref = "spring-boot" }
+spring-boot-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
+spring-boot-logging = { module = "org.springframework.boot:spring-boot-starter-logging", version.ref = "spring-boot" }
+spring-boot-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
+spring-boot-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis", version.ref = "spring-boot" }
+spring-boot-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
+
+sosialhjelp-common-selftest = { module = "no.nav.sosialhjelp:sosialhjelp-common-selftest", version.ref = "sosialhjelpCommon" }
+sosialhjelp-common-api = { module = "no.nav.sosialhjelp:sosialhjelp-common-api", version.ref = "sosialhjelpCommon" }
+
+micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "micrometerRegistry" }
+prometheus-common = { module = "io.prometheus:simpleclient_common", version.ref = "prometheus" }
+prometheus-hotspot = { module = "io.prometheus:simpleclient_hotspot", version.ref = "prometheus" }
+
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+logstash-logback-encoder = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "logstash" }
+
+logback-syslog4j = { module = "com.papertrailapp:logback-syslog4j", version.ref = "logbackSyslog4j" }
+syslog4j = { module = "org.syslog4j:syslog4j", version.ref = "syslog4j" }
+
+java-jwt = { module = "com.auth0:java-jwt", version.ref = "javaJwt" }
+jwks-rsa = { module = "com.auth0:jwks-rsa", version.ref = "jwksRsa" }
+
+filformat = { module = "no.nav.sbl.dialogarena:soknadsosialhjelp-filformat", version.ref = "filformat" }
+
+jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+
+token-validation = { module = "no.nav.security:token-validation-spring", version.ref = "tokenValidation" }
+token-validation-test = { module = "no.nav.security:token-validation-spring-test", version.ref = "tokenValidation" }
+token-client = { module = "no.nav.security:token-client-spring", version.ref = "tokenValidation" }
+
+springdoc-common = { module = "org.springdoc:springdoc-openapi-starter-common", version.ref = "springdoc" }
+springdoc-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+
+unleash = { module = "io.getunleash:unleash-client-java", version.ref = "unleash" }
+
+lettuce = { module = "io.lettuce:lettuce-core", version.ref = "lettuce" }
+
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+
+[bundles]
+spring-boot = [
+    "spring-boot-web",
+    "spring-boot-webflux",
+    "spring-boot-actuator",
+    "spring-boot-logging",
+    "spring-boot-validation",
+    "spring-boot-data-redis",
+    "spring-boot-test"
+]
+springdoc = ["springdoc-common", "springdoc-webmvc-ui"]
+token-validation = ["token-validation", "token-client"]
+prometheus = ["prometheus-common", "prometheus-hotspot"]
+sosialhjelp-common = ["sosialhjelp-common-api", "sosialhjelp-common-selftest"]
+coroutines = ["coroutines-core", "coroutines-reactor", "coroutines-slf4j"]
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-plugin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+versions = { id = "com.github.ben-manes.versions", version = "0.49.0" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "11.6.1" }
