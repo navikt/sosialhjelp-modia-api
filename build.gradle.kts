@@ -42,7 +42,7 @@ plugins {
     kotlin("jvm") version "1.9.20"
     kotlin("plugin.spring") version "1.9.20"
     id("org.springframework.boot") version "3.1.5"
-    id("com.github.ben-manes.versions") version "0.49.0" // ./gradlew dependencyUpdates
+    id("com.github.ben-manes.versions") version "0.50.0" // ./gradlew dependencyUpdates
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
 }
 
