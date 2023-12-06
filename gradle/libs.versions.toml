@@ -1,7 +1,7 @@
 [versions]
 kotlin = "1.9.20"
 coroutines = "1.6.4"
-spring-boot = "3.1.1"
+spring-boot = "3.2.0"
 logback = "1.2.11"
 logstash = "7.2"
 sosialhjelpCommon = "1.20230209.0920-45d9782"
