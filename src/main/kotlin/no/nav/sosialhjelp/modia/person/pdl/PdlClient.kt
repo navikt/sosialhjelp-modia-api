@@ -9,9 +9,9 @@ import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.getCallId
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.tilgang.azure.AzuredingsService
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
+import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEHANDLINGSNUMMER_MODIA
+import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_BEHANDLINGSNUMMER
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
-import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_TEMA
-import no.nav.sosialhjelp.modia.utils.IntegrationUtils.TEMA_KOM
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.AUTHORIZATION
@@ -44,6 +44,7 @@ class PdlClientImpl(
         }
         .baseUrl(clientProperties.pdlEndpointUrl)
         .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        .defaultHeader(HEADER_BEHANDLINGSNUMMER, BEHANDLINGSNUMMER_MODIA)
         .build()
 
     override fun hentPerson(ident: String, veilederToken: String): PdlHentPerson? {
@@ -57,7 +58,6 @@ class PdlClientImpl(
                     .contentType(APPLICATION_JSON)
                     .header(AUTHORIZATION, BEARER + azureAdToken)
                     .header(HEADER_CALL_ID, getCallId())
-                    .header(HEADER_TEMA, TEMA_KOM)
                     .bodyValue(PdlRequest(query, Variables(ident)))
                     .retrieve()
                     .awaitBody<PdlPersonResponse>()
