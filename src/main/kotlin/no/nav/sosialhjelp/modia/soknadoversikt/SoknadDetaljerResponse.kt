@@ -8,5 +8,5 @@ data class SoknadDetaljerResponse(
     val status: SoknadsStatus,
     val harOppgaver: Boolean,
     val harDokumentasjonkrav: Boolean,
-    val harVilkar: Boolean
+    val harVilkar: Boolean,
 )

@@ -18,7 +18,8 @@ data class SoknadNoekkelinfoResponse(
     val videresendtHistorikk: List<VideresendtInfo>?,
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     val tidspunktForelopigSvar: LocalDateTime?,
-    val papirSoknad: Boolean
+    val papirSoknad: Boolean,
+    val kommunenummer: String,
 )
 
 data class VideresendtInfo(
