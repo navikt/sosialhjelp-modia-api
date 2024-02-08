@@ -10,7 +10,7 @@ jobs:
     permissions:
       packages: write
     steps:
-      - uses: actions/delete-package-versions@v4
+      - uses: actions/delete-package-versions@v5
         with:
           package-name: 'sosialhjelp-modia-api/sosialhjelp-modia-api'
           package-type: 'container'
