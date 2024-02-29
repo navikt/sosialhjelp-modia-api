@@ -1,11 +1,11 @@
 [versions]
-kotlin = "1.9.20"
+kotlin = "1.9.22"
 coroutines = "1.6.4"
 spring-boot = "3.1.1"
 logback = "1.2.11"
 logstash = "7.2"
 sosialhjelpCommon = "1.20230209.0920-45d9782"
-filformat = "1.2023.06.21-14.54-583dfcc41d77"
+filformat = "1.2023.07.11-15.37-bb76af3d1843"
 micrometerRegistry = "1.10.3"
 prometheus = "0.16.0"
 tokenValidation = "3.0.3"
@@ -18,7 +18,7 @@ lettuce = "6.2.2.RELEASE"
 unleash = "8.3.0"
 springdoc = "2.0.2"
 junitJupiter = "5.9.2"
-mockk = "1.13.4"
+mockk = "1.13.10"
 ktlint = "0.45.2"
 
 [libraries]
