@@ -22,7 +22,7 @@ class KommunenavnClient(
 
     fun getAll(): KommunenavnProperties {
         return kommunenavnWebClient.get()
-            .uri("https://register.geonorge.no/sosi-kodelister/inndelinger/inndelingsbase/kommunenummer.json")
+            .uri("https://register.geonorge.no/api/sosi-kodelister/inndelinger/inndelingsbase/kommunenummer.json")
             .retrieve()
             .bodyToMono(typeRef<KommunenavnProperties>())
             .doOnError {
