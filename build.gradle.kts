@@ -66,7 +66,7 @@ dependencies {
     implementation(libs.lettuce)
 
 //    Test
-    testImplementation(libs.spring.boot.test)
+    testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)
     testImplementation(libs.token.validation.test)
