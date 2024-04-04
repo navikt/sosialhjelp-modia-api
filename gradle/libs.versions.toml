@@ -1,7 +1,7 @@
 [versions]
 kotlin = "1.9.20"
 coroutines = "1.6.4"
-spring-boot = "3.1.1"
+spring-boot = "3.2.4"
 logback = "1.2.11"
 logstash = "7.2"
 sosialhjelpCommon = "1.20230209.0920-45d9782"
@@ -32,7 +32,10 @@ spring-boot-actuator = { module = "org.springframework.boot:spring-boot-starter-
 spring-boot-logging = { module = "org.springframework.boot:spring-boot-starter-logging", version.ref = "spring-boot" }
 spring-boot-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
 spring-boot-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis", version.ref = "spring-boot" }
-spring-boot-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
+#spring-boot-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
+
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
+
 
 sosialhjelp-common-selftest = { module = "no.nav.sosialhjelp:sosialhjelp-common-selftest", version.ref = "sosialhjelpCommon" }
 sosialhjelp-common-api = { module = "no.nav.sosialhjelp:sosialhjelp-common-api", version.ref = "sosialhjelpCommon" }
@@ -76,7 +79,7 @@ spring-boot = [
     "spring-boot-logging",
     "spring-boot-validation",
     "spring-boot-data-redis",
-    "spring-boot-test"
+#    "spring-boot-test"
 ]
 springdoc = ["springdoc-common", "springdoc-webmvc-ui"]
 token-validation = ["token-validation", "token-client"]
