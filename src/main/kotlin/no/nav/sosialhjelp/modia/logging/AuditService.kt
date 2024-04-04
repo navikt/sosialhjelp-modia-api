@@ -28,7 +28,7 @@ class AuditService(
         val attributes: Map<String, Any> = commonAttributes(brukerFnr, url, httpMethod, access)
             .plus(
                 mapOf(
-                    RESOURCE to RESOURCE_AUDIT_ACCESS,
+                    RESOURCE to RESOURCE_AUDIT_ACCESS
                 )
             )
         auditLogger.report(attributes)

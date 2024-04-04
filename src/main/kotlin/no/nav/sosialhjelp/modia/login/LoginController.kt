@@ -18,6 +18,6 @@ class LoginController {
     }
 
     data class LoginResponse(
-        val melding: String,
+        val melding: String
     )
 }

@@ -11,7 +11,7 @@ const val VEDLEGG_KREVES_STATUS = "VedleggKreves"
 
 @Component
 class SoknadVedleggService(
-    private val fiksClient: FiksClient,
+    private val fiksClient: FiksClient
 ) {
 
     fun hentSoknadVedleggMedStatus(digisosSak: DigisosSak, status: String): List<InternalVedlegg> {

@@ -10,5 +10,5 @@ data class DokumentasjonkravResponse(
     @JsonFormat(pattern = "yyyy-MM-dd")
     val innsendelsesfrist: LocalDate?,
     @JsonFormat(pattern = "yyyy-MM-dd")
-    val datoLagtTil: LocalDate?,
+    val datoLagtTil: LocalDate?
 )

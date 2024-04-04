@@ -16,7 +16,7 @@ import reactor.netty.http.client.HttpClient
 class AzuredingsClient(
     webClientBuilder: WebClient.Builder,
     proxiedHttpClient: HttpClient,
-    private val azuredingsWebConfig: AzuredingsWebConfig,
+    private val azuredingsWebConfig: AzuredingsWebConfig
 ) {
 
     private val azuredingsWebClient: WebClient = webClientBuilder

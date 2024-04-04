@@ -11,7 +11,7 @@ import org.springframework.web.filter.CorsFilter
 
 @Component
 class CorsConfig(
-    private val miljoUtils: MiljoUtils,
+    private val miljoUtils: MiljoUtils
 ) {
 
     @Bean

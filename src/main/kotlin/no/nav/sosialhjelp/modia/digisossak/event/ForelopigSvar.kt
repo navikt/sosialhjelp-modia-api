@@ -8,7 +8,6 @@ import no.nav.sosialhjelp.modia.digisossak.event.Titler.FORELOPIG_SVAR
 import no.nav.sosialhjelp.modia.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonForelopigSvar) {
-
     forelopigSvar = ForelopigSvar(hendelse.hendelsestidspunkt.toLocalDateTime())
 
     historikk.add(Hendelse(FORELOPIG_SVAR, FORELOPIG_SVAR, hendelse.hendelsestidspunkt.toLocalDateTime(), VIS_BREVET))

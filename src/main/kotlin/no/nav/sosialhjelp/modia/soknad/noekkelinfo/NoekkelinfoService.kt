@@ -38,7 +38,7 @@ class NoekkelinfoService(
             videresendtHistorikk = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
             tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt,
             papirSoknad = erPapirSoknad,
-            kommunenummer = digisosSak.kommunenummer,
+            kommunenummer = digisosSak.kommunenummer
         )
     }
 
@@ -54,7 +54,7 @@ class NoekkelinfoService(
     }
 
     private fun leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model: InternalDigisosSoker): List<VideresendtInfo>? {
-        return if (model.navKontorHistorikk.size > 1)
+        return if (model.navKontorHistorikk.size > 1) {
             model.navKontorHistorikk
                 .map {
                     VideresendtInfo(
@@ -63,7 +63,9 @@ class NoekkelinfoService(
                         navKontor = NavKontor(it.navEnhetsnavn, it.navEnhetsnummer)
                     )
                 }
-        else null
+        } else {
+            null
+        }
     }
 
     companion object {

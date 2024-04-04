@@ -34,7 +34,7 @@ interface PdlClient {
 class PdlClientImpl(
     webClientBuilder: WebClient.Builder,
     private val azuredingsService: AzuredingsService,
-    private val clientProperties: ClientProperties,
+    private val clientProperties: ClientProperties
 ) : PdlClient {
 
     private val pdlWebClient = webClientBuilder

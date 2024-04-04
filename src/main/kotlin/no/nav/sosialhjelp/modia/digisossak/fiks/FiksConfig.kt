@@ -14,7 +14,7 @@ import reactor.netty.http.client.HttpClient
 class FiksConfig(
     private val webClientBuilder: WebClient.Builder,
     private val proxiedHttpClient: HttpClient,
-    private val clientProperties: ClientProperties,
+    private val clientProperties: ClientProperties
 ) {
 
     @Bean

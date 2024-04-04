@@ -33,7 +33,7 @@ class SkjermedePersonerClientImpl(
     webClientBuilder: WebClient.Builder,
     private val azuredingsService: AzuredingsService,
     private val redisService: RedisService,
-    private val clientProperties: ClientProperties,
+    private val clientProperties: ClientProperties
 ) : SkjermedePersonerClient {
 
     private val skjermedePersonerWebClient: WebClient =

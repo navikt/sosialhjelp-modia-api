@@ -10,7 +10,7 @@ import reactor.netty.http.client.HttpClient
 @Component
 class KommunenavnClient(
     webClientBuilder: WebClient.Builder,
-    proxiedHttpClient: HttpClient,
+    proxiedHttpClient: HttpClient
 ) {
     private val kommunenavnWebClient: WebClient =
         webClientBuilder
