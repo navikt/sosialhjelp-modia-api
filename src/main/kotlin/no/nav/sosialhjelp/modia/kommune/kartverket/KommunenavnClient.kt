@@ -10,7 +10,7 @@ import reactor.netty.http.client.HttpClient
 @Component
 class KommunenavnClient(
     webClientBuilder: WebClient.Builder,
-    proxiedHttpClient: HttpClient
+    proxiedHttpClient: HttpClient,
 ) {
     private val kommunenavnWebClient: WebClient =
         webClientBuilder
@@ -22,7 +22,7 @@ class KommunenavnClient(
 
     fun getAll(): KommunenavnProperties {
         return kommunenavnWebClient.get()
-            .uri("https://register.geonorge.no/api/subregister/sosi-kodelister/kartverket/kommunenummer-alle.json")
+            .uri("https://register.geonorge.no/sosi-kodelister/inndelinger/inndelingsbase/kommunenummer.json")
             .retrieve()
             .bodyToMono(typeRef<KommunenavnProperties>())
             .doOnError {

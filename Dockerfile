@@ -1,4 +1,4 @@
-FROM ghcr.io/navikt/baseimages/temurin:17
+FROM ghcr.io/navikt/baseimages/temurin:21
 
 ENV LC_ALL="no_NB.UTF-8"
 ENV LANG="no_NB.UTF-8"

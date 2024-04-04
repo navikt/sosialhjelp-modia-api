@@ -1,24 +1,18 @@
-name: 'Code Scanning with CodeQL'
+name: 'Dependency Submission Gradle'
 
 on:
   push:
     branches:
       - 'master'
-    tags-ignore:
-      - '**' # Don't build any tags
-    paths-ignore:
-      - '.github/**'
+    paths:
       - 'build.gradle.kts'
-  pull_request:
-    paths-ignore:
-      - '.github/**'
-      - 'build.gradle.kts'
+      - 'gradle/libs.versions.toml'
 
 jobs:
-  analyze_code:
-    name: Analyze Code
+  dependency_submission:
+    name: Dependency Submission Gradle
     permissions:
-      actions: read
-      security-events: write
-      contents: read
-    uses: navikt/sosialhjelp-ci/.github/workflows/codeql_java.yml@v2
+      contents: write
+    uses: navikt/sosialhjelp-ci/.github/workflows/dependency_submission_gradle.yml@main
+    with:
+      java-version: '21'
