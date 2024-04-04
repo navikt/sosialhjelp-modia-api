@@ -19,7 +19,7 @@ class MaskinportenClientConfig(
     @Value("\${maskinporten_client_jwk}") private val clientJwk: String,
     webClientBuilder: WebClient.Builder,
     proxiedHttpClient: HttpClient,
-    private val miljoUtils: MiljoUtils,
+    private val miljoUtils: MiljoUtils
 ) {
 
     @Bean
@@ -70,12 +70,12 @@ class MaskinportenClientConfig(
 
 data class WellKnown(
     val issuer: String,
-    val token_endpoint: String,
+    val token_endpoint: String
 )
 
 data class MaskinportenProperties(
     val clientId: String,
     val clientJwk: String,
     val scope: String,
-    val wellKnownUrl: String,
+    val wellKnownUrl: String
 )

@@ -5,6 +5,5 @@ import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
 
 @Suppress("UNUSED_PARAMETER", "unused")
 fun InternalDigisosSoker.apply(hendelse: JsonRammevedtak) {
-
     // lar stå som blank inntil videre
 }

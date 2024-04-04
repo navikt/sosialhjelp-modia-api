@@ -59,7 +59,7 @@ class SoknadsoversiktController(
                     sendt = sak.originalSoknadNAV?.timestampSendt?.let { unixTimestampToDate(it) },
                     kilde = IntegrationUtils.KILDE_INNSYN_API,
                     papirSoknad = erPapirSoknad(sak.originalSoknadNAV),
-                    papirSoknadRegistrerteDato = papirSoknadDato(sak),
+                    papirSoknadRegistrerteDato = papirSoknadDato(sak)
                 )
             }
         log.info("Hentet alle (${responselist.size}) DigisosSaker for bruker.")

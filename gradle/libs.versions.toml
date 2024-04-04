@@ -19,7 +19,7 @@ unleash = "8.3.0"
 springdoc = "2.5.0"
 junitJupiter = "5.10.2"
 mockk = "1.13.10"
-ktlint = "0.45.2"
+ktlint = "0.47.1"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -89,4 +89,4 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-plugin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }
-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "11.6.1" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.1.0" }

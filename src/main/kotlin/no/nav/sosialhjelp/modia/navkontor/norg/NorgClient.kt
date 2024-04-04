@@ -145,7 +145,7 @@ class NorgClientMock : NorgClient {
             NavEnhet(enhetId = 9, navn = "NAV Bergen", enhetNr = "3002", antallRessurser = 9, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
             NavEnhet(enhetId = 10, navn = "NAV Trondheim", enhetNr = "4002", antallRessurser = 10, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
             NavEnhet(enhetId = 11, navn = "NAV Stavanger", enhetNr = "5002", antallRessurser = 11, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
-            NavEnhet(enhetId = 12, navn = "NAV Tromsø", enhetNr = "6002", antallRessurser = 12, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL"),
+            NavEnhet(enhetId = 12, navn = "NAV Tromsø", enhetNr = "6002", antallRessurser = 12, status = "AKTIV", aktiveringsdato = "1982-04-21", nedleggelsesdato = "null", sosialeTjenester = sosialetjenesterInfo, type = "LOKAL")
         )
     }
 

@@ -11,7 +11,6 @@ import no.nav.sosialhjelp.modia.digisossak.event.Titler.SOKNAD_UNDER_BEHANDLING
 import no.nav.sosialhjelp.modia.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonSoknadsStatus) {
-
     status = SoknadsStatus.valueOf(hendelse.status.name)
 
     val tittel = when (hendelse.status) {

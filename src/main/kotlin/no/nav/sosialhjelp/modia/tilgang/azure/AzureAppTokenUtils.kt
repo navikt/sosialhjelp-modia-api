@@ -23,7 +23,7 @@ interface AzureAppTokenUtils {
 class AzureAppTokenUtilsImpl(
     webClientBuilder: WebClient.Builder,
     proxiedHttpClient: HttpClient,
-    private val clientProperties: ClientProperties,
+    private val clientProperties: ClientProperties
 ) : AzureAppTokenUtils {
 
     private val azureAppTokenWebClient: WebClient =

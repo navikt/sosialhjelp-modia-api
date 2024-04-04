@@ -21,7 +21,7 @@ class AzuredingsService(
     private val azuredingsClient: AzuredingsClient,
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
-    miljoUtils: MiljoUtils,
+    miljoUtils: MiljoUtils
 ) {
 
     private val privateRsaKey: RSAKey = if (clientProperties.azuredingsPrivateJwk == "generateRSA") {

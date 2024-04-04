@@ -8,5 +8,5 @@ data class VilkarResponse(
     val sakstittel: String?,
     val vilkarUtbetalinger: List<VilkarUtbetalingResponse>,
     @JsonFormat(pattern = "yyyy-MM-dd")
-    val datoLagtTil: LocalDate?,
+    val datoLagtTil: LocalDate?
 )

@@ -11,7 +11,6 @@ import no.nav.sosialhjelp.modia.digisossak.event.Titler.SAK_FERDIGBEHANDLET
 import no.nav.sosialhjelp.modia.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonVedtakFattet) {
-
     val utfallString = hendelse.utfall?.name
     val utfall = if (utfallString == null) null else UtfallVedtak.valueOf(utfallString)
 

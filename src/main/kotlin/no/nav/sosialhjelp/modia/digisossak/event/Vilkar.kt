@@ -9,7 +9,6 @@ import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.toLocalDateTime
 
 fun InternalDigisosSoker.apply(hendelse: JsonVilkar) {
-
     val log by logger()
 
     val utbetalinger = finnAlleUtbetalingerSomVilkarRefererTil(hendelse)

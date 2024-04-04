@@ -15,7 +15,6 @@ fun InternalDigisosSoker.apply(
     hendelse: JsonTildeltNavKontor,
     norgClient: NorgClient
 ) {
-
     val behandlendeNavKontor = navKontorHistorikk.lastOrNull()
     if (hendelse.navKontor == behandlendeNavKontor?.navEnhetsnummer) {
         return
