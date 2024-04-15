@@ -45,11 +45,11 @@ internal class SoknadsoversiktControllerTest {
 
     private val controller = SoknadsoversiktController(fiksClient, eventService, oppgaveService, dokumentasjonkravService, tilgangskontrollService)
 
-    private val digisosSak1: DigisosSak = mockk()
-    private val digisosSak2: DigisosSak = mockk()
-    private val digisosSak3: DigisosSak = mockk()
-    private val digisosSak4: DigisosSak = mockk()
-    private val digisosSak5: DigisosSak = mockk()
+    private val digisosSak1: DigisosSak = mockk(relaxed = true)
+    private val digisosSak2: DigisosSak = mockk(relaxed = true)
+    private val digisosSak3: DigisosSak = mockk(relaxed = true)
+    private val digisosSak4: DigisosSak = mockk(relaxed = true)
+    private val digisosSak5: DigisosSak = mockk(relaxed = true)
 
     private val model1: InternalDigisosSoker = mockk()
     private val model2: InternalDigisosSoker = mockk()

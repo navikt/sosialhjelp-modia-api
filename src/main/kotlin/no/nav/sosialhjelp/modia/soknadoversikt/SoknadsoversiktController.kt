@@ -14,6 +14,7 @@ import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.DokumentasjonkravServic
 import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import no.nav.sosialhjelp.modia.unixTimestampToDate
+import no.nav.sosialhjelp.modia.utils.BrokenSoknad
 import no.nav.sosialhjelp.modia.utils.Ident
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils
 import org.springframework.http.HttpHeaders
@@ -59,7 +60,10 @@ class SoknadsoversiktController(
                     sendt = sak.originalSoknadNAV?.timestampSendt?.let { unixTimestampToDate(it) },
                     kilde = IntegrationUtils.KILDE_INNSYN_API,
                     papirSoknad = erPapirSoknad(sak.originalSoknadNAV),
-                    papirSoknadRegistrerteDato = papirSoknadDato(sak)
+                    papirSoknadRegistrerteDato = papirSoknadDato(sak),
+                    isBroken = sak.originalSoknadNAV?.navEksternRefId?.let {
+                        BrokenSoknad.isBrokenSoknad(it)
+                    } ?: false
                 )
             }
         log.info("Hentet alle (${responselist.size}) DigisosSaker for bruker.")
