@@ -54,7 +54,7 @@ spec:
         - host: graph.microsoft.com
         - host: norg2.dev-fss-pub.nais.io
         - host: pdl-api.dev-fss-pub.nais.io
-        - host: skjermede-personer-pip.dev.intern.nav.no
+        - host: skjermede-personer-pip.intern.dev.nav.no
         - host: teamdigisos-unleash-api.nav.cloud.nais.io
       rules:
         - application: sosialhjelp-modia-api-redis
@@ -85,7 +85,7 @@ spec:
     - name: PDL_SCOPE
       value: "api://dev-fss.pdl.pdl-api/.default"
     - name: SKJERMEDE_PERSONER_ENDPOINT_URL
-      value: "https://skjermede-personer-pip.dev.intern.nav.no"
+      value: "https://skjermede-personer-pip.intern.dev.nav.no"
     - name: SKJERMEDE_PERSONER_SCOPE
       value: "api://dev-gcp.nom.skjermede-personer-pip/.default"
     - name: REDIS_HOST
