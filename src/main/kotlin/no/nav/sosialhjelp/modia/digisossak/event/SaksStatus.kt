@@ -9,7 +9,6 @@ import no.nav.sosialhjelp.modia.toLocalDateTime
 import java.util.Locale
 
 fun InternalDigisosSoker.apply(hendelse: JsonSaksStatus) {
-
     val sakForReferanse = saker.firstOrNull { it.referanse == hendelse.referanse }
 
     if (sakForReferanse != null) {

@@ -48,11 +48,15 @@ spec:
         - application: salesforce
           namespace: teamcrm
           cluster: prod-external
+        - application: saas-proxy
+          namespace: teamcrm
+          cluster: prod-gcp
     outbound:
       external:
         - host: teamdigisos-unleash-api.nav.cloud.nais.io
   ingresses:
     - "https://sosialhjelp-modia-api.intern.nav.no/sosialhjelp/modia-api"
+    - "https://sosialhjelp-modia-api.prod-fss-pub.nais.io"
   resources:
     limits:
       cpu: 500m

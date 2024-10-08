@@ -90,7 +90,7 @@ internal class FiksClientTest {
                     listOf(
                         ok_digisossak_response_string(),
                         ok_digisossak_response_string(LocalDateTime.now().minusMonths(1)),
-                        ok_digisossak_response_string(LocalDateTime.now().minusMonths(2)),
+                        ok_digisossak_response_string(LocalDateTime.now().minusMonths(2))
                     ).toString()
                 )
         )
@@ -111,7 +111,7 @@ internal class FiksClientTest {
                     listOf(
                         ok_digisossak_response_string(),
                         ok_digisossak_response_string(LocalDateTime.now().minusMonths(1)),
-                        ok_digisossak_response_string(LocalDateTime.now().minusMonths(16)),
+                        ok_digisossak_response_string(LocalDateTime.now().minusMonths(16))
                     ).toString()
                 )
         )

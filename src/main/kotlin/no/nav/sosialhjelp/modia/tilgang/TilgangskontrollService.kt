@@ -27,23 +27,29 @@ class TilgangskontrollService(
 
     fun harTilgang(brukerIdent: String, token: String, url: String, method: HttpMethod) {
         val veilederToken = token.replace(BEARER, "")
-        if (!azureGraphClient.hentInnloggetVeilederSineGrupper(veilederToken).value.any { it.id == clientProperties.veilederGruppeId })
+        if (!azureGraphClient.hentInnloggetVeilederSineGrupper(veilederToken).value.any { it.id == clientProperties.veilederGruppeId }) {
             throw ManglendeModiaSosialhjelpTilgangException("Veileder er ikke i riktig azure gruppe til å bruke modia sosialhjelp.")
                 .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
+        }
         val pdlPerson = hentPersonFraPdl(brukerIdent, veilederToken)
             ?: throw ManglendeTilgangException("Person ikke funnet i PDL.")
                 .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
-        if (pdlPerson.isKode6Or7()) throw ManglendeTilgangException("Person har addressebeskyttelse.")
-            .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
-        if (skjermedePersonerClient.erPersonSkjermet(brukerIdent, veilederToken)) throw ManglendeTilgangException("Person er skjermet.")
-            .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
+        if (pdlPerson.isKode6Or7()) {
+            throw ManglendeTilgangException("Person har addressebeskyttelse.")
+                .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
+        }
+        if (skjermedePersonerClient.erPersonSkjermet(brukerIdent, veilederToken)) {
+            throw ManglendeTilgangException("Person er skjermet.")
+                .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
+        }
     }
 
     fun harVeilederTilgangTilTjenesten(token: String, url: String, method: HttpMethod) {
         val veilederToken = token.replace(BEARER, "")
-        if (!azureGraphClient.hentInnloggetVeilederSineGrupper(veilederToken).value.any { it.id == clientProperties.veilederGruppeId })
+        if (!azureGraphClient.hentInnloggetVeilederSineGrupper(veilederToken).value.any { it.id == clientProperties.veilederGruppeId }) {
             throw ManglendeModiaSosialhjelpTilgangException("Veileder er ikke i riktig azure gruppe til å bruke modia sosialhjelp.")
                 .also { auditService.reportToAuditlog("", url, method, Access.DENY) }
+        }
     }
 
     private fun hentPersonFraPdl(brukerIdent: String, veilederToken: String): PdlPerson? {

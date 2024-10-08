@@ -34,7 +34,7 @@ interface RedisService {
 @Component
 class RedisServiceImpl(
     @Value("\${cache_time_to_live_seconds}") private val cacheTimeToLiveSeconds: Long,
-    private val redisStore: RedisStore,
+    private val redisStore: RedisStore
 ) : RedisService {
 
     override val defaultTimeToLiveSeconds = cacheTimeToLiveSeconds
@@ -83,7 +83,9 @@ class RedisServiceImpl(
                 log.warn("Fant key=$ALLE_NAVENHETER_CACHE_KEY, men feil oppstod ved deserialisering til List<NavEnhet>")
                 null
             }
-        } else null
+        } else {
+            null
+        }
     }
 
     private fun getBytes(type: RedisKeyType, key: String): ByteArray? {

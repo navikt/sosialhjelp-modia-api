@@ -515,6 +515,7 @@ internal class UtbetalingerServiceTest {
         assertThat(response).hasSize(1)
         assertThat(response[0].tittel).isEqualTo("Nødhjelp1")
     }
+
     @Test
     fun `skal filtrere riktig med forfallsdato - bare tom er satt`() {
         val tom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
@@ -613,6 +614,7 @@ internal class UtbetalingerServiceTest {
         assertThat(response[0].tittel).isEqualTo("Nødhjelp1")
         assertThat(response[1].tittel).isEqualTo("Nødhjelp2")
     }
+
     @Test
     fun `skal filtrere riktig med forfallsdato - fom og tom er satt`() {
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)

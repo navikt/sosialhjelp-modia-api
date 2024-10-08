@@ -48,11 +48,16 @@ spec:
         - application: salesforce
           namespace: teamcrm
           cluster: dev-external
+        - application: saas-proxy
+          namespace: teamcrm
+          cluster: dev-gcp
     outbound:
       external:
         - host: teamdigisos-unleash-api.nav.cloud.nais.io
   ingresses:
-    - "https://sosialhjelp-modia-api.dev.intern.nav.no/sosialhjelp/modia-api"
+    - "https://sosialhjelp-modia-api.intern.dev.nav.no/sosialhjelp/modia-api"
+    - "https://sosialhjelp-modia-api.dev-fss-pub.nais.io"
+
   resources:
     limits:
       cpu: 500m
@@ -70,11 +75,11 @@ spec:
     - name: FIKS_DIGISOS_ENDPOINT_URL
       value: "https://api.fiks.test.ks.no"
     - name: NORG_ENDPOINT_URL
-      value: "https://norg2.dev.intern.nav.no/norg2/api/v1"
+      value: "https://norg2.intern.dev.nav.no/norg2/api/v1"
     - name: NORG_OPPSLAG_URL
       value: "https://norg2-frontend.ekstern.dev.nav.no/#/startsok?enhetNr="
     - name: PDL_ENDPOINT_URL
-      value: "https://pdl-api.dev.intern.nav.no/graphql"
+      value: "https://pdl-api.intern.dev.nav.no/graphql"
     - name: PDL_SCOPE
       value: "api://dev-fss.pdl.pdl-api/.default"
     - name: SKJERMEDE_PERSONER_ENDPOINT_URL
@@ -92,6 +97,6 @@ spec:
     - name: SWAGGER_ENABLED
       value: "true"
     - name: MODIA_BASEURL
-      value: "https://sosialhjelp-modia.dev.intern.nav.no/sosialhjelp/modia"
+      value: "https://sosialhjelp-modia.intern.dev.nav.no/sosialhjelp/modia"
     - name: MASKINPORTEN_WELL_KNOWN_URL
-      value: "https://ver2.maskinporten.no/.well-known/oauth-authorization-server"
+      value: "https://test.maskinporten.no/.well-known/oauth-authorization-server"

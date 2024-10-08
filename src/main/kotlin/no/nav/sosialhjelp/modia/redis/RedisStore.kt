@@ -25,13 +25,17 @@ class RedisStore(
         val await = redisFuture.await(1, TimeUnit.SECONDS)
         return if (await) {
             redisFuture.get()
-        } else null
+        } else {
+            null
+        }
     }
 
     fun set(key: String, value: ByteArray, timeToLive: Long): String? {
         val redisFuture: RedisFuture<String> = async.setex(key, timeToLive, value)
         return if (redisFuture.await(1, TimeUnit.SECONDS)) {
             redisFuture.get()
-        } else null
+        } else {
+            null
+        }
     }
 }

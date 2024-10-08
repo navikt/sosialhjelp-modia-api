@@ -12,9 +12,11 @@ updates:
     commit-message:
       prefix: "gradle"
     groups:
-      minor-patch:
+      minor:
         update-types:
           - "minor"
+      patch:
+        update-types:
           - "patch"
 
   - package-ecosystem: "github-actions"

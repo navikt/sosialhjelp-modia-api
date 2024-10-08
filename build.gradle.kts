@@ -4,46 +4,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "no.nav.sosialhjelp"
 
-object Versions {
-    const val coroutines = "1.6.4"
-    const val springBoot = "3.1.1"
-    const val logback = "1.2.11"
-    const val logstash = "7.2"
-    const val sosialhjelpCommon = "1.20230209.0920-45d9782"
-    const val filformat = "1.2023.06.21-14.54-583dfcc41d77"
-    const val micrometerRegistry = "1.10.3"
-    const val prometheus = "0.16.0"
-    const val tokenValidation = "3.0.3"
-    const val jackson = "2.14.2"
-    const val guava = "31.1-jre"
-    const val logbackSyslog4j = "1.0.0"
-    const val javaJwt = "4.2.2"
-    const val jwksRsa = "0.21.3"
-    const val syslog4j = "0.9.30"
-    const val lettuce = "6.2.2.RELEASE"
-    const val unleash = "8.3.0"
-    const val springdoc = "2.0.2"
-
-    const val jsonSmart = "2.4.10"
-    const val log4j = "2.19.0"
-    const val snakeyaml = "2.0"
-    const val jakartaActivationApi = "2.1.0"
-    const val jakartaXmlBindApi = "4.0.0"
-    const val jakartaServletApi = "5.0.0"
-    const val netty = "4.1.94.Final"
-
-    // Test only
-    const val junitJupiter = "5.9.2"
-    const val mockk = "1.13.4"
-    const val junit = "4.13.2"
-}
-
 plugins {
-    kotlin("jvm") version "1.9.20"
-    kotlin("plugin.spring") version "1.9.20"
-    id("org.springframework.boot") version "3.1.5"
-    id("com.github.ben-manes.versions") version "0.49.0" // ./gradlew dependencyUpdates
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
+    alias(libs.plugins.versions)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.plugin.spring)
+    alias(libs.plugins.spring.boot)
 }
 
 java {
@@ -52,125 +18,58 @@ java {
 }
 
 ktlint {
-    this.version.set("0.45.2")
-}
-
-configurations {
-    "implementation" {
-        exclude(group = "org.springframework.boot", module = "spring-boot-starter-tomcat")
-        exclude(group = "javax.activation", module = "activation")
-        exclude(group = "javax.mail", module = "mailapi")
-        exclude(group = "javax.validation", module = "validation-api")
-    }
-    "testImplementation" {
-        exclude(group = "org.springframework.boot", module = "spring-boot-starter-tomcat")
-        exclude(group = "org.hamcrest", module = "hamcrest-library")
-        exclude(group = "org.hamcrest", module = "hamcrest-core")
-        exclude(group = "org.mockito", module = "mockito-core")
-    }
+    this.version.set(libs.versions.ktlint)
 }
 
 dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
 
-//    Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:${Versions.coroutines}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${Versions.coroutines}")
+    implementation(libs.bundles.coroutines)
 
-//    Spring
-    implementation("org.springframework.boot:spring-boot-starter-web:${Versions.springBoot}")
-    implementation("org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}")
-    implementation("org.springframework.boot:spring-boot-starter-jetty:${Versions.springBoot}")
-    implementation("org.springframework.boot:spring-boot-starter-actuator:${Versions.springBoot}")
-    implementation("org.springframework.boot:spring-boot-starter-logging:${Versions.springBoot}")
-    implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.springBoot}")
-    implementation("org.springframework.boot:spring-boot-starter-data-redis:${Versions.springBoot}")
+    implementation(libs.bundles.spring.boot)
 
-//    Sosialhjelp-common
-    implementation("no.nav.sosialhjelp:sosialhjelp-common-selftest:${Versions.sosialhjelpCommon}")
-    implementation("no.nav.sosialhjelp:sosialhjelp-common-api:${Versions.sosialhjelpCommon}")
+    implementation(libs.bundles.sosialhjelp.common)
 
 //    Micrometer/prometheus
-    implementation("io.micrometer:micrometer-registry-prometheus:${Versions.micrometerRegistry}")
-    implementation("io.prometheus:simpleclient_common:${Versions.prometheus}")
-    implementation("io.prometheus:simpleclient_hotspot:${Versions.prometheus}")
+    implementation(libs.bundles.prometheus)
+    implementation(libs.micrometer.registry.prometheus)
 
 //    Logging
-    implementation("ch.qos.logback:logback-classic:${Versions.logback}")
-    implementation("net.logstash.logback:logstash-logback-encoder:${Versions.logstash}")
+    implementation(libs.logback)
+    implementation(libs.logstash.logback.encoder)
 
 //    Auditlogger syslog
-    implementation("com.papertrailapp:logback-syslog4j:${Versions.logbackSyslog4j}")
-    implementation("org.syslog4j:syslog4j:${Versions.syslog4j}")
+    implementation(libs.logback.syslog4j)
+    implementation(libs.syslog4j)
 
 //    JWT
-    implementation("com.auth0:java-jwt:${Versions.javaJwt}")
-    implementation("com.auth0:jwks-rsa:${Versions.jwksRsa}")
+    implementation(libs.java.jwt)
+    implementation(libs.jwks.rsa)
 
 //    Filformat
-    implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:${Versions.filformat}")
+    implementation(libs.filformat)
 
 //    Jackson
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jackson}")
+    implementation(libs.jackson.module.kotlin)
 
 //    Token-validation
-    implementation("no.nav.security:token-validation-spring:${Versions.tokenValidation}")
-    implementation("no.nav.security:token-client-spring:${Versions.tokenValidation}")
+    implementation(libs.bundles.token.validation)
 
 //    Springdoc
-    implementation("org.springdoc:springdoc-openapi-starter-common:${Versions.springdoc}")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${Versions.springdoc}")
+    implementation(libs.bundles.springdoc)
 
 //    Unleash
-    implementation("io.getunleash:unleash-client-java:${Versions.unleash}")
+    implementation(libs.unleash)
 
 //    Redis
-    implementation("io.lettuce:lettuce-core:${Versions.lettuce}")
+    implementation(libs.lettuce)
 
 //    Test
-    testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
-    testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junitJupiter}")
-    testImplementation("io.mockk:mockk:${Versions.mockk}")
-    testImplementation("no.nav.security:token-validation-spring-test:${Versions.tokenValidation}")
-
-//    Spesifikke versjoner oppgradert etter ønske fra snyk
-    constraints {
-        implementation("com.google.guava:guava:${Versions.guava}") {
-            because("Snyk ønsker 30.1.1-jre eller høyere.")
-        }
-        implementation("net.minidev:json-smart:${Versions.jsonSmart}") {
-            because("https://github.com/advisories/GHSA-493p-pfq6-5258")
-        }
-        testImplementation("junit:junit:${Versions.junit}") {
-            because("Snyk ønsker 4.13.1 eller høyere. Transitiv avhengighet dratt inn av token-validation-spring-test.")
-        }
-        implementation("org.apache.logging.log4j:log4j-api:${Versions.log4j}") {
-            because("0-day exploit i version 2.0.0-2.14.1")
-        }
-        implementation("org.apache.logging.log4j:log4j-to-slf4j:${Versions.log4j}") {
-            because("0-day exploit i version 2.0.0-2.14.1")
-        }
-
-        implementation("org.yaml:snakeyaml:${Versions.snakeyaml}") {
-            because("https://security.snyk.io/vuln/SNYK-JAVA-ORGYAML-3152153")
-        }
-        implementation("io.netty:netty-handler:${Versions.netty}") {
-            because("https://github.com/advisories/GHSA-6mjq-h674-j845")
-        }
-
-        // jakarta
-        implementation("jakarta.activation:jakarta.activation-api") {
-            version { strictly(Versions.jakartaActivationApi) }
-        }
-        implementation("jakarta.servlet:jakarta.servlet-api") {
-            version { strictly(Versions.jakartaServletApi) }
-        }
-        implementation("jakarta.xml.bind:jakarta.xml.bind-api") {
-            version { strictly(Versions.jakartaXmlBindApi) }
-        }
-    }
+    testImplementation(libs.spring.boot.test)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockk)
+    testImplementation(libs.token.validation.test)
 }
 
 val githubUser: String by project

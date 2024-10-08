@@ -21,7 +21,7 @@ import org.springframework.web.reactive.function.client.bodyToMono
 class KommuneInfoClient(
     private val maskinportenClient: MaskinportenClient,
     private val clientProperties: ClientProperties,
-    private val fiksWebClient: WebClient,
+    private val fiksWebClient: WebClient
 ) {
 
     fun getKommuneInfo(kommunenummer: String): KommuneInfo {

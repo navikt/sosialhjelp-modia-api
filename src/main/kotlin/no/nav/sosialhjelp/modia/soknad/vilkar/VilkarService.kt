@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 @Component
 class VilkarService(
     private val fiksClient: FiksClient,
-    private val eventService: EventService,
+    private val eventService: EventService
 ) {
     fun hentVilkar(fiksDigisosId: String): List<VilkarResponse> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)

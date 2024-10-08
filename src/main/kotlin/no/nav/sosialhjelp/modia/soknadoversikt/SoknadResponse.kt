@@ -15,4 +15,5 @@ data class SoknadResponse(
     val papirSoknad: Boolean,
     @JsonFormat(pattern = "yyyy-MM-dd")
     val papirSoknadRegistrerteDato: LocalDate?,
+    val isBroken: Boolean
 )

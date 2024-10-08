@@ -11,7 +11,7 @@ import org.springframework.web.filter.CorsFilter
 
 @Component
 class CorsConfig(
-    private val miljoUtils: MiljoUtils,
+    private val miljoUtils: MiljoUtils
 ) {
 
     @Bean
@@ -40,7 +40,7 @@ class CorsConfig(
             "https://navdialog.lightning.force.com"
         )
         private val ALLOWED_ORIGINS_NON_PROD = listOf(
-            "https://sosialhjelp-modia.dev.intern.nav.no",
+            "https://sosialhjelp-modia.intern.dev.nav.no",
             "https://sosialhjelp-modia-dev.dev.nav.no",
             "https://digisos.dev.nav.no",
             "https://sosialhjelp-modia-mock.ekstern.dev.nav.no",

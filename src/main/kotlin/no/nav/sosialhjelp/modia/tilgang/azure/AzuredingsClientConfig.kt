@@ -17,7 +17,7 @@ class AzuredingsWebConfig(val tokenEndpoint: String)
 class AzuredingsClientConfig(
     webClientBuilder: WebClient.Builder,
     proxiedHttpClient: HttpClient,
-    private val clientProperties: ClientProperties,
+    private val clientProperties: ClientProperties
 ) {
     @Bean
     @Profile("!test")

@@ -17,7 +17,7 @@ class AzureGraphClient(
     webClientBuilder: WebClient.Builder,
     proxiedHttpClient: HttpClient,
     private val azuredingsService: AzuredingsService,
-    private val clientProperties: ClientProperties,
+    private val clientProperties: ClientProperties
 ) {
 
     private val azureGraphWebClient: WebClient =
