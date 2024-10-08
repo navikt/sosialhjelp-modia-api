@@ -41,23 +41,4 @@
         </root>
     </springProfile>
 
-    <springProfile name="log-audit">
-        <appender name="sporingslogg" class="com.papertrailapp.logback.Syslog4jAppender">
-            <layout class="ch.qos.logback.classic.PatternLayout">
-                <pattern>%msg%n</pattern>
-            </layout>
-            <syslogConfig class="org.productivity.java.syslog4j.impl.net.tcp.TCPNetSyslogConfig">
-                <host>audit.nais</host>
-                <port>6514</port>
-                <ident>sosialhjelp-modia-api</ident>
-                <maxMessageLength>128000</maxMessageLength>
-            </syslogConfig>
-        </appender>
-
-        <logger level="INFO" name="sporingslogg" additivity="false">
-            <appender-ref ref="sporingslogg" />
-        </logger>
-
-    </springProfile>
-
 </configuration>
