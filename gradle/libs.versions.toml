@@ -13,7 +13,7 @@ jackson = "2.14.2"
 logbackSyslog4j = "1.0.0"
 javaJwt = "4.2.2"
 jwksRsa = "0.21.3"
-syslog4j = "0.9.46"
+syslog4j = "0.9.61"
 lettuce = "6.2.2.RELEASE"
 unleash = "8.3.0"
 springdoc = "2.0.2"
@@ -48,7 +48,7 @@ logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 logstash-logback-encoder = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "logstash" }
 
 logback-syslog4j = { module = "com.papertrailapp:logback-syslog4j", version.ref = "logbackSyslog4j" }
-syslog4j = { module = "org.syslog4j:syslog4j", version.ref = "syslog4j" }
+syslog4j = { module = "org.graylog2:syslog4j", version.ref = "syslog4j" }
 
 java-jwt = { module = "com.auth0:java-jwt", version.ref = "javaJwt" }
 jwks-rsa = { module = "com.auth0:jwks-rsa", version.ref = "jwksRsa" }
