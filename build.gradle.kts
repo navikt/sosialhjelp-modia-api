@@ -16,10 +16,10 @@ object Versions {
     const val tokenValidation = "3.0.3"
     const val jackson = "2.14.2"
     const val guava = "31.1-jre"
-    // const val logbackSyslog4j = "1.0.0"
+    const val logbackSyslog4j = "1.0.0"
     const val javaJwt = "4.2.2"
     const val jwksRsa = "0.21.3"
-    // const val syslog4j = "0.9.46"
+    const val syslog4j = "0.9.30"
     const val lettuce = "6.2.2.RELEASE"
     const val unleash = "8.3.0"
     const val springdoc = "2.0.2"
@@ -102,8 +102,8 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:${Versions.logstash}")
 
 //    Auditlogger syslog
-//    implementation("com.papertrailapp:logback-syslog4j:${Versions.logbackSyslog4j}")
-//    implementation("org.syslog4j:syslog4j:${Versions.syslog4j}")
+    implementation("com.papertrailapp:logback-syslog4j:${Versions.logbackSyslog4j}")
+    implementation("org.syslog4j:syslog4j:${Versions.syslog4j}")
 
 //    JWT
     implementation("com.auth0:java-jwt:${Versions.javaJwt}")
