@@ -26,8 +26,8 @@ internal class TildeltNavKontorTest {
 
     private val service = EventService(jsonDigisosSokerService, norgClient, soknadVedleggService)
 
-    private val enhetNavn = "NAV Holmenkollen"
-    private val enhetNavn2 = "NAV Longyearbyen"
+    private val enhetNavn = "Nav Holmenkollen"
+    private val enhetNavn2 = "Nav Longyearbyen"
 
     @BeforeEach
     fun init() {
@@ -99,11 +99,11 @@ internal class TildeltNavKontorTest {
         assertThat(last.type).isEqualTo(SendingType.VIDERESENDT)
         assertThat(last.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
         assertThat(last.navEnhetsnummer).isEqualTo("")
-        assertThat(last.navEnhetsnavn).isEqualTo("[Kan ikke hente NAV-kontor for \"\"]")
+        assertThat(last.navEnhetsnavn).isEqualTo("[Kan ikke hente Nav-kontor for \"\"]")
 
         val hendelse = model.historikk.last()
         assertThat(hendelse.tittel).isEqualTo(SOKNAD_VIDERESENDT)
-        assertThat(hendelse.beskrivelse).contains("[Kan ikke hente NAV-kontor for \"\"]")
+        assertThat(hendelse.beskrivelse).contains("[Kan ikke hente Nav-kontor for \"\"]")
     }
 
     @Test
@@ -131,7 +131,7 @@ internal class TildeltNavKontorTest {
         assertThat(hendelse.tittel).isEqualTo(SOKNAD_VIDERESENDT)
         assertThat(hendelse.beskrivelse)
             .doesNotContain(enhetNavn)
-            .contains("et annet NAV-kontor")
+            .contains("et annet Nav-kontor")
     }
 
     @Test

@@ -27,9 +27,9 @@ fun InternalDigisosSoker.apply(
 
     val destinasjon = try {
         norgClient.hentNavEnhet(hendelse.navKontor)?.navn?.takeUnless { it.isEmpty() }
-            ?: "[Kan ikke hente NAV-kontor for \"${hendelse.navKontor}\"]"
+            ?: "[Kan ikke hente Nav-kontor for \"${hendelse.navKontor}\"]"
     } catch (e: NorgException) {
-        "et annet NAV-kontor"
+        "et annet Nav-kontor"
     }
     soknadsmottaker = Soknadsmottaker(navEnhetsnummer = hendelse.navKontor, navEnhetsnavn = destinasjon)
     val beskrivelse = "Søknaden med vedlegg er videresendt og mottatt ved $destinasjon. Videresendingen vil ikke påvirke saksbehandlingstiden."

@@ -45,7 +45,7 @@ class HendelseService(
             .forEach { (tidspunkt, samtidigOpplastedeVedlegg) ->
                 val antallVedleggForTidspunkt = samtidigOpplastedeVedlegg.sumOf { it.antallFiler }
                 historikk.add(
-                    Hendelse("Du har sendt $antallVedleggForTidspunkt vedlegg til NAV", null, tidspunkt!!)
+                    Hendelse("Du har sendt $antallVedleggForTidspunkt vedlegg til Nav", null, tidspunkt!!)
                 )
             }
     }

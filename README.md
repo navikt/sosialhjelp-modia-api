@@ -7,7 +7,7 @@ Backend-app som skal gi innsyn i sosialhjelp-saker for saksbehandlere ved NKS.
 ## Henvendelser
 Spørsmål knyttet til koden eller teamet kan stilles til teamdigisos@nav.no.
 
-### For NAV-ansatte
+### For Nav-ansatte
 Interne henvendelser kan sendes via Slack i kanalen #team_digisos.
 
 ## Teknologi
