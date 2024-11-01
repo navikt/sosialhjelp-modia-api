@@ -20,10 +20,10 @@ internal class NavKontorServiceTest {
     private val enhetsnr = "1234"
     private val annetEnhetsnr = "2222"
 
-    private val navEnhet = NavEnhet(1, "NAV test", enhetsnr, "AKTIV", 1, "", "", "sosiale tjenester", "LOKAL")
-    private val annenNavEnhet = NavEnhet(2, "NAV 2", annetEnhetsnr, "AKTIV", 1, "", "", "sosiale tjenester", "LOKAL")
-    private val navEnhetUtenSosialTjenesterInformasjon = NavEnhet(3, "NAV 3", "annet_enhetsnr", "AKTIV", 1, "", "", "", "LOKAL")
-    private val navEnhetIkkeLokal = NavEnhet(4, "NAV 4", "annet_enhetsnr", "AKTIV", 1, "", "", "", "IKKE_LOKAL")
+    private val navEnhet = NavEnhet(1, "Nav test", enhetsnr, "AKTIV", 1, "", "", "sosiale tjenester", "LOKAL")
+    private val annenNavEnhet = NavEnhet(2, "Nav 2", annetEnhetsnr, "AKTIV", 1, "", "", "sosiale tjenester", "LOKAL")
+    private val navEnhetUtenSosialTjenesterInformasjon = NavEnhet(3, "Nav 3", "annet_enhetsnr", "AKTIV", 1, "", "", "", "LOKAL")
+    private val navEnhetIkkeLokal = NavEnhet(4, "Nav 4", "annet_enhetsnr", "AKTIV", 1, "", "", "", "IKKE_LOKAL")
 
     @Test
     internal fun skalHenteNavEnhet() {

@@ -32,12 +32,12 @@ internal class NoekkelinfoServiceTest {
 
     private val mockDigisosSak: DigisosSak = mockk()
 
-    private val enhetNavn1 = "NAV TestKontor"
+    private val enhetNavn1 = "Nav TestKontor"
     private val enhetsnr1 = "1234"
     private val kommunenr = "2468"
     private val kommunenavn = "Oslo"
 
-    private val enhetNavn2 = "NAV sekundært TestKontor"
+    private val enhetNavn2 = "Nav sekundært TestKontor"
     private val enhetsnr2 = "5678"
     private val kommunenavn2 = "Nabo"
 

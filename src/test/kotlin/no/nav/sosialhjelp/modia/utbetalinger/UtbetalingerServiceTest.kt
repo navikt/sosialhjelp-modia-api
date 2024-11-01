@@ -38,7 +38,7 @@ internal class UtbetalingerServiceTest {
     private val digisosId = "some id"
 
     private val enhetsnr = "1337"
-    private val enhetsnavn = "NAV nav nav"
+    private val enhetsnavn = "Nav nav nav"
 
     @BeforeEach
     fun init() {
