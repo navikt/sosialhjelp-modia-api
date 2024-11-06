@@ -13,9 +13,9 @@ jobs:
     name: 'Deploy to prod-fss'
     if: ${{ github.event_name == 'repository_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     permissions:
-      packages: write
       contents: write
-    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@v2
+      id-token: write
+    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@v3
     with:
       cluster-name: 'prod-fss'
       resource-folder: 'prod'
