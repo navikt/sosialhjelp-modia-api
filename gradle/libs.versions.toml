@@ -78,8 +78,7 @@ spring-boot = [
     "spring-boot-actuator",
     "spring-boot-logging",
     "spring-boot-validation",
-    "spring-boot-data-redis",
-    "spring-boot-test"
+    "spring-boot-data-redis"
 ]
 springdoc = ["springdoc-common", "springdoc-webmvc-ui"]
 token-validation = ["token-validation", "token-client"]
