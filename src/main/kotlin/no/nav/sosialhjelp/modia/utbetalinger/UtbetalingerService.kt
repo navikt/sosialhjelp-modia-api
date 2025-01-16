@@ -118,6 +118,11 @@ class UtbetalingerService(
         val behandlendeNavKontor = model.navKontorHistorikk.lastOrNull()
 
         return model.utbetalinger
+            .onEach {
+                if (it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato == null && it.forfallsDato == null)) {
+                    log.info("Utbetaling (${it.referanse}) har verken utbetalingsDato eller forfallsDato")
+                }
+            }
             .filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
             .filter { skalUtbetalingVisesInnenforPeriode(it, fom, tom) }
             .map { utbetaling ->
