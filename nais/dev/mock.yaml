@@ -31,8 +31,8 @@ spec:
       runtime: java
     logging:
       destinations:
-        - loki
-        - elastic
+        - id: loki
+        - id: elastic
   accessPolicy:
     outbound:
       external:

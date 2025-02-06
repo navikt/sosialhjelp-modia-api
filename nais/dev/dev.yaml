@@ -40,8 +40,8 @@ spec:
       runtime: java
     logging:
       destinations:
-        - loki
-        - elastic
+        - id: loki
+        - id: elastic
   maskinporten:
     enabled: true
     scopes:
