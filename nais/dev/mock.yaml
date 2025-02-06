@@ -25,6 +25,14 @@ spec:
     cpuThresholdPercentage: 70
     min: 1
     max: 2
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: java
+    logging:
+      destinations:
+        - loki
+        - elastic
   accessPolicy:
     outbound:
       external:
