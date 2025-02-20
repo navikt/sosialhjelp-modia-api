@@ -16,13 +16,13 @@ spec:
           - id: "82efbcf9-7a99-4c60-9242-79c439ca3cdc" # 0000-GA-Modia_Sosialhjelp_NKS
   liveness:
     path: /sosialhjelp/modia-api/internal/isAlive
-    initialDelay: 20
+    initialDelay: 60
     timeout: 1
-    periodSeconds: 5
+    periodSeconds: 10
     failureThreshold: 10
   readiness:
     path: /sosialhjelp/modia-api/internal/isReady
-    initialDelay: 20
+    initialDelay: 60
     timeout: 1
   prometheus:
     enabled: true
