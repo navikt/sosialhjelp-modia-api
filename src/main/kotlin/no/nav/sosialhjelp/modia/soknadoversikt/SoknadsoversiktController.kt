@@ -15,7 +15,7 @@ import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import no.nav.sosialhjelp.modia.unixTimestampToDate
 import no.nav.sosialhjelp.modia.utils.BrokenSoknad
-import no.nav.sosialhjelp.modia.utils.Ident
+import no.nav.sosialhjelp.modia.utils.Personident
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -41,12 +41,12 @@ class SoknadsoversiktController(
     @PostMapping("/soknader")
     fun getSoknader(
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
-        @RequestBody ident: Ident
+        @RequestBody personident: Personident
     ): ResponseEntity<List<SoknadResponse>> {
-        tilgangskontrollService.harTilgang(ident.fnr, token, "/soknader", HttpMethod.POST)
+        tilgangskontrollService.harTilgang(personident.personident, token, "/soknader", HttpMethod.POST)
 
         val saker = try {
-            fiksClient.hentAlleDigisosSaker(ident.fnr)
+            fiksClient.hentAlleDigisosSaker(personident.personident)
         } catch (e: FiksException) {
             return ResponseEntity.status(503).build()
         }
@@ -75,9 +75,9 @@ class SoknadsoversiktController(
     fun getSoknadDetaljer(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
-        @RequestBody ident: Ident
+        @RequestBody personident: Personident
     ): ResponseEntity<SoknadDetaljerResponse> {
-        tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/soknadDetaljer", HttpMethod.POST)
+        tilgangskontrollService.harTilgang(personident.personident, token, "/$fiksDigisosId/soknadDetaljer", HttpMethod.POST)
 
         val sak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createSoknadsoversiktModel(sak)

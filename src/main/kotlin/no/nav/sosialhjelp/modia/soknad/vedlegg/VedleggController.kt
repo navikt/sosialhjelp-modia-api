@@ -3,7 +3,7 @@ package no.nav.sosialhjelp.modia.soknad.vedlegg
 import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
-import no.nav.sosialhjelp.modia.utils.Ident
+import no.nav.sosialhjelp.modia.utils.Personident
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
@@ -25,8 +25,8 @@ class VedleggController(
 ) {
 
     @PostMapping("/{fiksDigisosId}/vedlegg")
-    fun hentVedlegg(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<VedleggResponse>> {
-        tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/vedlegg", HttpMethod.POST)
+    fun hentVedlegg(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody personident: Personident): ResponseEntity<List<VedleggResponse>> {
+        tilgangskontrollService.harTilgang(personident.personident, token, "/$fiksDigisosId/vedlegg", HttpMethod.POST)
 
         val internalVedleggList: List<InternalVedlegg> = vedleggService.hentAlleOpplastedeVedlegg(fiksDigisosId)
         if (internalVedleggList.isEmpty()) {

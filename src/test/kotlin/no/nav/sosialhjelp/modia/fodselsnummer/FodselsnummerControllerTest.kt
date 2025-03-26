@@ -7,7 +7,7 @@ import io.mockk.mockk
 import io.mockk.runs
 import no.nav.sosialhjelp.modia.app.exceptions.ManglendeModiaSosialhjelpTilgangException
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
-import no.nav.sosialhjelp.modia.utils.Ident
+import no.nav.sosialhjelp.modia.utils.Personident
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.BeforeEach
@@ -21,7 +21,7 @@ internal class FodselsnummerControllerTest {
     private val modiaBaseUrl = "http://localhost:3000/sosialhjelp/modia"
     private val controller = FodselsnummerController(tilgangskontrollService, fodselsnummerService, modiaBaseUrl)
 
-    private val ident = Ident("11111111111")
+    private val personident = Personident("11111111111")
     private val fnrId = "abfcc2e8-9986-48c0-9952-eb6b724df6ce"
 
     @BeforeEach
@@ -33,8 +33,8 @@ internal class FodselsnummerControllerTest {
 
     @Test
     fun `setFodselsnummer - skal lagre fodselsnummer og returnere modia url med fodselsnummer id`() {
-        every { fodselsnummerService.setFnrForSalesforce(ident.fnr) } returns fnrId
-        val response = controller.setFodselsnummer("token", ident)
+        every { fodselsnummerService.setFnrForSalesforce(personident.personident) } returns fnrId
+        val response = controller.setFodselsnummer("token", personident)
 
         assertThat(response.body).isNotNull
         assertThat(response.body).isInstanceOf(SetFodselsnummerResponse::class.java)
@@ -44,7 +44,7 @@ internal class FodselsnummerControllerTest {
 
     @Test
     fun `setFodselsnummer - sette med tomt string og returnere bad request`() {
-        val response = controller.setFodselsnummer("token", Ident(" "))
+        val response = controller.setFodselsnummer("token", Personident(" "))
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
@@ -56,16 +56,16 @@ internal class FodselsnummerControllerTest {
         } throws ManglendeModiaSosialhjelpTilgangException("veileder har ikke tilgang")
 
         assertThatExceptionOfType(ManglendeModiaSosialhjelpTilgangException::class.java)
-            .isThrownBy { controller.setFodselsnummer("token", ident) }
+            .isThrownBy { controller.setFodselsnummer("token", personident) }
     }
 
     @Test
     fun `hentFodselsnummer - skal returnere fodselsnummer fra cachen`() {
-        every { fodselsnummerService.getFnr(fnrId) } returns ident.fnr
+        every { fodselsnummerService.getFnr(fnrId) } returns personident.personident
         val response = controller.hentFodselsnummer("token", fnrId)
 
         assertThat(response.body).isNotNull
-        assertThat(response.body).isEqualTo(ident.fnr)
+        assertThat(response.body).isEqualTo(personident.personident)
     }
 
     @Test

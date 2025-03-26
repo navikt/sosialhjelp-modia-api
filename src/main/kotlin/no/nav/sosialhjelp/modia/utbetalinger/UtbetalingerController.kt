@@ -3,7 +3,7 @@ package no.nav.sosialhjelp.modia.utbetalinger
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
-import no.nav.sosialhjelp.modia.utils.Ident
+import no.nav.sosialhjelp.modia.utils.Personident
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
@@ -29,16 +29,16 @@ class UtbetalingerController(
     @PostMapping("/utbetalinger")
     fun hentUtbetalinger(
         @RequestHeader(value = AUTHORIZATION) token: String,
-        @RequestBody ident: Ident,
+        @RequestBody personident: Personident,
         @RequestParam(defaultValue = "3") months: Int,
         @RequestParam fom: String?,
         @RequestParam tom: String?
     ): ResponseEntity<List<UtbetalingerResponse>> {
-        tilgangskontrollService.harTilgang(ident.fnr, token, "/utbetalinger", HttpMethod.POST)
+        tilgangskontrollService.harTilgang(personident.personident, token, "/utbetalinger", HttpMethod.POST)
 
         return ResponseEntity.ok().body(
             utbetalingerService.hentAlleUtbetalinger(
-                ident.fnr,
+                personident.personident,
                 months,
                 fom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) },
                 tom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) }
@@ -50,9 +50,9 @@ class UtbetalingerController(
     fun hentUtbetalingerForDigisosSak(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = AUTHORIZATION) token: String,
-        @RequestBody ident: Ident
+        @RequestBody personident: Personident
     ): ResponseEntity<List<UtbetalingerResponse>> {
-        tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/utbetalinger", HttpMethod.POST)
+        tilgangskontrollService.harTilgang(personident.personident, token, "/$fiksDigisosId/utbetalinger", HttpMethod.POST)
 
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         return ResponseEntity.ok().body(utbetalingerService.hentUtbetalingerForDigisosSak(digisosSak))

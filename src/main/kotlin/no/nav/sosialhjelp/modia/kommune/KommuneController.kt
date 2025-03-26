@@ -2,7 +2,7 @@ package no.nav.sosialhjelp.modia.kommune
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
-import no.nav.sosialhjelp.modia.utils.Ident
+import no.nav.sosialhjelp.modia.utils.Personident
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
@@ -23,8 +23,8 @@ class KommuneController(
 ) {
 
     @PostMapping("/kommuner/{kommunenummer}")
-    fun hentKommuneInfo(@PathVariable kommunenummer: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<KommuneResponse> {
-        tilgangskontrollService.harTilgang(ident.fnr, token, "/kommuner/$kommunenummer", HttpMethod.POST)
+    fun hentKommuneInfo(@PathVariable kommunenummer: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody personident: Personident): ResponseEntity<KommuneResponse> {
+        tilgangskontrollService.harTilgang(personident.personident, token, "/kommuner/$kommunenummer", HttpMethod.POST)
 
         val kommuneInfo = kommuneService.get(kommunenummer)
         return ResponseEntity.ok(

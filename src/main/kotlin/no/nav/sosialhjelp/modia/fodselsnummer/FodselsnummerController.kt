@@ -3,7 +3,7 @@ package no.nav.sosialhjelp.modia.fodselsnummer
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
-import no.nav.sosialhjelp.modia.utils.Ident
+import no.nav.sosialhjelp.modia.utils.Personident
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -28,10 +28,10 @@ class FodselsnummerController(
     @PostMapping("/fodselsnummer")
     fun setFodselsnummer(
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
-        @RequestBody ident: Ident
+        @RequestBody personident: Personident
     ): ResponseEntity<SetFodselsnummerResponse> {
         tilgangskontrollService.harVeilederTilgangTilTjenesten(token, "/fodselsnummer", HttpMethod.POST)
-        val fnr = ident.fnr.trim()
+        val fnr = personident.personident.trim()
         if (fnr.isEmpty()) {
             log.error("Request mangler fnr")
             return ResponseEntity.badRequest().build()

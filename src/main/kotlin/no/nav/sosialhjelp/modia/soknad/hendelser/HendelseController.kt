@@ -2,7 +2,7 @@ package no.nav.sosialhjelp.modia.soknad.hendelser
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
-import no.nav.sosialhjelp.modia.utils.Ident
+import no.nav.sosialhjelp.modia.utils.Personident
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
@@ -22,8 +22,8 @@ class HendelseController(
 ) {
 
     @PostMapping("/{fiksDigisosId}/hendelser")
-    fun hentHendelser(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<HendelseResponse>> {
-        tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/hendelser", HttpMethod.POST)
+    fun hentHendelser(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody personident: Personident): ResponseEntity<List<HendelseResponse>> {
+        tilgangskontrollService.harTilgang(personident.personident, token, "/$fiksDigisosId/hendelser", HttpMethod.POST)
 
         val hendelser = hendelseService.hentHendelser(fiksDigisosId)
         return ResponseEntity.ok(hendelser)

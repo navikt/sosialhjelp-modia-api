@@ -26,11 +26,16 @@ class TilgangskontrollService(
 ) {
 
     fun harTilgang(brukerIdent: String, token: String, url: String, method: HttpMethod) {
-        val veilederToken = token.replace(BEARER, "")
-        if (!azureGraphClient.hentInnloggetVeilederSineGrupper(veilederToken).value.any { it.id == clientProperties.veilederGruppeId }) {
-            throw ManglendeModiaSosialhjelpTilgangException("Veileder er ikke i riktig azure gruppe til å bruke modia sosialhjelp.")
-                .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
-        }
+        val veilederToken = sjekkTilgangForNavident(token, brukerIdent, url, method)
+        sjekkTilgangTilPerson(brukerIdent, veilederToken, url, method)
+    }
+
+    private fun sjekkTilgangTilPerson(
+        brukerIdent: String,
+        veilederToken: String,
+        url: String,
+        method: HttpMethod
+    ) {
         val pdlPerson = hentPersonFraPdl(brukerIdent, veilederToken)
             ?: throw ManglendeTilgangException("Person ikke funnet i PDL.")
                 .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
@@ -45,11 +50,21 @@ class TilgangskontrollService(
     }
 
     fun harVeilederTilgangTilTjenesten(token: String, url: String, method: HttpMethod) {
+        sjekkTilgangForNavident(token, "", url, method)
+    }
+
+    private fun sjekkTilgangForNavident(
+        token: String,
+        brukerIdent: String,
+        url: String,
+        method: HttpMethod
+    ): String {
         val veilederToken = token.replace(BEARER, "")
         if (!azureGraphClient.hentInnloggetVeilederSineGrupper(veilederToken).value.any { it.id == clientProperties.veilederGruppeId }) {
             throw ManglendeModiaSosialhjelpTilgangException("Veileder er ikke i riktig azure gruppe til å bruke modia sosialhjelp.")
-                .also { auditService.reportToAuditlog("", url, method, Access.DENY) }
+                .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
         }
+        return veilederToken
     }
 
     private fun hentPersonFraPdl(brukerIdent: String, veilederToken: String): PdlPerson? {

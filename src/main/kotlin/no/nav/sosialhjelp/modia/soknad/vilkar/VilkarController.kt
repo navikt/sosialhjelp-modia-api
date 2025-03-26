@@ -2,7 +2,7 @@ package no.nav.sosialhjelp.modia.soknad.vilkar
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
-import no.nav.sosialhjelp.modia.utils.Ident
+import no.nav.sosialhjelp.modia.utils.Personident
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
@@ -26,9 +26,9 @@ class VilkarController(
     fun hentOppgaver(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
-        @RequestBody ident: Ident
+        @RequestBody personident: Personident
     ): ResponseEntity<List<VilkarResponse>> {
-        tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/vilkar", HttpMethod.POST)
+        tilgangskontrollService.harTilgang(personident.personident, token, "/$fiksDigisosId/vilkar", HttpMethod.POST)
         val vilkar = vilkarService.hentVilkar(fiksDigisosId)
         if (vilkar.isEmpty()) {
             return ResponseEntity(HttpStatus.NO_CONTENT)

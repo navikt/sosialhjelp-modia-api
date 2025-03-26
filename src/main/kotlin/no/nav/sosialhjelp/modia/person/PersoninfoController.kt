@@ -2,7 +2,7 @@ package no.nav.sosialhjelp.modia.person
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
-import no.nav.sosialhjelp.modia.utils.Ident
+import no.nav.sosialhjelp.modia.utils.Personident
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
@@ -21,10 +21,10 @@ class PersoninfoController(
 ) {
 
     @PostMapping("/personinfo")
-    fun hentPersoninfo(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<PersoninfoResponse> {
-        tilgangskontrollService.harTilgang(ident.fnr, token, "/personinfo", HttpMethod.POST)
+    fun hentPersoninfo(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody personident: Personident): ResponseEntity<PersoninfoResponse> {
+        tilgangskontrollService.harTilgang(personident.personident, token, "/personinfo", HttpMethod.POST)
 
-        val personinfoResponse = personinfoService.hentPersoninfo(ident.fnr, token)
+        val personinfoResponse = personinfoService.hentPersoninfo(personident.personident, token)
         return ResponseEntity.ok(personinfoResponse)
     }
 }

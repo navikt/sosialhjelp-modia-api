@@ -7,7 +7,7 @@ import io.mockk.just
 import io.mockk.mockk
 import no.nav.sosialhjelp.modia.soknad.vedlegg.VedleggController.VedleggResponse
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
-import no.nav.sosialhjelp.modia.utils.Ident
+import no.nav.sosialhjelp.modia.utils.Personident
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -44,7 +44,7 @@ internal class VedleggControllerTest {
             InternalVedlegg(dokumenttype, tilleggsinfo, frist, 1, datoLagtTil, LocalDateTime.now())
         )
 
-        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
+        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Personident(fnr))
 
         val body = vedleggResponses.body
 
@@ -69,7 +69,7 @@ internal class VedleggControllerTest {
             InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil, LocalDateTime.now())
         )
 
-        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
+        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Personident(fnr))
 
         val body = vedleggResponses.body
 
@@ -92,7 +92,7 @@ internal class VedleggControllerTest {
             InternalVedlegg(dokumenttype, null, frist, 0, datoLagtTil, LocalDateTime.now())
         )
 
-        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
+        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Personident(fnr))
 
         val body = vedleggResponses.body
 
@@ -117,7 +117,7 @@ internal class VedleggControllerTest {
             InternalVedlegg(dokumenttype_2, tilleggsinfo, frist, 1, datoLagtTil_2, LocalDateTime.now())
         )
 
-        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
+        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Personident(fnr))
 
         val body = vedleggResponses.body
 
@@ -150,7 +150,7 @@ internal class VedleggControllerTest {
             InternalVedlegg(dokumenttype, null, frist, 0, null, LocalDateTime.now())
         )
 
-        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Ident(fnr))
+        val vedleggResponses: ResponseEntity<List<VedleggResponse>> = controller.hentVedlegg(id, "token", Personident(fnr))
 
         val body = vedleggResponses.body
 

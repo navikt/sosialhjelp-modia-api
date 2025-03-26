@@ -2,7 +2,7 @@ package no.nav.sosialhjelp.modia.soknad.oppgave
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
-import no.nav.sosialhjelp.modia.utils.Ident
+import no.nav.sosialhjelp.modia.utils.Personident
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
@@ -23,8 +23,8 @@ class OppgaveController(
 ) {
 
     @PostMapping("/{fiksDigisosId}/oppgaver")
-    fun hentOppgaver(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<OppgaveResponse>> {
-        tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/oppgaver", HttpMethod.POST)
+    fun hentOppgaver(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody personident: Personident): ResponseEntity<List<OppgaveResponse>> {
+        tilgangskontrollService.harTilgang(personident.personident, token, "/$fiksDigisosId/oppgaver", HttpMethod.POST)
 
         val oppgaver = oppgaveService.hentOppgaver(fiksDigisosId)
         if (oppgaver.isEmpty()) {

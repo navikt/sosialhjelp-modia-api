@@ -2,7 +2,7 @@ package no.nav.sosialhjelp.modia.soknad.noekkelinfo
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
-import no.nav.sosialhjelp.modia.utils.Ident
+import no.nav.sosialhjelp.modia.utils.Personident
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
@@ -22,8 +22,8 @@ class NoekkelinfoController(
 ) {
 
     @PostMapping("/{fiksDigisosId}/noekkelinfo")
-    fun hentNoekkelInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadNoekkelinfoResponse> {
-        tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/noekkelinfo", HttpMethod.POST)
+    fun hentNoekkelInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody personident: Personident): ResponseEntity<SoknadNoekkelinfoResponse> {
+        tilgangskontrollService.harTilgang(personident.personident, token, "/$fiksDigisosId/noekkelinfo", HttpMethod.POST)
 
         val noekkelinfo = noekkelinfoService.hentNoekkelInfo(fiksDigisosId)
         return ResponseEntity.ok().body(noekkelinfo)

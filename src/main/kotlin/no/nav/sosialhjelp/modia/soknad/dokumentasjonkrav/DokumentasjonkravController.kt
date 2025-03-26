@@ -2,7 +2,7 @@ package no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
-import no.nav.sosialhjelp.modia.utils.Ident
+import no.nav.sosialhjelp.modia.utils.Personident
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
@@ -26,9 +26,9 @@ class DokumentasjonkravController(
     fun hentOppgaver(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
-        @RequestBody ident: Ident
+        @RequestBody personident: Personident
     ): ResponseEntity<List<DokumentasjonkravResponse>> {
-        tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/dokumentasjonkrav", HttpMethod.POST)
+        tilgangskontrollService.harTilgang(personident.personident, token, "/$fiksDigisosId/dokumentasjonkrav", HttpMethod.POST)
         val dokumentasjonkrav = dokumentasjonkravService.hentDokumentasjonkrav(fiksDigisosId)
         if (dokumentasjonkrav.isEmpty()) {
             return ResponseEntity(HttpStatus.NO_CONTENT)

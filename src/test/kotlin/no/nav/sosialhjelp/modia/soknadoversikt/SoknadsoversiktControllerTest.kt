@@ -26,7 +26,7 @@ import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.DokumentasjonkravServic
 import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveResponse
 import no.nav.sosialhjelp.modia.soknad.oppgave.OppgaveService
 import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
-import no.nav.sosialhjelp.modia.utils.Ident
+import no.nav.sosialhjelp.modia.utils.Personident
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.KILDE_INNSYN_API
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -224,7 +224,7 @@ internal class SoknadsoversiktControllerTest {
 
         every { model2.saker } returns mutableListOf(sak1, sak2)
 
-        val response = controller.getSoknader("token", Ident(fnr))
+        val response = controller.getSoknader("token", Personident(fnr))
 
         val saker = response.body
         assertThat(saker).isNotNull
@@ -315,7 +315,7 @@ internal class SoknadsoversiktControllerTest {
         every { model2.saker } returns mutableListOf(sak1, sak2)
         every { model3.saker } returns mutableListOf(sak3)
 
-        val response1 = controller.getSoknadDetaljer(id_1, "token", Ident(fnr))
+        val response1 = controller.getSoknadDetaljer(id_1, "token", Personident(fnr))
         val digisosSak1 = response1.body
 
         assertThat(response1.statusCode).isEqualTo(HttpStatus.OK)
@@ -324,7 +324,7 @@ internal class SoknadsoversiktControllerTest {
         assertThat(digisosSak1?.harOppgaver).isTrue
         assertThat(digisosSak1?.harVilkar).isFalse
 
-        val response2 = controller.getSoknadDetaljer(id_2, "token", Ident(fnr))
+        val response2 = controller.getSoknadDetaljer(id_2, "token", Personident(fnr))
         val digisosSak2 = response2.body
 
         assertThat(response2.statusCode).isEqualTo(HttpStatus.OK)
@@ -334,7 +334,7 @@ internal class SoknadsoversiktControllerTest {
         assertThat(digisosSak2?.harOppgaver).isTrue
         assertThat(digisosSak2?.harVilkar).isTrue
 
-        val response3 = controller.getSoknadDetaljer(id_3, "token", Ident(fnr))
+        val response3 = controller.getSoknadDetaljer(id_3, "token", Personident(fnr))
         val digisosSak3 = response3.body
 
         assertThat(response3.statusCode).isEqualTo(HttpStatus.OK)
@@ -357,7 +357,7 @@ internal class SoknadsoversiktControllerTest {
         every { model1.vilkar } returns mutableListOf()
         every { model1.dokumentasjonkrav } returns mutableListOf()
 
-        val response = controller.getSoknadDetaljer(id_1, "token", Ident(fnr))
+        val response = controller.getSoknadDetaljer(id_1, "token", Personident(fnr))
         val sak = response.body
 
         assertThat(sak).isNotNull
