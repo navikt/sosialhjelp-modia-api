@@ -1,10 +1,11 @@
 package no.nav.sosialhjelp.modia.person
 
 import no.nav.sosialhjelp.modia.person.pdl.PdlClient
+import no.nav.sosialhjelp.modia.person.pdl.navn
 import no.nav.sosialhjelp.modia.person.pdl.alder
 import no.nav.sosialhjelp.modia.person.pdl.kjoenn
-import no.nav.sosialhjelp.modia.person.pdl.navn
 import no.nav.sosialhjelp.modia.person.pdl.telefonnummer
+import no.nav.sosialhjelp.modia.person.pdl.foedselsdato
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils
 import org.springframework.stereotype.Component
 
@@ -21,7 +22,8 @@ class PersoninfoService(
             hentPerson?.navn,
             hentPerson?.alder,
             hentPerson?.kjoenn,
-            hentPerson?.telefonnummer
+            hentPerson?.telefonnummer,
+            hentPerson?.foedselsdato
         )
     }
 }

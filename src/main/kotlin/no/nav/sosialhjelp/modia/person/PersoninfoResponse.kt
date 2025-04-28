@@ -4,5 +4,6 @@ data class PersoninfoResponse(
     val sammensattNavn: String?,
     val alder: Int?,
     val kjoenn: String?,
-    val tlfnr: String?
+    val tlfnr: String?,
+    val foedselsdato: String?
 )

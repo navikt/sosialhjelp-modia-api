@@ -112,6 +112,10 @@ val PdlHentPerson.telefonnummer: String?
             ?.minByOrNull { it.prioritet }
             ?.let { it.landskode.plus(it.nummer) }
     }
+val PdlHentPerson.foedselsdato: String?
+    get() {
+        return hentPerson?.foedsel?.firstOrNull()?.foedselsdato
+    }
 
 fun PdlPerson.isKode6Or7(): Boolean {
     return adressebeskyttelse.any {
