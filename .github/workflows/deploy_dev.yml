@@ -10,7 +10,6 @@ on:
         type: choice
         options:
           - 'dev-fss'
-          - 'dev'
           - 'mock'
 
 jobs:

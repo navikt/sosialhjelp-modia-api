@@ -25,7 +25,6 @@ spec:
     inbound:
       rules:
         - application: sosialhjelp-modia-api
-        - application: sosialhjelp-modia-api-dev
         - application: sosialhjelp-modia-api-redisexporter
   service:
     port: 6379
