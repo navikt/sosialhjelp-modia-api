@@ -14,10 +14,14 @@ jobs:
     permissions:
       packages: write
       contents: write
+      checks: write
+      pull-requests: write
     env:
       ORG_GRADLE_PROJECT_githubUser: x-access-token
       ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Build kotlin, and run tests/lint
-        uses: navikt/sosialhjelp-ci/actions/build-kotlin@v2
+        uses: navikt/sosialhjelp-ci/actions/build-kotlin@v7
+        with:
+          java-version: '21'

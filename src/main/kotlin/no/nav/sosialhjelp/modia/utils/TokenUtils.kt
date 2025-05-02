@@ -20,9 +20,9 @@ class TokenUtilsImpl(
 ) : TokenUtils {
 
     override fun hentTokenMedGraphScope(): String {
-        val clientProperties = clientConfigurationProperties.registration["onbehalfof"]
-        val response = oAuth2AccessTokenService.getAccessToken(clientProperties)
-        return response.accessToken
+        return clientConfigurationProperties.registration["onbehalfof"]
+            ?.let { clientProperties -> oAuth2AccessTokenService.getAccessToken(clientProperties).access_token }
+            ?: error("ClientProperties er null")
     }
 
     override fun hentNavIdentForInnloggetBruker(): String {
