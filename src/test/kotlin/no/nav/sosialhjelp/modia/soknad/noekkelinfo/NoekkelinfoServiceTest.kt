@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 internal class NoekkelinfoServiceTest {
-
     private val fiksClient: FiksClient = mockk()
     private val eventService: EventService = mockk()
     private val kommunenavnService: KommunenavnService = mockk()
@@ -60,9 +59,10 @@ internal class NoekkelinfoServiceTest {
         val model = InternalDigisosSoker()
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
-        model.navKontorHistorikk = mutableListOf(
-            NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1)
-        )
+        model.navKontorHistorikk =
+            mutableListOf(
+                NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
+            )
 
         every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
@@ -88,9 +88,10 @@ internal class NoekkelinfoServiceTest {
         val model = InternalDigisosSoker()
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
-        model.navKontorHistorikk = mutableListOf(
-            NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1)
-        )
+        model.navKontorHistorikk =
+            mutableListOf(
+                NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
+            )
         model.forelopigSvar = ForelopigSvar(tidspunkt)
 
         every { eventService.createModel(any()) } returns model
@@ -116,10 +117,11 @@ internal class NoekkelinfoServiceTest {
         val model = InternalDigisosSoker()
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
-        model.navKontorHistorikk = mutableListOf(
-            NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
-            NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2)
-        )
+        model.navKontorHistorikk =
+            mutableListOf(
+                NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
+                NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2),
+            )
 
         every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
@@ -144,10 +146,11 @@ internal class NoekkelinfoServiceTest {
         val model = InternalDigisosSoker()
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
-        model.navKontorHistorikk = mutableListOf(
-            NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
-            NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2)
-        )
+        model.navKontorHistorikk =
+            mutableListOf(
+                NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
+                NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2),
+            )
 
         every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null

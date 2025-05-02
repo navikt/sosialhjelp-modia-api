@@ -19,11 +19,14 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class OppgaveController(
     private val oppgaveService: OppgaveService,
-    private val tilgangskontrollService: TilgangskontrollService
+    private val tilgangskontrollService: TilgangskontrollService,
 ) {
-
     @PostMapping("/{fiksDigisosId}/oppgaver")
-    fun hentOppgaver(@PathVariable fiksDigisosId: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<List<OppgaveResponse>> {
+    fun hentOppgaver(
+        @PathVariable fiksDigisosId: String,
+        @RequestHeader(value = AUTHORIZATION) token: String,
+        @RequestBody ident: Ident,
+    ): ResponseEntity<List<OppgaveResponse>> {
         tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/oppgaver", HttpMethod.POST)
 
         val oppgaver = oppgaveService.hentOppgaver(fiksDigisosId)

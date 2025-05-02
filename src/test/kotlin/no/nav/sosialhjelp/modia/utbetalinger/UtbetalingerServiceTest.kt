@@ -83,8 +83,8 @@ internal class UtbetalingerServiceTest {
                 utbetalingsmetode = "utbetalingsmetode",
                 vilkar = mutableListOf(),
                 dokumentasjonkrav = mutableListOf(),
-                datoHendelse = LocalDateTime.now()
-            )
+                datoHendelse = LocalDateTime.now(),
+            ),
         )
         model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
@@ -116,9 +116,41 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         model.utbetalinger.addAll(
             mutableListOf(
-                Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, utbetalingsdato2, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "referanse",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp",
+                    null,
+                    utbetalingsdato,
+                    null,
+                    null,
+                    null,
+                    false,
+                    null,
+                    null,
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+                Utbetaling(
+                    "Sak2",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Tannlege",
+                    null,
+                    utbetalingsdato2,
+                    null,
+                    null,
+                    null,
+                    false,
+                    null,
+                    null,
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
 
         coEvery { eventService.createModel(any()) } returns model
@@ -146,9 +178,41 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         model.utbetalinger.addAll(
             mutableListOf(
-                Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Tannlege", null, utbetalingsdato2, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "referanse",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp",
+                    null,
+                    utbetalingsdato,
+                    null,
+                    null,
+                    null,
+                    false,
+                    null,
+                    null,
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+                Utbetaling(
+                    "Sak2",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Tannlege",
+                    null,
+                    utbetalingsdato2,
+                    null,
+                    null,
+                    null,
+                    false,
+                    null,
+                    null,
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
 
         coEvery { eventService.createModel(any()) } returns model
@@ -172,12 +236,27 @@ internal class UtbetalingerServiceTest {
     @Test
     fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med vilkar`() {
         val model = InternalDigisosSoker()
-        val vilkar = Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
+        val vilkar =
+            Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
-        val utbetaling1 = Utbetaling(
-            "referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
-            null, utbetalingsdato, null, null, null, false, null, null, mutableListOf(vilkar), mutableListOf(), LocalDateTime.now()
-        )
+        val utbetaling1 =
+            Utbetaling(
+                "referanse",
+                UtbetalingsStatus.UTBETALT,
+                BigDecimal.TEN,
+                "Nødhjelp",
+                null,
+                utbetalingsdato,
+                null,
+                null,
+                null,
+                false,
+                null,
+                null,
+                mutableListOf(vilkar),
+                mutableListOf(),
+                LocalDateTime.now(),
+            )
         model.utbetalinger.add(utbetaling1)
 
         coEvery { eventService.createModel(any()) } returns model
@@ -193,21 +272,36 @@ internal class UtbetalingerServiceTest {
     @Test
     fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med dokumentasjonkrav`() {
         val model = InternalDigisosSoker()
-        val dokumentasjonkrav = Dokumentasjonkrav(
-            "dokumentasjonskrav",
-            "Dokumentasjonstittel",
-            "beskrivelse",
-            OppgaveStatus.RELEVANT,
-            null,
-            null,
-            null,
-            null
-        )
+        val dokumentasjonkrav =
+            Dokumentasjonkrav(
+                "dokumentasjonskrav",
+                "Dokumentasjonstittel",
+                "beskrivelse",
+                OppgaveStatus.RELEVANT,
+                null,
+                null,
+                null,
+                null,
+            )
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
-        val utbetaling1 = Utbetaling(
-            "referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
-            null, utbetalingsdato, null, null, null, false, null, null, mutableListOf(), mutableListOf(dokumentasjonkrav), LocalDateTime.now()
-        )
+        val utbetaling1 =
+            Utbetaling(
+                "referanse",
+                UtbetalingsStatus.UTBETALT,
+                BigDecimal.TEN,
+                "Nødhjelp",
+                null,
+                utbetalingsdato,
+                null,
+                null,
+                null,
+                false,
+                null,
+                null,
+                mutableListOf(),
+                mutableListOf(dokumentasjonkrav),
+                LocalDateTime.now(),
+            )
         model.utbetalinger.add(utbetaling1)
 
         coEvery { eventService.createModel(any()) } returns model
@@ -226,17 +320,43 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         model.utbetalinger.add(
             Utbetaling(
-                "Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null,
-                utbetalingsdato, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()
-            )
+                "Sak1",
+                UtbetalingsStatus.UTBETALT,
+                BigDecimal.TEN,
+                "Nødhjelp",
+                null,
+                utbetalingsdato,
+                null,
+                null,
+                null,
+                false,
+                null,
+                null,
+                mutableListOf(),
+                mutableListOf(),
+                LocalDateTime.now(),
+            ),
         )
 
         val model2 = InternalDigisosSoker()
         model2.utbetalinger.add(
             Utbetaling(
-                "Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.ONE, "Barnehage og SFO", null,
-                utbetalingsdato2, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()
-            )
+                "Sak2",
+                UtbetalingsStatus.UTBETALT,
+                BigDecimal.ONE,
+                "Barnehage og SFO",
+                null,
+                utbetalingsdato2,
+                null,
+                null,
+                null,
+                false,
+                null,
+                null,
+                mutableListOf(),
+                mutableListOf(),
+                LocalDateTime.now(),
+            ),
         )
 
         val mockDigisosSak2: DigisosSak = mockk()
@@ -292,8 +412,8 @@ internal class UtbetalingerServiceTest {
                 utbetalingsmetode = "utbetalingsmetode",
                 vilkar = mutableListOf(),
                 dokumentasjonkrav = mutableListOf(),
-                datoHendelse = LocalDateTime.now()
-            )
+                datoHendelse = LocalDateTime.now(),
+            ),
         )
 
         every { eventService.createModel(any()) } returns model
@@ -325,11 +445,75 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         model.utbetalinger.addAll(
             mutableListOf(
-                Utbetaling("referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                Utbetaling("Sak2", UtbetalingsStatus.PLANLAGT_UTBETALING, BigDecimal.TEN, "Tannlege", utbetalingsdato2, null, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                Utbetaling("Sak3", UtbetalingsStatus.STOPPET, BigDecimal.TEN, "Depositum", null, utbetalingsdato3, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now()),
-                Utbetaling("Sak4", UtbetalingsStatus.ANNULLERT, BigDecimal.TEN, "Kinopenger", null, utbetalingsdato4, null, null, null, false, null, null, mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "referanse",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp",
+                    null,
+                    utbetalingsdato,
+                    null,
+                    null,
+                    null,
+                    false,
+                    null,
+                    null,
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+                Utbetaling(
+                    "Sak2",
+                    UtbetalingsStatus.PLANLAGT_UTBETALING,
+                    BigDecimal.TEN,
+                    "Tannlege",
+                    utbetalingsdato2,
+                    null,
+                    null,
+                    null,
+                    null,
+                    false,
+                    null,
+                    null,
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+                Utbetaling(
+                    "Sak3",
+                    UtbetalingsStatus.STOPPET,
+                    BigDecimal.TEN,
+                    "Depositum",
+                    null,
+                    utbetalingsdato3,
+                    null,
+                    null,
+                    null,
+                    false,
+                    null,
+                    null,
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+                Utbetaling(
+                    "Sak4",
+                    UtbetalingsStatus.ANNULLERT,
+                    BigDecimal.TEN,
+                    "Kinopenger",
+                    null,
+                    utbetalingsdato4,
+                    null,
+                    null,
+                    null,
+                    false,
+                    null,
+                    null,
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
 
         coEvery { eventService.createModel(any()) } returns model
@@ -355,12 +539,27 @@ internal class UtbetalingerServiceTest {
     @Test
     fun `hentAlleUtbetalinger skal filtrere ned til 0 utbetalinger`() {
         val model = InternalDigisosSoker()
-        val vilkar = Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
+        val vilkar =
+            Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
-        val utbetaling1 = Utbetaling(
-            "referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
-            null, utbetalingsdato, null, null, null, false, null, null, mutableListOf(vilkar), mutableListOf(), LocalDateTime.now()
-        )
+        val utbetaling1 =
+            Utbetaling(
+                "referanse",
+                UtbetalingsStatus.UTBETALT,
+                BigDecimal.TEN,
+                "Nødhjelp",
+                null,
+                utbetalingsdato,
+                null,
+                null,
+                null,
+                false,
+                null,
+                null,
+                mutableListOf(vilkar),
+                mutableListOf(),
+                LocalDateTime.now(),
+            )
         model.utbetalinger.add(utbetaling1)
 
         coEvery { eventService.createModel(any()) } returns model
@@ -375,16 +574,36 @@ internal class UtbetalingerServiceTest {
     @Test
     fun `hentAlleUtbetalinger skal filtrere bort utbetalinger til gamle saker`() {
         val model = InternalDigisosSoker()
-        val vilkar = Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
+        val vilkar =
+            Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
-        val utbetaling1 = Utbetaling(
-            "referanse", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp",
-            null, utbetalingsdato, null, null, null, false, null, null, mutableListOf(vilkar), mutableListOf(), LocalDateTime.now()
-        )
+        val utbetaling1 =
+            Utbetaling(
+                "referanse",
+                UtbetalingsStatus.UTBETALT,
+                BigDecimal.TEN,
+                "Nødhjelp",
+                null,
+                utbetalingsdato,
+                null,
+                null,
+                null,
+                false,
+                null,
+                null,
+                mutableListOf(vilkar),
+                mutableListOf(),
+                LocalDateTime.now(),
+            )
         model.utbetalinger.add(utbetaling1)
 
         coEvery { eventService.createModel(any()) } returns model
-        coEvery { mockDigisosSak.sistEndret } returns ZonedDateTime.now(ZoneId.of("UTC")).minusMonths(5).toInstant().toEpochMilli()
+        coEvery { mockDigisosSak.sistEndret } returns
+            ZonedDateTime
+                .now(ZoneId.of("UTC"))
+                .minusMonths(5)
+                .toInstant()
+                .toEpochMilli()
         every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
@@ -401,16 +620,48 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         model.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp1", null, fom.plusDays(1), fom.plusDays(1), fom.plusDays(2), "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak1",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp1",
+                    null,
+                    fom.plusDays(1),
+                    fom.plusDays(1),
+                    fom.plusDays(2),
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
         model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
         val modelForFom = InternalDigisosSoker()
         modelForFom.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp2", null, fom.minusDays(1), fom.minusDays(8), fom.minusDays(7), "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak2",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp2",
+                    null,
+                    fom.minusDays(1),
+                    fom.minusDays(8),
+                    fom.minusDays(7),
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
 
         val digisosSak: DigisosSak = mockk()
@@ -442,16 +693,48 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         model.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp1", fom.plusDays(1), null, fom.plusDays(1), fom.plusDays(2), "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak1",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp1",
+                    fom.plusDays(1),
+                    null,
+                    fom.plusDays(1),
+                    fom.plusDays(2),
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
         model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
         val modelForFom = InternalDigisosSoker()
         modelForFom.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp2", fom.minusDays(1), null, fom.minusDays(8), fom.minusDays(7), "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak2",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp2",
+                    fom.minusDays(1),
+                    null,
+                    fom.minusDays(8),
+                    fom.minusDays(7),
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
 
         val digisosSak: DigisosSak = mockk()
@@ -483,16 +766,48 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         model.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp1", null, tom.minusDays(1), tom.minusDays(2), tom.minusDays(1), "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak1",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp1",
+                    null,
+                    tom.minusDays(1),
+                    tom.minusDays(2),
+                    tom.minusDays(1),
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
         model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
         val modelForTom = InternalDigisosSoker()
         modelForTom.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp2", null, tom.plusDays(1), tom.plusDays(8), tom.plusDays(7), "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak2",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp2",
+                    null,
+                    tom.plusDays(1),
+                    tom.plusDays(8),
+                    tom.plusDays(7),
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
 
         val digisosSak: DigisosSak = mockk()
@@ -524,16 +839,48 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         model.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp1", tom.minusDays(1), null, tom.minusDays(2), tom.minusDays(1), "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak1",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp1",
+                    tom.minusDays(1),
+                    null,
+                    tom.minusDays(2),
+                    tom.minusDays(1),
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
         model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
         val modelForTom = InternalDigisosSoker()
         modelForTom.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp2", tom.plusDays(1), null, tom.plusDays(8), tom.plusDays(7), "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak2",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp2",
+                    tom.plusDays(1),
+                    null,
+                    tom.plusDays(8),
+                    tom.plusDays(7),
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
 
         val digisosSak: DigisosSak = mockk()
@@ -568,23 +915,71 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         model.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp1", null, tom.minusDays(1), fom, tom, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak1",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp1",
+                    null,
+                    tom.minusDays(1),
+                    fom,
+                    tom,
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
         model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
         val modelForFom = InternalDigisosSoker()
         modelForFom.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp2", null, fom.plusDays(1), fom.minusDays(6), fom.minusDays(5), "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak2",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp2",
+                    null,
+                    fom.plusDays(1),
+                    fom.minusDays(6),
+                    fom.minusDays(5),
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
 
         val modelEtterTom = InternalDigisosSoker()
         modelEtterTom.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak3", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp3", null, tom.plusDays(1), tom.plusDays(1), tom.plusDays(2), "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak3",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp3",
+                    null,
+                    tom.plusDays(1),
+                    tom.plusDays(1),
+                    tom.plusDays(2),
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
 
         val digisosSak: DigisosSak = mockk()
@@ -626,23 +1021,71 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         model.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp1", tom.minusDays(1), null, fom, tom, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak1",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp1",
+                    tom.minusDays(1),
+                    null,
+                    fom,
+                    tom,
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
         model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
         val modelForFom = InternalDigisosSoker()
         modelForFom.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak2", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp2", fom.plusDays(1), null, fom.minusDays(6), fom.minusDays(5), "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak2",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp2",
+                    fom.plusDays(1),
+                    null,
+                    fom.minusDays(6),
+                    fom.minusDays(5),
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
 
         val modelEtterTom = InternalDigisosSoker()
         modelEtterTom.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak3", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp3", tom.plusDays(1), null, tom.plusDays(1), tom.plusDays(2), "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak3",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp3",
+                    tom.plusDays(1),
+                    null,
+                    tom.plusDays(1),
+                    tom.plusDays(2),
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
 
         val digisosSak: DigisosSak = mockk()
@@ -683,8 +1126,24 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         model.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato, null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak1",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp",
+                    null,
+                    utbetalingsdato,
+                    null,
+                    null,
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
         model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
@@ -709,8 +1168,24 @@ internal class UtbetalingerServiceTest {
         val model = InternalDigisosSoker()
         model.utbetalinger.addAll(
             arrayOf(
-                Utbetaling("Sak1", UtbetalingsStatus.UTBETALT, BigDecimal.TEN, "Nødhjelp", null, utbetalingsdato, null, null, "utleier", false, "kontonr", "utbetalingsmetode", mutableListOf(), mutableListOf(), LocalDateTime.now())
-            )
+                Utbetaling(
+                    "Sak1",
+                    UtbetalingsStatus.UTBETALT,
+                    BigDecimal.TEN,
+                    "Nødhjelp",
+                    null,
+                    utbetalingsdato,
+                    null,
+                    null,
+                    "utleier",
+                    false,
+                    "kontonr",
+                    "utbetalingsmetode",
+                    mutableListOf(),
+                    mutableListOf(),
+                    LocalDateTime.now(),
+                ),
+            ),
         )
         model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 

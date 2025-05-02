@@ -101,8 +101,8 @@ internal class OppgaveServiceTest {
                 Oppgave(type, tillegg, frist, tidspunktForKrav, true),
                 Oppgave(type3, tillegg3, frist3, tidspunktForKrav, true),
                 Oppgave(type4, tillegg4, frist4, tidspunktForKrav, true),
-                Oppgave(type2, tillegg2, frist2, tidspunktForKrav, true)
-            )
+                Oppgave(type2, tillegg2, frist2, tidspunktForKrav, true),
+            ),
         )
 
         every { eventService.createModel(any()) } returns model
@@ -136,17 +136,19 @@ internal class OppgaveServiceTest {
             listOf(
                 Oppgave(type, tillegg, frist, tidspunktForKrav, true),
                 Oppgave(type2, null, frist2, tidspunktForKrav, true),
-                Oppgave(type3, tillegg3, frist3, tidspunktForKrav, true)
-            )
+                Oppgave(type3, tillegg3, frist3, tidspunktForKrav, true),
+            ),
         )
 
         every { eventService.createModel(any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns listOf(
-            InternalVedlegg(type, tillegg, frist, 1, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1)),
-            InternalVedlegg(type2, null, frist2, 1, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1)),
-            InternalVedlegg(type3, tillegg3, frist3, 1, tidspunktFoerKrav, tidspunktEtterKrav.plusDays(1)), // Filtreres bort pga. tidspunkt
-            InternalVedlegg(type3, null, frist3, 1, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1))
-        ) // Filtreres bort pga tillegsinfo
+        every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns
+            listOf(
+                InternalVedlegg(type, tillegg, frist, 1, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1)),
+                InternalVedlegg(type2, null, frist2, 1, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1)),
+                // Filtreres bort pga. tidspunkt
+                InternalVedlegg(type3, tillegg3, frist3, 1, tidspunktFoerKrav, tidspunktEtterKrav.plusDays(1)),
+                InternalVedlegg(type3, null, frist3, 1, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1)),
+            ) // Filtreres bort pga tillegsinfo
         // Så type3 er den eneste oppgaven uten vedlegg
 
         val oppgaver = service.hentOppgaver("123")
@@ -171,14 +173,15 @@ internal class OppgaveServiceTest {
         model.oppgaver.addAll(
             listOf(
                 Oppgave(type, tillegg, frist, tidspunktForKrav, true),
-                Oppgave(type, tillegg, frist2, tidspunktForKrav.plusDays(1), true)
-            )
+                Oppgave(type, tillegg, frist2, tidspunktForKrav.plusDays(1), true),
+            ),
         )
 
         every { eventService.createModel(any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns listOf(
-            InternalVedlegg(type, tillegg, frist, 2, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1))
-        )
+        every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns
+            listOf(
+                InternalVedlegg(type, tillegg, frist, 2, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1)),
+            )
 
         val oppgaver = service.hentOppgaver("123")
 

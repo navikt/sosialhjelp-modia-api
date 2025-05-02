@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 internal class SoknadDokumentasjonkravTest {
-
     private val jsonDigisosSokerService: JsonDigisosSokerService = mockk()
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
@@ -25,13 +24,13 @@ internal class SoknadDokumentasjonkravTest {
     fun init() {
         clearAllMocks()
 
-        every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
+        every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
         resetHendelser()
     }
 
     @Test
-    internal fun `skal legge til dokumentasjonkrav fra søknaden`() {
+    internal fun `skal legge til dokumentasjonkrav fra soknaden`() {
         every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -40,19 +39,20 @@ internal class SoknadDokumentasjonkravTest {
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                         SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3)
-                    )
+                        SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3),
+                    ),
                 )
-        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns listOf(
-            InternalVedlegg(
-                type = "statsborgerskap",
-                tilleggsinfo = "dokumentasjon",
-                innsendelsesfrist = null,
-                antallFiler = 1,
-                datoLagtTil = LocalDateTime.now(),
-                null
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns
+            listOf(
+                InternalVedlegg(
+                    type = "statsborgerskap",
+                    tilleggsinfo = "dokumentasjon",
+                    innsendelsesfrist = null,
+                    antallFiler = 1,
+                    datoLagtTil = LocalDateTime.now(),
+                    null,
+                ),
             )
-        )
 
         val model = service.createModel(defaultDigisosSak)
 

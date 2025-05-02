@@ -7,9 +7,15 @@ import org.springframework.context.annotation.Profile
 
 @Profile("!mock-alt")
 @Configuration
-@EnableJwtTokenValidation(ignore = ["org.springframework", "org.springdoc.webmvc.api.OpenApiWebMvcResource", "org.springdoc.webmvc.ui.SwaggerWelcomeWebMvc", "org.springdoc.webmvc.ui.SwaggerConfigResource"])
+@EnableJwtTokenValidation(
+    ignore = [
+        "org.springframework",
+        "org.springdoc.webmvc.api.OpenApiWebMvcResource",
+        "org.springdoc.webmvc.ui.SwaggerWelcomeWebMvc",
+        "org.springdoc.webmvc.ui.SwaggerConfigResource",
+    ],
+)
 @EnableOAuth2Client(cacheEnabled = true)
 class SecurityConfig {
-
     // JwtTokenValidation er enabled så lenge appen kjører med profil != mock-alt
 }

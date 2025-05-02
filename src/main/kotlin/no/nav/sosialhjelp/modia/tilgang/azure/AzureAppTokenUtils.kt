@@ -23,40 +23,37 @@ interface AzureAppTokenUtils {
 class AzureAppTokenUtilsImpl(
     webClientBuilder: WebClient.Builder,
     proxiedHttpClient: HttpClient,
-    private val clientProperties: ClientProperties
+    private val clientProperties: ClientProperties,
 ) : AzureAppTokenUtils {
-
     private val azureAppTokenWebClient: WebClient =
         webClientBuilder
             .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }
-            .build()
+            }.build()
 
-    override fun hentTokenMedSkjermedePersonerScope(): String {
-        return runBlocking(Dispatchers.IO) {
+    override fun hentTokenMedSkjermedePersonerScope(): String =
+        runBlocking(Dispatchers.IO) {
             val params = LinkedMultiValueMap<String, String>()
             params.add("client_id", clientProperties.azureClientId)
             params.add("scope", clientProperties.skjermedePersonerScope)
             params.add("client_secret", clientProperties.azureClientSecret)
             params.add("grant_type", "client_credentials")
 
-            val tokenResponse: AzuredingsResponse = azureAppTokenWebClient.post()
-                .uri(clientProperties.azureTokenEndpointUrl)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData(params))
-                .retrieve()
-                .awaitBody()
+            val tokenResponse: AzuredingsResponse =
+                azureAppTokenWebClient
+                    .post()
+                    .uri(clientProperties.azureTokenEndpointUrl)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(BodyInserters.fromFormData(params))
+                    .retrieve()
+                    .awaitBody()
             tokenResponse.accessToken
         }
-    }
 }
 
 @Profile("(mock-alt | local | test)")
 @Component
 class MockAzureAppTokenUtils : AzureAppTokenUtils {
-    override fun hentTokenMedSkjermedePersonerScope(): String {
-        return "skjermede-personer-pip-token"
-    }
+    override fun hentTokenMedSkjermedePersonerScope(): String = "skjermede-personer-pip-token"
 }

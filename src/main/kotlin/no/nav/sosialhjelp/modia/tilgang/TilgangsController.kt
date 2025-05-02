@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api")
 class TilgangsController(
-    private val tilgangskontrollService: TilgangskontrollService
+    private val tilgangskontrollService: TilgangskontrollService,
 ) {
-
     @GetMapping("/tilgang")
-    fun hentPersoninfo(@RequestHeader(value = AUTHORIZATION) token: String): ResponseEntity<String> {
+    fun hentPersoninfo(
+        @RequestHeader(value = AUTHORIZATION) token: String,
+    ): ResponseEntity<String> {
         tilgangskontrollService.harVeilederTilgangTilTjenesten(token, "/tilgang", HttpMethod.GET)
         return ResponseEntity.ok("true")
     }

@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class PdlResponseTest {
-
     private val fornavn = "Fornavn"
     private val mellomnavn = "Mellomnavn"
     private val dobbeltmellomnavn = "Mellom1 Mellom2"
@@ -50,7 +49,8 @@ internal class PdlResponseTest {
 
     @Test
     internal fun `navn - skal gi stor forbokstav - med dobbelt navn`() {
-        every { pdlHentPerson.hentPerson?.navn } returns listOf(PdlPersonNavn(fornavn.lowercase(), dobbeltmellomnavn.lowercase(), etternavn.lowercase()))
+        every { pdlHentPerson.hentPerson?.navn } returns
+            listOf(PdlPersonNavn(fornavn.lowercase(), dobbeltmellomnavn.lowercase(), etternavn.lowercase()))
 
         val navn = pdlHentPerson.navn
 
@@ -81,7 +81,7 @@ internal class PdlResponseTest {
     }
 
     @Test
-    internal fun `kjoenn - returnerer brukers kjønn`() {
+    internal fun `kjoenn - returnerer brukers kjonn`() {
         every { pdlHentPerson.hentPerson?.kjoenn } returns listOf(PdlKjoenn(Kjoenn.KVINNE))
 
         assertThat(pdlHentPerson.kjoenn).isEqualTo(Kjoenn.KVINNE.name)
@@ -89,10 +89,11 @@ internal class PdlResponseTest {
 
     @Test
     internal fun `telefonnummer - returnerer brukers prioriterte telefonnummer`() {
-        every { pdlHentPerson.hentPerson?.telefonnummer } returns listOf(
-            PdlTelefonnummer("+1", "12345678", 2),
-            PdlTelefonnummer("+2", "98765432", 1)
-        )
+        every { pdlHentPerson.hentPerson?.telefonnummer } returns
+            listOf(
+                PdlTelefonnummer("+1", "12345678", 2),
+                PdlTelefonnummer("+2", "98765432", 1),
+            )
 
         assertThat(pdlHentPerson.telefonnummer).isEqualTo("+298765432")
     }

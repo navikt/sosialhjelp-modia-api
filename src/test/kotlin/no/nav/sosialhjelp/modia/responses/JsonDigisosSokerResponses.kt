@@ -1,6 +1,7 @@
 package no.nav.sosialhjelp.modia.responses
 
-val ok_minimal_jsondigisossoker_response_string = """
+val ok_minimal_jsondigisossoker_response_string =
+    """
 {
 	"version": "1.0.0",
 	"avsender": {
@@ -15,9 +16,10 @@ val ok_minimal_jsondigisossoker_response_string = """
 		}
 	]
 }
-""".trimIndent()
+    """.trimIndent()
 
-val ok_komplett_jsondigisossoker_response = """
+val ok_komplett_jsondigisossoker_response =
+    """
 {
 	"version": "1.0.0",
 	"avsender": {
@@ -148,4 +150,4 @@ val ok_komplett_jsondigisossoker_response = """
 		}
 	]
 }
-""".trimIndent()
+    """.trimIndent()

@@ -22,13 +22,12 @@ import org.springframework.web.bind.annotation.RestController
 class FodselsnummerController(
     private val tilgangskontrollService: TilgangskontrollService,
     private val fodselsnummerService: FodselsnummerService,
-    @Value("\${modia_baseurl}") private val modiaBaseurl: String
+    @Value("\${modia_baseurl}") private val modiaBaseurl: String,
 ) {
-
     @PostMapping("/fodselsnummer")
     fun setFodselsnummer(
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
-        @RequestBody ident: Ident
+        @RequestBody ident: Ident,
     ): ResponseEntity<SetFodselsnummerResponse> {
         tilgangskontrollService.harVeilederTilgangTilTjenesten(token, "/fodselsnummer", HttpMethod.POST)
         val fnr = ident.fnr.trim()
@@ -40,15 +39,15 @@ class FodselsnummerController(
         log.info("Generert lenke til modia sosialhjelp - /uuid/$fnrId")
         return ResponseEntity.ok(
             SetFodselsnummerResponse(
-                modiaSosialhjelpUrl = "$modiaBaseurl/uuid/$fnrId"
-            )
+                modiaSosialhjelpUrl = "$modiaBaseurl/uuid/$fnrId",
+            ),
         )
     }
 
     @GetMapping("/fodselsnummer/{fnrId}")
     fun hentFodselsnummer(
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
-        @PathVariable fnrId: String
+        @PathVariable fnrId: String,
     ): ResponseEntity<String> {
         tilgangskontrollService.harVeilederTilgangTilTjenesten(token, "/fodselsnummer/$fnrId", HttpMethod.GET)
         val fnr = fodselsnummerService.getFnr(fnrId)

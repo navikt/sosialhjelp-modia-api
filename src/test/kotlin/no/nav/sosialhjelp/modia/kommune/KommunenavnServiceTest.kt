@@ -13,16 +13,16 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class KommunenavnServiceTest {
-
     private val kommunenavnClient: KommunenavnClient = mockk()
     private val service = KommunenavnService(kommunenavnClient)
 
     private val kommuneNr = "0301"
     private val kommunenavn = "Oslo"
 
-    private val response = objectMapper.readValue<KommunenavnProperties>(
-        ClassLoader.getSystemResourceAsStream("kartverket-response.json")!!
-    )
+    private val response =
+        objectMapper.readValue<KommunenavnProperties>(
+            ClassLoader.getSystemResourceAsStream("kartverket-response.json")!!,
+        )
 
     @BeforeEach
     internal fun setUp() {

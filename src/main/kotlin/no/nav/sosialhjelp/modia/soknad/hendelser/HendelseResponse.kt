@@ -4,5 +4,5 @@ data class HendelseResponse(
     val tittel: String,
     val tidspunkt: String,
     val beskrivelse: String?,
-    val filbeskrivelse: String?
+    val filbeskrivelse: String?,
 )

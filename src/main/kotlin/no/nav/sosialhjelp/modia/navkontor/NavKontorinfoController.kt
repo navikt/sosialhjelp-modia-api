@@ -13,17 +13,21 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"])
 class NavKontorinfoController(
-    private val navKontorService: NavKontorService
+    private val navKontorService: NavKontorService,
 ) {
-
     @GetMapping("/kontorinfo")
-    fun hentNavKontorinfo(@RequestParam(name = "enhetsnr") enhetsnr: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<KontorinfoResponse> {
+    fun hentNavKontorinfo(
+        @RequestParam(name = "enhetsnr") enhetsnr: String,
+        @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
+    ): ResponseEntity<KontorinfoResponse> {
         val kontorinfo = navKontorService.hentNavKontorinfo(enhetsnr)
         return kontorinfo?.let { ResponseEntity.ok(it) } ?: ResponseEntity.noContent().build()
     }
 
     @GetMapping("/alleNavKontorinfo")
-    fun hentAlleNavKontorinfo(@RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<List<KontorinfoResponse>> {
+    fun hentAlleNavKontorinfo(
+        @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
+    ): ResponseEntity<List<KontorinfoResponse>> {
         val alleEnheter = navKontorService.hentAlleNavKontorinfo()
         if (alleEnheter.isEmpty()) {
             return ResponseEntity.noContent().build()

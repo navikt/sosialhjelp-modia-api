@@ -11,13 +11,10 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"])
 class LoginController {
-
     @GetMapping("/login")
-    fun login(response: HttpServletResponse): ResponseEntity<LoginResponse> {
-        return ResponseEntity.ok(LoginResponse("ok"))
-    }
+    fun login(response: HttpServletResponse): ResponseEntity<LoginResponse> = ResponseEntity.ok(LoginResponse("ok"))
 
     data class LoginResponse(
-        val melding: String
+        val melding: String,
     )
 }

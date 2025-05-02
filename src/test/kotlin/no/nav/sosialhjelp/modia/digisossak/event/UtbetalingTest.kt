@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class UtbetalingTest {
-
     private val jsonDigisosSokerService: JsonDigisosSokerService = mockk()
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
@@ -25,7 +24,7 @@ internal class UtbetalingTest {
     fun init() {
         clearAllMocks()
 
-        every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
+        every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
@@ -45,8 +44,8 @@ internal class UtbetalingTest {
                         SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3),
                         SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_4),
                         SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_5),
-                        UTBETALING.withHendelsestidspunkt(tidspunkt_6)
-                    )
+                        UTBETALING.withHendelsestidspunkt(tidspunkt_6),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -56,14 +55,14 @@ internal class UtbetalingTest {
         assertThat(model.saker).hasSize(1)
         assertThat(model.historikk).hasSize(6)
 
-        assertThat(model.saker[0].tittel).isEqualTo(tittel_1) // tittel for sak fra saksstatus-hendelse
+        assertThat(model.saker[0].tittel).isEqualTo(TITTEL_1) // tittel for sak fra saksstatus-hendelse
 
         assertThat(model.saker[0].utbetalinger).hasSize(1)
         val utbetaling = model.saker[0].utbetalinger[0]
-        assertThat(utbetaling.referanse).isEqualTo(utbetaling_ref_1)
+        assertThat(utbetaling.referanse).isEqualTo(UTBETALING_REF_1)
         assertThat(utbetaling.status).isEqualTo(UtbetalingsStatus.UTBETALT)
         assertThat(utbetaling.belop).isEqualTo("1234.56")
-        assertThat(utbetaling.beskrivelse).isEqualTo(tittel_1)
+        assertThat(utbetaling.beskrivelse).isEqualTo(TITTEL_1)
         assertThat(utbetaling.forfallsDato).isEqualTo("2019-12-31")
         assertThat(utbetaling.utbetalingsDato).isEqualTo("2019-12-24")
         assertThat(utbetaling.fom).isEqualTo("2019-12-01")
@@ -85,8 +84,8 @@ internal class UtbetalingTest {
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                         SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        UTBETALING.withHendelsestidspunkt(tidspunkt_3)
-                    )
+                        UTBETALING.withHendelsestidspunkt(tidspunkt_3),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -107,8 +106,8 @@ internal class UtbetalingTest {
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                         SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        UTBETALING_ANNEN_MOTTAKER.withHendelsestidspunkt(tidspunkt_3)
-                    )
+                        UTBETALING_ANNEN_MOTTAKER.withHendelsestidspunkt(tidspunkt_3),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)

@@ -11,16 +11,17 @@ import no.nav.sosialhjelp.modia.toLocalDateTime
 fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonkrav) {
     val log by logger()
 
-    val dokumentasjonkrav = Dokumentasjonkrav(
-        dokumentasjonkravId = hendelse.dokumentasjonkravreferanse,
-        tittel = hendelse.tittel,
-        beskrivelse = hendelse.beskrivelse,
-        saksreferanse = hendelse.saksreferanse,
-        status = hendelse.status?.let { OppgaveStatus.valueOf(it.value()) },
-        utbetalingsReferanse = hendelse.utbetalingsreferanse,
-        datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
-        frist = hendelse.frist?.toLocalDateTime()
-    )
+    val dokumentasjonkrav =
+        Dokumentasjonkrav(
+            dokumentasjonkravId = hendelse.dokumentasjonkravreferanse,
+            tittel = hendelse.tittel,
+            beskrivelse = hendelse.beskrivelse,
+            saksreferanse = hendelse.saksreferanse,
+            status = hendelse.status?.let { OppgaveStatus.valueOf(it.value()) },
+            utbetalingsReferanse = hendelse.utbetalingsreferanse,
+            datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
+            frist = hendelse.frist?.toLocalDateTime(),
+        )
 
     this.dokumentasjonkrav.oppdaterEllerLeggTilDokumentasjonkrav(hendelse, dokumentasjonkrav)
 
@@ -57,7 +58,10 @@ fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonkrav) {
 //    }
 }
 
-private fun MutableList<Dokumentasjonkrav>.oppdaterEllerLeggTilDokumentasjonkrav(hendelse: JsonDokumentasjonkrav, dokumentasjonkrav: Dokumentasjonkrav) {
+private fun MutableList<Dokumentasjonkrav>.oppdaterEllerLeggTilDokumentasjonkrav(
+    hendelse: JsonDokumentasjonkrav,
+    dokumentasjonkrav: Dokumentasjonkrav,
+) {
     if (any { it.dokumentasjonkravId == hendelse.dokumentasjonkravreferanse }) {
         filter { it.dokumentasjonkravId == hendelse.dokumentasjonkravreferanse }
             .forEach { it.oppdaterFelter(hendelse) }

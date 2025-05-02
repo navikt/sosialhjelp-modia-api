@@ -21,24 +21,29 @@ class AzuredingsService(
     private val azuredingsClient: AzuredingsClient,
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
-    miljoUtils: MiljoUtils
+    miljoUtils: MiljoUtils,
 ) {
+    private val privateRsaKey: RSAKey =
+        if (clientProperties.azuredingsPrivateJwk == "generateRSA") {
+            if (miljoUtils.isRunningInProd()) throw RuntimeException("Generation of RSA keys is not allowed in prod.")
+            RSAKeyGenerator(2048).keyUse(KeyUse.SIGNATURE).keyID(UUID.randomUUID().toString()).generate()
+        } else {
+            RSAKey.parse(clientProperties.azuredingsPrivateJwk)
+        }
 
-    private val privateRsaKey: RSAKey = if (clientProperties.azuredingsPrivateJwk == "generateRSA") {
-        if (miljoUtils.isRunningInProd()) throw RuntimeException("Generation of RSA keys is not allowed in prod.")
-        RSAKeyGenerator(2048).keyUse(KeyUse.SIGNATURE).keyID(UUID.randomUUID().toString()).generate()
-    } else {
-        RSAKey.parse(clientProperties.azuredingsPrivateJwk)
-    }
-
-    suspend fun exchangeToken(token: String, scope: String): String {
+    suspend fun exchangeToken(
+        token: String,
+        scope: String,
+    ): String {
         val redisKey = "$token$scope"
         redisService.getString(RedisKeyType.AZUREDINGS, redisKey)?.let { return it }
 
         val jwt = createSignedAssertion(clientProperties.azuredingsJwtClientId, clientProperties.azuredingsJwtAudience, privateRsaKey)
 
         return try {
-            azuredingsClient.exchangeToken(token, jwt, clientProperties.azuredingsJwtClientId, scope).accessToken
+            azuredingsClient
+                .exchangeToken(token, jwt, clientProperties.azuredingsJwtClientId, scope)
+                .accessToken
                 .also { lagreTilCache(redisKey, it) }
         } catch (e: WebClientResponseException) {
             log.warn("Error message from server: ${e.responseBodyAsString}")
@@ -46,9 +51,14 @@ class AzuredingsService(
         }
     }
 
-    private fun createSignedAssertion(clientId: String, audience: String, rsaKey: RSAKey): String {
+    private fun createSignedAssertion(
+        clientId: String,
+        audience: String,
+        rsaKey: RSAKey,
+    ): String {
         val now = Instant.now()
-        return JWT.create()
+        return JWT
+            .create()
             .withSubject(clientId)
             .withIssuer(clientId)
             .withAudience(audience)
@@ -60,7 +70,10 @@ class AzuredingsService(
             .sign(Algorithm.RSA256(null, rsaKey.toRSAPrivateKey()))
     }
 
-    private fun lagreTilCache(key: String, onBehalfToken: String) {
+    private fun lagreTilCache(
+        key: String,
+        onBehalfToken: String,
+    ) {
         redisService.set(RedisKeyType.AZUREDINGS, key, onBehalfToken.toByteArray(), 30)
     }
 

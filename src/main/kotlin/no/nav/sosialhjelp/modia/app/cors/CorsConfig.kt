@@ -11,9 +11,8 @@ import org.springframework.web.filter.CorsFilter
 
 @Component
 class CorsConfig(
-    private val miljoUtils: MiljoUtils
+    private val miljoUtils: MiljoUtils,
 ) {
-
     @Bean
     fun corsFilter(): FilterRegistrationBean<CorsFilter> {
         val source = UrlBasedCorsConfigurationSource()
@@ -35,16 +34,18 @@ class CorsConfig(
         get() = if (miljoUtils.isRunningInProd()) ALLOWED_ORIGINS_PROD else ALLOWED_ORIGINS_NON_PROD
 
     companion object {
-        private val ALLOWED_ORIGINS_PROD = listOf(
-            "https://sosialhjelp-modia.intern.nav.no",
-            "https://navdialog.lightning.force.com"
-        )
-        private val ALLOWED_ORIGINS_NON_PROD = listOf(
-            "https://sosialhjelp-modia.intern.dev.nav.no",
-            "https://sosialhjelp-modia-dev.dev.nav.no",
-            "https://digisos.dev.nav.no",
-            "https://sosialhjelp-modia-mock.ekstern.dev.nav.no",
-            "https://navdialog--sit2.sandbox.lightning.force.com"
-        )
+        private val ALLOWED_ORIGINS_PROD =
+            listOf(
+                "https://sosialhjelp-modia.intern.nav.no",
+                "https://navdialog.lightning.force.com",
+            )
+        private val ALLOWED_ORIGINS_NON_PROD =
+            listOf(
+                "https://sosialhjelp-modia.intern.dev.nav.no",
+                "https://sosialhjelp-modia-dev.dev.nav.no",
+                "https://digisos.dev.nav.no",
+                "https://sosialhjelp-modia-mock.ekstern.dev.nav.no",
+                "https://navdialog--sit2.sandbox.lightning.force.com",
+            )
     }
 }

@@ -12,12 +12,13 @@ import org.springframework.context.annotation.Profile
 @Configuration
 @EnableConfigurationProperties(RedisProperties::class)
 class RedisConfig {
-
     @Bean
     fun redisClient(properties: RedisProperties): RedisClient {
-        val redisUri = RedisURI.Builder.redis(properties.host, properties.port)
-            .withPassword(properties.password as CharSequence)
-            .build()
+        val redisUri =
+            RedisURI.Builder
+                .redis(properties.host, properties.port)
+                .withPassword(properties.password as CharSequence)
+                .build()
 
         return RedisClient.create(redisUri)
     }

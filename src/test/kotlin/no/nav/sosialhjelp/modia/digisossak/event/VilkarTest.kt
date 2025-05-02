@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class VilkarTest {
-
     private val jsonDigisosSokerService: JsonDigisosSokerService = mockk()
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
@@ -25,7 +24,7 @@ internal class VilkarTest {
     fun init() {
         clearAllMocks()
 
-        every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
+        every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
@@ -45,8 +44,8 @@ internal class VilkarTest {
                         SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3),
                         SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_4),
                         UTBETALING.withHendelsestidspunkt(tidspunkt_5),
-                        VILKAR_OPPFYLT.withHendelsestidspunkt(tidspunkt_6)
-                    )
+                        VILKAR_OPPFYLT.withHendelsestidspunkt(tidspunkt_6),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -59,7 +58,7 @@ internal class VilkarTest {
         assertThat(model.saker[0].utbetalinger).hasSize(1)
         val utbetaling = model.saker[0].utbetalinger[0]
         assertThat(utbetaling.vilkar).hasSize(1)
-        assertThat(utbetaling.vilkar[0].referanse).isEqualTo(vilkar_ref_1)
+        assertThat(utbetaling.vilkar[0].referanse).isEqualTo(VILKAR_REF_1)
         assertThat(utbetaling.vilkar[0].beskrivelse).isEqualTo("beskrivelse")
         assertThat(utbetaling.vilkar[0].status).isEqualTo(OppgaveStatus.RELEVANT)
     }
@@ -74,8 +73,8 @@ internal class VilkarTest {
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                         SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        VILKAR_OPPFYLT.withHendelsestidspunkt(tidspunkt_3)
-                    )
+                        VILKAR_OPPFYLT.withHendelsestidspunkt(tidspunkt_3),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -87,7 +86,7 @@ internal class VilkarTest {
     }
 
     @Test
-    fun `vilkar FØR utbetaling - vilkar knyttes ikke til noen utbetaling`() {
+    fun `vilkar FOR utbetaling - vilkar knyttes ikke til noen utbetaling`() {
         every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -99,8 +98,8 @@ internal class VilkarTest {
                         SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3),
                         SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_4),
                         VILKAR_OPPFYLT.withHendelsestidspunkt(tidspunkt_5),
-                        UTBETALING.withHendelsestidspunkt(tidspunkt_6)
-                    )
+                        UTBETALING.withHendelsestidspunkt(tidspunkt_6),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -126,8 +125,8 @@ internal class VilkarTest {
                         SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3),
                         SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_4),
                         VILKAR_OPPFYLT.withHendelsestidspunkt(tidspunkt_5),
-                        UTBETALING.withHendelsestidspunkt(tidspunkt_5)
-                    )
+                        UTBETALING.withHendelsestidspunkt(tidspunkt_5),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -140,6 +139,6 @@ internal class VilkarTest {
         assertThat(model.saker[0].utbetalinger).hasSize(1)
         val utbetaling = model.saker[0].utbetalinger[0]
         assertThat(utbetaling.vilkar).hasSize(1)
-        assertThat(utbetaling.vilkar[0].referanse).isEqualTo(vilkar_ref_1)
+        assertThat(utbetaling.vilkar[0].referanse).isEqualTo(VILKAR_REF_1)
     }
 }

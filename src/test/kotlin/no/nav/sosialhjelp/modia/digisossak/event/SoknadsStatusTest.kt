@@ -20,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class SoknadsStatusTest {
-
     private val jsonDigisosSokerService: JsonDigisosSokerService = mockk()
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
@@ -31,7 +30,7 @@ internal class SoknadsStatusTest {
     fun init() {
         clearAllMocks()
 
-        every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
+        every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
@@ -62,8 +61,8 @@ internal class SoknadsStatusTest {
                 .withVersion("123")
                 .withHendelser(
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
-                    )
+                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -80,20 +79,22 @@ internal class SoknadsStatusTest {
 
     @Test
     fun `soknadsStatus MOTTATT papirsoknad`() {
-        val papirsoknadDigisosSak = defaultDigisosSak.copy(
-            originalSoknadNAV = null,
-            tilleggsinformasjon = Tilleggsinformasjon(
-                enhetsnummer = null
+        val papirsoknadDigisosSak =
+            defaultDigisosSak.copy(
+                originalSoknadNAV = null,
+                tilleggsinformasjon =
+                    Tilleggsinformasjon(
+                        enhetsnummer = null,
+                    ),
             )
-        )
         every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
                 .withHendelser(
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
-                    )
+                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                    ),
                 )
 
         val model = service.createModel(papirsoknadDigisosSak)
@@ -117,8 +118,8 @@ internal class SoknadsStatusTest {
                 .withHendelser(
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2)
-                    )
+                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -144,8 +145,8 @@ internal class SoknadsStatusTest {
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                         SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_3)
-                    )
+                        SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_3),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)

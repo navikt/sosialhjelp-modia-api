@@ -8,13 +8,15 @@ import java.net.URL
 fun proxiedHttpClient(proxyUrl: String): HttpClient {
     val uri = URL(proxyUrl)
 
-    return HttpClient.create()
+    return HttpClient
+        .create()
         .resolver(DefaultAddressResolverGroup.INSTANCE)
         .proxy { proxy ->
             proxy.type(ProxyProvider.Proxy.HTTP).host(uri.host).port(uri.port)
         }
 }
 
-fun unproxiedHttpClient(): HttpClient = HttpClient
-    .newConnection()
-    .resolver(DefaultAddressResolverGroup.INSTANCE)
+fun unproxiedHttpClient(): HttpClient =
+    HttpClient
+        .newConnection()
+        .resolver(DefaultAddressResolverGroup.INSTANCE)

@@ -19,49 +19,47 @@ class MaskinportenClientConfig(
     @Value("\${maskinporten_client_jwk}") private val clientJwk: String,
     webClientBuilder: WebClient.Builder,
     proxiedHttpClient: HttpClient,
-    private val miljoUtils: MiljoUtils
+    private val miljoUtils: MiljoUtils,
 ) {
-
     @Bean
     @Profile("!test")
-    fun maskinportenClient(): MaskinportenClient {
-        return MaskinportenClient(maskinPortenWebClient, maskinportenProperties, wellknown, miljoUtils)
-    }
+    fun maskinportenClient(): MaskinportenClient = MaskinportenClient(maskinPortenWebClient, maskinportenProperties, wellknown, miljoUtils)
 
     @Bean
     @Profile("test")
-    fun maskinportenClientTest(): MaskinportenClient {
-        return MaskinportenClient(
+    fun maskinportenClientTest(): MaskinportenClient =
+        MaskinportenClient(
             maskinPortenWebClient,
             maskinportenProperties,
             WellKnown("iss", "token_url"),
-            miljoUtils
+            miljoUtils,
         )
-    }
 
     private val maskinPortenWebClient: WebClient =
         webClientBuilder
             .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }
-            .build()
+            }.build()
 
-    private val maskinportenProperties = MaskinportenProperties(
-        clientId = clientId,
-        clientJwk = clientJwk,
-        scope = scopes,
-        wellKnownUrl = wellKnownUrl
-    )
+    private val maskinportenProperties =
+        MaskinportenProperties(
+            clientId = clientId,
+            clientJwk = clientJwk,
+            scope = scopes,
+            wellKnownUrl = wellKnownUrl,
+        )
 
     private val wellknown: WellKnown
-        get() = maskinPortenWebClient.get()
-            .uri(wellKnownUrl)
-            .retrieve()
-            .bodyToMono<WellKnown>()
-            .doOnSuccess { log.info("Hentet WellKnown for Maskinporten") }
-            .doOnError { log.warn("Feil ved henting av WellKnown for Maskinporten", it) }
-            .block() ?: throw RuntimeException("Feil ved henting av WellKnown for Maskinporten")
+        get() =
+            maskinPortenWebClient
+                .get()
+                .uri(wellKnownUrl)
+                .retrieve()
+                .bodyToMono<WellKnown>()
+                .doOnSuccess { log.info("Hentet WellKnown for Maskinporten") }
+                .doOnError { log.warn("Feil ved henting av WellKnown for Maskinporten", it) }
+                .block() ?: throw RuntimeException("Feil ved henting av WellKnown for Maskinporten")
 
     companion object {
         private val log by logger()
@@ -70,12 +68,12 @@ class MaskinportenClientConfig(
 
 data class WellKnown(
     val issuer: String,
-    val token_endpoint: String
+    val token_endpoint: String,
 )
 
 data class MaskinportenProperties(
     val clientId: String,
     val clientJwk: String,
     val scope: String,
-    val wellKnownUrl: String
+    val wellKnownUrl: String,
 )

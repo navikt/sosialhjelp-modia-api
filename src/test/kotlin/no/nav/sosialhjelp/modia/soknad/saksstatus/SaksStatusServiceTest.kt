@@ -56,8 +56,8 @@ internal class SaksStatusServiceTest {
                 tittel = tittel,
                 vedtak = mutableListOf(),
                 utbetalinger = mutableListOf(),
-                datoOpprettet = now
-            )
+                datoOpprettet = now,
+            ),
         )
 
         every { eventService.createModel(any()) } returns model
@@ -82,15 +82,16 @@ internal class SaksStatusServiceTest {
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING, // overstyres når vedtak finnes
                 tittel = tittel,
-                vedtak = mutableListOf(
-                    Vedtak(
-                        utfall = UtfallVedtak.INNVILGET,
-                        datoFattet = now
-                    )
-                ),
+                vedtak =
+                    mutableListOf(
+                        Vedtak(
+                            utfall = UtfallVedtak.INNVILGET,
+                            datoFattet = now,
+                        ),
+                    ),
                 utbetalinger = mutableListOf(),
-                datoOpprettet = now
-            )
+                datoOpprettet = now,
+            ),
         )
 
         every { eventService.createModel(any()) } returns model
@@ -117,15 +118,16 @@ internal class SaksStatusServiceTest {
                 referanse = referanse,
                 saksStatus = SaksStatus.UNDER_BEHANDLING, // overstyres når vedtak finnes
                 tittel = SAK_DEFAULT_TITTEL,
-                vedtak = mutableListOf(
-                    Vedtak(
-                        utfall = UtfallVedtak.DELVIS_INNVILGET,
-                        datoFattet = now
-                    )
-                ),
+                vedtak =
+                    mutableListOf(
+                        Vedtak(
+                            utfall = UtfallVedtak.DELVIS_INNVILGET,
+                            datoFattet = now,
+                        ),
+                    ),
                 utbetalinger = mutableListOf(),
-                datoOpprettet = now
-            )
+                datoOpprettet = now,
+            ),
         )
 
         every { eventService.createModel(any()) } returns model
@@ -153,18 +155,19 @@ internal class SaksStatusServiceTest {
                     referanse = referanse,
                     saksStatus = SaksStatus.UNDER_BEHANDLING,
                     tittel = tittel,
-                    vedtak = mutableListOf(
-                        Vedtak(
-                            utfall = UtfallVedtak.INNVILGET,
-                            datoFattet = now.minusDays(2)
+                    vedtak =
+                        mutableListOf(
+                            Vedtak(
+                                utfall = UtfallVedtak.INNVILGET,
+                                datoFattet = now.minusDays(2),
+                            ),
+                            Vedtak(
+                                utfall = UtfallVedtak.DELVIS_INNVILGET,
+                                datoFattet = now.plusDays(2),
+                            ),
                         ),
-                        Vedtak(
-                            utfall = UtfallVedtak.DELVIS_INNVILGET,
-                            datoFattet = now.plusDays(2)
-                        )
-                    ),
                     utbetalinger = mutableListOf(),
-                    datoOpprettet = now
+                    datoOpprettet = now,
                 ),
                 Sak(
                     referanse = referanse,
@@ -172,9 +175,9 @@ internal class SaksStatusServiceTest {
                     tittel = SAK_DEFAULT_TITTEL,
                     vedtak = mutableListOf(),
                     utbetalinger = mutableListOf(),
-                    datoOpprettet = now
-                )
-            )
+                    datoOpprettet = now,
+                ),
+            ),
         )
 
         every { eventService.createModel(any()) } returns model

@@ -1,6 +1,7 @@
 package no.nav.sosialhjelp.modia.responses
 
-val ok_kommuneinfo_response_string = """
+val ok_kommuneinfo_response_string =
+    """
 {
     "kommunenummer": "1234",
     "kanMottaSoknader": true,
@@ -9,4 +10,4 @@ val ok_kommuneinfo_response_string = """
     "harMidlertidigDeaktivertOppdateringer": false,
     "kontaktpersoner": null
 }
-""".trimIndent()
+    """.trimIndent()

@@ -17,25 +17,23 @@ class AzureGraphClient(
     webClientBuilder: WebClient.Builder,
     proxiedHttpClient: HttpClient,
     private val azuredingsService: AzuredingsService,
-    private val clientProperties: ClientProperties
+    private val clientProperties: ClientProperties,
 ) {
-
     private val azureGraphWebClient: WebClient =
         webClientBuilder
             .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }
-            .build()
+            }.build()
 
-    fun hentInnloggetVeilederSineGrupper(token: String): AzureAdGrupper {
-        return runBlocking(Dispatchers.IO) {
+    fun hentInnloggetVeilederSineGrupper(token: String): AzureAdGrupper =
+        runBlocking(Dispatchers.IO) {
             val excangedToken = azuredingsService.exchangeToken(token, "https://graph.microsoft.com/.default")
-            azureGraphWebClient.get()
+            azureGraphWebClient
+                .get()
                 .uri("${clientProperties.azureGraphUrl}/me/memberOf")
                 .header(HttpHeaders.AUTHORIZATION, BEARER + excangedToken)
                 .retrieve()
                 .awaitBody()
         }
-    }
 }

@@ -13,11 +13,11 @@ import reactor.netty.http.client.HttpClient
 @Component
 class MsGraphClient(
     webClientBuilder: WebClient.Builder,
-    proxiedHttpClient: HttpClient
+    proxiedHttpClient: HttpClient,
 ) {
-
-    fun hentOnPremisesSamAccountName(accessToken: String): OnPremisesSamAccountName {
-        return msGraphWebClient.get()
+    fun hentOnPremisesSamAccountName(accessToken: String): OnPremisesSamAccountName =
+        msGraphWebClient
+            .get()
             .uri("https://graph.microsoft.com/v1.0/me?\$select=$ON_PREMISES_SAM_ACCOUNT_NAME_FIELD")
             .header(HttpHeaders.ACCEPT, APPLICATION_JSON_VALUE)
             .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
@@ -25,17 +25,14 @@ class MsGraphClient(
             .bodyToMono<OnPremisesSamAccountName>()
             .onErrorMap {
                 MsGraphException("MsGraph hentOnPremisesSamAccountName feilet", it)
-            }
-            .block()!!
-    }
+            }.block()!!
 
     private val msGraphWebClient: WebClient =
         webClientBuilder
             .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }
-            .build()
+            }.build()
 
     companion object {
         private const val ON_PREMISES_SAM_ACCOUNT_NAME_FIELD = "onPremisesSamAccountName"
@@ -43,5 +40,5 @@ class MsGraphClient(
 }
 
 data class OnPremisesSamAccountName(
-    val onPremisesSamAccountName: String // NavIdent
+    val onPremisesSamAccountName: String, // NavIdent
 )

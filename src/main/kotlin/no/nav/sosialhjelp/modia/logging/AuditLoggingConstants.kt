@@ -22,7 +22,7 @@ const val TITLE_FIKS = "Fiks"
 
 const val RESOURCE_AUDIT_ACCESS = "audit:access"
 
-enum class Access() {
+enum class Access {
     PERMIT,
-    DENY
+    DENY,
 }

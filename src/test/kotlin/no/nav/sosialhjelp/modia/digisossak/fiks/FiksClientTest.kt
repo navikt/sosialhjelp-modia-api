@@ -17,7 +17,7 @@ import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.app.maskinporten.MaskinportenClient
 import no.nav.sosialhjelp.modia.logging.AuditService
 import no.nav.sosialhjelp.modia.redis.RedisService
-import no.nav.sosialhjelp.modia.responses.ok_digisossak_response_string
+import no.nav.sosialhjelp.modia.responses.okDigisossakResponseString
 import no.nav.sosialhjelp.modia.responses.ok_minimal_jsondigisossoker_response_string
 import no.nav.sosialhjelp.modia.utils.RequestUtils
 import no.nav.sosialhjelp.modia.utils.objectMapper
@@ -35,7 +35,6 @@ import org.springframework.web.reactive.function.client.WebClient
 import java.time.LocalDateTime
 
 internal class FiksClientTest {
-
     private val mockWebServer = MockWebServer()
     private val fiksWebClient = WebClient.create(mockWebServer.url("/").toString())
     private val clientProperties: ClientProperties = mockk(relaxed = true)
@@ -46,16 +45,17 @@ internal class FiksClientTest {
     private val initialDelay = 2L
     private val documentTTL = 360L
 
-    private val fiksClient = FiksClientImpl(
-        fiksWebClient = fiksWebClient,
-        clientProperties = clientProperties,
-        maskinportenClient = maskinportenClient,
-        auditService = auditService,
-        redisService = redisService,
-        maxAttempts = maxRetryAttempts,
-        initialDelay = initialDelay,
-        documentTTL = documentTTL
-    )
+    private val fiksClient =
+        FiksClientImpl(
+            fiksWebClient = fiksWebClient,
+            clientProperties = clientProperties,
+            maskinportenClient = maskinportenClient,
+            auditService = auditService,
+            redisService = redisService,
+            maxAttempts = maxRetryAttempts,
+            initialDelay = initialDelay,
+            documentTTL = documentTTL,
+        )
 
     private val id = "123"
 
@@ -88,11 +88,11 @@ internal class FiksClientTest {
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .setBody(
                     listOf(
-                        ok_digisossak_response_string(),
-                        ok_digisossak_response_string(LocalDateTime.now().minusMonths(1)),
-                        ok_digisossak_response_string(LocalDateTime.now().minusMonths(2))
-                    ).toString()
-                )
+                        okDigisossakResponseString(),
+                        okDigisossakResponseString(LocalDateTime.now().minusMonths(1)),
+                        okDigisossakResponseString(LocalDateTime.now().minusMonths(2)),
+                    ).toString(),
+                ),
         )
 
         val result = fiksClient.hentAlleDigisosSaker(id)
@@ -109,11 +109,11 @@ internal class FiksClientTest {
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .setBody(
                     listOf(
-                        ok_digisossak_response_string(),
-                        ok_digisossak_response_string(LocalDateTime.now().minusMonths(1)),
-                        ok_digisossak_response_string(LocalDateTime.now().minusMonths(16))
-                    ).toString()
-                )
+                        okDigisossakResponseString(),
+                        okDigisossakResponseString(LocalDateTime.now().minusMonths(1)),
+                        okDigisossakResponseString(LocalDateTime.now().minusMonths(16)),
+                    ).toString(),
+                ),
         )
 
         val result = fiksClient.hentAlleDigisosSaker(id)
@@ -128,7 +128,7 @@ internal class FiksClientTest {
             MockResponse()
                 .setResponseCode(200)
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setBody(ok_digisossak_response_string())
+                .setBody(okDigisossakResponseString()),
         )
 
         val result = fiksClient.hentDigisosSak(id)
@@ -142,7 +142,7 @@ internal class FiksClientTest {
             MockResponse()
                 .setResponseCode(200)
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setBody(ok_digisossak_response_string(LocalDateTime.now().minusMonths(16)))
+                .setBody(okDigisossakResponseString(LocalDateTime.now().minusMonths(16))),
         )
 
         assertThatExceptionOfType(FiksNotFoundException::class.java)
@@ -154,7 +154,7 @@ internal class FiksClientTest {
         repeat(maxRetryAttempts.toInt() + 1) {
             mockWebServer.enqueue(
                 MockResponse()
-                    .setResponseCode(500)
+                    .setResponseCode(500),
             )
         }
 
@@ -165,7 +165,7 @@ internal class FiksClientTest {
 
     @Test
     fun `GET digisosSak fra cache`() {
-        val digisosSak: DigisosSak = objectMapper.readValue(ok_digisossak_response_string())
+        val digisosSak: DigisosSak = objectMapper.readValue(okDigisossakResponseString())
         every { redisService.get(any(), any(), DigisosSak::class.java) } returns digisosSak
 
         val result2 = fiksClient.hentDigisosSak(id)
@@ -181,7 +181,7 @@ internal class FiksClientTest {
             MockResponse()
                 .setResponseCode(200)
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setBody(ok_digisossak_response_string())
+                .setBody(okDigisossakResponseString()),
         )
 
         val result1 = fiksClient.hentDigisosSak(id)
@@ -190,7 +190,7 @@ internal class FiksClientTest {
         verify(exactly = 1) { redisService.get(any(), any(), DigisosSak::class.java) }
         verify(exactly = 1) { redisService.set(any(), any(), any(), any()) }
 
-        val digisosSak: DigisosSak = objectMapper.readValue(ok_digisossak_response_string())
+        val digisosSak: DigisosSak = objectMapper.readValue(okDigisossakResponseString())
         every { redisService.get(any(), any(), DigisosSak::class.java) } returns digisosSak
 
         val result = fiksClient.hentDigisosSak(id)
@@ -206,10 +206,10 @@ internal class FiksClientTest {
             MockResponse()
                 .setResponseCode(200)
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setBody(ok_digisossak_response_string())
+                .setBody(okDigisossakResponseString()),
         )
 
-        val digisosSak = objectMapper.readValue(ok_digisossak_response_string(), DigisosSak::class.java)
+        val digisosSak = objectMapper.readValue(okDigisossakResponseString(), DigisosSak::class.java)
 
 //        annen veileder har hentet digisosSak tidligere (og finnes i cache)
         val annenSaksbehandler = "other"
@@ -228,7 +228,7 @@ internal class FiksClientTest {
             MockResponse()
                 .setResponseCode(200)
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setBody(ok_digisossak_response_string())
+                .setBody(okDigisossakResponseString()),
         )
 
         every { RequestUtils.getSosialhjelpModiaSessionId() } returns null
@@ -246,7 +246,7 @@ internal class FiksClientTest {
             MockResponse()
                 .setResponseCode(200)
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .setBody(ok_minimal_jsondigisossoker_response_string)
+                .setBody(ok_minimal_jsondigisossoker_response_string),
         )
 
         val result = fiksClient.hentDokument("fnr", id, "dokumentlagerId", JsonDigisosSoker::class.java)

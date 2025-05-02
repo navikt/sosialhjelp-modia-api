@@ -19,7 +19,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class TildeltNavKontorTest {
-
     private val jsonDigisosSokerService: JsonDigisosSokerService = mockk()
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
@@ -33,7 +32,7 @@ internal class TildeltNavKontorTest {
     fun init() {
         clearAllMocks()
 
-        every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
+        every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
@@ -42,7 +41,7 @@ internal class TildeltNavKontorTest {
 
     @Test
     fun `tildeltNavKontor skal hente navenhets navn fra Norg`() {
-        every { norgClient.hentNavEnhet(navKontor)!!.navn } returns enhetNavn
+        every { norgClient.hentNavEnhet(NAV_KONTOR)!!.navn } returns enhetNavn
         every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -50,8 +49,8 @@ internal class TildeltNavKontorTest {
                 .withHendelser(
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2)
-                    )
+                        TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -65,7 +64,7 @@ internal class TildeltNavKontorTest {
         val last = model.navKontorHistorikk.last()
         assertThat(last.type).isEqualTo(SendingType.VIDERESENDT)
         assertThat(last.tidspunkt).isEqualTo(tidspunkt_2.toLocalDateTime())
-        assertThat(last.navEnhetsnummer).isEqualTo(navKontor)
+        assertThat(last.navEnhetsnummer).isEqualTo(NAV_KONTOR)
         assertThat(last.navEnhetsnavn).isEqualTo(enhetNavn)
 
         val hendelse = model.historikk.last()
@@ -83,8 +82,8 @@ internal class TildeltNavKontorTest {
                 .withHendelser(
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        TILDELT_EMPTY_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2)
-                    )
+                        TILDELT_EMPTY_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -108,7 +107,7 @@ internal class TildeltNavKontorTest {
 
     @Test
     fun `tildeltNavKontor skal gi generell melding hvis NorgClient kaster FiksException`() {
-        every { norgClient.hentNavEnhet(navKontor) } throws NorgException("noe feilet", null)
+        every { norgClient.hentNavEnhet(NAV_KONTOR) } throws NorgException("noe feilet", null)
         every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -116,8 +115,8 @@ internal class TildeltNavKontorTest {
                 .withHendelser(
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2)
-                    )
+                        TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -136,8 +135,8 @@ internal class TildeltNavKontorTest {
 
     @Test
     fun `tildeltNavKontor til samme navKontor som soknad ble sendt til - gir ingen hendelse`() {
-        val digisosSak = defaultDigisosSak.copy(tilleggsinformasjon = Tilleggsinformasjon(enhetsnummer = navKontor))
-        every { norgClient.hentNavEnhet(navKontor)!!.navn } returns enhetNavn
+        val digisosSak = defaultDigisosSak.copy(tilleggsinformasjon = Tilleggsinformasjon(enhetsnummer = NAV_KONTOR))
+        every { norgClient.hentNavEnhet(NAV_KONTOR)!!.navn } returns enhetNavn
         every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -145,8 +144,8 @@ internal class TildeltNavKontorTest {
                 .withHendelser(
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2)
-                    )
+                        TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2),
+                    ),
                 )
 
         val model = service.createModel(digisosSak)
@@ -162,7 +161,7 @@ internal class TildeltNavKontorTest {
 
     @Test
     fun `flere identiske tildeltNavKontor-hendelser skal kun gi en hendelse i historikk`() {
-        every { norgClient.hentNavEnhet(navKontor)!!.navn } returns enhetNavn
+        every { norgClient.hentNavEnhet(NAV_KONTOR)!!.navn } returns enhetNavn
         every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -171,8 +170,8 @@ internal class TildeltNavKontorTest {
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                         TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2),
-                        TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_3)
-                    )
+                        TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_3),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -189,8 +188,8 @@ internal class TildeltNavKontorTest {
 
     @Test
     fun `tildeltNavKontor til ulike kontor gir like mange hendelser`() {
-        every { norgClient.hentNavEnhet(navKontor)!!.navn } returns enhetNavn
-        every { norgClient.hentNavEnhet(navKontor2)!!.navn } returns enhetNavn2
+        every { norgClient.hentNavEnhet(NAV_KONTOR)!!.navn } returns enhetNavn
+        every { norgClient.hentNavEnhet(NAV_KONTOR_2)!!.navn } returns enhetNavn2
         every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -199,8 +198,8 @@ internal class TildeltNavKontorTest {
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                         TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2),
-                        TILDELT_NAV_KONTOR_2.withHendelsestidspunkt(tidspunkt_3)
-                    )
+                        TILDELT_NAV_KONTOR_2.withHendelsestidspunkt(tidspunkt_3),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)

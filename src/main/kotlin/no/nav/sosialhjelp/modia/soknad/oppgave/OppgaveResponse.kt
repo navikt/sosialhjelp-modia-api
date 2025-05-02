@@ -11,5 +11,5 @@ data class OppgaveResponse(
     @JsonFormat(pattern = "yyyy-MM-dd")
     val vedleggDatoLagtTil: LocalDate?,
     val antallVedlegg: Int,
-    val erFraInnsyn: Boolean
+    val erFraInnsyn: Boolean,
 )

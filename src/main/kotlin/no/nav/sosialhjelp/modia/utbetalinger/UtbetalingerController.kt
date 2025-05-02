@@ -23,16 +23,15 @@ import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
 class UtbetalingerController(
     private val utbetalingerService: UtbetalingerService,
     private val fiksClient: FiksClient,
-    private val tilgangskontrollService: TilgangskontrollService
+    private val tilgangskontrollService: TilgangskontrollService,
 ) {
-
     @PostMapping("/utbetalinger")
     fun hentUtbetalinger(
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident,
         @RequestParam(defaultValue = "3") months: Int,
         @RequestParam fom: String?,
-        @RequestParam tom: String?
+        @RequestParam tom: String?,
     ): ResponseEntity<List<UtbetalingerResponse>> {
         tilgangskontrollService.harTilgang(ident.fnr, token, "/utbetalinger", HttpMethod.POST)
 
@@ -41,8 +40,8 @@ class UtbetalingerController(
                 ident.fnr,
                 months,
                 fom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) },
-                tom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) }
-            )
+                tom?.let { LocalDate.parse(it, ISO_LOCAL_DATE) },
+            ),
         )
     }
 
@@ -50,7 +49,7 @@ class UtbetalingerController(
     fun hentUtbetalingerForDigisosSak(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = AUTHORIZATION) token: String,
-        @RequestBody ident: Ident
+        @RequestBody ident: Ident,
     ): ResponseEntity<List<UtbetalingerResponse>> {
         tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/utbetalinger", HttpMethod.POST)
 

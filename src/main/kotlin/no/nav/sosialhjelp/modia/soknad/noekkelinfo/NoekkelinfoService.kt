@@ -18,9 +18,8 @@ class NoekkelinfoService(
     private val fiksClient: FiksClient,
     private val eventService: EventService,
     private val kommunenavnService: KommunenavnService,
-    private val kommuneService: KommuneService
+    private val kommuneService: KommuneService,
 ) {
-
     fun hentNoekkelInfo(fiksDigisosId: String): SoknadNoekkelinfoResponse {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
@@ -33,20 +32,26 @@ class NoekkelinfoService(
             tittel = hentSoknadTittel(digisosSak, model),
             status = model.status,
             sistOppdatert = unixToLocalDateTime(digisosSak.sistEndret).toLocalDate(),
-            sendtEllerMottattTidspunkt = model.historikk.takeIf { it.isNotEmpty() }?.get(0)?.tidspunkt?.toLocalDate(), // null hvis papirsøknad og ikke enda mottatt
+            sendtEllerMottattTidspunkt =
+                model.historikk
+                    .takeIf {
+                        it.isNotEmpty()
+                    }?.get(0)
+                    ?.tidspunkt
+                    ?.toLocalDate(),
+            // null hvis papirsøknad og ikke enda mottatt
             navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }, // null hvis papirsøknad og ikke enda mottatt
             kommunenavn = kommunenavn,
             videresendtHistorikk = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
             tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt,
             papirSoknad = erPapirSoknad,
             kommunenummer = digisosSak.kommunenummer,
-            isBroken = digisosSak.originalSoknadNAV?.navEksternRefId?.let { BrokenSoknad.isBrokenSoknad(it) } ?: false
+            isBroken = digisosSak.originalSoknadNAV?.navEksternRefId?.let { BrokenSoknad.isBrokenSoknad(it) } ?: false,
         )
     }
 
-    private fun hentBehandlendekommune(kommunenummer: String): String {
-        return kommuneService.getBehandlingsanvarligKommune(kommunenummer) ?: kommunenavnService.hentKommunenavnFor(kommunenummer)
-    }
+    private fun hentBehandlendekommune(kommunenummer: String): String =
+        kommuneService.getBehandlingsanvarligKommune(kommunenummer) ?: kommunenavnService.hentKommunenavnFor(kommunenummer)
 
     private fun papirSoknad(originalSoknadNav: OriginalSoknadNAV?): Boolean {
         if (originalSoknadNav == null) {
@@ -55,20 +60,19 @@ class NoekkelinfoService(
         return false
     }
 
-    private fun leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model: InternalDigisosSoker): List<VideresendtInfo>? {
-        return if (model.navKontorHistorikk.size > 1) {
+    private fun leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model: InternalDigisosSoker): List<VideresendtInfo>? =
+        if (model.navKontorHistorikk.size > 1) {
             model.navKontorHistorikk
                 .map {
                     VideresendtInfo(
                         type = it.type,
                         tidspunkt = it.tidspunkt.toLocalDate(),
-                        navKontor = NavKontor(it.navEnhetsnavn, it.navEnhetsnummer)
+                        navKontor = NavKontor(it.navEnhetsnavn, it.navEnhetsnummer),
                     )
                 }
         } else {
             null
         }
-    }
 
     companion object {
         private val log by logger()

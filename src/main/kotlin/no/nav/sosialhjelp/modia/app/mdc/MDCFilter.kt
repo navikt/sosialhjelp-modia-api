@@ -13,8 +13,11 @@ import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
 class MDCFilter : OncePerRequestFilter() {
-
-    override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
+    override fun doFilterInternal(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        filterChain: FilterChain,
+    ) {
         addCallId(request)
         addDigisosId(request)
         put(MDCUtils.PATH, request.requestURI)
@@ -26,18 +29,22 @@ class MDCFilter : OncePerRequestFilter() {
         }
     }
 
-    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
-        return request.method == HttpMethod.OPTIONS.name()
-    }
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean = request.method == HttpMethod.OPTIONS.name()
 
     private fun addCallId(request: HttpServletRequest) {
-        request.getHeader(HEADER_CALL_ID)
+        request
+            .getHeader(HEADER_CALL_ID)
             ?.let { put(MDCUtils.CALL_ID, it) }
             ?: put(MDCUtils.CALL_ID, generateCallId())
     }
 
     private fun addDigisosId(request: HttpServletRequest) {
-        if (request.requestURI.matches(Regex("^$MODIA_BASE_URL(.*)/(personinfo|noekkelinfo|soknadDetaljer|saksStatus|oppgaver|dokumentasjonkrav|vilkar|hendelser|vedlegg|utbetalinger)"))) {
+        if (request.requestURI.matches(
+                Regex(
+                    "^$MODIA_BASE_URL(.*)/(personinfo|noekkelinfo|soknadDetaljer|saksStatus|oppgaver|dokumentasjonkrav|vilkar|hendelser|vedlegg|utbetalinger)",
+                ),
+            )
+        ) {
             val digisosId = request.requestURI.substringAfter(MODIA_BASE_URL).substringBefore("/")
             put(MDCUtils.DIGISOS_ID, digisosId)
         }

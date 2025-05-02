@@ -31,11 +31,16 @@ import java.time.LocalDate
 class EventService(
     private val jsonDigisosSokerService: JsonDigisosSokerService,
     private val norgClient: NorgClient,
-    private val soknadVedleggService: SoknadVedleggService
+    private val soknadVedleggService: SoknadVedleggService,
 ) {
-
     fun createModel(digisosSak: DigisosSak): InternalDigisosSoker {
-        val jsonDigisosSoker: JsonDigisosSoker? = jsonDigisosSokerService.get(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata, digisosSak.digisosSoker?.timestampSistOppdatert)
+        val jsonDigisosSoker: JsonDigisosSoker? =
+            jsonDigisosSokerService.get(
+                digisosSak.sokerFnr,
+                digisosSak.fiksDigisosId,
+                digisosSak.digisosSoker?.metadata,
+                digisosSak.digisosSoker?.timestampSistOppdatert,
+            )
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
 
         val model = InternalDigisosSoker()
@@ -45,16 +50,29 @@ class EventService(
             val navenhetsnavn = getNavenhetsnavnOrDefault(enhetsnummer)
 
             model.soknadsmottaker = Soknadsmottaker(enhetsnummer, navenhetsnavn)
-            model.historikk.add(Hendelse(SOKNAD_SENDT, "Søknaden med vedlegg er sendt til $navenhetsnavn.", unixToLocalDateTime(timestampSendt), VIS_SOKNADEN))
-            model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, unixToLocalDateTime(timestampSendt), enhetsnummer, navenhetsnavn))
+            model.historikk.add(
+                Hendelse(
+                    SOKNAD_SENDT,
+                    "Søknaden med vedlegg er sendt til $navenhetsnavn.",
+                    unixToLocalDateTime(timestampSendt),
+                    VIS_SOKNADEN,
+                ),
+            )
+            model.navKontorHistorikk.add(
+                NavKontorInformasjon(SendingType.SENDT, unixToLocalDateTime(timestampSendt), enhetsnummer, navenhetsnavn),
+            )
         }
 
-        jsonDigisosSoker?.hendelser
+        jsonDigisosSoker
+            ?.hendelser
             ?.sortedWith(hendelseComparator)
             ?.forEach { model.applyHendelse(it) }
 
         val originalSoknadNAV = digisosSak.originalSoknadNAV
-        if (originalSoknadNAV != null && model.oppgaver.isEmpty() && soknadSendtForMindreEnn30DagerSiden(originalSoknadNAV.timestampSendt)) {
+        if (originalSoknadNAV != null &&
+            model.oppgaver.isEmpty() &&
+            soknadSendtForMindreEnn30DagerSiden(originalSoknadNAV.timestampSendt)
+        ) {
             model.applySoknadKrav(digisosSak, soknadVedleggService, timestampSendt!!)
         }
 
@@ -68,7 +86,13 @@ class EventService(
     }
 
     fun createSoknadsoversiktModel(digisosSak: DigisosSak): InternalDigisosSoker {
-        val jsonDigisosSoker: JsonDigisosSoker? = jsonDigisosSokerService.get(digisosSak.sokerFnr, digisosSak.fiksDigisosId, digisosSak.digisosSoker?.metadata, digisosSak.digisosSoker?.timestampSistOppdatert)
+        val jsonDigisosSoker: JsonDigisosSoker? =
+            jsonDigisosSokerService.get(
+                digisosSak.sokerFnr,
+                digisosSak.fiksDigisosId,
+                digisosSak.digisosSoker?.metadata,
+                digisosSak.digisosSoker?.timestampSistOppdatert,
+            )
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
 
         val model = InternalDigisosSoker()
@@ -83,7 +107,10 @@ class EventService(
             .forEach { model.applyHendelse(it) }
 
         val originalSoknadNAV = digisosSak.originalSoknadNAV
-        if (originalSoknadNAV != null && model.oppgaver.isEmpty() && soknadSendtForMindreEnn30DagerSiden(originalSoknadNAV.timestampSendt)) {
+        if (originalSoknadNAV != null &&
+            model.oppgaver.isEmpty() &&
+            soknadSendtForMindreEnn30DagerSiden(originalSoknadNAV.timestampSendt)
+        ) {
             model.applySoknadKrav(digisosSak, soknadVedleggService, timestampSendt!!)
         }
 
@@ -110,17 +137,19 @@ class EventService(
         unixToLocalDateTime(timestampSendt).toLocalDate().isAfter(LocalDate.now().minusDays(30))
 
     companion object {
-        private val log by logger()
-
         /**
          * Sorter hendelser på hendelsestidspunkt.
          * Hvis to hendelser har identisk hendelsestidspunkt, og én er Utbetaling og den andre er Vilkår eller Dokumentasjonkrav  -> sorter Utbetaling før Vilkår/Dokumentasjonkrav.
          * Dette gjør at vi kan knytte Vilkår/Dokumentasjonkrav til Utbetalingen.
          */
-        private val hendelseComparator = compareBy<JsonHendelse> { it.hendelsestidspunkt }
-            .thenComparator { a, b -> compareHendelseByType(a.type, b.type) }
+        private val hendelseComparator =
+            compareBy<JsonHendelse> { it.hendelsestidspunkt }
+                .thenComparator { a, b -> compareHendelseByType(a.type, b.type) }
 
-        private fun compareHendelseByType(a: JsonHendelse.Type, b: JsonHendelse.Type): Int {
+        private fun compareHendelseByType(
+            a: JsonHendelse.Type,
+            b: JsonHendelse.Type,
+        ): Int {
             if (a == JsonHendelse.Type.UTBETALING && (b == JsonHendelse.Type.VILKAR || b == JsonHendelse.Type.DOKUMENTASJONKRAV)) {
                 return -1
             } else if (b == JsonHendelse.Type.UTBETALING && (a == JsonHendelse.Type.VILKAR || a == JsonHendelse.Type.DOKUMENTASJONKRAV)) {

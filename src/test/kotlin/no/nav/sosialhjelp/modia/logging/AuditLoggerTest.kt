@@ -14,23 +14,23 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpMethod
 
 internal class AuditLoggerTest {
-
     private val cefString = slot<String>()
 
     private val logger = AuditLogger()
 
-    private val values = mutableMapOf<String, Any>(
-        TITLE to "title",
-        RESOURCE to RESOURCE_AUDIT_ACCESS,
-        NAVIDENT to "Z999888",
-        BRUKER_FNR to "11111122222",
-        CALL_ID to "callid",
-        CONSUMER_ID to "consumerId",
-        URL to "http://test",
-        HTTP_METHOD to HttpMethod.GET,
-        SEVERITY to Severity.INFO,
-        LOG to SPORINGSLOGG
-    )
+    private val values =
+        mutableMapOf<String, Any>(
+            TITLE to "title",
+            RESOURCE to RESOURCE_AUDIT_ACCESS,
+            NAVIDENT to "Z999888",
+            BRUKER_FNR to "11111122222",
+            CALL_ID to "callid",
+            CONSUMER_ID to "consumerId",
+            URL to "http://test",
+            HTTP_METHOD to HttpMethod.GET,
+            SEVERITY to Severity.INFO,
+            LOG to SPORINGSLOGG,
+        )
 
     @BeforeEach
     internal fun setUp() {

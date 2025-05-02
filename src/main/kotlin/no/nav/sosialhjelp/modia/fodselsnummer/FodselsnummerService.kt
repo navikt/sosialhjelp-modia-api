@@ -8,7 +8,7 @@ import java.util.UUID
 
 @Component
 class FodselsnummerService(
-    private val redisService: RedisService
+    private val redisService: RedisService,
 ) {
     fun setFnrForSalesforce(fnr: String): String {
         val fnrId = UUID.randomUUID().toString()
@@ -16,17 +16,16 @@ class FodselsnummerService(
         return fnrId
     }
 
-    fun getFnr(fnrId: String): String? {
-        return hentFraCache(fnrId)
-    }
+    fun getFnr(fnrId: String): String? = hentFraCache(fnrId)
 
-    private fun lagreTilCache(fnrId: String, fnr: String) {
+    private fun lagreTilCache(
+        fnrId: String,
+        fnr: String,
+    ) {
         redisService.set(RedisKeyType.FNR_SERVICE, fnrId, objectMapper.writeValueAsBytes(fnr), FNR_TIME_TO_LIVE_SECONDS)
     }
 
-    private fun hentFraCache(fnrId: String): String? {
-        return redisService.getString(RedisKeyType.FNR_SERVICE, fnrId)
-    }
+    private fun hentFraCache(fnrId: String): String? = redisService.getString(RedisKeyType.FNR_SERVICE, fnrId)
 
     companion object {
         private const val FNR_TIME_TO_LIVE_SECONDS = 3600L

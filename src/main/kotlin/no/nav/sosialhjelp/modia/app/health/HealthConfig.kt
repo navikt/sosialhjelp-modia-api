@@ -10,11 +10,8 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class HealthConfig(
     private val dependencyChecks: List<DependencyCheck>,
-    private val meterRegistry: MeterRegistry
+    private val meterRegistry: MeterRegistry,
 ) {
-
     @Bean
-    fun selftestService(): SelftestService {
-        return SelftestService("sosialhjelp-modia-api", Miljo.getAppImage(), dependencyChecks, meterRegistry)
-    }
+    fun selftestService(): SelftestService = SelftestService("sosialhjelp-modia-api", Miljo.getAppImage(), dependencyChecks, meterRegistry)
 }

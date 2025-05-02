@@ -6,19 +6,23 @@ import org.springframework.stereotype.Component
 
 @Component
 class JsonDigisosSokerService(
-    private val fiksClient: FiksClient
+    private val fiksClient: FiksClient,
 ) {
-    fun get(fnr: String, digisosId: String, digisosSokerMetadata: String?, timestampSistOppdatert: Long?): JsonDigisosSoker? {
-        return if (digisosSokerMetadata != null && timestampSistOppdatert != null) {
+    fun get(
+        fnr: String,
+        digisosId: String,
+        digisosSokerMetadata: String?,
+        timestampSistOppdatert: Long?,
+    ): JsonDigisosSoker? =
+        if (digisosSokerMetadata != null && timestampSistOppdatert != null) {
             fiksClient.hentDokument(
                 fnr,
                 digisosId,
                 dokumentlagerId = digisosSokerMetadata,
                 requestedClass = JsonDigisosSoker::class.java,
-                cacheKey = "${digisosSokerMetadata}_$timestampSistOppdatert"
+                cacheKey = "${digisosSokerMetadata}_$timestampSistOppdatert",
             )
         } else {
             null
         }
-    }
 }

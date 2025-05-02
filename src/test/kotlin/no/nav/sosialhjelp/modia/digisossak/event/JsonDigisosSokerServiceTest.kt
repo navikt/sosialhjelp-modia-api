@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class JsonDigisosSokerServiceTest {
-
     private val fiksClient: FiksClient = mockk()
     private val jsonDigisosSokerService = JsonDigisosSokerService(fiksClient)
 

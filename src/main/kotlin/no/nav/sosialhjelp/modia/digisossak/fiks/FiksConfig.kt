@@ -14,9 +14,8 @@ import reactor.netty.http.client.HttpClient
 class FiksConfig(
     private val webClientBuilder: WebClient.Builder,
     private val proxiedHttpClient: HttpClient,
-    private val clientProperties: ClientProperties
+    private val clientProperties: ClientProperties,
 ) {
-
     @Bean
     fun fiksWebClient(): WebClient =
         webClientBuilder
@@ -25,7 +24,6 @@ class FiksConfig(
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
                 it.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(objectMapper))
                 it.defaultCodecs().jackson2JsonEncoder(Jackson2JsonEncoder(objectMapper))
-            }
-            .baseUrl(clientProperties.fiksDigisosEndpointUrl)
+            }.baseUrl(clientProperties.fiksDigisosEndpointUrl)
             .build()
 }

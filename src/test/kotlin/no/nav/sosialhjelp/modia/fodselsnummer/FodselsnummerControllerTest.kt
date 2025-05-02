@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 
 internal class FodselsnummerControllerTest {
-
     private val tilgangskontrollService: TilgangskontrollService = mockk()
     private val fodselsnummerService: FodselsnummerService = mockk()
     private val modiaBaseUrl = "http://localhost:3000/sosialhjelp/modia"

@@ -25,7 +25,11 @@ import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.bodyToMono
 
 interface PdlClient {
-    fun hentPerson(ident: String, veilederToken: String): PdlHentPerson?
+    fun hentPerson(
+        ident: String,
+        veilederToken: String,
+    ): PdlHentPerson?
+
     fun ping()
 }
 
@@ -34,38 +38,42 @@ interface PdlClient {
 class PdlClientImpl(
     webClientBuilder: WebClient.Builder,
     private val azuredingsService: AzuredingsService,
-    private val clientProperties: ClientProperties
+    private val clientProperties: ClientProperties,
 ) : PdlClient {
+    private val pdlWebClient =
+        webClientBuilder
+            .clientConnector(ReactorClientHttpConnector(unproxiedHttpClient()))
+            .codecs {
+                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+            }.baseUrl(clientProperties.pdlEndpointUrl)
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .defaultHeader(HEADER_BEHANDLINGSNUMMER, BEHANDLINGSNUMMER_MODIA)
+            .build()
 
-    private val pdlWebClient = webClientBuilder
-        .clientConnector(ReactorClientHttpConnector(unproxiedHttpClient()))
-        .codecs {
-            it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-        }
-        .baseUrl(clientProperties.pdlEndpointUrl)
-        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-        .defaultHeader(HEADER_BEHANDLINGSNUMMER, BEHANDLINGSNUMMER_MODIA)
-        .build()
-
-    override fun hentPerson(ident: String, veilederToken: String): PdlHentPerson? {
+    override fun hentPerson(
+        ident: String,
+        veilederToken: String,
+    ): PdlHentPerson? {
         val query = getResourceAsString("/pdl/hentPerson.graphql")
 
-        val pdlPersonResponse = try {
-            runBlocking(Dispatchers.IO) {
-                val azureAdToken = azuredingsService.exchangeToken(veilederToken, clientProperties.pdlScope)
+        val pdlPersonResponse =
+            try {
+                runBlocking(Dispatchers.IO) {
+                    val azureAdToken = azuredingsService.exchangeToken(veilederToken, clientProperties.pdlScope)
 
-                pdlWebClient.post()
-                    .contentType(APPLICATION_JSON)
-                    .header(AUTHORIZATION, BEARER + azureAdToken)
-                    .header(HEADER_CALL_ID, getCallId())
-                    .bodyValue(PdlRequest(query, Variables(ident)))
-                    .retrieve()
-                    .awaitBody<PdlPersonResponse>()
+                    pdlWebClient
+                        .post()
+                        .contentType(APPLICATION_JSON)
+                        .header(AUTHORIZATION, BEARER + azureAdToken)
+                        .header(HEADER_CALL_ID, getCallId())
+                        .bodyValue(PdlRequest(query, Variables(ident)))
+                        .retrieve()
+                        .awaitBody<PdlPersonResponse>()
+                }
+            } catch (e: WebClientResponseException) {
+                log.error("PDL - ${e.statusCode} ${e.statusText} feil ved henting av navn fra PDL", e)
+                throw PdlException(e.message)
             }
-        } catch (e: WebClientResponseException) {
-            log.error("PDL - ${e.statusCode} ${e.statusText} feil ved henting av navn fra PDL", e)
-            throw PdlException(e.message)
-        }
 
         checkForPdlApiErrors(pdlPersonResponse)
 
@@ -73,27 +81,32 @@ class PdlClientImpl(
     }
 
     override fun ping() {
-        pdlWebClient.options()
+        pdlWebClient
+            .options()
             .retrieve()
             .bodyToMono<String>()
             .doOnError { e ->
                 log.error("PDL - ping feilet", e)
-            }
-            .block()
+            }.block()
     }
 
     @Suppress("SameParameterValue")
-    private fun getResourceAsString(path: String) = this.javaClass.getResource(path)?.readText()?.replace("[\n\r]", "")
-        ?: throw RuntimeException("Feil ved lesing av graphql-spørring fra fil")
+    private fun getResourceAsString(path: String) =
+        this.javaClass
+            .getResource(path)
+            ?.readText()
+            ?.replace("[\n\r]", "")
+            ?: throw RuntimeException("Feil ved lesing av graphql-spørring fra fil")
 
     private fun checkForPdlApiErrors(response: PdlPersonResponse?) {
         response?.errors?.let { handleErrors(it) }
     }
 
     private fun handleErrors(errors: List<PdlError>) {
-        val errorString: String = errors
-            .map { it.message + "(feilkode: " + it.extensions.code + ")" }
-            .joinToString(prefix = "Error i respons fra pdl-api: ") { it }
+        val errorString: String =
+            errors
+                .map { it.message + "(feilkode: " + it.extensions.code + ")" }
+                .joinToString(prefix = "Error i respons fra pdl-api: ") { it }
         throw PdlException(errorString)
     }
 
@@ -105,18 +118,19 @@ class PdlClientImpl(
 @Component
 @Profile("local")
 class PdlClientMock : PdlClient {
-
     private val pdlHentPersonMap = mutableMapOf<String, PdlHentPerson>()
 
-    override fun hentPerson(ident: String, veilederToken: String): PdlHentPerson? {
-        return pdlHentPersonMap.getOrElse(
-            ident
+    override fun hentPerson(
+        ident: String,
+        veilederToken: String,
+    ): PdlHentPerson? =
+        pdlHentPersonMap.getOrElse(
+            ident,
         ) {
             val default = defaultPdlHentPerson()
             pdlHentPersonMap[ident] = default
             default
         }
-    }
 
     private fun defaultPdlHentPerson(): PdlHentPerson {
         @Suppress("SameParameterValue")
@@ -126,8 +140,8 @@ class PdlClientMock : PdlClient {
                 listOf(PdlPersonNavn("Bruce", "mock", "Banner")),
                 listOf(PdlKjoenn(Kjoenn.KVINNE)),
                 listOf(PdlFoedselsdato("2000-01-01")),
-                listOf(PdlTelefonnummer("+47", "12345678", 1))
-            )
+                listOf(PdlTelefonnummer("+47", "12345678", 1)),
+            ),
         )
     }
 

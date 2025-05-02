@@ -9,28 +9,37 @@ import org.springframework.stereotype.Component
 @Component
 class AuditService(
     private val auditLogger: AuditLogger,
-    private val tokenUtils: TokenUtils
+    private val tokenUtils: TokenUtils,
 ) {
-
-    private fun commonAttributes(brukerFnr: String, url: String, httpMethod: HttpMethod, access: Access): Map<String, Any> {
-        return mutableMapOf(
+    private fun commonAttributes(
+        brukerFnr: String,
+        url: String,
+        httpMethod: HttpMethod,
+        access: Access,
+    ): Map<String, Any> =
+        mutableMapOf(
             CALL_ID to (MDCUtils.getCallId() ?: ""),
             CONSUMER_ID to SRVSOSIALHJELP_MOD,
             NAVIDENT to tokenUtils.hentNavIdentForInnloggetBruker(),
             BRUKER_FNR to brukerFnr,
             URL to url,
             HTTP_METHOD to httpMethod,
-            ACCESS to access.name
+            ACCESS to access.name,
         )
-    }
 
-    fun reportToAuditlog(brukerFnr: String, url: String, httpMethod: HttpMethod, access: Access = Access.DENY) {
-        val attributes: Map<String, Any> = commonAttributes(brukerFnr, url, httpMethod, access)
-            .plus(
-                mapOf(
-                    RESOURCE to RESOURCE_AUDIT_ACCESS
+    fun reportToAuditlog(
+        brukerFnr: String,
+        url: String,
+        httpMethod: HttpMethod,
+        access: Access = Access.DENY,
+    ) {
+        val attributes: Map<String, Any> =
+            commonAttributes(brukerFnr, url, httpMethod, access)
+                .plus(
+                    mapOf(
+                        RESOURCE to RESOURCE_AUDIT_ACCESS,
+                    ),
                 )
-            )
         auditLogger.report(attributes)
     }
 
@@ -39,16 +48,17 @@ class AuditService(
         url: String,
         httpMethod: HttpMethod,
         fiksRequestId: String,
-        access: Access = Access.PERMIT
+        access: Access = Access.PERMIT,
     ) {
-        val attributes: Map<String, Any> = commonAttributes(brukerFnr, url, httpMethod, access)
-            .plus(
-                mapOf(
-                    TITLE to TITLE_FIKS,
-                    RESOURCE to RESOURCE_AUDIT_ACCESS,
-                    FIKS_REQUEST_ID to fiksRequestId
+        val attributes: Map<String, Any> =
+            commonAttributes(brukerFnr, url, httpMethod, access)
+                .plus(
+                    mapOf(
+                        TITLE to TITLE_FIKS,
+                        RESOURCE to RESOURCE_AUDIT_ACCESS,
+                        FIKS_REQUEST_ID to fiksRequestId,
+                    ),
                 )
-            )
         auditLogger.report(attributes)
     }
 }

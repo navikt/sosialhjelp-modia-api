@@ -7,5 +7,5 @@ data class VilkarUtbetalingResponse(
     val tittel: String,
     @JsonFormat(pattern = "yyyy-MM-dd")
     val utbetalingEllerForfall: LocalDate?,
-    val status: String
+    val status: String,
 )

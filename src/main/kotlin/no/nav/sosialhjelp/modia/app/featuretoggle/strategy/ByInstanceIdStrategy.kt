@@ -3,7 +3,7 @@ package no.nav.sosialhjelp.modia.app.featuretoggle.strategy
 import io.getunleash.strategy.Strategy
 
 class ByInstanceIdStrategy(
-    private val currentInstanceId: String
+    private val currentInstanceId: String,
 ) : Strategy {
     override fun getName(): String = "byInstanceId"
 

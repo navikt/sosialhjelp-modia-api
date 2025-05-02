@@ -16,17 +16,17 @@ data class InternalDigisosSoker(
     var dokumentasjonkrav: MutableList<Dokumentasjonkrav> = mutableListOf(),
     var vilkar: MutableList<Vilkar> = mutableListOf(),
     var historikk: MutableList<Hendelse> = mutableListOf(),
-    var forelopigSvar: ForelopigSvar? = null
+    var forelopigSvar: ForelopigSvar? = null,
 )
 
 data class Forvaltningsbrev(
     var referanse: String,
-    var tittel: String
+    var tittel: String,
 )
 
 data class Soknadsmottaker(
     val navEnhetsnummer: String,
-    val navEnhetsnavn: String
+    val navEnhetsnavn: String,
 )
 
 data class Oppgave(
@@ -34,7 +34,7 @@ data class Oppgave(
     var tilleggsinfo: String?,
     var innsendelsesfrist: LocalDateTime?,
     var tidspunktForKrav: LocalDateTime,
-    var erFraInnsyn: Boolean
+    var erFraInnsyn: Boolean,
 )
 
 data class Sak(
@@ -43,12 +43,12 @@ data class Sak(
     var tittel: String?,
     var vedtak: MutableList<Vedtak>,
     var utbetalinger: MutableList<Utbetaling>,
-    var datoOpprettet: LocalDate
+    var datoOpprettet: LocalDate,
 )
 
 data class Vedtak(
     var utfall: UtfallVedtak?,
-    var datoFattet: LocalDate
+    var datoFattet: LocalDate,
 )
 
 data class Utbetaling(
@@ -66,7 +66,7 @@ data class Utbetaling(
     var utbetalingsmetode: String?,
     var vilkar: MutableList<Vilkar>,
     var dokumentasjonkrav: MutableList<Dokumentasjonkrav>,
-    var datoHendelse: LocalDateTime
+    var datoHendelse: LocalDateTime,
 )
 
 data class Vilkar(
@@ -76,7 +76,7 @@ data class Vilkar(
     var datoLagtTil: LocalDateTime,
     var datoSistEndret: LocalDateTime,
     var utbetalingsReferanse: List<String>,
-    var saksreferanse: String?
+    var saksreferanse: String?,
 )
 
 data class Dokumentasjonkrav(
@@ -87,7 +87,7 @@ data class Dokumentasjonkrav(
     var utbetalingsReferanse: List<String>?,
     var datoLagtTil: LocalDateTime?,
     var frist: LocalDateTime?,
-    val saksreferanse: String?
+    val saksreferanse: String?,
 ) {
     fun isEmpty(): Boolean = tittel.isNullOrBlank() && beskrivelse.isNullOrBlank()
 }
@@ -96,40 +96,59 @@ data class Hendelse(
     val tittel: String,
     val beskrivelse: String?,
     val tidspunkt: LocalDateTime,
-    val filbeskrivelse: String? = null
+    val filbeskrivelse: String? = null,
 )
 
 data class ForelopigSvar(
-    val hendelseTidspunkt: LocalDateTime
+    val hendelseTidspunkt: LocalDateTime,
 )
 
 data class NavKontorInformasjon(
     val type: SendingType,
     val tidspunkt: LocalDateTime,
     val navEnhetsnummer: String,
-    val navEnhetsnavn: String
+    val navEnhetsnavn: String,
 )
 
 enum class SendingType {
-    SENDT, VIDERESENDT
+    SENDT,
+    VIDERESENDT,
 }
 
 enum class SoknadsStatus {
-    SENDT, MOTTATT, UNDER_BEHANDLING, FERDIGBEHANDLET, BEHANDLES_IKKE
+    SENDT,
+    MOTTATT,
+    UNDER_BEHANDLING,
+    FERDIGBEHANDLET,
+    BEHANDLES_IKKE,
 }
 
 enum class SaksStatus {
-    UNDER_BEHANDLING, IKKE_INNSYN, FERDIGBEHANDLET, BEHANDLES_IKKE, FEILREGISTRERT
+    UNDER_BEHANDLING,
+    IKKE_INNSYN,
+    FERDIGBEHANDLET,
+    BEHANDLES_IKKE,
+    FEILREGISTRERT,
 }
 
 enum class UtbetalingsStatus {
-    PLANLAGT_UTBETALING, UTBETALT, STOPPET, ANNULLERT
+    PLANLAGT_UTBETALING,
+    UTBETALT,
+    STOPPET,
+    ANNULLERT,
 }
 
 enum class UtfallVedtak {
-    INNVILGET, DELVIS_INNVILGET, AVSLATT, AVVIST
+    INNVILGET,
+    DELVIS_INNVILGET,
+    AVSLATT,
+    AVVIST,
 }
 
 enum class OppgaveStatus {
-    RELEVANT, ANNULLERT, OPPFYLT, IKKE_OPPFYLT, LEVERT_TIDLIGERE
+    RELEVANT,
+    ANNULLERT,
+    OPPFYLT,
+    IKKE_OPPFYLT,
+    LEVERT_TIDLIGERE,
 }

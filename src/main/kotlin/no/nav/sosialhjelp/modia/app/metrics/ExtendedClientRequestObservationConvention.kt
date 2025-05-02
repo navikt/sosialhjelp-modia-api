@@ -7,8 +7,6 @@ import org.springframework.web.reactive.function.client.DefaultClientRequestObse
 
 @Component
 class ExtendedClientRequestObservationConvention : DefaultClientRequestObservationConvention() {
-
-    override fun getLowCardinalityKeyValues(context: ClientRequestObservationContext): KeyValues {
-        return super.getLowCardinalityKeyValues(context).and(clientName(context))
-    }
+    override fun getLowCardinalityKeyValues(context: ClientRequestObservationContext): KeyValues =
+        super.getLowCardinalityKeyValues(context).and(clientName(context))
 }

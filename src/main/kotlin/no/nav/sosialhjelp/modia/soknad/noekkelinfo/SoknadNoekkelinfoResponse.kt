@@ -20,17 +20,17 @@ data class SoknadNoekkelinfoResponse(
     val tidspunktForelopigSvar: LocalDateTime?,
     val papirSoknad: Boolean,
     val kommunenummer: String,
-    val isBroken: Boolean
+    val isBroken: Boolean,
 )
 
 data class VideresendtInfo(
     val type: SendingType,
     @JsonFormat(pattern = "yyyy-MM-dd")
     val tidspunkt: LocalDate,
-    val navKontor: NavKontor
+    val navKontor: NavKontor,
 )
 
 data class NavKontor(
     val enhetsNavn: String,
-    val enhetsNr: String
+    val enhetsNr: String,
 )

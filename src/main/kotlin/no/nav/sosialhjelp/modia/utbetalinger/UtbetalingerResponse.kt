@@ -20,10 +20,10 @@ data class UtbetalingerResponse(
     val kontonummer: String?,
     val utbetalingsmetode: String?,
     val harVilkar: Boolean,
-    val navKontor: NavKontor?
+    val navKontor: NavKontor?,
 )
 
 data class NavKontor(
     val enhetsNavn: String,
-    val enhetsNr: String
+    val enhetsNr: String,
 )
