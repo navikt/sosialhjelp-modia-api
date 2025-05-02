@@ -40,7 +40,7 @@ class NoekkelinfoService(
                     ?.tidspunkt
                     ?.toLocalDate(),
             // null hvis papirsøknad og ikke enda mottatt
-            navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }, // null hvis papirsøknad og ikke enda mottatt
+            navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) },
             kommunenavn = kommunenavn,
             videresendtHistorikk = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
             tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt,

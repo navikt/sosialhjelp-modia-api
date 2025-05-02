@@ -20,7 +20,6 @@ import no.nav.sosialhjelp.modia.digisossak.domain.SendingType
 import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.digisossak.domain.Soknadsmottaker
 import no.nav.sosialhjelp.modia.digisossak.event.Titler.SOKNAD_SENDT
-import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
 import no.nav.sosialhjelp.modia.unixToLocalDateTime

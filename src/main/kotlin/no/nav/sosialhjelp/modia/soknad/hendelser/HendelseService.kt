@@ -53,13 +53,18 @@ class HendelseService(
             }
     }
 
+    // TODO - lenke til utbetalingsplan
     private fun InternalDigisosSoker.leggTilHendelserForUtbetalinger() {
         utbetalinger
             .filter { it.status == UtbetalingsStatus.UTBETALT }
             .groupBy { it.datoHendelse.rundNedTilNaermeste5Minutt() }
             .forEach { (_, grupperteVilkar) ->
                 historikk.add(
-                    Hendelse("Dine utbetalinger har blitt oppdatert", null, grupperteVilkar[0].datoHendelse), // TODO - lenke til utbetalingsplan
+                    Hendelse(
+                        "Dine utbetalinger har blitt oppdatert",
+                        null,
+                        grupperteVilkar[0].datoHendelse,
+                    ),
                 )
             }
     }

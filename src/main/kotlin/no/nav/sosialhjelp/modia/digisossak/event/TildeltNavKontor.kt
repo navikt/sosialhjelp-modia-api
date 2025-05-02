@@ -33,7 +33,8 @@ fun InternalDigisosSoker.apply(
             "et annet Nav-kontor"
         }
     soknadsmottaker = Soknadsmottaker(navEnhetsnummer = hendelse.navKontor, navEnhetsnavn = destinasjon)
-    val beskrivelse = "Søknaden med vedlegg er videresendt og mottatt ved $destinasjon. Videresendingen vil ikke påvirke saksbehandlingstiden."
+    val beskrivelse =
+        "Søknaden med vedlegg er videresendt og mottatt ved $destinasjon. Videresendingen vil ikke påvirke saksbehandlingstiden."
     historikk.add(
         Hendelse(
             tittel = SOKNAD_VIDERESENDT,
