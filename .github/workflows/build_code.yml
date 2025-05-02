@@ -27,4 +27,4 @@ jobs:
         uses: mikepenz/action-junit-report@v5
         if: failure()
         with:
-          report_paths: '**/build/reports/tests/test/index.html'
+          report_paths: '///home/runner/work/sosialhjelp-modia-api/sosialhjelp-modia-api/build/reports/tests/test/index.html'
