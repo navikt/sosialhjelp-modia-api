@@ -18,7 +18,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 class ExceptionHandler : ResponseEntityExceptionHandler() {
-
     @Value("\${loginurl}")
     private val loginurl: String? = null
 
@@ -72,7 +71,9 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     }
 
     @ExceptionHandler(ManglendeModiaSosialhjelpTilgangException::class)
-    fun handleManglendeModiaSosialhjelpTilgangException(e: ManglendeModiaSosialhjelpTilgangException): ResponseEntity<FrontendErrorMessage> {
+    fun handleManglendeModiaSosialhjelpTilgangException(
+        e: ManglendeModiaSosialhjelpTilgangException,
+    ): ResponseEntity<FrontendErrorMessage> {
         log.info("Veileder manger ad-rolle for tilgang til sosialhjelp i modia.")
         val error = FrontendErrorMessage(TILGANG_ERROR, "Mangler tilgang til tjenesten")
         return ResponseEntity(error, HttpStatus.FORBIDDEN)
@@ -81,11 +82,12 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(value = [JwtTokenUnauthorizedException::class, JwtTokenMissingException::class])
     fun handleTokenValidationExceptions(
         ex: RuntimeException,
-        request: WebRequest
+        request: WebRequest,
     ): ResponseEntity<FrontendErrorMessage> {
         if (ex.message?.contains("Server misconfigured") == true) {
             log.error(ex.message)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(FrontendErrorMessage("unexpected_error", "Noe uventet feilet"))
         }
@@ -96,19 +98,20 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(value = [MetaDataNotAvailableException::class, IssuerConfigurationException::class])
     fun handleTokenValidationConfigurationExceptions(
         ex: RuntimeException,
-        request: WebRequest
+        request: WebRequest,
     ): ResponseEntity<FrontendErrorMessage> {
         log.error("Klarer ikke hente metadata fra discoveryurl eller problemer ved konfigurering av issuer. Feilmelding: ${ex.message}")
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .contentType(MediaType.APPLICATION_JSON)
             .body(FrontendErrorMessage("unexpected_error", "Noe uventet feilet"))
     }
 
-    private fun createUnauthorizedWithLoginUrlResponse(loginUrl: String): ResponseEntity<FrontendErrorMessage> {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    private fun createUnauthorizedWithLoginUrlResponse(loginUrl: String): ResponseEntity<FrontendErrorMessage> =
+        ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)
             .contentType(MediaType.APPLICATION_JSON)
             .body(FrontendUnauthorizedMelding(loginUrl, "authentication_error", "Autentiseringsfeil"))
-    }
 
     companion object {
         private val log by logger()
@@ -123,14 +126,13 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
 
     open class FrontendErrorMessage(
         val type: String?,
-        val message: String?
+        val message: String?,
     )
 
     @Suppress("unused")
     class FrontendUnauthorizedMelding(
         val loginUrl: String,
         type: String?,
-        message: String?
-    ) :
-        FrontendErrorMessage(type, message)
+        message: String?,
+    ) : FrontendErrorMessage(type, message)
 }

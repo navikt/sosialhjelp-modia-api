@@ -15,15 +15,16 @@ fun InternalDigisosSoker.apply(hendelse: JsonVilkar) {
 
     fjernFraUtbetalingerSomIkkeLegereErReferertTilIVilkaret(hendelse)
 
-    val vilkar = Vilkar(
-        referanse = hendelse.vilkarreferanse,
-        beskrivelse = hendelse.beskrivelse,
-        saksreferanse = hendelse.saksreferanse,
-        status = OppgaveStatus.valueOf(hendelse.status.value()),
-        datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
-        datoSistEndret = hendelse.hendelsestidspunkt.toLocalDateTime(),
-        utbetalingsReferanse = hendelse.utbetalingsreferanse
-    )
+    val vilkar =
+        Vilkar(
+            referanse = hendelse.vilkarreferanse,
+            beskrivelse = hendelse.beskrivelse,
+            saksreferanse = hendelse.saksreferanse,
+            status = OppgaveStatus.valueOf(hendelse.status.value()),
+            datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
+            datoSistEndret = hendelse.hendelsestidspunkt.toLocalDateTime(),
+            utbetalingsReferanse = hendelse.utbetalingsreferanse,
+        )
 
     this.vilkar.oppdaterEllerLeggTilVilkar(hendelse, vilkar)
 
@@ -60,7 +61,10 @@ private fun InternalDigisosSoker.fjernFraUtbetalingerSomIkkeLegereErReferertTilI
     }
 }
 
-private fun MutableList<Vilkar>.oppdaterEllerLeggTilVilkar(hendelse: JsonVilkar, vilkar: Vilkar) {
+private fun MutableList<Vilkar>.oppdaterEllerLeggTilVilkar(
+    hendelse: JsonVilkar,
+    vilkar: Vilkar,
+) {
     if (any { it.referanse == hendelse.vilkarreferanse }) {
         filter { it.referanse == hendelse.vilkarreferanse }
             .forEach { it.oppdaterFelter(hendelse) }

@@ -21,10 +21,14 @@ import java.time.ZoneOffset
 @Component
 class UtbetalingerService(
     private val fiksClient: FiksClient,
-    private val eventService: EventService
+    private val eventService: EventService,
 ) {
-
-    fun hentAlleUtbetalinger(fnr: String, months: Int, fom: LocalDate?, tom: LocalDate?): List<UtbetalingerResponse> {
+    fun hentAlleUtbetalinger(
+        fnr: String,
+        months: Int,
+        fom: LocalDate?,
+        tom: LocalDate?,
+    ): List<UtbetalingerResponse> {
         val digisosSaker = fiksClient.hentAlleDigisosSaker(fnr)
 
         if (digisosSaker.isEmpty()) {
@@ -32,10 +36,11 @@ class UtbetalingerService(
             return emptyList()
         }
 
-        val utbetalingList = when {
-            fom == null && tom == null -> utbetalingerSisteManeder(digisosSaker, months)
-            else -> hentUtbetalingerForIntervall(digisosSaker, fom, tom)
-        }
+        val utbetalingList =
+            when {
+                fom == null && tom == null -> utbetalingerSisteManeder(digisosSaker, months)
+                else -> hentUtbetalingerForIntervall(digisosSaker, fom, tom)
+            }
         loggMuligeDuplikater(utbetalingList)
         return utbetalingList
     }
@@ -47,15 +52,24 @@ class UtbetalingerService(
     }
 
     private fun loggMuligeDuplikater(utbetalingList: List<UtbetalingerResponse>) {
-        utbetalingList.groupBy { "${it.belop}_${it.utbetalingEllerForfallDigisosSoker}_${it.fom}_${it.tom}" }.values.filter { it.size > 1 }.forEach { list ->
-            val strings = list.joinToString {
-                "DigisosId=${it.fiksDigisosId} status=${it.status} tittel=${it.tittel} utbetalingEllerForfallsdato=${it.utbetalingEllerForfallDigisosSoker} fom=${it.fom} tom=${it.tom}"
+        utbetalingList
+            .groupBy {
+                "${it.belop}_${it.utbetalingEllerForfallDigisosSoker}_${it.fom}_${it.tom}"
+            }.values
+            .filter { it.size > 1 }
+            .forEach { list ->
+                val strings =
+                    list.joinToString {
+                        "DigisosId=${it.fiksDigisosId} status=${it.status} tittel=${it.tittel} utbetalingEllerForfallsdato=${it.utbetalingEllerForfallDigisosSoker} fom=${it.fom} tom=${it.tom}"
+                    }
+                log.info("Mulig duplikate utbetalinger: [$strings]")
             }
-            log.info("Mulig duplikate utbetalinger: [$strings]")
-        }
     }
 
-    private fun utbetalingerSisteManeder(digisosSaker: List<DigisosSak>, months: Int): List<UtbetalingerResponse> {
+    private fun utbetalingerSisteManeder(
+        digisosSaker: List<DigisosSak>,
+        months: Int,
+    ): List<UtbetalingerResponse> {
         val requestAttributes = getRequestAttributes()
 
         return runBlocking(Dispatchers.IO + MDCContext()) {
@@ -64,12 +78,15 @@ class UtbetalingerService(
                 .flatMapParallel {
                     setRequestAttributes(requestAttributes)
                     getUtbetalinger(it)
-                }
-                .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
+                }.sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         }
     }
 
-    private fun hentUtbetalingerForIntervall(digisosSaker: List<DigisosSak>, fom: LocalDate?, tom: LocalDate?): List<UtbetalingerResponse> {
+    private fun hentUtbetalingerForIntervall(
+        digisosSaker: List<DigisosSak>,
+        fom: LocalDate?,
+        tom: LocalDate?,
+    ): List<UtbetalingerResponse> {
         val requestAttributes = getRequestAttributes()
         check(!(fom != null && tom != null && fom.isAfter(tom))) { "Fom kan ikke være etter tom" }
 
@@ -78,23 +95,33 @@ class UtbetalingerService(
                 .flatMapParallel {
                     setRequestAttributes(requestAttributes)
                     getUtbetalinger(it, fom, tom)
-                }
-                .sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
+                }.sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         }
     }
 
-    private fun isDigisosSakNewerThanMonths(digisosSak: DigisosSak, months: Int): Boolean {
-        return digisosSak.sistEndret >= LocalDateTime.now().minusMonths(months.toLong())
-            .toInstant(ZoneOffset.UTC).toEpochMilli()
-    }
+    private fun isDigisosSakNewerThanMonths(
+        digisosSak: DigisosSak,
+        months: Int,
+    ): Boolean =
+        digisosSak.sistEndret >=
+            LocalDateTime
+                .now()
+                .minusMonths(months.toLong())
+                .toInstant(ZoneOffset.UTC)
+                .toEpochMilli()
 
-    private fun skalUtbetalingVisesInnenforPeriode(utbetaling: Utbetaling, fom: LocalDate?, tom: LocalDate?): Boolean {
-        val range = when {
-            fom != null && tom != null && (fom.isBefore(tom) || fom.isEqual(tom)) -> fom.rangeTo(tom)
-            fom != null && tom == null -> fom.rangeTo(LocalDate.now())
-            fom == null && tom != null -> LocalDate.now().minusYears(1).rangeTo(tom)
-            else -> throw IllegalStateException("Fom og tom kan ikke begge være null")
-        }
+    private fun skalUtbetalingVisesInnenforPeriode(
+        utbetaling: Utbetaling,
+        fom: LocalDate?,
+        tom: LocalDate?,
+    ): Boolean {
+        val range =
+            when {
+                fom != null && tom != null && (fom.isBefore(tom) || fom.isEqual(tom)) -> fom.rangeTo(tom)
+                fom != null && tom == null -> fom.rangeTo(LocalDate.now())
+                fom == null && tom != null -> LocalDate.now().minusYears(1).rangeTo(tom)
+                else -> throw IllegalStateException("Fom og tom kan ikke begge være null")
+            }
 
         val utbetalingsDatoInnenfor = utbetaling.utbetalingsDato?.let { range.contains(it) } ?: false
         val forfallsDatoInnenfor = utbetaling.forfallsDato?.let { range.contains(it) } ?: false
@@ -113,7 +140,11 @@ class UtbetalingerService(
             }
     }
 
-    private fun getUtbetalinger(digisosSak: DigisosSak, fom: LocalDate?, tom: LocalDate?): List<UtbetalingerResponse> {
+    private fun getUtbetalinger(
+        digisosSak: DigisosSak,
+        fom: LocalDate?,
+        tom: LocalDate?,
+    ): List<UtbetalingerResponse> {
         val model = eventService.createModel(digisosSak)
         val behandlendeNavKontor = model.navKontorHistorikk.lastOrNull()
 
@@ -122,8 +153,7 @@ class UtbetalingerService(
                 if (it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato == null && it.forfallsDato == null)) {
                     log.info("Utbetaling (${it.referanse}) har verken utbetalingsDato eller forfallsDato")
                 }
-            }
-            .filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
+            }.filter { it.status != UtbetalingsStatus.ANNULLERT && (it.utbetalingsDato != null || it.forfallsDato != null) }
             .filter { skalUtbetalingVisesInnenforPeriode(it, fom, tom) }
             .map { utbetaling ->
                 utbetaling.infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(digisosSak.kommunenummer)
@@ -131,8 +161,12 @@ class UtbetalingerService(
             }
     }
 
-    private fun toUtbetalingResponse(utbetaling: Utbetaling, fiksDigisosId: String, behandlendeNavKontor: NavKontorInformasjon?): UtbetalingerResponse {
-        return UtbetalingerResponse(
+    private fun toUtbetalingResponse(
+        utbetaling: Utbetaling,
+        fiksDigisosId: String,
+        behandlendeNavKontor: NavKontorInformasjon?,
+    ): UtbetalingerResponse =
+        UtbetalingerResponse(
             tittel = utbetaling.beskrivelse,
             belop = utbetaling.belop.toDouble(),
             utbetalingEllerForfallDigisosSoker = utbetaling.utbetalingsDato ?: utbetaling.forfallsDato,
@@ -145,20 +179,25 @@ class UtbetalingerService(
             kontonummer = utbetaling.kontonummer,
             utbetalingsmetode = utbetaling.utbetalingsmetode,
             harVilkar = utbetaling.vilkar.isNotEmpty(),
-            navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) }
+            navKontor = behandlendeNavKontor?.let { NavKontor(it.navEnhetsnavn, it.navEnhetsnummer) },
         )
-    }
 
     private fun Utbetaling.infoLoggVedManglendeUtbetalingsDatoEllerForfallsDato(kommunenummer: String) {
         when {
             status == UtbetalingsStatus.UTBETALT && utbetalingsDato == null -> {
-                log.info("Utbetaling ($referanse) med status=${UtbetalingsStatus.UTBETALT} har ikke utbetalingsDato. Kommune=$kommunenummer")
+                log.info(
+                    "Utbetaling ($referanse) med status=${UtbetalingsStatus.UTBETALT} har ikke utbetalingsDato. Kommune=$kommunenummer",
+                )
             }
             status == UtbetalingsStatus.PLANLAGT_UTBETALING && forfallsDato == null -> {
-                log.info("Utbetaling ($referanse) med status=${UtbetalingsStatus.PLANLAGT_UTBETALING} har ikke forfallsDato. Kommune=$kommunenummer")
+                log.info(
+                    "Utbetaling ($referanse) med status=${UtbetalingsStatus.PLANLAGT_UTBETALING} har ikke forfallsDato. Kommune=$kommunenummer",
+                )
             }
             status == UtbetalingsStatus.STOPPET && (forfallsDato == null || utbetalingsDato == null) -> {
-                log.info("Utbetaling ($referanse) med status=${UtbetalingsStatus.STOPPET} mangler forfallsDato eller utbetalingsDato. Kommune=$kommunenummer")
+                log.info(
+                    "Utbetaling ($referanse) med status=${UtbetalingsStatus.STOPPET} mangler forfallsDato eller utbetalingsDato. Kommune=$kommunenummer",
+                )
             }
         }
     }

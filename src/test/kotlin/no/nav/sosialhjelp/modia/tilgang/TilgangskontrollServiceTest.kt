@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpMethod
 
 internal class TilgangskontrollServiceTest {
-
     private val pdlClient: PdlClient = mockk()
     private val skjermedePersonerClient: SkjermedePersonerClient = mockk()
     private val azureGraphClient: AzureGraphClient = mockk()

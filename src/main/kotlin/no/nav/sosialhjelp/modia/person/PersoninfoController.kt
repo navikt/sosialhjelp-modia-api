@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class PersoninfoController(
     private val personinfoService: PersoninfoService,
-    private val tilgangskontrollService: TilgangskontrollService
+    private val tilgangskontrollService: TilgangskontrollService,
 ) {
-
     @PostMapping("/personinfo")
-    fun hentPersoninfo(@RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<PersoninfoResponse> {
+    fun hentPersoninfo(
+        @RequestHeader(value = AUTHORIZATION) token: String,
+        @RequestBody ident: Ident,
+    ): ResponseEntity<PersoninfoResponse> {
         tilgangskontrollService.harTilgang(ident.fnr, token, "/personinfo", HttpMethod.POST)
 
         val personinfoResponse = personinfoService.hentPersoninfo(ident.fnr, token)

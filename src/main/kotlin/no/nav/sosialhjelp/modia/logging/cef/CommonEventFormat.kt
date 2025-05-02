@@ -4,7 +4,7 @@ import org.springframework.http.HttpMethod
 
 data class CommonEventFormat(
     val headers: Headers,
-    val extension: Extension
+    val extension: Extension,
 ) {
     override fun toString(): String {
         // CEF:Version|Device Vendor|Device Product|Device Version|Device Event Class ID|Name|Severity|[Extension]
@@ -16,15 +16,14 @@ data class Headers(
     val log: String,
     val resource: String,
     val title: String,
-    val severity: Severity
+    val severity: Severity,
 ) {
-    override fun toString(): String {
-        return "CEF:0|sosialhjelp-modia-api|$log|1.0|$resource|$title|$severity|"
-    }
+    override fun toString(): String = "CEF:0|sosialhjelp-modia-api|$log|1.0|$resource|$title|$severity|"
 }
 
 enum class Severity {
-    INFO, WARN
+    INFO,
+    WARN,
 }
 
 data class Extension(
@@ -40,18 +39,15 @@ data class Extension(
     val url: String,
     // requestMethod - requestMethod - The method used to access a URL.
     val httpMethod: HttpMethod,
-    val fiks: Fiks?
+    val fiks: Fiks?,
 ) {
-    override fun toString(): String {
-        return "end=${System.currentTimeMillis()} suid=$navIdent duid=$brukerFnr sproc=$callId dproc=$consumerId request=$url requestMethod=${httpMethod.name()}"
+    override fun toString(): String =
+        "end=${System.currentTimeMillis()} suid=$navIdent duid=$brukerFnr sproc=$callId dproc=$consumerId request=$url requestMethod=${httpMethod.name()}"
             .plus(fiks?.toString() ?: "")
-    }
 }
 
 data class Fiks(
-    val fiksRequestId: String
+    val fiksRequestId: String,
 ) {
-    override fun toString(): String {
-        return " cs5=$fiksRequestId cs5Label=fiksRequestId"
-    }
+    override fun toString(): String = " cs5=$fiksRequestId cs5Label=fiksRequestId"
 }

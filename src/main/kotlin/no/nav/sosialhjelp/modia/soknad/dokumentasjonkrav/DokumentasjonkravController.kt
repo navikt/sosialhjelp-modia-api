@@ -19,14 +19,13 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class DokumentasjonkravController(
     private val dokumentasjonkravService: DokumentasjonkravService,
-    private val tilgangskontrollService: TilgangskontrollService
+    private val tilgangskontrollService: TilgangskontrollService,
 ) {
-
     @PostMapping("/{fiksDigisosId}/dokumentasjonkrav")
     fun hentOppgaver(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
-        @RequestBody ident: Ident
+        @RequestBody ident: Ident,
     ): ResponseEntity<List<DokumentasjonkravResponse>> {
         tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/dokumentasjonkrav", HttpMethod.POST)
         val dokumentasjonkrav = dokumentasjonkravService.hentDokumentasjonkrav(fiksDigisosId)

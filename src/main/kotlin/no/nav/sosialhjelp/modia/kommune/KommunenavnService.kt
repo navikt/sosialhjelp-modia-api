@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 @Service
 class KommunenavnService(
-    private val kommunenavnClient: KommunenavnClient
+    private val kommunenavnClient: KommunenavnClient,
 ) {
     private var kommunenavnMap: Map<String, String> = HashMap()
     private var sistOppdatert = LocalDateTime.now().minusDays(2)

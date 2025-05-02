@@ -11,9 +11,8 @@ import org.springframework.stereotype.Component
 @Component
 class PdlCheck(
     clientProperties: ClientProperties,
-    private val pdlClient: PdlClient
+    private val pdlClient: PdlClient,
 ) : DependencyCheck {
-
     override val type = DependencyType.REST
     override val name = "PDL"
     override val address = clientProperties.pdlEndpointUrl

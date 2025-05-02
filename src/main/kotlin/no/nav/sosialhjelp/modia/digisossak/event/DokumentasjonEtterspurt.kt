@@ -11,9 +11,17 @@ import no.nav.sosialhjelp.modia.toLocalDateTime
 fun InternalDigisosSoker.apply(hendelse: JsonDokumentasjonEtterspurt) {
     val prevSize = oppgaver.size
 
-    oppgaver = hendelse.dokumenter
-        .map { Oppgave(it.dokumenttype, it.tilleggsinformasjon, it.innsendelsesfrist.toLocalDateTime(), hendelse.hendelsestidspunkt.toLocalDateTime(), true) }
-        .toMutableList()
+    oppgaver =
+        hendelse.dokumenter
+            .map {
+                Oppgave(
+                    it.dokumenttype,
+                    it.tilleggsinformasjon,
+                    it.innsendelsesfrist.toLocalDateTime(),
+                    hendelse.hendelsestidspunkt.toLocalDateTime(),
+                    true,
+                )
+            }.toMutableList()
 
     if (hendelse.dokumenter.isNotEmpty() && hendelse.forvaltningsbrev != null) {
         val beskrivelse = "Vi trenger flere opplysninger til søknaden din"

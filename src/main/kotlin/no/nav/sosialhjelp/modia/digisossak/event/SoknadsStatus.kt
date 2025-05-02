@@ -13,24 +13,26 @@ import no.nav.sosialhjelp.modia.toLocalDateTime
 fun InternalDigisosSoker.apply(hendelse: JsonSoknadsStatus) {
     status = SoknadsStatus.valueOf(hendelse.status.name)
 
-    val tittel = when (hendelse.status) {
-        JsonSoknadsStatus.Status.MOTTATT -> SOKNAD_MOTTATT
-        JsonSoknadsStatus.Status.UNDER_BEHANDLING -> SOKNAD_UNDER_BEHANDLING
-        JsonSoknadsStatus.Status.FERDIGBEHANDLET -> SOKNAD_FERDIGBEHANDLET
-        JsonSoknadsStatus.Status.BEHANDLES_IKKE -> SOKNAD_BEHANDLES_IKKE
-        else -> throw RuntimeException("Statustype ${hendelse.status.value()} mangler mapping")
-    }
-
-    val beskrivelse: String? = if (tittel == SOKNAD_MOTTATT) {
-        val navEnhetsnavn = soknadsmottaker?.navEnhetsnavn
-        if (navEnhetsnavn.isNullOrEmpty()) {
-            "Søknaden med vedlegg er mottatt."
-        } else {
-            "Søknaden med vedlegg er mottatt ved $navEnhetsnavn."
+    val tittel =
+        when (hendelse.status) {
+            JsonSoknadsStatus.Status.MOTTATT -> SOKNAD_MOTTATT
+            JsonSoknadsStatus.Status.UNDER_BEHANDLING -> SOKNAD_UNDER_BEHANDLING
+            JsonSoknadsStatus.Status.FERDIGBEHANDLET -> SOKNAD_FERDIGBEHANDLET
+            JsonSoknadsStatus.Status.BEHANDLES_IKKE -> SOKNAD_BEHANDLES_IKKE
+            else -> throw RuntimeException("Statustype ${hendelse.status.value()} mangler mapping")
         }
-    } else {
-        null
-    }
+
+    val beskrivelse: String? =
+        if (tittel == SOKNAD_MOTTATT) {
+            val navEnhetsnavn = soknadsmottaker?.navEnhetsnavn
+            if (navEnhetsnavn.isNullOrEmpty()) {
+                "Søknaden med vedlegg er mottatt."
+            } else {
+                "Søknaden med vedlegg er mottatt ved $navEnhetsnavn."
+            }
+        } else {
+            null
+        }
 
     historikk.add(Hendelse(tittel, beskrivelse, hendelse.hendelsestidspunkt.toLocalDateTime()))
 }

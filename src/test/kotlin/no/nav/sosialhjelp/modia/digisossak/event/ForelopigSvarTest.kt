@@ -15,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class ForelopigSvarTest {
-
     private val jsonDigisosSokerService: JsonDigisosSokerService = mockk()
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
@@ -26,7 +25,7 @@ internal class ForelopigSvarTest {
     fun init() {
         clearAllMocks()
 
-        every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
+        every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
@@ -41,8 +40,8 @@ internal class ForelopigSvarTest {
                 .withVersion("123")
                 .withHendelser(
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1)
-                    )
+                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -62,8 +61,8 @@ internal class ForelopigSvarTest {
                 .withHendelser(
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        FORELOPIGSVAR.withHendelsestidspunkt(tidspunkt_2)
-                    )
+                        FORELOPIGSVAR.withHendelsestidspunkt(tidspunkt_2),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)

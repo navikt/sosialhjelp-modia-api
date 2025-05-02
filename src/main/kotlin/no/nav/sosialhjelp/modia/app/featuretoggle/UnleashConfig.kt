@@ -13,23 +13,24 @@ import org.springframework.context.annotation.Profile
 @Profile("!local")
 @Configuration
 class UnleashConfig(
-    private val clientProperties: ClientProperties
+    private val clientProperties: ClientProperties,
 ) {
-
     @Bean
     fun unleashClient(): Unleash {
-        val byInstanceIdStrategy = ByInstanceIdStrategy(clientProperties.unleash_env)
-        val config = UnleashConfig.builder()
-            .appName(clientProperties.unleash_instance_id)
-            .environment(clientProperties.unleash_env)
-            .instanceId(clientProperties.unleash_instance_id + "_" + clientProperties.unleash_env)
-            .unleashAPI("${clientProperties.unleash_server_api_url}/api")
-            .apiKey(clientProperties.unleash_server_api_token)
-            .build()
+        val byInstanceIdStrategy = ByInstanceIdStrategy(clientProperties.unleashEnv)
+        val config =
+            UnleashConfig
+                .builder()
+                .appName(clientProperties.unleashInstanceId)
+                .environment(clientProperties.unleashEnv)
+                .instanceId(clientProperties.unleashInstanceId + "_" + clientProperties.unleashEnv)
+                .unleashAPI("${clientProperties.unleashServerApiUrl}/api")
+                .apiKey(clientProperties.unleashServerApiToken)
+                .build()
 
         return DefaultUnleash(
             config,
-            byInstanceIdStrategy
+            byInstanceIdStrategy,
         )
     }
 }
@@ -37,9 +38,6 @@ class UnleashConfig(
 @Profile("local")
 @Configuration
 class UnleashMockConfig {
-
     @Bean
-    fun unleashClient(): Unleash {
-        return FakeUnleash()
-    }
+    fun unleashClient(): Unleash = FakeUnleash()
 }

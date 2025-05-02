@@ -27,42 +27,38 @@ import kotlin.reflect.full.companionObject
 
 inline fun <reified T : Any> typeRef(): ParameterizedTypeReference<T> = object : ParameterizedTypeReference<T>() {}
 
-fun String.toLocalDateTime(): LocalDateTime {
-    return ZonedDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
-        .withZoneSameInstant(ZoneId.of("Europe/Oslo")).toLocalDateTime()
-}
+fun String.toLocalDateTime(): LocalDateTime =
+    ZonedDateTime
+        .parse(this, DateTimeFormatter.ISO_DATE_TIME)
+        .withZoneSameInstant(ZoneId.of("Europe/Oslo"))
+        .toLocalDateTime()
 
-fun String.toLocalDate(): LocalDate =
-    LocalDate.parse(this, DateTimeFormatter.ISO_LOCAL_DATE)
+fun String.toLocalDate(): LocalDate = LocalDate.parse(this, DateTimeFormatter.ISO_LOCAL_DATE)
 
-fun unixToLocalDateTime(tidspunkt: Long): LocalDateTime {
-    return LocalDateTime.ofInstant(Instant.ofEpochMilli(tidspunkt), ZoneId.of("Europe/Oslo"))
-}
+fun unixToLocalDateTime(tidspunkt: Long): LocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(tidspunkt), ZoneId.of("Europe/Oslo"))
 
-fun unixTimestampToDate(tidspunkt: Long): Date {
-    return Timestamp.valueOf(unixToLocalDateTime(tidspunkt))
-}
+fun unixTimestampToDate(tidspunkt: Long): Date = Timestamp.valueOf(unixToLocalDateTime(tidspunkt))
 
-fun <R : Any> R.logger(): Lazy<Logger> {
-    return lazy { LoggerFactory.getLogger(unwrapCompanionClass(this.javaClass).name) }
-}
+fun <R : Any> R.logger(): Lazy<Logger> = lazy { LoggerFactory.getLogger(unwrapCompanionClass(this.javaClass).name) }
 
 // unwrap companion class to enclosing class given a Java Class
-fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
-    return ofClass.enclosingClass?.takeIf {
-        ofClass.enclosingClass.kotlin.companionObject?.java == ofClass
+fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> =
+    ofClass.enclosingClass?.takeIf {
+        ofClass.enclosingClass.kotlin.companionObject
+            ?.java == ofClass
     } ?: ofClass
-}
 
-fun hentSoknadTittel(digisosSak: DigisosSak, model: InternalDigisosSoker): String {
-    return when (digisosSak.digisosSoker) {
+fun hentSoknadTittel(
+    digisosSak: DigisosSak,
+    model: InternalDigisosSoker,
+): String =
+    when (digisosSak.digisosSoker) {
         null -> SOKNAD_DEFAULT_TITTEL
         else ->
             model.saker
                 .filter { SaksStatus.FEILREGISTRERT != it.saksStatus }
                 .joinToString { it.tittel ?: SAK_DEFAULT_TITTEL }
     }
-}
 
 val String.maskerFnr: String
     get() {
@@ -76,22 +72,22 @@ val ErrorMessage.feilmeldingUtenFnr: String?
 
 fun messageUtenFnr(e: WebClientResponseException): String {
     val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
-    val message = e.message?.maskerFnr
+    val message = e.message.maskerFnr
     return "$message - $fiksErrorMessage"
 }
 
-private fun <T : WebClientResponseException> T.toFiksErrorMessage(): ErrorMessage? {
-    return try {
+private fun <T : WebClientResponseException> T.toFiksErrorMessage(): ErrorMessage? =
+    try {
         objectMapper.readValue(this.responseBodyAsByteArray, ErrorMessage::class.java)
     } catch (e: IOException) {
         null
     }
-}
 
-suspend fun <A, B> Iterable<A>.flatMapParallel(f: suspend (A) -> List<B>): List<B> = coroutineScope {
-    map {
-        async {
-            f(it)
-        }
-    }.awaitAll().flatten()
-}
+suspend fun <A, B> Iterable<A>.flatMapParallel(f: suspend (A) -> List<B>): List<B> =
+    coroutineScope {
+        map {
+            async {
+                f(it)
+            }
+        }.awaitAll().flatten()
+    }

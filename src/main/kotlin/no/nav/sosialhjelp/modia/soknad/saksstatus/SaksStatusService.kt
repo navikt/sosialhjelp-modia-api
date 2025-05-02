@@ -11,9 +11,8 @@ import org.springframework.stereotype.Component
 @Component
 class SaksStatusService(
     private val fiksClient: FiksClient,
-    private val eventService: EventService
+    private val eventService: EventService,
 ) {
-
     fun hentSaksStatuser(fiksDigisosId: String): List<SaksStatusResponse> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
@@ -23,33 +22,34 @@ class SaksStatusService(
             return emptyList()
         }
 
-        val responseList = model.saker
-            .filter { it.saksStatus != SaksStatus.FEILREGISTRERT }
-            .map { sak ->
-                SaksStatusResponse(
-                    tittel = sak.tittel ?: SAK_DEFAULT_TITTEL,
-                    status = hentStatusNavn(sak),
-                    vedtak = sak.vedtak.map {
-                        SaksStatusResponse.Vedtak(
-                            vedtakDato = it.datoFattet,
-                            utfall = it.utfall
-                        )
-                    },
-                    datoOpprettet = sak.datoOpprettet,
-                    datoAvsluttet = sak.vedtak.maxByOrNull { it.datoFattet }?.datoFattet,
-                    utbetalinger = sak.utbetalinger
-                )
-            }
+        val responseList =
+            model.saker
+                .filter { it.saksStatus != SaksStatus.FEILREGISTRERT }
+                .map { sak ->
+                    SaksStatusResponse(
+                        tittel = sak.tittel ?: SAK_DEFAULT_TITTEL,
+                        status = hentStatusNavn(sak),
+                        vedtak =
+                            sak.vedtak.map {
+                                SaksStatusResponse.Vedtak(
+                                    vedtakDato = it.datoFattet,
+                                    utfall = it.utfall,
+                                )
+                            },
+                        datoOpprettet = sak.datoOpprettet,
+                        datoAvsluttet = sak.vedtak.maxByOrNull { it.datoFattet }?.datoFattet,
+                        utbetalinger = sak.utbetalinger,
+                    )
+                }
         log.info("Hentet ${responseList.size} sak(er) for $fiksDigisosId")
         return responseList
     }
 
-    private fun hentStatusNavn(sak: Sak): SaksStatus {
-        return when {
+    private fun hentStatusNavn(sak: Sak): SaksStatus =
+        when {
             sak.vedtak.isEmpty() -> sak.saksStatus ?: SaksStatus.UNDER_BEHANDLING
             else -> SaksStatus.FERDIGBEHANDLET
         }
-    }
 
     companion object {
         private val log by logger()

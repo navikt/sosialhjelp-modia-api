@@ -11,19 +11,23 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
 
-class AzuredingsWebConfig(val tokenEndpoint: String)
+class AzuredingsWebConfig(
+    val tokenEndpoint: String,
+)
 
 @Configuration
 class AzuredingsClientConfig(
     webClientBuilder: WebClient.Builder,
     proxiedHttpClient: HttpClient,
-    private val clientProperties: ClientProperties
+    private val clientProperties: ClientProperties,
 ) {
     @Bean
     @Profile("!test")
     fun azuredingsWebClient(): AzuredingsWebConfig {
         val wellKnown = downloadWellKnown(clientProperties.azuredingsUrl)
-        log.info("AzuredingsClient: Lastet ned well known fra: ${clientProperties.azuredingsUrl} bruker token endpoint: ${wellKnown.token_endpoint}")
+        log.info(
+            "AzuredingsClient: Lastet ned well known fra: ${clientProperties.azuredingsUrl} bruker token endpoint: ${wellKnown.token_endpoint}",
+        )
         return AzuredingsWebConfig(wellKnown.token_endpoint)
     }
 
@@ -32,8 +36,7 @@ class AzuredingsClientConfig(
             .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }
-            .build()
+            }.build()
 
     fun downloadWellKnown(url: String): WellKnown =
         azuredingsWebClient

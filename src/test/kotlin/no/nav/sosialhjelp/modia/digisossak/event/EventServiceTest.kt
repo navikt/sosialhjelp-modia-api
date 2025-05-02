@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 internal class EventServiceTest {
-
     private val jsonDigisosSokerService: JsonDigisosSokerService = mockk()
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
@@ -32,7 +31,7 @@ internal class EventServiceTest {
     fun init() {
         clearAllMocks()
 
-        every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
+        every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
@@ -59,7 +58,7 @@ internal class EventServiceTest {
      [ ] utbetaling - flere caser?
      ...
      [ ] komplett case
-    */
+     */
 
     @Test
     fun `ingen innsyn OG ingen soknad`() {
@@ -72,7 +71,9 @@ internal class EventServiceTest {
         assertThat(model).isNotNull
         assertThat(model.status).isEqualTo(SoknadsStatus.SENDT)
         assertThat(model.historikk).hasSize(1)
-        assertThat(model.historikk[0].beskrivelse).isEqualTo("Søknaden med vedlegg er sendt til [Kan ikke hente Nav-kontor uten enhetsnummer].")
+        assertThat(
+            model.historikk[0].beskrivelse,
+        ).isEqualTo("Søknaden med vedlegg er sendt til [Kan ikke hente Nav-kontor uten enhetsnummer].")
     }
 
     @Test
@@ -88,7 +89,6 @@ internal class EventServiceTest {
 
     @Nested
     inner class SaksStatusVedtakFattet {
-
         @Test
         fun `saksStatus UTEN vedtakFattet`() {
             every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
@@ -99,8 +99,8 @@ internal class EventServiceTest {
                         listOf(
                             SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                             SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                            SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3)
-                        )
+                            SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3),
+                        ),
                     )
 
             val model = service.createModel(defaultDigisosSak)
@@ -112,8 +112,8 @@ internal class EventServiceTest {
 
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
-            assertThat(sak.referanse).isEqualTo(referanse_1)
-            assertThat(sak.tittel).isEqualTo(tittel_1)
+            assertThat(sak.referanse).isEqualTo(REFERANSE_1)
+            assertThat(sak.tittel).isEqualTo(TITTEL_1)
             assertThat(sak.vedtak).isEmpty()
             assertThat(sak.utbetalinger).isEmpty()
 
@@ -133,8 +133,8 @@ internal class EventServiceTest {
                         listOf(
                             SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                             SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                            SAK1_UTEN_SAKS_STATUS_ELLER_TITTEL.withHendelsestidspunkt(tidspunkt_3)
-                        )
+                            SAK1_UTEN_SAKS_STATUS_ELLER_TITTEL.withHendelsestidspunkt(tidspunkt_3),
+                        ),
                     )
 
             val model = service.createModel(defaultDigisosSak)
@@ -146,7 +146,7 @@ internal class EventServiceTest {
 
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
-            assertThat(sak.referanse).isEqualTo(referanse_1)
+            assertThat(sak.referanse).isEqualTo(REFERANSE_1)
             assertThat(sak.tittel).isNull()
             assertThat(sak.vedtak).isEmpty()
             assertThat(sak.utbetalinger).isEmpty()
@@ -168,8 +168,8 @@ internal class EventServiceTest {
                             SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                             SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
                             SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3),
-                            SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_4)
-                        )
+                            SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_4),
+                        ),
                     )
 
             val model = service.createModel(defaultDigisosSak)
@@ -181,8 +181,8 @@ internal class EventServiceTest {
 
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
-            assertThat(sak.referanse).isEqualTo(referanse_1)
-            assertThat(sak.tittel).isEqualTo(tittel_1)
+            assertThat(sak.referanse).isEqualTo(REFERANSE_1)
+            assertThat(sak.tittel).isEqualTo(TITTEL_1)
             assertThat(sak.vedtak).hasSize(1)
             assertThat(sak.utbetalinger).isEmpty()
 
@@ -192,7 +192,7 @@ internal class EventServiceTest {
             val hendelse = model.historikk.last()
             assertThat(hendelse.tidspunkt).isEqualTo(tidspunkt_4.toLocalDateTime())
             assertThat(hendelse.tittel).isEqualTo(SAK_FERDIGBEHANDLET)
-            assertThat(hendelse.beskrivelse).contains("$tittel_1 er ferdigbehandlet")
+            assertThat(hendelse.beskrivelse).contains("$TITTEL_1 er ferdigbehandlet")
         }
 
         @Test
@@ -205,8 +205,8 @@ internal class EventServiceTest {
                         listOf(
                             SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                             SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                            SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3)
-                        )
+                            SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3),
+                        ),
                     )
 
             val model = service.createModel(defaultDigisosSak)
@@ -218,7 +218,7 @@ internal class EventServiceTest {
 
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
-            assertThat(sak.referanse).isEqualTo(referanse_1)
+            assertThat(sak.referanse).isEqualTo(REFERANSE_1)
             assertThat(sak.tittel).isEqualTo(SAK_DEFAULT_TITTEL)
             assertThat(sak.vedtak).hasSize(1)
             assertThat(sak.utbetalinger).isEmpty()
@@ -243,8 +243,8 @@ internal class EventServiceTest {
                             SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                             SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
                             SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3),
-                            SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_4)
-                        )
+                            SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_4),
+                        ),
                     )
 
             val model = service.createModel(defaultDigisosSak)
@@ -256,9 +256,9 @@ internal class EventServiceTest {
 
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
-            assertThat(sak.referanse).isEqualTo(referanse_1)
+            assertThat(sak.referanse).isEqualTo(REFERANSE_1)
             assertThat(sak.tittel)
-                .isEqualTo(tittel_1)
+                .isEqualTo(TITTEL_1)
                 .isNotEqualTo(SAK_DEFAULT_TITTEL)
             assertThat(sak.vedtak).hasSize(1)
 
@@ -283,8 +283,8 @@ internal class EventServiceTest {
                             SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
                             SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3),
                             SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_4),
-                            SAK1_VEDTAK_FATTET_AVSLATT.withHendelsestidspunkt(tidspunkt_5)
-                        )
+                            SAK1_VEDTAK_FATTET_AVSLATT.withHendelsestidspunkt(tidspunkt_5),
+                        ),
                     )
 
             val model = service.createModel(defaultDigisosSak)
@@ -296,8 +296,8 @@ internal class EventServiceTest {
 
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
-            assertThat(sak.referanse).isEqualTo(referanse_1)
-            assertThat(sak.tittel).isEqualTo(tittel_1)
+            assertThat(sak.referanse).isEqualTo(REFERANSE_1)
+            assertThat(sak.tittel).isEqualTo(TITTEL_1)
             assertThat(sak.vedtak).hasSize(2)
 
             val vedtak = sak.vedtak[0]
@@ -318,8 +318,8 @@ internal class EventServiceTest {
                             SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                             SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
                             SAK1_UTEN_SAKS_STATUS_ELLER_TITTEL.withHendelsestidspunkt(tidspunkt_3),
-                            SAK1_VEDTAK_FATTET_UTEN_UTFALL.withHendelsestidspunkt(tidspunkt_4)
-                        )
+                            SAK1_VEDTAK_FATTET_UTEN_UTFALL.withHendelsestidspunkt(tidspunkt_4),
+                        ),
                     )
 
             val model = service.createModel(defaultDigisosSak)
@@ -331,7 +331,7 @@ internal class EventServiceTest {
 
             val sak = model.saker.last()
             assertThat(sak.saksStatus).isEqualTo(SaksStatus.UNDER_BEHANDLING)
-            assertThat(sak.referanse).isEqualTo(referanse_1)
+            assertThat(sak.referanse).isEqualTo(REFERANSE_1)
             assertThat(sak.tittel).isNull()
             assertThat(sak.vedtak).hasSize(1)
 
@@ -355,8 +355,8 @@ internal class EventServiceTest {
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                         SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        FORELOPIGSVAR.withHendelsestidspunkt(tidspunkt_3)
-                    )
+                        FORELOPIGSVAR.withHendelsestidspunkt(tidspunkt_3),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)

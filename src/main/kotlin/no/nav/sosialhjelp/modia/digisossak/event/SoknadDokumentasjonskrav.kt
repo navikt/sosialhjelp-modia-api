@@ -10,20 +10,20 @@ import no.nav.sosialhjelp.modia.unixToLocalDateTime
 fun InternalDigisosSoker.applySoknadKrav(
     digisosSak: DigisosSak,
     soknadVedleggService: SoknadVedleggService,
-    timestampSendt: Long
+    timestampSendt: Long,
 ) {
     val vedleggKreves = soknadVedleggService.hentSoknadVedleggMedStatus(digisosSak, VEDLEGG_KREVES_STATUS)
 
-    oppgaver = vedleggKreves
-        .filterNot { it.type == "annet" && it.tilleggsinfo == "annet" }
-        .map {
-            Oppgave(
-                it.type,
-                it.tilleggsinfo,
-                null,
-                unixToLocalDateTime(timestampSendt),
-                false
-            )
-        }
-        .toMutableList()
+    oppgaver =
+        vedleggKreves
+            .filterNot { it.type == "annet" && it.tilleggsinfo == "annet" }
+            .map {
+                Oppgave(
+                    it.type,
+                    it.tilleggsinfo,
+                    null,
+                    unixToLocalDateTime(timestampSendt),
+                    false,
+                )
+            }.toMutableList()
 }

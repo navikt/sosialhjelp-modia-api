@@ -14,10 +14,12 @@ import java.util.concurrent.TimeUnit
 @Profile("!no-redis")
 @Component
 class RedisStore(
-    redisClient: RedisClient
+    redisClient: RedisClient,
 ) {
-
-    private val connection: StatefulRedisConnection<String, ByteArray> = redisClient.connect(RedisCodec.of(StringCodec.UTF8, ByteArrayCodec.INSTANCE))
+    private val connection: StatefulRedisConnection<String, ByteArray> =
+        redisClient.connect(
+            RedisCodec.of(StringCodec.UTF8, ByteArrayCodec.INSTANCE),
+        )
     private val async: RedisAsyncCommands<String, ByteArray> = connection.async()!!
 
     fun get(key: String): ByteArray? {
@@ -30,7 +32,11 @@ class RedisStore(
         }
     }
 
-    fun set(key: String, value: ByteArray, timeToLive: Long): String? {
+    fun set(
+        key: String,
+        value: ByteArray,
+        timeToLive: Long,
+    ): String? {
         val redisFuture: RedisFuture<String> = async.setex(key, timeToLive, value)
         return if (redisFuture.await(1, TimeUnit.SECONDS)) {
             redisFuture.get()

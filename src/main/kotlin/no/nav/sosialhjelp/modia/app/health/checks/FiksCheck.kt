@@ -10,9 +10,8 @@ import org.springframework.stereotype.Component
 @Component
 class FiksCheck(
     clientProperties: ClientProperties,
-    private val kommuneInfoClient: KommuneInfoClient
+    private val kommuneInfoClient: KommuneInfoClient,
 ) : DependencyCheck {
-
     override val type = DependencyType.REST
     override val name = "Fiks Digisos API"
     override val address = clientProperties.fiksDigisosEndpointUrl

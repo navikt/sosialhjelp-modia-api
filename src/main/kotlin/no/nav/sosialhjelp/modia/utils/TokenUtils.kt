@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component
 
 interface TokenUtils {
     fun hentNavIdentForInnloggetBruker(): String
+
     fun hentTokenMedGraphScope(): String
 }
 
@@ -16,29 +17,21 @@ interface TokenUtils {
 class TokenUtilsImpl(
     private val clientConfigurationProperties: ClientConfigurationProperties,
     private val oAuth2AccessTokenService: OAuth2AccessTokenService,
-    private val msGraphClient: MsGraphClient
+    private val msGraphClient: MsGraphClient,
 ) : TokenUtils {
-
-    override fun hentTokenMedGraphScope(): String {
-        return clientConfigurationProperties.registration["onbehalfof"]
+    override fun hentTokenMedGraphScope(): String =
+        clientConfigurationProperties.registration["onbehalfof"]
             ?.let { clientProperties -> oAuth2AccessTokenService.getAccessToken(clientProperties).access_token }
             ?: error("ClientProperties er null")
-    }
 
-    override fun hentNavIdentForInnloggetBruker(): String {
-        return msGraphClient.hentOnPremisesSamAccountName(hentTokenMedGraphScope()).onPremisesSamAccountName
-    }
+    override fun hentNavIdentForInnloggetBruker(): String =
+        msGraphClient.hentOnPremisesSamAccountName(hentTokenMedGraphScope()).onPremisesSamAccountName
 }
 
 @Profile("(mock-alt | local)")
 @Component
 class MockTokenUtils : TokenUtils {
+    override fun hentNavIdentForInnloggetBruker(): String = "Z123456"
 
-    override fun hentNavIdentForInnloggetBruker(): String {
-        return "Z123456"
-    }
-
-    override fun hentTokenMedGraphScope(): String {
-        return "msgraph-token"
-    }
+    override fun hentTokenMedGraphScope(): String = "msgraph-token"
 }

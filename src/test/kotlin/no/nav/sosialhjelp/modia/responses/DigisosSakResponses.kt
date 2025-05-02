@@ -3,8 +3,8 @@ package no.nav.sosialhjelp.modia.responses
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-fun ok_digisossak_response_string(sistEndret: LocalDateTime = LocalDateTime.now().minusMonths(1)): String {
-    return """
+fun okDigisossakResponseString(sistEndret: LocalDateTime = LocalDateTime.now().minusMonths(1)): String =
+    """
 {
   "fiksDigisosId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "sokerFnr": "11111111111",
@@ -58,6 +58,3 @@ fun ok_digisossak_response_string(sistEndret: LocalDateTime = LocalDateTime.now(
   }
 }
     """.trimIndent()
-}
-
-val ok_digisossak_annen_kommune_response_string = ok_digisossak_response_string().replace("\"1111\"", "\"2222\"")

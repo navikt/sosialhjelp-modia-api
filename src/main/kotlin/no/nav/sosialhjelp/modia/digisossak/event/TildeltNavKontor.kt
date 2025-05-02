@@ -13,7 +13,7 @@ import no.nav.sosialhjelp.modia.toLocalDateTime
 
 fun InternalDigisosSoker.apply(
     hendelse: JsonTildeltNavKontor,
-    norgClient: NorgClient
+    norgClient: NorgClient,
 ) {
     val behandlendeNavKontor = navKontorHistorikk.lastOrNull()
     if (hendelse.navKontor == behandlendeNavKontor?.navEnhetsnummer) {
@@ -25,27 +25,29 @@ fun InternalDigisosSoker.apply(
         return
     }
 
-    val destinasjon = try {
-        norgClient.hentNavEnhet(hendelse.navKontor)?.navn?.takeUnless { it.isEmpty() }
-            ?: "[Kan ikke hente Nav-kontor for \"${hendelse.navKontor}\"]"
-    } catch (e: NorgException) {
-        "et annet Nav-kontor"
-    }
+    val destinasjon =
+        try {
+            norgClient.hentNavEnhet(hendelse.navKontor)?.navn?.takeUnless { it.isEmpty() }
+                ?: "[Kan ikke hente Nav-kontor for \"${hendelse.navKontor}\"]"
+        } catch (e: NorgException) {
+            "et annet Nav-kontor"
+        }
     soknadsmottaker = Soknadsmottaker(navEnhetsnummer = hendelse.navKontor, navEnhetsnavn = destinasjon)
-    val beskrivelse = "Søknaden med vedlegg er videresendt og mottatt ved $destinasjon. Videresendingen vil ikke påvirke saksbehandlingstiden."
+    val beskrivelse =
+        "Søknaden med vedlegg er videresendt og mottatt ved $destinasjon. Videresendingen vil ikke påvirke saksbehandlingstiden."
     historikk.add(
         Hendelse(
             tittel = SOKNAD_VIDERESENDT,
             beskrivelse = beskrivelse,
-            tidspunkt = hendelse.hendelsestidspunkt.toLocalDateTime()
-        )
+            tidspunkt = hendelse.hendelsestidspunkt.toLocalDateTime(),
+        ),
     )
     navKontorHistorikk.add(
         NavKontorInformasjon(
             type = SendingType.VIDERESENDT,
             tidspunkt = hendelse.hendelsestidspunkt.toLocalDateTime(),
             navEnhetsnummer = hendelse.navKontor,
-            navEnhetsnavn = destinasjon
-        )
+            navEnhetsnavn = destinasjon,
+        ),
     )
 }

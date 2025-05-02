@@ -18,11 +18,14 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class NoekkelinfoController(
     private val noekkelinfoService: NoekkelinfoService,
-    private val tilgangskontrollService: TilgangskontrollService
+    private val tilgangskontrollService: TilgangskontrollService,
 ) {
-
     @PostMapping("/{fiksDigisosId}/noekkelinfo")
-    fun hentNoekkelInfo(@PathVariable fiksDigisosId: String, @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<SoknadNoekkelinfoResponse> {
+    fun hentNoekkelInfo(
+        @PathVariable fiksDigisosId: String,
+        @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
+        @RequestBody ident: Ident,
+    ): ResponseEntity<SoknadNoekkelinfoResponse> {
         tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/noekkelinfo", HttpMethod.POST)
 
         val noekkelinfo = noekkelinfoService.hentNoekkelInfo(fiksDigisosId)

@@ -10,26 +10,24 @@ import reactor.netty.http.client.HttpClient
 @Component
 class KommunenavnClient(
     webClientBuilder: WebClient.Builder,
-    proxiedHttpClient: HttpClient
+    proxiedHttpClient: HttpClient,
 ) {
     private val kommunenavnWebClient: WebClient =
         webClientBuilder
             .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }
-            .build()
+            }.build()
 
-    fun getAll(): KommunenavnProperties {
-        return kommunenavnWebClient.get()
+    fun getAll(): KommunenavnProperties =
+        kommunenavnWebClient
+            .get()
             .uri("https://register.geonorge.no/api/sosi-kodelister/inndelinger/inndelingsbase/kommunenummer.json")
             .retrieve()
             .bodyToMono(typeRef<KommunenavnProperties>())
             .doOnError {
                 log.warn("Kartverket - henting av info feilet:", it)
-            }
-            .block()!!
-    }
+            }.block()!!
 
     companion object {
         private val log by logger()

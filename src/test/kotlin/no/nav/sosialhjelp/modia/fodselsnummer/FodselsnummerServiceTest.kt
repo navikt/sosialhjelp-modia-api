@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class FodselsnummerServiceTest {
-
     private val redisService: RedisService = mockk()
     private val service = FodselsnummerService(redisService)
 

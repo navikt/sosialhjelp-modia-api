@@ -9,5 +9,5 @@ data class NavEnhet(
     val aktiveringsdato: String,
     val nedleggelsesdato: String?,
     val sosialeTjenester: String?,
-    val type: String?
+    val type: String?,
 )

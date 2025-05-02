@@ -19,11 +19,14 @@ import java.util.Date
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class KommuneController(
     private val kommuneService: KommuneService,
-    private val tilgangskontrollService: TilgangskontrollService
+    private val tilgangskontrollService: TilgangskontrollService,
 ) {
-
     @PostMapping("/kommuner/{kommunenummer}")
-    fun hentKommuneInfo(@PathVariable kommunenummer: String, @RequestHeader(value = AUTHORIZATION) token: String, @RequestBody ident: Ident): ResponseEntity<KommuneResponse> {
+    fun hentKommuneInfo(
+        @PathVariable kommunenummer: String,
+        @RequestHeader(value = AUTHORIZATION) token: String,
+        @RequestBody ident: Ident,
+    ): ResponseEntity<KommuneResponse> {
         tilgangskontrollService.harTilgang(ident.fnr, token, "/kommuner/$kommunenummer", HttpMethod.POST)
 
         val kommuneInfo = kommuneService.get(kommunenummer)
@@ -35,8 +38,8 @@ class KommuneController(
                 erInnsendingEttersendelseMidlertidigDeaktivert = kommuneInfo.harMidlertidigDeaktivertMottak,
                 tidspunkt = Date(),
                 harNksTilgang = kommuneInfo.harNksTilgang,
-                behandlingsansvarlig = kommuneInfo.behandlingsansvarlig
-            )
+                behandlingsansvarlig = kommuneInfo.behandlingsansvarlig,
+            ),
         )
     }
 }

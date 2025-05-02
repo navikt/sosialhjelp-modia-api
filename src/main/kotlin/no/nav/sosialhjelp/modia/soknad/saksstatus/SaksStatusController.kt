@@ -19,14 +19,13 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api", produces = ["application/json;charset=UTF-8"], consumes = ["application/json;charset=UTF-8"])
 class SaksStatusController(
     private val saksStatusService: SaksStatusService,
-    private val tilgangskontrollService: TilgangskontrollService
+    private val tilgangskontrollService: TilgangskontrollService,
 ) {
-
     @PostMapping("/{fiksDigisosId}/saksStatus")
     fun hentSaksStatuser(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = AUTHORIZATION) token: String,
-        @RequestBody ident: Ident
+        @RequestBody ident: Ident,
     ): ResponseEntity<List<SaksStatusResponse>> {
         tilgangskontrollService.harTilgang(ident.fnr, token, "/$fiksDigisosId/saksStatus", HttpMethod.POST)
 

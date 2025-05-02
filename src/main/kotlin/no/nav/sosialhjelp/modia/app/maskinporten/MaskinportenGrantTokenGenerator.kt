@@ -17,29 +17,29 @@ import java.util.UUID
 class MaskinportenGrantTokenGenerator(
     private val maskinportenProperties: MaskinportenProperties,
     private val issuer: String,
-    miljoUtils: MiljoUtils
+    miljoUtils: MiljoUtils,
 ) {
-
     /**
      * Generer privateRsaKey hvis maskinporten_clientJwk == generateRSA, og appen ikke kjører i prod.
      * Dvs at rsaKey genereres i ved lokal kjøring, i test eller mot mock-alt.
      */
-    private val privateRsaKey = if (maskinportenProperties.clientJwk == "generateRSA") {
-        if (miljoUtils.isRunningInProd()) throw IllegalStateException("Generation of RSA keys is not allowed in prod")
-        RSAKeyGenerator(2048).keyUse(KeyUse.SIGNATURE).keyID(UUID.randomUUID().toString()).generate()
-    } else {
-        RSAKey.parse(maskinportenProperties.clientJwk)
-    }
+    private val privateRsaKey =
+        if (maskinportenProperties.clientJwk == "generateRSA") {
+            if (miljoUtils.isRunningInProd()) throw IllegalStateException("Generation of RSA keys is not allowed in prod")
+            RSAKeyGenerator(2048).keyUse(KeyUse.SIGNATURE).keyID(UUID.randomUUID().toString()).generate()
+        } else {
+            RSAKey.parse(maskinportenProperties.clientJwk)
+        }
 
-    fun getJwt(): String {
-        return SignedJWT(signatureHeader, createJwtClaimSet(issuer))
+    fun getJwt(): String =
+        SignedJWT(signatureHeader, createJwtClaimSet(issuer))
             .apply { sign(RSASSASigner(privateRsaKey.toPrivateKey())) }
             .serialize()
-    }
 
     private fun createJwtClaimSet(audience: String): JWTClaimsSet {
         val now: Instant = Instant.now()
-        return JWTClaimsSet.Builder()
+        return JWTClaimsSet
+            .Builder()
             .audience(audience)
             .issuer(maskinportenProperties.clientId)
             .claim(SCOPE_CLAIM, maskinportenProperties.scope)
@@ -49,10 +49,12 @@ class MaskinportenGrantTokenGenerator(
     }
 
     private val signatureHeader
-        get() = JWSHeader.Builder(JWSAlgorithm.RS256)
-            .keyID(privateRsaKey.keyID)
-            .type(JOSEObjectType.JWT)
-            .build()
+        get() =
+            JWSHeader
+                .Builder(JWSAlgorithm.RS256)
+                .keyID(privateRsaKey.keyID)
+                .type(JOSEObjectType.JWT)
+                .build()
 
     companion object {
         private const val SCOPE_CLAIM = "scope"

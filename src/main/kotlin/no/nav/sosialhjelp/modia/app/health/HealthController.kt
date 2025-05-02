@@ -16,9 +16,8 @@ const val APPLICATION_READY = "Application is ready!"
 @RestController
 @RequestMapping(value = ["/internal"])
 class HealthController(
-    private val selftestService: SelftestService
+    private val selftestService: SelftestService,
 ) {
-
     @ResponseBody
     @GetMapping(value = ["/isAlive"], produces = [MediaType.TEXT_PLAIN_VALUE])
     fun isAlive(): String = APPLICATION_LIVENESS
@@ -29,7 +28,5 @@ class HealthController(
 
     @ResponseBody
     @GetMapping("/selftest")
-    fun selftest(): SelftestResult {
-        return selftestService.getSelftest()
-    }
+    fun selftest(): SelftestResult = selftestService.getSelftest()
 }

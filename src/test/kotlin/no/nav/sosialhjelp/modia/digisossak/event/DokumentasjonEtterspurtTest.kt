@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class DokumentasjonEtterspurtTest {
-
     private val jsonDigisosSokerService: JsonDigisosSokerService = mockk()
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
@@ -29,7 +28,7 @@ internal class DokumentasjonEtterspurtTest {
     @BeforeEach
     fun init() {
         clearAllMocks()
-        every { norgClient.hentNavEnhet(enhetsnr)!!.navn } returns enhetsnavn
+        every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
         every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
@@ -46,8 +45,8 @@ internal class DokumentasjonEtterspurtTest {
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                         SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        DOKUMENTASJONETTERSPURT.withHendelsestidspunkt(tidspunkt_3)
-                    )
+                        DOKUMENTASJONETTERSPURT.withHendelsestidspunkt(tidspunkt_3),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -59,8 +58,8 @@ internal class DokumentasjonEtterspurtTest {
         assertThat(model.historikk).hasSize(4)
 
         val oppgave = model.oppgaver.last()
-        assertThat(oppgave.tittel).isEqualTo(dokumenttype)
-        assertThat(oppgave.tilleggsinfo).isEqualTo(tilleggsinfo)
+        assertThat(oppgave.tittel).isEqualTo(DOKUMENT_TYPE)
+        assertThat(oppgave.tilleggsinfo).isEqualTo(TILLEGGSINFO)
         assertThat(oppgave.innsendelsesfrist).isEqualTo(innsendelsesfrist.toLocalDateTime())
         assertThat(oppgave.erFraInnsyn).isEqualTo(true)
 
@@ -79,8 +78,8 @@ internal class DokumentasjonEtterspurtTest {
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                         SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        DOKUMENTASJONETTERSPURT_UTEN_FORVALTNINGSBREV.withHendelsestidspunkt(tidspunkt_3)
-                    )
+                        DOKUMENTASJONETTERSPURT_UTEN_FORVALTNINGSBREV.withHendelsestidspunkt(tidspunkt_3),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -92,8 +91,8 @@ internal class DokumentasjonEtterspurtTest {
         assertThat(model.historikk).hasSize(3)
 
         val oppgave = model.oppgaver.last()
-        assertThat(oppgave.tittel).isEqualTo(dokumenttype)
-        assertThat(oppgave.tilleggsinfo).isEqualTo(tilleggsinfo)
+        assertThat(oppgave.tittel).isEqualTo(DOKUMENT_TYPE)
+        assertThat(oppgave.tilleggsinfo).isEqualTo(TILLEGGSINFO)
         assertThat(oppgave.innsendelsesfrist).isEqualTo(innsendelsesfrist.toLocalDateTime())
         assertThat(oppgave.erFraInnsyn).isEqualTo(true)
     }
@@ -108,8 +107,8 @@ internal class DokumentasjonEtterspurtTest {
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
                         SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        DOKUMENTASJONETTERSPURT_TOM_DOKUMENT_LISTE.withHendelsestidspunkt(tidspunkt_3)
-                    )
+                        DOKUMENTASJONETTERSPURT_TOM_DOKUMENT_LISTE.withHendelsestidspunkt(tidspunkt_3),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)
@@ -131,8 +130,8 @@ internal class DokumentasjonEtterspurtTest {
                 .withHendelser(
                     listOf(
                         SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2)
-                    )
+                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                    ),
                 )
 
         val model = service.createModel(defaultDigisosSak)

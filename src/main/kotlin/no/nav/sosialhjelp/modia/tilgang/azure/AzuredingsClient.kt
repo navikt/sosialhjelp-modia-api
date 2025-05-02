@@ -16,18 +16,22 @@ import reactor.netty.http.client.HttpClient
 class AzuredingsClient(
     webClientBuilder: WebClient.Builder,
     proxiedHttpClient: HttpClient,
-    private val azuredingsWebConfig: AzuredingsWebConfig
+    private val azuredingsWebConfig: AzuredingsWebConfig,
 ) {
+    private val azuredingsWebClient: WebClient =
+        webClientBuilder
+            .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
+            .codecs {
+                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+            }.build()
 
-    private val azuredingsWebClient: WebClient = webClientBuilder
-        .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
-        .codecs {
-            it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-        }
-        .build()
-
-    suspend fun exchangeToken(subjectToken: String, clientAssertion: String, clientId: String, scope: String): AzuredingsResponse {
-        return withContext(Dispatchers.IO) {
+    suspend fun exchangeToken(
+        subjectToken: String,
+        clientAssertion: String,
+        clientId: String,
+        scope: String,
+    ): AzuredingsResponse =
+        withContext(Dispatchers.IO) {
             val params = LinkedMultiValueMap<String, String>()
             params.add("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
             params.add("client_id", clientId)
@@ -45,5 +49,4 @@ class AzuredingsClient(
                 .retrieve()
                 .awaitBody()
         }
-    }
 }

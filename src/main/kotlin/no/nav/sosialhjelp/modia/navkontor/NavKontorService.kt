@@ -1,6 +1,5 @@
 package no.nav.sosialhjelp.modia.navkontor
 
-import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.navkontor.norg.NavEnhet
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.redis.RedisService
@@ -11,9 +10,8 @@ import org.springframework.stereotype.Component
 class NavKontorService(
     @Value("\${client.norg_oppslag_url}") private val norgOppslagUrl: String,
     private val norgClient: NorgClient,
-    private val redisService: RedisService
+    private val redisService: RedisService,
 ) {
-
     fun hentNavKontorinfo(enhetsnr: String): KontorinfoResponse? {
         val enhet = norgClient.hentNavEnhet(enhetsnr)
         if (enhet == null || enhet.sosialeTjenester.isNullOrBlank()) {
@@ -35,21 +33,16 @@ class NavKontorService(
                     it.enhetNr,
                     it.navn,
                     it.sosialeTjenester ?: "",
-                    lagNorgUrl(it.enhetNr)
+                    lagNorgUrl(it.enhetNr),
                 )
             }
     }
 
-    private fun hentNavEnhetListeFraCache(): List<NavEnhet>? {
-        return redisService.getAlleNavEnheter()
-    }
+    private fun hentNavEnhetListeFraCache(): List<NavEnhet>? = redisService.getAlleNavEnheter()
 
-    private fun lagNorgUrl(enhetNr: String): String {
-        return "$norgOppslagUrl$enhetNr"
-    }
+    private fun lagNorgUrl(enhetNr: String): String = "$norgOppslagUrl$enhetNr"
 
     companion object {
         private const val TYPE_LOKAL = "LOKAL"
-        private val log by logger()
     }
 }

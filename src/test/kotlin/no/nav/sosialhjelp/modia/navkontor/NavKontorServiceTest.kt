@@ -10,7 +10,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class NavKontorServiceTest {
-
     private val norgUrl = "norgUrl"
     private val norgClient: NorgClient = mockk()
     private val redisService: RedisService = mockk()

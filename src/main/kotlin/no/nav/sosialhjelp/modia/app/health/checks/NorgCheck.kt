@@ -11,9 +11,8 @@ import org.springframework.stereotype.Component
 @Component
 class NorgCheck(
     private val norgClient: NorgClient,
-    clientProperties: ClientProperties
+    clientProperties: ClientProperties,
 ) : DependencyCheck {
-
     override val type = DependencyType.REST
     override val name = "NORG2"
     override val address = clientProperties.norgEndpointUrl

@@ -19,14 +19,30 @@ enum class RedisKeyType {
     FIKS_CLIENT,
     NORG_CLIENT,
     KOMMUNE_SERVICE,
-    FNR_SERVICE
+    FNR_SERVICE,
 }
 
 interface RedisService {
     val defaultTimeToLiveSeconds: Long
-    fun <T : Any> get(type: RedisKeyType, key: String, requestedClass: Class<out T>): T?
-    fun getString(type: RedisKeyType, key: String): String?
-    fun set(type: RedisKeyType, key: String, value: ByteArray, timeToLive: Long = defaultTimeToLiveSeconds)
+
+    fun <T : Any> get(
+        type: RedisKeyType,
+        key: String,
+        requestedClass: Class<out T>,
+    ): T?
+
+    fun getString(
+        type: RedisKeyType,
+        key: String,
+    ): String?
+
+    fun set(
+        type: RedisKeyType,
+        key: String,
+        value: ByteArray,
+        timeToLive: Long = defaultTimeToLiveSeconds,
+    )
+
     fun getAlleNavEnheter(): List<NavEnhet>?
 }
 
@@ -34,15 +50,19 @@ interface RedisService {
 @Component
 class RedisServiceImpl(
     @Value("\${cache_time_to_live_seconds}") private val cacheTimeToLiveSeconds: Long,
-    private val redisStore: RedisStore
+    private val redisStore: RedisStore,
 ) : RedisService {
-
     override val defaultTimeToLiveSeconds = cacheTimeToLiveSeconds
 
-    override fun <T : Any> get(type: RedisKeyType, key: String, requestedClass: Class<out T>): T? {
+    override fun <T : Any> get(
+        type: RedisKeyType,
+        key: String,
+        requestedClass: Class<out T>,
+    ): T? {
         val bytes: ByteArray = getBytes(type, key) ?: return null
         return try {
-            objectMapper.readValue(bytes, requestedClass)
+            objectMapper
+                .readValue(bytes, requestedClass)
                 .also { valider(it) }
                 .also { log.debug("Hentet ${requestedClass.simpleName} fra cache, type=${type.name}") } as T
         } catch (e: IOException) {
@@ -54,7 +74,10 @@ class RedisServiceImpl(
         }
     }
 
-    override fun getString(type: RedisKeyType, key: String): String? {
+    override fun getString(
+        type: RedisKeyType,
+        key: String,
+    ): String? {
         val bytes: ByteArray = getBytes(type, key) ?: return null
         return try {
             log.debug("Hentet String fra cache, type=${type.name}")
@@ -65,7 +88,12 @@ class RedisServiceImpl(
         }
     }
 
-    override fun set(type: RedisKeyType, key: String, value: ByteArray, timeToLive: Long) {
+    override fun set(
+        type: RedisKeyType,
+        key: String,
+        value: ByteArray,
+        timeToLive: Long,
+    ) {
         val result = redisStore.set("${type.name}_$key", value, timeToLive)
         if (result == null) {
             log.warn("Cache put feilet eller fikk timeout")
@@ -88,7 +116,10 @@ class RedisServiceImpl(
         }
     }
 
-    private fun getBytes(type: RedisKeyType, key: String): ByteArray? {
+    private fun getBytes(
+        type: RedisKeyType,
+        key: String,
+    ): ByteArray? {
         return redisStore.get("${type.name}_$key") // Redis har konfigurert timout for disse.
     }
 
@@ -98,8 +129,12 @@ class RedisServiceImpl(
      */
     private fun valider(obj: Any?) {
         when {
-            obj is JsonDigisosSoker && obj.additionalProperties.isNotEmpty() -> throw IOException("JsonDigisosSoker har ukjente properties - må tilhøre ett annet objekt. Cache-value tas ikke i bruk")
-            obj is JsonVedleggSpesifikasjon && obj.additionalProperties.isNotEmpty() -> throw IOException("JsonVedleggSpesifikasjon har ukjente properties - må tilhøre ett annet objekt. Cache-value tas ikke i bruk")
+            obj is JsonDigisosSoker && obj.additionalProperties.isNotEmpty() -> throw IOException(
+                "JsonDigisosSoker har ukjente properties - må tilhøre ett annet objekt. Cache-value tas ikke i bruk",
+            )
+            obj is JsonVedleggSpesifikasjon && obj.additionalProperties.isNotEmpty() -> throw IOException(
+                "JsonVedleggSpesifikasjon har ukjente properties - må tilhøre ett annet objekt. Cache-value tas ikke i bruk",
+            )
         }
     }
 
@@ -111,21 +146,26 @@ class RedisServiceImpl(
 @Profile("no-redis")
 @Component
 class RedisServiceMock : RedisService {
-
     override val defaultTimeToLiveSeconds: Long = 1L
 
-    override fun <T : Any> get(type: RedisKeyType, key: String, requestedClass: Class<out T>): T? {
-        return null
+    override fun <T : Any> get(
+        type: RedisKeyType,
+        key: String,
+        requestedClass: Class<out T>,
+    ): T? = null
+
+    override fun getString(
+        type: RedisKeyType,
+        key: String,
+    ): String? = null
+
+    override fun set(
+        type: RedisKeyType,
+        key: String,
+        value: ByteArray,
+        timeToLive: Long,
+    ) {
     }
 
-    override fun getString(type: RedisKeyType, key: String): String? {
-        return null
-    }
-
-    override fun set(type: RedisKeyType, key: String, value: ByteArray, timeToLive: Long) {
-    }
-
-    override fun getAlleNavEnheter(): List<NavEnhet>? {
-        return null
-    }
+    override fun getAlleNavEnheter(): List<NavEnhet>? = null
 }

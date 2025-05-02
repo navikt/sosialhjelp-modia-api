@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component
 @Component
 class KommuneService(
     private val kommuneInfoClient: KommuneInfoClient,
-    private val redisService: RedisService
+    private val redisService: RedisService,
 ) {
-
     fun get(kommunenummer: String): KommuneInfo {
         hentFraCache(kommunenummer)?.let { return it }
 
-        return kommuneInfoClient.getKommuneInfo(kommunenummer)
+        return kommuneInfoClient
+            .getKommuneInfo(kommunenummer)
             .also { lagreTilCache(it) }
     }
 
@@ -30,11 +30,9 @@ class KommuneService(
         redisService.set(RedisKeyType.KOMMUNE_SERVICE, kommuneInfo.kommunenummer, objectMapper.writeValueAsBytes(kommuneInfo))
     }
 
-    private fun leggTilKommuneINavnet(kommunenavn: String): String {
-        return if (kommunenavn.lowercase().endsWith(" kommune")) kommunenavn else "$kommunenavn kommune"
-    }
+    private fun leggTilKommuneINavnet(kommunenavn: String): String =
+        if (kommunenavn.lowercase().endsWith(" kommune")) kommunenavn else "$kommunenavn kommune"
 
-    private fun hentFraCache(kommunenummer: String): KommuneInfo? {
-        return redisService.get(RedisKeyType.KOMMUNE_SERVICE, kommunenummer, KommuneInfo::class.java)
-    }
+    private fun hentFraCache(kommunenummer: String): KommuneInfo? =
+        redisService.get(RedisKeyType.KOMMUNE_SERVICE, kommunenummer, KommuneInfo::class.java)
 }

@@ -18,7 +18,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class KommuneServiceTest {
-
     private val kommuneInfoClient: KommuneInfoClient = mockk()
     private val redisService: RedisService = mockk()
 

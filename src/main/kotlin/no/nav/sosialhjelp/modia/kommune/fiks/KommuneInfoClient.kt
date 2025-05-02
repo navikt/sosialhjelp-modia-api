@@ -21,11 +21,11 @@ import org.springframework.web.reactive.function.client.bodyToMono
 class KommuneInfoClient(
     private val maskinportenClient: MaskinportenClient,
     private val clientProperties: ClientProperties,
-    private val fiksWebClient: WebClient
+    private val fiksWebClient: WebClient,
 ) {
-
-    fun getKommuneInfo(kommunenummer: String): KommuneInfo {
-        return fiksWebClient.get()
+    fun getKommuneInfo(kommunenummer: String): KommuneInfo =
+        fiksWebClient
+            .get()
             .uri(PATH_KOMMUNEINFO, kommunenummer)
             .accept(MediaType.APPLICATION_JSON)
             .header(AUTHORIZATION, BEARER + maskinportenClient.getToken())
@@ -39,13 +39,12 @@ class KommuneInfoClient(
                     e.statusCode.is4xxClientError -> FiksClientException(e.statusCode.value(), e.message, e)
                     else -> FiksServerException(e.statusCode.value(), e.message, e)
                 }
-            }
-            .block()
+            }.block()
             ?: throw RuntimeException("Noe feil skjedde ved henting av KommuneInfo for kommune=$kommunenummer")
-    }
 
-    fun getAll(): List<KommuneInfo> {
-        return fiksWebClient.get()
+    fun getAll(): List<KommuneInfo> =
+        fiksWebClient
+            .get()
             .uri(PATH_ALLE_KOMMUNEINFO)
             .accept(MediaType.APPLICATION_JSON)
             .header(AUTHORIZATION, BEARER + maskinportenClient.getToken())
@@ -59,10 +58,8 @@ class KommuneInfoClient(
                     e.statusCode.is4xxClientError -> FiksClientException(e.statusCode.value(), e.message, e)
                     else -> FiksServerException(e.statusCode.value(), e.message, e)
                 }
-            }
-            .block()
+            }.block()
             ?: emptyList()
-    }
 
     companion object {
         private val log by logger()
