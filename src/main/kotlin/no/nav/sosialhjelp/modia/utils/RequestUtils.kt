@@ -11,7 +11,7 @@ object RequestUtils {
         return requestAttributes
             ?.request
             ?.cookies
-            ?.firstOrNull { it.name == SOSIALHJELP_MODIA_COOKIE_NAME }
+            ?.firstOrNull { it?.name == SOSIALHJELP_MODIA_COOKIE_NAME }
             ?.value
     }
 }
