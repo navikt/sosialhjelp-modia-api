@@ -6,7 +6,7 @@ on:
       - "nais/redisexporter.yml"
       - ".github/workflows/autodeploy_dev_redis.yml"
     branches-ignore:
-      - 'master'
+      - 'main'
     tags-ignore:
       - "**" # Don't build any tags
 

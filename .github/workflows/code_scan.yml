@@ -3,7 +3,7 @@ name: 'Code Scanning with CodeQL'
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
     tags-ignore:
       - '**' # Don't build any tags
     paths-ignore:

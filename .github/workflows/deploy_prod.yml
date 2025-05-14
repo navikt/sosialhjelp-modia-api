@@ -2,7 +2,7 @@ name: Deploy til prod-fss
 on:
   workflow_run:
     workflows: ['Build Kotlin, Run Lint and Test']
-    branches: [master]
+    branches: [main]
     types:
       - completed
   repository_dispatch:
