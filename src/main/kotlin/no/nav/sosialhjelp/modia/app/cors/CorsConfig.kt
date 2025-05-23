@@ -44,7 +44,7 @@ class CorsConfig(
                 "https://sosialhjelp-modia.intern.dev.nav.no",
                 "https://sosialhjelp-modia-dev.dev.nav.no",
                 "https://digisos.dev.nav.no",
-                "https://sosialhjelp-modia-mock.ekstern.dev.nav.no",
+                "https://digisos.ekstern.dev.nav.no/sosialhjelp/modia",
                 "https://navdialog--sit2.sandbox.lightning.force.com",
             )
     }
