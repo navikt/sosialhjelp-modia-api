@@ -1,12 +1,12 @@
 [versions]
 kotlin = "2.1.20"
 coroutines = "1.10.2"
-spring-boot = "3.4.5"
+spring-boot = "3.5.0"
 logback = "1.5.18"
 logstash = "8.1"
 sosialhjelpCommon = "1.20230209.0920-45d9782"
 filformat = "1.2025.01.20-12.05-901742ed6fe0"
-micrometerRegistry = "1.14.6"
+micrometerRegistry = "1.15.0"
 prometheus = "0.16.0"
 tokenValidation = "5.0.25"
 jackson = "2.19.0"
@@ -88,4 +88,4 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-plugin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 versions = { id = "com.github.ben-manes.versions", version = "0.52.0" }
-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.2.0" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.3.0" }
