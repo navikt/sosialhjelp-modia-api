@@ -11,8 +11,9 @@ query($ident: ID!, $navnHistorikk: Boolean!){
         kjoenn {
             kjoenn
         }
-        foedsel {
+        foedselsdato {
             foedselsdato
+            foedselsaar
         }
         telefonnummer {
             landskode

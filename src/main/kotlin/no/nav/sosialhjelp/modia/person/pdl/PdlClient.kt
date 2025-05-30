@@ -139,7 +139,7 @@ class PdlClientMock : PdlClient {
                 listOf(Adressebeskyttelse(Gradering.UGRADERT)),
                 listOf(PdlPersonNavn("Bruce", "mock", "Banner")),
                 listOf(PdlKjoenn(Kjoenn.KVINNE)),
-                listOf(PdlFoedselsdato("2000-01-01")),
+                listOf(PdlFoedselsdato("2000-01-01", 2000)),
                 listOf(PdlTelefonnummer("+47", "12345678", 1)),
             ),
         )

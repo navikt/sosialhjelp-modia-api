@@ -34,7 +34,7 @@ data class PdlPerson(
     val adressebeskyttelse: List<Adressebeskyttelse>,
     val navn: List<PdlPersonNavn>,
     val kjoenn: List<PdlKjoenn>,
-    val foedsel: List<PdlFoedselsdato>,
+    val foedselsdato: List<PdlFoedselsdato>,
     val telefonnummer: List<PdlTelefonnummer>,
 )
 
@@ -62,6 +62,7 @@ data class PdlKjoenn(
 
 data class PdlFoedselsdato(
     val foedselsdato: String?,
+    val foedselsaar: Int?
 )
 
 data class PdlTelefonnummer(
@@ -102,7 +103,7 @@ private fun String.capitalizeEachWord(): String =
 val PdlHentPerson.alder: Int?
     get() {
         return hentPerson
-            ?.foedsel
+            ?.foedselsdato
             ?.firstOrNull()
             ?.foedselsdato
             ?.let { Period.between(LocalDate.parse(it), LocalDate.now()).years }
