@@ -68,14 +68,14 @@ internal class PdlResponseTest {
 
     @Test
     internal fun `alder - tom foedselsdato gir null`() {
-        every { pdlHentPerson.hentPerson?.foedsel } returns listOf(PdlFoedselsdato(null))
+        every { pdlHentPerson.hentPerson?.foedselsdato } returns listOf(PdlFoedselsdato(null, null))
 
         assertThat(pdlHentPerson.alder).isNull()
     }
 
     @Test
     internal fun `alder - returnerer brukers alder fra foedselsdato`() {
-        every { pdlHentPerson.hentPerson?.foedsel } returns listOf(PdlFoedselsdato("2000-01-01"))
+        every { pdlHentPerson.hentPerson?.foedselsdato } returns listOf(PdlFoedselsdato("2000-01-01", null))
 
         assertThat(pdlHentPerson.alder).isGreaterThan(0)
     }
