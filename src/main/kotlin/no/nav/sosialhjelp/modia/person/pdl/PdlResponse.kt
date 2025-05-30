@@ -62,7 +62,7 @@ data class PdlKjoenn(
 
 data class PdlFoedselsdato(
     val foedselsdato: String?,
-    val foedselsaar: Int?
+    val foedselsaar: Int?,
 )
 
 data class PdlTelefonnummer(
