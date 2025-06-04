@@ -15,7 +15,7 @@ jobs:
     name: 'Deploy Redis to Dev'
     permissions:
       id-token: write
-    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_redis.yml@v8
+    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_redis.yml@v9
     secrets: inherit
     with:
       to-prod-fss: true
