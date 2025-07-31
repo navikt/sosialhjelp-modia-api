@@ -80,7 +80,7 @@ repositories {
     mavenCentral()
     maven("https://plugins.gradle.org/m2/")
     maven {
-        url = uri("https://maven.pkg.github.com/navikt/sosialhjelp-common")
+        url = uri("https://maven.pkg.github.com/navikt/*")
         credentials {
             username = githubUser
             password = githubPassword
