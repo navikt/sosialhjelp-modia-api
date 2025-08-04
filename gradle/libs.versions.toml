@@ -1,24 +1,24 @@
 [versions]
 kotlin = "2.2.0"
 coroutines = "1.10.2"
-spring-boot = "3.5.3"
+spring-boot = "3.5.4"
 logback = "1.5.18"
 logstash = "8.1"
 sosialhjelpCommon = "1.20230209.0920-45d9782"
 filformat = "1.2025.07.30-13.34-d9f62af5ba3c"
-micrometerRegistry = "1.15.1"
+micrometerRegistry = "1.15.2"
 prometheus = "0.16.0"
-tokenValidation = "5.0.30"
-jackson = "2.19.1"
+tokenValidation = "5.0.33"
+jackson = "2.19.2"
 logbackSyslog4j = "1.0.0"
 javaJwt = "4.5.0"
 jwksRsa = "0.22.2"
 syslog4j = "0.9.61"
 lettuce = "6.7.1.RELEASE"
-unleash = "11.0.1"
+unleash = "11.0.2"
 springdoc = "2.8.9"
-junitJupiter = "5.13.2"
-mockk = "1.14.4"
+junitJupiter = "5.13.4"
+mockk = "1.14.5"
 ktlint = "1.5.0"
 
 [libraries]
@@ -88,4 +88,4 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-plugin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 versions = { id = "com.github.ben-manes.versions", version = "0.52.0" }
-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.3.0" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "13.0.0" }
