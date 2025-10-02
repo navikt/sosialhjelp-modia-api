@@ -5,7 +5,7 @@ on:
       - "nais/redis-config.yml"
       - "nais/redisexporter.yml"
       - ".github/workflows/autodeploy_dev_redis.yml"
-    branches-ignore:
+    branches:
       - 'main'
     tags-ignore:
       - "**" # Don't build any tags
