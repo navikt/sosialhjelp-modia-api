@@ -10,6 +10,7 @@ metadata:
   namespace: teamdigisos
 spec:
   image: bitnamilegacy/redis:6.0.16
+  #image: bitnami/redis:7.2
   port: 6379
   replicas: # A single Redis-app doesn't scale
     min: 1
