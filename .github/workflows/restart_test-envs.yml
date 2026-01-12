@@ -13,3 +13,4 @@ jobs:
     with:
       to-mock: true
       to-dev-fss: true
+      to-dev-gcp: true

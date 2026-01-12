@@ -19,3 +19,4 @@ jobs:
     secrets: inherit
     with:
       to-dev-fss: true
+      to-dev-gcp: true
