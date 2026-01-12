@@ -9,6 +9,7 @@ on:
         default: 'dev-fss'
         type: choice
         options:
+          - 'dev-gcp'
           - 'dev-fss'
           - 'mock'
 

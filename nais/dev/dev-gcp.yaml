@@ -1,0 +1,125 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: sosialhjelp-modia-api
+  namespace: teamdigisos
+  labels:
+    team: teamdigisos
+spec:
+  image: {{image}}
+  port: 8383
+  azure:
+    application:
+      enabled: true
+      claims:
+        groups:
+          - id: "7357bc5c-8389-435d-8311-46452d356a83" # 0000-GA-Modia_Sosialhjelp_NKS
+  liveness:
+    path: /sosialhjelp/modia-api/internal/isAlive
+    initialDelay: 20
+    timeout: 1
+    periodSeconds: 5
+    failureThreshold: 10
+  readiness:
+    path: /sosialhjelp/modia-api/internal/isReady
+    initialDelay: 20
+    timeout: 1
+  prometheus:
+    enabled: true
+    path: /sosialhjelp/modia-api/internal/prometheus
+  replicas:
+    cpuThresholdPercentage: 70
+    min: 1
+    max: 2
+  maskinporten:
+    enabled: true
+    scopes:
+      consumes:
+        - name: "ks:fiks"
+  envFrom:
+    - secret: redis-password-modia-api
+    - secret: fiks-integrasjon-secret
+    - secret: sosialhjelp-modia-api-unleash-api-token
+  accessPolicy:
+    inbound:
+      rules:
+        - application: sosialhjelp-modia-oidc-auth-proxy
+        - application: salesforce
+          namespace: teamcrm
+          cluster: dev-external
+        - application: saas-proxy
+          namespace: teamcrm
+          cluster: dev-gcp
+    outbound:
+      external:
+        - host: graph.microsoft.com
+        - host: api.fiks.test.ks.no
+        - host: register.geonorge.no
+        - host: test.maskinporten.no
+        - host: teamdigisos-unleash-api.nav.cloud.nais.io
+      rules:
+        - application: pdl-api
+          namespace: pdl
+          cluster: dev-fss
+        - application: norg2
+          namespace: org
+          cluster: dev-fss
+        - application: skjermede-personer-pip
+          namespace: nom
+          cluster: dev-gcp
+        - application: sosialhjelp-modia-api-redis
+          namespace: teamdigisos
+  ingresses:
+    - "https://sosialhjelp-modia-api.intern.dev.nav.no/sosialhjelp/modia-api"
+    - "https://sosialhjelp-modia-api.dev.nav.no"
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      cpu: 10m
+      memory: 512Mi
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: java
+    logging:
+      destinations:
+        - id: loki
+        - id: elastic
+      cpu: 500m
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev-gcp,log-kibana,log-audit"
+    - name: AZURE_GRAPH_API_URL
+      value: "https://graph.microsoft.com/v1.0"
+    - name: VEILEDER_GRUPPE_ID
+      value: "7357bc5c-8389-435d-8311-46452d356a83"
+    - name: FIKS_DIGISOS_ENDPOINT_URL
+      value: "https://api.fiks.test.ks.no"
+    - name: NORG_ENDPOINT_URL
+      value: "https://norg2.intern.dev.nav.no/norg2/api/v1"
+    - name: NORG_OPPSLAG_URL
+      value: "https://norg2-frontend.ekstern.dev.nav.no/#/startsok?enhetNr="
+    - name: PDL_ENDPOINT_URL
+      value: "https://pdl-api.intern.dev.nav.no/graphql"
+    - name: PDL_SCOPE
+      value: "api://dev-fss.pdl.pdl-api/.default"
+    - name: SKJERMEDE_PERSONER_ENDPOINT_URL
+      value: "https://skjermede-personer-pip.intern.dev.nav.no"
+    - name: SKJERMEDE_PERSONER_SCOPE
+      value: "api://dev-gcp.nom.skjermede-personer-pip/.default"
+    - name: REDIS_HOST
+      value: "sosialhjelp-modia-api-redis.teamdigisos.svc.cluster.local"
+    - name: CACHE_TIME_TO_LIVE_SECONDS
+      value: "60"
+    - name: UNLEASH_INSTANCE_ID
+      value: "sosialhjelp-modia-api"
+    - name: UNLEASH_ENV
+      value: "dev-gcp"
+    - name: SWAGGER_ENABLED
+      value: "true"
+    - name: MODIA_BASEURL
+      value: "https://sosialhjelp-modia.intern.dev.nav.no/sosialhjelp/modia"
+    - name: MASKINPORTEN_WELL_KNOWN_URL
+      value: "https://test.maskinporten.no/.well-known/oauth-authorization-server"
+
