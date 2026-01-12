@@ -86,7 +86,6 @@ spec:
       destinations:
         - id: loki
         - id: elastic
-      cpu: 500m
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "dev-gcp,log-kibana,log-audit"
