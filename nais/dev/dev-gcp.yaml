@@ -71,7 +71,7 @@ spec:
           namespace: teamdigisos
   ingresses:
     - "https://sosialhjelp-modia-api.intern.dev.nav.no/sosialhjelp/modia-api"
-    - "https://sosialhjelp-modia-api.dev.nav.no"
+    - "https://sosialhjelp-modia-api.ekstern.dev.nav.no"
   resources:
     limits:
       memory: 1Gi
