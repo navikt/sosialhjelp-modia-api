@@ -9,8 +9,12 @@ spec:
   image: {{image}}
   port: 8383
   azure:
+    sidecar:
+      enabled: true
+      autoLogin: true
     application:
       enabled: true
+      allowAllUsers: false
       claims:
         groups:
           - id: "7357bc5c-8389-435d-8311-46452d356a83" # 0000-GA-Modia_Sosialhjelp_NKS
@@ -31,6 +35,9 @@ spec:
     cpuThresholdPercentage: 70
     min: 1
     max: 2
+  valkey:
+    - instance: modia-api
+      access: readwrite
   observability:
     autoInstrumentation:
       enabled: true
@@ -48,9 +55,15 @@ spec:
     outbound:
       external:
         - host: teamdigisos-unleash-api.nav.cloud.nais.io
+        - host: api.fiks.test.ks.no
+        - host: pdl-api.dev-fss-pub.nais.io
+      rules:
+        - application: skjermede-personer-pip
+          namespace: nom
+        - application: norg2
+          namespace: org
     inbound:
       rules:
-        - application: sosialhjelp-modia-oidc-auth-proxy
         - application: salesforce
           namespace: teamcrm
           cluster: dev-external
@@ -65,7 +78,6 @@ spec:
       cpu: 10m
       memory: 512Mi
   envFrom:
-    - secret: redis-password-modia-api
     - secret: fiks-integrasjon-secret
     - secret: sosialhjelp-modia-api-unleash-api-token
   ingresses:
@@ -80,19 +92,17 @@ spec:
     - name: FIKS_DIGISOS_ENDPOINT_URL
       value: "https://api.fiks.test.ks.no"
     - name: NORG_ENDPOINT_URL
-      value: "https://norg2.intern.dev.nav.no/norg2/api/v1"
+      value: "http://norg2.org/norg2/api/v1"
     - name: NORG_OPPSLAG_URL
       value: "https://norg2-frontend.ekstern.dev.nav.no/#/startsok?enhetNr="
     - name: PDL_ENDPOINT_URL
-      value: "https://pdl-api.intern.dev.nav.no/graphql"
+      value: "https://pdl-api.dev-fss-pub.nais.io/graphql"
     - name: PDL_SCOPE
       value: "api://dev-fss.pdl.pdl-api/.default"
     - name: SKJERMEDE_PERSONER_ENDPOINT_URL
-      value: "https://skjermede-personer-pip.intern.dev.nav.no"
+      value: "http://skjermede-personer-pip.nom"
     - name: SKJERMEDE_PERSONER_SCOPE
       value: "api://dev-gcp.nom.skjermede-personer-pip/.default"
-    - name: REDIS_HOST
-      value: "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local"
     - name: CACHE_TIME_TO_LIVE_SECONDS
       value: "60"
     - name: UNLEASH_INSTANCE_ID
