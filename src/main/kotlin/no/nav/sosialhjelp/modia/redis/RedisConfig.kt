@@ -17,7 +17,8 @@ class RedisConfig {
         val redisUri =
             RedisURI.Builder
                 .redis(properties.host, properties.port)
-                .withPassword(properties.password as CharSequence)
+                .withAuthentication(properties.username, properties.password)
+                .withSsl(true)
                 .build()
 
         return RedisClient.create(redisUri)

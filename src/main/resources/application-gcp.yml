@@ -5,9 +5,12 @@ spring:
     name: "sosialhjelp-modia-api"
   data:
     redis:
-      host: ${REDIS_HOST_MODIA_API}
-      port: 6379
       password: ${REDIS_PASSWORD_MODIA_API}
+      host: ${REDIS_HOST_MODIA_API}
+      username: ${REDIS_USERNAME_MODIA_API}
+      port: ${REDIS_PORT_MODIA_API}
+      ssl:
+        enabled: true
   codec:
     max-in-memory-size: 10MB
 
