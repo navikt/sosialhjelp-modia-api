@@ -19,7 +19,7 @@ object MDCUtils {
         MDC.put(key, value)
     }
 
-    fun getCallId(): String = MDC.get(CALL_ID) ?: ""
+    fun getCallId(): String? = MDC.get(CALL_ID)
 
     fun clearMDC() {
         MDC.remove(CALL_ID)

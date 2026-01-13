@@ -54,7 +54,7 @@ spec:
     - secret: sosialhjelp-modia-api-unleash-api-token
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "mock-alt,log-kibana,no-redis"
+      value: "mock-alt,log-console,no-redis"
     - name: METADATA_URL
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/well-known/azuread"
     - name: AZURE_GRAPH_API_URL

@@ -25,7 +25,7 @@ class CorsConfig(
         config.maxAge = 3600L
         source.registerCorsConfiguration("/**", config)
         val corsFilter = CorsFilter(source)
-        bean.setFilter(corsFilter)
+        bean.filter = corsFilter
         bean.order = Ordered.HIGHEST_PRECEDENCE
         return bean
     }
