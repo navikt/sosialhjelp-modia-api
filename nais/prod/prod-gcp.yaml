@@ -17,7 +17,7 @@ spec:
       allowAllUsers: false
       claims:
         groups:
-          - id: "7357bc5c-8389-435d-8311-46452d356a83" # 0000-GA-Modia_Sosialhjelp_NKS
+          - id: "82efbcf9-7a99-4c60-9242-79c439ca3cdc" # 0000-GA-Modia_Sosialhjelp_NKS
   liveness:
     path: /sosialhjelp/modia-api/internal/isAlive
     initialDelay: 60
@@ -55,8 +55,8 @@ spec:
     outbound:
       external:
         - host: teamdigisos-unleash-api.nav.cloud.nais.io
-        - host: api.fiks.test.ks.no
-        - host: pdl-api.dev-fss-pub.nais.io
+        - host: api.fiks.ks.no
+        - host: pdl-api.prod-fss-pub.nais.io
       rules:
         - application: skjermede-personer-pip
           namespace: nom
@@ -66,10 +66,9 @@ spec:
       rules:
         - application: salesforce
           namespace: teamcrm
-          cluster: dev-external
+          cluster: prod-external
         - application: saas-proxy
           namespace: teamcrm
-
   resources:
     limits:
       cpu: 500m
@@ -81,37 +80,38 @@ spec:
     - secret: fiks-integrasjon-secret
     - secret: sosialhjelp-modia-api-unleash-api-token
   ingresses:
-    - "https://sosialhjelp-modia-api.ansatt.dev.nav.no/sosialhjelp/modia-api"
+    - "https://sosialhjelp-modia-api-gcp.intern.nav.no/sosialhjelp/modia-api"
+    - "https://sosialhjelp-modia-api-gcp.prod-fss-pub.nais.io"
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "gcp,log-kibana"
     - name: AZURE_GRAPH_API_URL
       value: "https://graph.microsoft.com/v1.0"
     - name: VEILEDER_GRUPPE_ID
-      value: "7357bc5c-8389-435d-8311-46452d356a83"
+      value: "82efbcf9-7a99-4c60-9242-79c439ca3cdc"
     - name: FIKS_DIGISOS_ENDPOINT_URL
-      value: "https://api.fiks.test.ks.no"
+      value: "https://api.fiks.ks.no"
     - name: NORG_ENDPOINT_URL
       value: "http://norg2.org/norg2/api/v1"
     - name: NORG_OPPSLAG_URL
-      value: "https://norg2-frontend.ekstern.dev.nav.no/#/startsok?enhetNr="
+      value: "https://norg2-frontend.ekstern.nav.no/#/startsok?enhetNr="
     - name: PDL_ENDPOINT_URL
-      value: "https://pdl-api.dev-fss-pub.nais.io/graphql"
+      value: "https://pdl-api.prod-fss-pub.nais.io/graphql"
     - name: PDL_SCOPE
-      value: "api://dev-fss.pdl.pdl-api/.default"
+      value: "api://prod-fss.pdl.pdl-api/.default"
     - name: SKJERMEDE_PERSONER_ENDPOINT_URL
       value: "http://skjermede-personer-pip.nom"
     - name: SKJERMEDE_PERSONER_SCOPE
-      value: "api://dev-gcp.nom.skjermede-personer-pip/.default"
+      value: "api://prod-gcp.nom.skjermede-personer-pip/.default"
     - name: CACHE_TIME_TO_LIVE_SECONDS
       value: "60"
     - name: UNLEASH_INSTANCE_ID
       value: "sosialhjelp-modia-api"
     - name: UNLEASH_ENV
-      value: "dev-gcp"
+      value: "prod-gcp"
     - name: SWAGGER_ENABLED
       value: "true"
     - name: MODIA_BASEURL
-      value: "https://sosialhjelp-modia.intern.dev.nav.no/sosialhjelp/modia"
+      value: "https://sosialhjelp-modia.intern.nav.no/sosialhjelp/modia"
     - name: MASKINPORTEN_WELL_KNOWN_URL
-      value: "https://test.maskinporten.no/.well-known/oauth-authorization-server"
+      value: "https://maskinporten.no/.well-known/oauth-authorization-server"
