@@ -7,17 +7,27 @@ on:
       - completed
   repository_dispatch:
     types: [deploy_prod_tag]
+  workflow_dispatch:
+    inputs:
+      config-file-name:
+        description: 'Config-fil som skal deployes'
+        required: true
+        default: 'prod-gcp'
+        type: choice
+        options:
+          - 'prod-gcp'
+          - 'prod-fss'
 
 jobs:
   deploy-to-prod:
-    name: 'Deploy to prod-fss'
+    name: "Deploy to ${{ inputs.config-file-name || 'prod-fss' }}"
     if: ${{ github.event_name == 'repository_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: write
       id-token: write
     uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@v8
     with:
-      cluster-name: 'prod-fss'
+      cluster-name: ${{ inputs.config-file-name || 'prod-fss' }}
       resource-folder: 'prod'
-      resource-name: 'prod-fss'
+      resource-name: ${{ inputs.config-file-name || 'prod-fss' }}
     secrets: inherit
