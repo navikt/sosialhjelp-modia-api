@@ -24,6 +24,7 @@ class RedisConfig {
 
         return RedisClient.create(redisUri)
     }
+
     @Bean
     @Profile("!gcp")
     fun redisClientFss(properties: DataRedisProperties): RedisClient {
