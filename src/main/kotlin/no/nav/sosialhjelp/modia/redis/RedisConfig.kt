@@ -13,12 +13,24 @@ import org.springframework.context.annotation.Profile
 @EnableConfigurationProperties(DataRedisProperties::class)
 class RedisConfig {
     @Bean
+    @Profile("gcp")
     fun redisClient(properties: DataRedisProperties): RedisClient {
         val redisUri =
             RedisURI.Builder
                 .redis(properties.host, properties.port)
                 .withAuthentication(properties.username, properties.password)
                 .withSsl(true)
+                .build()
+
+        return RedisClient.create(redisUri)
+    }
+    @Bean
+    @Profile("!gcp")
+    fun redisClientFss(properties: DataRedisProperties): RedisClient {
+        val redisUri =
+            RedisURI.Builder
+                .redis(properties.host, properties.port)
+                .withPassword(properties.password as CharSequence)
                 .build()
 
         return RedisClient.create(redisUri)
