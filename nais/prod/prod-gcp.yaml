@@ -62,13 +62,6 @@ spec:
           namespace: nom
         - application: norg2
           namespace: org
-    inbound:
-      rules:
-        - application: salesforce
-          namespace: teamcrm
-          cluster: prod-external
-        - application: saas-proxy
-          namespace: teamcrm
   resources:
     limits:
       memory: 1Gi

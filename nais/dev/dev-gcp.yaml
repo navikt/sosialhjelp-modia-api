@@ -62,20 +62,12 @@ spec:
           namespace: nom
         - application: norg2
           namespace: org
-    inbound:
-      rules:
-        - application: salesforce
-          namespace: teamcrm
-          cluster: dev-external
-        - application: saas-proxy
-          namespace: teamcrm
 
   resources:
     limits:
-      cpu: 500m
       memory: 1Gi
     requests:
-      cpu: 10m
+      cpu: 25m
       memory: 512Mi
   envFrom:
     - secret: fiks-integrasjon-secret
