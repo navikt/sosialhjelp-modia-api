@@ -74,7 +74,7 @@ spec:
     - "https://sosialhjelp-modia-api-gcp.intern.nav.no/sosialhjelp/modia-api"
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "gcp,log-kibana"
+      value: "gcp,log-kibana,prod"
     - name: AZURE_GRAPH_API_URL
       value: "https://graph.microsoft.com/v1.0"
     - name: VEILEDER_GRUPPE_ID
