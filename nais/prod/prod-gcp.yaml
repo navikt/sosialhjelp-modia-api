@@ -33,8 +33,8 @@ spec:
     path: /sosialhjelp/modia-api/internal/prometheus
   replicas:
     cpuThresholdPercentage: 70
-    min: 1
-    max: 2
+    min: 2
+    max: 4
   valkey:
     - instance: modia-api
       access: readwrite
@@ -71,10 +71,9 @@ spec:
           namespace: teamcrm
   resources:
     limits:
-      cpu: 500m
       memory: 1Gi
     requests:
-      cpu: 10m
+      cpu: 25m
       memory: 512Mi
   envFrom:
     - secret: fiks-integrasjon-secret
