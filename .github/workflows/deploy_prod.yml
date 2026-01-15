@@ -1,4 +1,4 @@
-name: Deploy til prod-fss
+name: Deploy til prod
 on:
   workflow_run:
     workflows: ['Build Kotlin, Run Lint and Test']
@@ -21,7 +21,7 @@ on:
 jobs:
   deploy-to-prod:
     name: "Deploy to ${{ inputs.config-file-name || 'prod-fss' }}"
-    if: ${{ github.event_name == 'repository_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: write
       id-token: write
