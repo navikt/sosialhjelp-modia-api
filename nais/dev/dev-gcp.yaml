@@ -10,10 +10,7 @@ spec:
   port: 8383
   azure:
     sidecar:
-      autoLogin: true
-      autoLoginIgnorePaths:
-        - /sosialhjelp/modia-api/api/**
-        - /api/**
+      autoLogin: false
       enabled: true
     application:
       enabled: true
