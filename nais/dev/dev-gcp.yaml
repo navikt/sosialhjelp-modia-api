@@ -76,7 +76,7 @@ spec:
     - secret: fiks-integrasjon-secret
     - secret: sosialhjelp-modia-api-unleash-api-token
   ingresses:
-    - "https://sosialhjelp-modia-api.ansatt.dev.nav.no/sosialhjelp/modia-api"
+    - "https://sosialhjelp-modia-api.ekstern.dev.nav.no/sosialhjelp/modia-api"
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "gcp,log-kibana,dev"
