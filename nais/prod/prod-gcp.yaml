@@ -81,7 +81,6 @@ spec:
     - secret: sosialhjelp-modia-api-unleash-api-token
   ingresses:
     - "https://sosialhjelp-modia-api-gcp.intern.nav.no/sosialhjelp/modia-api"
-    - "https://sosialhjelp-modia-api-gcp.prod-fss-pub.nais.io"
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "gcp,log-kibana"
