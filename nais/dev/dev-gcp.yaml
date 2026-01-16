@@ -51,6 +51,7 @@ spec:
     inbound:
       rules:
         - application: sosialhjelp-modia-oidc-auth-proxy
+        - application: sosialhjelp-modia
         - application: salesforce
           namespace: teamcrm
           cluster: dev-external
