@@ -11,6 +11,7 @@ spec:
   azure:
     application:
       enabled: true
+      allowAllUsers: false
       claims:
         groups:
           - id: "82efbcf9-7a99-4c60-9242-79c439ca3cdc" # 0000-GA-Modia_Sosialhjelp_NKS
@@ -31,6 +32,9 @@ spec:
     cpuThresholdPercentage: 70
     min: 2
     max: 4
+  valkey:
+    - instance: modia-api
+      access: readwrite
   observability:
     autoInstrumentation:
       enabled: true
@@ -48,32 +52,30 @@ spec:
     outbound:
       external:
         - host: teamdigisos-unleash-api.nav.cloud.nais.io
+        - host: api.fiks.ks.no
+        - host: pdl-api.prod-fss-pub.nais.io
+      rules:
+        - application: skjermede-personer-pip
+          namespace: nom
+        - application: norg2
+          namespace: org
     inbound:
       rules:
-        - application: sosialhjelp-modia-oidc-auth-proxy
         - application: sosialhjelp-modia
-        - application: salesforce
-          namespace: teamcrm
-          cluster: prod-external
-        - application: saas-proxy
-          namespace: teamcrm
-          cluster: prod-gcp
   resources:
     limits:
-      cpu: 500m
       memory: 1Gi
     requests:
-      cpu: 10m
+      cpu: 25m
       memory: 512Mi
   envFrom:
-    - secret: redis-password-modia-api
     - secret: fiks-integrasjon-secret
     - secret: sosialhjelp-modia-api-unleash-api-token
   ingresses:
-    - "https://sosialhjelp-modia-api.intern.nav.no/sosialhjelp/modia-api"
+    - "https://sosialhjelp-modia-api-gcp.intern.nav.no/sosialhjelp/modia-api"
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "prod-gcp,log-kibana"
+      value: "gcp,log-kibana,prod"
     - name: AZURE_GRAPH_API_URL
       value: "https://graph.microsoft.com/v1.0"
     - name: VEILEDER_GRUPPE_ID
@@ -81,19 +83,17 @@ spec:
     - name: FIKS_DIGISOS_ENDPOINT_URL
       value: "https://api.fiks.ks.no"
     - name: NORG_ENDPOINT_URL
-      value: "https://norg2.intern.nav.no/norg2/api/v1"
+      value: "http://norg2.org/norg2/api/v1"
     - name: NORG_OPPSLAG_URL
       value: "https://norg2-frontend.ekstern.nav.no/#/startsok?enhetNr="
     - name: PDL_ENDPOINT_URL
-      value: "https://pdl-api.intern.nav.no/graphql"
+      value: "https://pdl-api.prod-fss-pub.nais.io/graphql"
     - name: PDL_SCOPE
       value: "api://prod-fss.pdl.pdl-api/.default"
     - name: SKJERMEDE_PERSONER_ENDPOINT_URL
-      value: "https://skjermede-personer-pip.intern.nav.no"
+      value: "http://skjermede-personer-pip.nom"
     - name: SKJERMEDE_PERSONER_SCOPE
       value: "api://prod-gcp.nom.skjermede-personer-pip/.default"
-    - name: REDIS_HOST
-      value: "sosialhjelp-modia-api-redis.teamdigisos.svc.nais.local"
     - name: CACHE_TIME_TO_LIVE_SECONDS
       value: "60"
     - name: UNLEASH_INSTANCE_ID
@@ -106,3 +106,4 @@ spec:
       value: "https://sosialhjelp-modia.intern.nav.no/sosialhjelp/modia"
     - name: MASKINPORTEN_WELL_KNOWN_URL
       value: "https://maskinporten.no/.well-known/oauth-authorization-server"
+
