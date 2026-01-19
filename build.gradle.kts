@@ -30,7 +30,7 @@ dependencies {
 
     implementation(libs.bundles.spring.boot)
     // midlertidig eksplisitt innhenting av jackson 3
-    implementation("tools.jackson.module:jackson-module-kotlin:3.0.0")
+    implementation("tools.jackson.module:jackson-module-kotlin:3.0.3")
 
     implementation(libs.bundles.sosialhjelp.common)
 
@@ -70,7 +70,6 @@ dependencies {
 
 //    Test
     testImplementation(libs.spring.boot.test)
-    testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)
     testImplementation(libs.token.validation.test)
 }
