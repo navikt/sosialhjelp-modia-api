@@ -12,7 +12,7 @@ import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.tilgang.azure.AzuredingsService
 import no.nav.sosialhjelp.modia.tilgang.skjermedepersoner.model.SkjermedePersonerRequest
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
-import no.nav.sosialhjelp.modia.utils.objectMapper
+import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -63,7 +63,7 @@ class SkjermedePersonerClientImpl(
         ident: String,
     ) {
         skjermet?.let {
-            redisService.set(SKJERMEDE_PERSONER, ident, objectMapper.writeValueAsBytes(it), 2 * 60 * 60)
+            redisService.set(SKJERMEDE_PERSONER, ident, sosialhjelpJsonMapper.writeValueAsBytes(it), 2 * 60 * 60)
         }
     }
 

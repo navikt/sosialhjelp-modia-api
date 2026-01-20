@@ -9,7 +9,7 @@ import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
 import no.nav.sosialhjelp.modia.digisossak.event.SAK_DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.digisossak.event.SOKNAD_DEFAULT_TITTEL
-import no.nav.sosialhjelp.modia.utils.objectMapper
+import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.ParameterizedTypeReference
@@ -78,8 +78,8 @@ fun messageUtenFnr(e: WebClientResponseException): String {
 
 private fun <T : WebClientResponseException> T.toFiksErrorMessage(): ErrorMessage? =
     try {
-        objectMapper.readValue(this.responseBodyAsByteArray, ErrorMessage::class.java)
-    } catch (e: IOException) {
+        sosialhjelpJsonMapper.readValue(this.responseBodyAsByteArray, ErrorMessage::class.java)
+    } catch (ignored: IOException) {
         null
     }
 

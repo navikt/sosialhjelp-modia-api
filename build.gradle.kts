@@ -29,10 +29,8 @@ dependencies {
     implementation(libs.bundles.coroutines)
 
     implementation(libs.bundles.spring.boot)
-    // midlertidig eksplisitt innhenting av jackson 3
-    implementation("tools.jackson.module:jackson-module-kotlin:3.0.3")
 
-    implementation(libs.bundles.sosialhjelp.common)
+    implementation(libs.sosialhjelp.common.api)
 
 //    Micrometer/prometheus
     implementation(libs.bundles.prometheus)
@@ -52,9 +50,6 @@ dependencies {
 
 //    Filformat
     implementation(libs.filformat)
-
-//    Jackson
-    implementation(libs.jackson.module.kotlin)
 
 //    Token-validation
     implementation(libs.bundles.token.validation)

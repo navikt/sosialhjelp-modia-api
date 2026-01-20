@@ -4,7 +4,7 @@ import no.nav.sosialhjelp.api.fiks.KommuneInfo
 import no.nav.sosialhjelp.modia.kommune.fiks.KommuneInfoClient
 import no.nav.sosialhjelp.modia.redis.RedisKeyType
 import no.nav.sosialhjelp.modia.redis.RedisService
-import no.nav.sosialhjelp.modia.utils.objectMapper
+import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.stereotype.Component
 
 @Component
@@ -27,7 +27,7 @@ class KommuneService(
     }
 
     private fun lagreTilCache(kommuneInfo: KommuneInfo) {
-        redisService.set(RedisKeyType.KOMMUNE_SERVICE, kommuneInfo.kommunenummer, objectMapper.writeValueAsBytes(kommuneInfo))
+        redisService.set(RedisKeyType.KOMMUNE_SERVICE, kommuneInfo.kommunenummer, sosialhjelpJsonMapper.writeValueAsBytes(kommuneInfo))
     }
 
     private fun leggTilKommuneINavnet(kommunenavn: String): String =
