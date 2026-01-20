@@ -1,6 +1,5 @@
 package no.nav.sosialhjelp.modia.kommune
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -11,11 +10,12 @@ import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.KommuneInfo
 import no.nav.sosialhjelp.modia.kommune.fiks.KommuneInfoClient
 import no.nav.sosialhjelp.modia.redis.RedisService
-import no.nav.sosialhjelp.modia.responses.ok_kommuneinfo_response_string
-import no.nav.sosialhjelp.modia.utils.objectMapper
+import no.nav.sosialhjelp.modia.responses.kommuneInfoResponseString
+import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import tools.jackson.module.kotlin.readValue
 
 internal class KommuneServiceTest {
     private val kommuneInfoClient: KommuneInfoClient = mockk()
@@ -40,7 +40,7 @@ internal class KommuneServiceTest {
 
     @Test
     internal fun `hent KommuneInfo fra cache`() {
-        val kommuneInfo: KommuneInfo = objectMapper.readValue(ok_kommuneinfo_response_string)
+        val kommuneInfo: KommuneInfo = sosialhjelpJsonMapper.readValue(kommuneInfoResponseString)
         every { redisService.get<KommuneInfo>(any(), any(), any()) } returns kommuneInfo
 
         val result = service.get(kommuneNr)
@@ -53,7 +53,8 @@ internal class KommuneServiceTest {
 
     @Test
     internal fun `hent KommuneInfo fra client`() {
-        every { kommuneInfoClient.getKommuneInfo(any()) } returns objectMapper.readValue(ok_kommuneinfo_response_string)
+        every { kommuneInfoClient.getKommuneInfo(any()) } returns
+                sosialhjelpJsonMapper.readValue(kommuneInfoResponseString)
 
         val result = service.get(kommuneNr)
 

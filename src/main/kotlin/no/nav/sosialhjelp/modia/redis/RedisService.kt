@@ -1,17 +1,18 @@
 package no.nav.sosialhjelp.modia.redis
 
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.io.IOException
+import java.nio.charset.StandardCharsets
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sosialhjelp.modia.app.exceptions.DigisosSakTilhorerAnnenBrukerException
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.navkontor.norg.NavEnhet
-import no.nav.sosialhjelp.modia.utils.objectMapper
+import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
-import java.io.IOException
-import java.nio.charset.StandardCharsets
+import tools.jackson.module.kotlin.KotlinInvalidNullException
+import tools.jackson.module.kotlin.readValue
 
 enum class RedisKeyType {
     AZUREDINGS,
@@ -61,14 +62,14 @@ class RedisServiceImpl(
     ): T? {
         val bytes: ByteArray = getBytes(type, key) ?: return null
         return try {
-            objectMapper
+            sosialhjelpJsonMapper
                 .readValue(bytes, requestedClass)
                 .also { valider(it) }
                 .also { log.debug("Hentet ${requestedClass.simpleName} fra cache, type=${type.name}") } as T
-        } catch (e: IOException) {
+        } catch (ignored: KotlinInvalidNullException) {
             log.warn("Fant type=${type.name} i cache, men value var ikke ${requestedClass.simpleName}")
             null
-        } catch (e: DigisosSakTilhorerAnnenBrukerException) {
+        } catch (ignored: DigisosSakTilhorerAnnenBrukerException) {
             log.warn("DigisosSak i cache tilhører en annen bruker enn brukeren fra token.")
             null
         }
@@ -82,7 +83,7 @@ class RedisServiceImpl(
         return try {
             log.debug("Hentet String fra cache, type=${type.name}")
             String(bytes, StandardCharsets.UTF_8)
-        } catch (e: IOException) {
+        } catch (ignored: IOException) {
             log.warn("Fant type=${type.name} i cache, men value var ikke String")
             null
         }
@@ -106,8 +107,8 @@ class RedisServiceImpl(
         val bytes: ByteArray? = redisStore.get(RedisKeyType.NORG_CLIENT.name + "_" + ALLE_NAVENHETER_CACHE_KEY)
         return if (bytes != null) {
             try {
-                objectMapper.readValue(bytes, jacksonTypeRef<List<NavEnhet>>())
-            } catch (e: IOException) {
+                sosialhjelpJsonMapper.readValue(bytes)
+            } catch (ignored: IOException) {
                 log.warn("Fant key=$ALLE_NAVENHETER_CACHE_KEY, men feil oppstod ved deserialisering til List<NavEnhet>")
                 null
             }

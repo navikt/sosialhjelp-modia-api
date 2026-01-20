@@ -2,7 +2,7 @@ package no.nav.sosialhjelp.modia.fodselsnummer
 
 import no.nav.sosialhjelp.modia.redis.RedisKeyType
 import no.nav.sosialhjelp.modia.redis.RedisService
-import no.nav.sosialhjelp.modia.utils.objectMapper
+import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.stereotype.Component
 import java.util.UUID
 
@@ -22,7 +22,7 @@ class FodselsnummerService(
         fnrId: String,
         fnr: String,
     ) {
-        redisService.set(RedisKeyType.FNR_SERVICE, fnrId, objectMapper.writeValueAsBytes(fnr), FNR_TIME_TO_LIVE_SECONDS)
+        redisService.set(RedisKeyType.FNR_SERVICE, fnrId, sosialhjelpJsonMapper.writeValueAsBytes(fnr), FNR_TIME_TO_LIVE_SECONDS)
     }
 
     private fun hentFraCache(fnrId: String): String? = redisService.getString(RedisKeyType.FNR_SERVICE, fnrId)
