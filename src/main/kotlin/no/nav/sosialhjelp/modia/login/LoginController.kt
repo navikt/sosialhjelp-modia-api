@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse
 import no.nav.security.token.support.core.api.Unprotected
 import no.nav.sosialhjelp.modia.logger
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpRequest
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.util.MultiValueMap
@@ -25,7 +26,7 @@ class LoginController(
     val log by logger()
 
     @GetMapping("/login")
-    fun login(response: HttpServletResponse): ResponseEntity<LoginResponse> {
+    fun login(request: HttpRequest, response: HttpServletResponse): ResponseEntity<LoginResponse> {
         val responseEntity =
             webClient
                 .post()
@@ -33,7 +34,7 @@ class LoginController(
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(
                     BodyInserters.fromFormData(
-                        MultiValueMap.fromMultiValue(mapOf("token" to listOf("token"), "identity_provider" to listOf("fuck"))),
+                        MultiValueMap.fromMultiValue(mapOf("token" to listOf(request.headers.get("Authorization")?.firstOrNull()?.removePrefix("Bearer ")), "identity_provider" to listOf("entra_id"))),
                     ),
                 ).retrieve()
                 .bodyToMono<String>()
