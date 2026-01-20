@@ -1,6 +1,5 @@
 package no.nav.sosialhjelp.modia.digisossak.fiks
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -20,7 +19,7 @@ import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.responses.okDigisossakResponseString
 import no.nav.sosialhjelp.modia.responses.ok_minimal_jsondigisossoker_response_string
 import no.nav.sosialhjelp.modia.utils.RequestUtils
-import no.nav.sosialhjelp.modia.utils.objectMapper
+import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
@@ -32,6 +31,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.WebClient
+import tools.jackson.module.kotlin.readValue
 import java.time.LocalDateTime
 
 internal class FiksClientTest {
@@ -165,7 +165,7 @@ internal class FiksClientTest {
 
     @Test
     fun `GET digisosSak fra cache`() {
-        val digisosSak: DigisosSak = objectMapper.readValue(okDigisossakResponseString())
+        val digisosSak: DigisosSak = sosialhjelpJsonMapper.readValue(okDigisossakResponseString())
         every { redisService.get(any(), any(), DigisosSak::class.java) } returns digisosSak
 
         val result2 = fiksClient.hentDigisosSak(id)
@@ -190,7 +190,7 @@ internal class FiksClientTest {
         verify(exactly = 1) { redisService.get(any(), any(), DigisosSak::class.java) }
         verify(exactly = 1) { redisService.set(any(), any(), any(), any()) }
 
-        val digisosSak: DigisosSak = objectMapper.readValue(okDigisossakResponseString())
+        val digisosSak: DigisosSak = sosialhjelpJsonMapper.readValue(okDigisossakResponseString())
         every { redisService.get(any(), any(), DigisosSak::class.java) } returns digisosSak
 
         val result = fiksClient.hentDigisosSak(id)
@@ -209,7 +209,7 @@ internal class FiksClientTest {
                 .setBody(okDigisossakResponseString()),
         )
 
-        val digisosSak = objectMapper.readValue(okDigisossakResponseString(), DigisosSak::class.java)
+        val digisosSak = sosialhjelpJsonMapper.readValue(okDigisossakResponseString(), DigisosSak::class.java)
 
 //        annen veileder har hentet digisosSak tidligere (og finnes i cache)
         val annenSaksbehandler = "other"
@@ -256,7 +256,7 @@ internal class FiksClientTest {
 
     @Test
     fun `GET dokument fra cache`() {
-        val jsonDigisosSoker: JsonDigisosSoker = objectMapper.readValue(ok_minimal_jsondigisossoker_response_string)
+        val jsonDigisosSoker: JsonDigisosSoker = sosialhjelpJsonMapper.readValue(ok_minimal_jsondigisossoker_response_string)
         every { redisService.get(any(), any(), JsonDigisosSoker::class.java) } returns jsonDigisosSoker
 
         val result = fiksClient.hentDokument("fnr", id, "dokumentlagerId", JsonDigisosSoker::class.java)

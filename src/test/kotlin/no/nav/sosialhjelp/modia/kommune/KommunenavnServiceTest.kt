@@ -1,16 +1,16 @@
 package no.nav.sosialhjelp.modia.kommune
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import no.nav.sosialhjelp.modia.kommune.kartverket.KommunenavnClient
 import no.nav.sosialhjelp.modia.kommune.kartverket.KommunenavnProperties
-import no.nav.sosialhjelp.modia.utils.objectMapper
+import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import tools.jackson.module.kotlin.readValue
 
 internal class KommunenavnServiceTest {
     private val kommunenavnClient: KommunenavnClient = mockk()
@@ -20,7 +20,7 @@ internal class KommunenavnServiceTest {
     private val kommunenavn = "Oslo"
 
     private val response =
-        objectMapper.readValue<KommunenavnProperties>(
+        sosialhjelpJsonMapper.readValue<KommunenavnProperties>(
             ClassLoader.getSystemResourceAsStream("kartverket-response.json")!!,
         )
 

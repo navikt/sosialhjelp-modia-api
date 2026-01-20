@@ -19,7 +19,7 @@ import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import no.nav.sosialhjelp.modia.utils.RequestUtils
-import no.nav.sosialhjelp.modia.utils.objectMapper
+import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -130,7 +130,7 @@ class FiksClientImpl(
     ) {
         if (skalBrukeCache()) {
             log.info("Lagret digisossak/dokument id=$id til cache")
-            redisService.set(RedisKeyType.FIKS_CLIENT, cacheKeyFor(id), objectMapper.writeValueAsBytes(content), timeToLive)
+            redisService.set(RedisKeyType.FIKS_CLIENT, cacheKeyFor(id), sosialhjelpJsonMapper.writeValueAsBytes(content), timeToLive)
         }
     }
 

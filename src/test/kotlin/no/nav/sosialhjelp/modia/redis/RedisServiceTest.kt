@@ -3,8 +3,8 @@ package no.nav.sosialhjelp.modia.redis
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.modia.responses.kommuneInfoResponseString
 import no.nav.sosialhjelp.modia.responses.okDigisossakResponseString
-import no.nav.sosialhjelp.modia.responses.ok_kommuneinfo_response_string
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -42,7 +42,7 @@ internal class RedisServiceTest {
 
     @Test
     internal fun `store gir feil type`() {
-        every { redisStore.get(any()) } returns ok_kommuneinfo_response_string.toByteArray()
+        every { redisStore.get(any()) } returns kommuneInfoResponseString.toByteArray()
 
         val digisosSak = service.get(RedisKeyType.SKJERMEDE_PERSONER, "key", DigisosSak::class.java)
         assertThat(digisosSak).isNull()

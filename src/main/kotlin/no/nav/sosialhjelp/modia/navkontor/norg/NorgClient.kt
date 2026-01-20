@@ -12,7 +12,7 @@ import no.nav.sosialhjelp.modia.redis.RedisKeyType
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.typeRef
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
-import no.nav.sosialhjelp.modia.utils.objectMapper
+import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.context.annotation.Profile
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
@@ -101,7 +101,7 @@ class NorgClientImpl(
         redisService.set(
             type = RedisKeyType.NORG_CLIENT,
             key = ALLE_NAVENHETER_CACHE_KEY,
-            value = objectMapper.writeValueAsBytes(list),
+            value = sosialhjelpJsonMapper.writeValueAsBytes(list),
             timeToLive = NAVENHET_CACHE_TIME_TO_LIVE_SECONDS,
         )
     }
@@ -114,7 +114,7 @@ class NorgClientImpl(
         redisService.set(
             type = RedisKeyType.NORG_CLIENT,
             key = "$NAVENHET_CACHE_KEY_PREFIX$enhetsnr",
-            value = objectMapper.writeValueAsBytes(navEnhet),
+            value = sosialhjelpJsonMapper.writeValueAsBytes(navEnhet),
             timeToLive = NAVENHET_CACHE_TIME_TO_LIVE_SECONDS,
         )
     }
