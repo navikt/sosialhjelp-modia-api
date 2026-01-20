@@ -54,7 +54,7 @@ internal class KommuneServiceTest {
     @Test
     internal fun `hent KommuneInfo fra client`() {
         every { kommuneInfoClient.getKommuneInfo(any()) } returns
-                sosialhjelpJsonMapper.readValue(kommuneInfoResponseString)
+            sosialhjelpJsonMapper.readValue(kommuneInfoResponseString)
 
         val result = service.get(kommuneNr)
 

@@ -13,7 +13,7 @@ const val APPLICATION_READY = "Application is ready!"
 @Unprotected
 @RestController
 @RequestMapping(value = ["/internal"])
-class HealthController() {
+class HealthController {
     @ResponseBody
     @GetMapping(value = ["/isAlive"], produces = [MediaType.TEXT_PLAIN_VALUE])
     fun isAlive(): String = APPLICATION_LIVENESS
