@@ -54,6 +54,7 @@ class LoginController(
                 .block()
 
         log.info(responseEntity.toString())
+        log.info("Token: ${authHeader.removePrefix("Bearer ")}")
         return ResponseEntity.ok(LoginResponse("ok"))
     }
 
