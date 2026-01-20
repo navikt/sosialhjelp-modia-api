@@ -26,7 +26,10 @@ class LoginController(
     val log by logger()
 
     @GetMapping("/login")
-    fun login(request: HttpRequest, response: HttpServletResponse): ResponseEntity<LoginResponse> {
+    fun login(
+        request: HttpRequest,
+        response: HttpServletResponse,
+    ): ResponseEntity<LoginResponse> {
         val responseEntity =
             webClient
                 .post()
@@ -34,7 +37,18 @@ class LoginController(
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(
                     BodyInserters.fromFormData(
-                        MultiValueMap.fromMultiValue(mapOf("token" to listOf(request.headers.get("Authorization")?.firstOrNull()?.removePrefix("Bearer ")), "identity_provider" to listOf("entra_id"))),
+                        MultiValueMap.fromMultiValue(
+                            mapOf(
+                                "token" to
+                                    listOf(
+                                        request.headers
+                                            .get("Authorization")
+                                            ?.firstOrNull()
+                                            ?.removePrefix("Bearer ") ?: "",
+                                    ),
+                                "identity_provider" to listOf("entra_id"),
+                            ),
+                        ),
                     ),
                 ).retrieve()
                 .bodyToMono<String>()
