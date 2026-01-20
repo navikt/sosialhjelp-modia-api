@@ -4,11 +4,11 @@ import jakarta.servlet.http.HttpServletResponse
 import no.nav.security.token.support.core.api.Unprotected
 import no.nav.sosialhjelp.modia.logger
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpRequest
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.reactive.function.BodyInserters
@@ -27,7 +27,8 @@ class LoginController(
 
     @GetMapping("/login")
     fun login(
-        request: HttpRequest,
+        @RequestHeader("Authorization", required = false)
+        authHeader: String?,
         response: HttpServletResponse,
     ): ResponseEntity<LoginResponse> {
         val responseEntity =
@@ -41,10 +42,8 @@ class LoginController(
                             mapOf(
                                 "token" to
                                     listOf(
-                                        request.headers
-                                            .get("Authorization")
-                                            ?.firstOrNull()
-                                            ?.removePrefix("Bearer ") ?: "",
+                                        authHeader?.removePrefix("Bearer ")
+                                            ?: throw IllegalArgumentException("Manglende Authorization header"),
                                     ),
                                 "identity_provider" to listOf("entra_id"),
                             ),
