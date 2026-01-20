@@ -16,7 +16,7 @@ jwksRsa = "0.23.0"
 syslog4j = "0.9.61"
 lettuce = "6.8.0.RELEASE"
 unleash = "11.1.1"
-springdoc = "2.8.13"
+springdoc = "3.0.1"
 mockk = "1.14.7"
 ktlint = "1.5.0"
 
