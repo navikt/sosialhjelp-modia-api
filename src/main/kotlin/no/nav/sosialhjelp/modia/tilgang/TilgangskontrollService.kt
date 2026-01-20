@@ -13,6 +13,7 @@ import no.nav.sosialhjelp.modia.person.pdl.isKode6Or7
 import no.nav.sosialhjelp.modia.tilgang.azure.AzureGraphClient
 import no.nav.sosialhjelp.modia.tilgang.skjermedepersoner.SkjermedePersonerClient
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
+import org.springframework.core.env.Environment
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 
@@ -23,6 +24,7 @@ class TilgangskontrollService(
     private val azureGraphClient: AzureGraphClient,
     private val auditService: AuditService,
     private val clientProperties: ClientProperties,
+    private val env: Environment,
 ) {
     fun harTilgang(
         brukerIdent: String,
@@ -31,7 +33,10 @@ class TilgangskontrollService(
         method: HttpMethod,
     ) {
         val veilederToken = token.replace(BEARER, "")
-        if (!azureGraphClient.hentInnloggetVeilederSineGrupper(veilederToken).value.any { it.id == clientProperties.veilederGruppeId }) {
+        // TODO: Fjern når FSS er død
+        if (!env.activeProfiles.contains("gcp") &&
+            !azureGraphClient.hentInnloggetVeilederSineGrupper(veilederToken).value.any { it.id == clientProperties.veilederGruppeId }
+        ) {
             throw ManglendeModiaSosialhjelpTilgangException("Veileder er ikke i riktig azure gruppe til å bruke modia sosialhjelp.")
                 .also { auditService.reportToAuditlog(brukerIdent, url, method, Access.DENY) }
         }
@@ -55,7 +60,7 @@ class TilgangskontrollService(
         method: HttpMethod,
     ) {
         val veilederToken = token.replace(BEARER, "")
-        if (!azureGraphClient.hentInnloggetVeilederSineGrupper(veilederToken).value.any { it.id == clientProperties.veilederGruppeId }) {
+        if (!env.activeProfiles.contains("gcp") && !azureGraphClient.hentInnloggetVeilederSineGrupper(veilederToken).value.any { it.id == clientProperties.veilederGruppeId }) {
             throw ManglendeModiaSosialhjelpTilgangException("Veileder er ikke i riktig azure gruppe til å bruke modia sosialhjelp.")
                 .also { auditService.reportToAuditlog("", url, method, Access.DENY) }
         }
