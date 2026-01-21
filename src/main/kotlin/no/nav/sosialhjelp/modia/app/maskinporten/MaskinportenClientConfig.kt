@@ -8,17 +8,16 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.netty.http.client.HttpClient
 
 @Configuration
 class MaskinportenClientConfig(
-    @Value("\${maskinporten_clientid}") private val clientId: String,
-    @Value("\${maskinporten_scopes}") private val scopes: String,
-    @Value("\${maskinporten_well_known_url}") private val wellKnownUrl: String,
-    @Value("\${maskinporten_client_jwk}") private val clientJwk: String,
+    @param:Value("\${maskinporten_clientid}") private val clientId: String,
+    @param:Value("\${maskinporten_scopes}") private val scopes: String,
+    @param:Value("\${maskinporten_well_known_url}") private val wellKnownUrl: String,
+    @param:Value("\${maskinporten_client_jwk}") private val clientJwk: String,
     webClientBuilder: WebClient.Builder,
     proxiedHttpClient: HttpClient,
     private val miljoUtils: MiljoUtils,

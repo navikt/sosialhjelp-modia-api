@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 class ExceptionHandler : ResponseEntityExceptionHandler() {
-    @Value("\${loginurl}")
+    @param:Value("\${loginurl}")
     private val loginurl: String? = null
 
     @ExceptionHandler(Throwable::class)

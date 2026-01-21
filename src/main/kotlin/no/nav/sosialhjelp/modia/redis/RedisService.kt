@@ -50,7 +50,7 @@ interface RedisService {
 @Profile("!no-redis")
 @Component
 class RedisServiceImpl(
-    @Value("\${cache_time_to_live_seconds}") private val cacheTimeToLiveSeconds: Long,
+    @param:Value("\${cache_time_to_live_seconds}") private val cacheTimeToLiveSeconds: Long,
     private val redisStore: RedisStore,
 ) : RedisService {
     override val defaultTimeToLiveSeconds = cacheTimeToLiveSeconds

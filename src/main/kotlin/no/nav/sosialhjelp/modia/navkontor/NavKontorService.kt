@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class NavKontorService(
-    @Value("\${client.norg_oppslag_url}") private val norgOppslagUrl: String,
+    @param:Value("\${client.norg_oppslag_url}") private val norgOppslagUrl: String,
     private val norgClient: NorgClient,
     private val redisService: RedisService,
 ) {
