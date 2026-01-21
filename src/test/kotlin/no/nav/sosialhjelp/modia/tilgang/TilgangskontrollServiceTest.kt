@@ -25,6 +25,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.core.env.Environment
 import org.springframework.http.HttpMethod
 
 internal class TilgangskontrollServiceTest {
@@ -33,8 +34,12 @@ internal class TilgangskontrollServiceTest {
     private val azureGraphClient: AzureGraphClient = mockk()
     private val auditService: AuditService = mockk()
     private val clientProperties: ClientProperties = mockk()
+    private val env: Environment =
+        mockk {
+            every { activeProfiles } returns arrayOf("test")
+        }
 
-    private val service = TilgangskontrollService(pdlClient, skjermedePersonerClient, azureGraphClient, auditService, clientProperties)
+    private val service = TilgangskontrollService(pdlClient, skjermedePersonerClient, azureGraphClient, auditService, clientProperties, env)
 
     private val fnr = "fnr"
     private val pdlPersonUtenBeskyttelse = PdlHentPerson(PdlPerson(emptyList(), emptyList(), emptyList(), emptyList(), emptyList()))

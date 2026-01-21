@@ -1,5 +1,6 @@
 package no.nav.sosialhjelp.modia.app.maskinporten
 
+import no.nav.sosialhjelp.modia.auth.texas.TexasClient
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.utils.MiljoUtils
 import org.springframework.beans.factory.annotation.Value
@@ -20,15 +21,21 @@ class MaskinportenClientConfig(
     webClientBuilder: WebClient.Builder,
     proxiedHttpClient: HttpClient,
     private val miljoUtils: MiljoUtils,
+    private val texasClient: TexasClient,
 ) {
     @Bean
-    @Profile("!test")
-    fun maskinportenClient(): MaskinportenClient = MaskinportenClient(maskinPortenWebClient, maskinportenProperties, wellknown, miljoUtils)
+    @Profile("!test&!gcp")
+    fun maskinportenClientFss(): MaskinportenClient =
+        MaskinportenClientFss(maskinPortenWebClient, maskinportenProperties, wellknown, miljoUtils)
+
+    @Bean
+    @Profile("!test&gcp")
+    fun maskinportenClientGcp(): MaskinportenClient = MaskinportenClientGcp(texasClient)
 
     @Bean
     @Profile("test")
-    fun maskinportenClientTest(): MaskinportenClient =
-        MaskinportenClient(
+    fun maskinportenClientTest(): MaskinportenClientFss =
+        MaskinportenClientFss(
             maskinPortenWebClient,
             maskinportenProperties,
             WellKnown("iss", "token_url"),
