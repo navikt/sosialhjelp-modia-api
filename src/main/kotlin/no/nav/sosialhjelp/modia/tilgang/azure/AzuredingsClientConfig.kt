@@ -4,6 +4,7 @@ import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.app.exceptions.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.app.maskinporten.WellKnown
 import no.nav.sosialhjelp.modia.logger
+import no.nav.sosialhjelp.modia.utils.configureWebClient
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -31,12 +32,7 @@ class AzuredingsClientConfig(
         return AzuredingsWebConfig(wellKnown.token_endpoint)
     }
 
-    private val azuredingsWebClient: WebClient =
-        webClientBuilder
-            .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
-            .codecs {
-                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }.build()
+    private val azuredingsWebClient: WebClient = webClientBuilder.configureWebClient(proxiedHttpClient)
 
     fun downloadWellKnown(url: String): WellKnown =
         azuredingsWebClient

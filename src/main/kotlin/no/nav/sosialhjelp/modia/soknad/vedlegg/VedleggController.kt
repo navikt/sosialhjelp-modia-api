@@ -54,9 +54,9 @@ class VedleggController(
     data class VedleggResponse(
         val type: String,
         val tilleggsinfo: String?,
-        @JsonFormat(pattern = "yyyy-MM-dd")
+        @param:JsonFormat(pattern = "yyyy-MM-dd")
         val innsendelsesfrist: LocalDateTime?,
-        @JsonFormat(pattern = "yyyy-MM-dd")
+        @param:JsonFormat(pattern = "yyyy-MM-dd")
         val datoLagtTil: LocalDateTime?,
         val antallVedlegg: Int,
     )

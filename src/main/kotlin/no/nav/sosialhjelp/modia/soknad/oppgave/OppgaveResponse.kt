@@ -6,9 +6,9 @@ import java.time.LocalDate
 data class OppgaveResponse(
     val dokumenttype: String,
     val tilleggsinformasjon: String?,
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @param:JsonFormat(pattern = "yyyy-MM-dd")
     val innsendelsesfrist: LocalDate?,
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @param:JsonFormat(pattern = "yyyy-MM-dd")
     val vedleggDatoLagtTil: LocalDate?,
     val antallVedlegg: Int,
     val erFraInnsyn: Boolean,

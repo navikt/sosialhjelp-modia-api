@@ -3,6 +3,7 @@ package no.nav.sosialhjelp.modia.app.maskinporten
 import no.nav.sosialhjelp.modia.auth.texas.TexasClient
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.utils.MiljoUtils
+import no.nav.sosialhjelp.modia.utils.configureWebClient
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -42,12 +43,7 @@ class MaskinportenClientConfig(
             miljoUtils,
         )
 
-    private val maskinPortenWebClient: WebClient =
-        webClientBuilder
-            .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
-            .codecs {
-                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }.build()
+    private val maskinPortenWebClient: WebClient = webClientBuilder.configureWebClient(proxiedHttpClient)
 
     private val maskinportenProperties =
         MaskinportenProperties(

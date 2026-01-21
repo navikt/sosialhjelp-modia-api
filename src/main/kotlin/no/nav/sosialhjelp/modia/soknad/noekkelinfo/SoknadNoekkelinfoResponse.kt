@@ -9,14 +9,14 @@ import java.time.LocalDateTime
 data class SoknadNoekkelinfoResponse(
     val tittel: String,
     val status: SoknadsStatus,
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @param:JsonFormat(pattern = "yyyy-MM-dd")
     val sistOppdatert: LocalDate,
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @param:JsonFormat(pattern = "yyyy-MM-dd")
     val sendtEllerMottattTidspunkt: LocalDate?,
     val navKontor: NavKontor?,
     val kommunenavn: String,
     val videresendtHistorikk: List<VideresendtInfo>?,
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    @param:JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     val tidspunktForelopigSvar: LocalDateTime?,
     val papirSoknad: Boolean,
     val kommunenummer: String,
@@ -25,7 +25,7 @@ data class SoknadNoekkelinfoResponse(
 
 data class VideresendtInfo(
     val type: SendingType,
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @param:JsonFormat(pattern = "yyyy-MM-dd")
     val tidspunkt: LocalDate,
     val navKontor: NavKontor,
 )

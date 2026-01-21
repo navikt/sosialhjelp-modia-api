@@ -8,6 +8,7 @@ import no.nav.sosialhjelp.modia.tilgang.azure.model.AzureAdGruppe
 import no.nav.sosialhjelp.modia.tilgang.azure.model.AzureAdGrupper
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import org.springframework.context.annotation.Profile
+import no.nav.sosialhjelp.modia.utils.configureWebClient
 import org.springframework.http.HttpHeaders
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
@@ -26,13 +27,9 @@ class AzureGraphClientFss(
     proxiedHttpClient: HttpClient,
     private val azuredingsService: AzuredingsService,
     private val clientProperties: ClientProperties,
-) : AzureGraphClient {
-    private val azureGraphWebClient: WebClient =
-        webClientBuilder
-            .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
-            .codecs {
-                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }.build()
+): AzureGraphClient {
+
+    private val azureGraphWebClient: WebClient = webClientBuilder.configureWebClient(proxiedHttpClient)
 
     override fun hentInnloggetVeilederSineGrupper(token: String): AzureAdGrupper =
         runBlocking(Dispatchers.IO) {

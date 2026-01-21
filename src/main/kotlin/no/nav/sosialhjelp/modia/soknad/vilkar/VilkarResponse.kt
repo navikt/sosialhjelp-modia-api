@@ -7,6 +7,6 @@ data class VilkarResponse(
     val referanse: String,
     val sakstittel: String?,
     val vilkarUtbetalinger: List<VilkarUtbetalingResponse>,
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @param:JsonFormat(pattern = "yyyy-MM-dd")
     val datoLagtTil: LocalDate?,
 )
