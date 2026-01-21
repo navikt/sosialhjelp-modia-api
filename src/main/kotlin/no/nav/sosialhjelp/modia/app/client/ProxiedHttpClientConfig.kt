@@ -9,7 +9,7 @@ import reactor.netty.http.client.HttpClient
 @Profile("prod-fss|dev-fss")
 @Configuration
 class ProxiedHttpClientConfig {
-    @param:Value($$"${HTTPS_PROXY}")
+    @Value($$"${HTTPS_PROXY}")
     private lateinit var proxyUrl: String
 
     @Bean

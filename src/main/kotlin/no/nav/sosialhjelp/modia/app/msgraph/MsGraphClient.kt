@@ -5,7 +5,6 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import no.nav.sosialhjelp.modia.utils.configureWebClient
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono

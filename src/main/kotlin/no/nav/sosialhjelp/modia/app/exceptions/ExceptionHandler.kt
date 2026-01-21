@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 class ExceptionHandler : ResponseEntityExceptionHandler() {
-    @param:Value("\${loginurl}")
+    @Value("\${loginurl}")
     private val loginurl: String? = null
 
     @ExceptionHandler(Throwable::class)
@@ -74,7 +74,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     fun handleManglendeModiaSosialhjelpTilgangException(
         e: ManglendeModiaSosialhjelpTilgangException,
     ): ResponseEntity<FrontendErrorMessage> {
-        log.info("Veileder manger ad-rolle for tilgang til sosialhjelp i modia.")
+        log.warn("Veileder manger ad-rolle for tilgang til sosialhjelp i modia.", e)
         val error = FrontendErrorMessage(TILGANG_ERROR, "Mangler tilgang til tjenesten")
         return ResponseEntity(error, HttpStatus.FORBIDDEN)
     }

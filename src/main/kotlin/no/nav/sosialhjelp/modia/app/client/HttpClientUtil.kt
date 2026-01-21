@@ -4,7 +4,6 @@ import io.netty.resolver.DefaultAddressResolverGroup
 import java.net.URI
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.ProxyProvider
-import java.net.URL
 
 fun proxiedHttpClient(proxyUrl: String): HttpClient {
     val uri = URI(proxyUrl).toURL()

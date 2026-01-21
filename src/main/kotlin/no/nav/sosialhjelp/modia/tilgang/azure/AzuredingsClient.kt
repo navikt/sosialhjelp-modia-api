@@ -5,7 +5,6 @@ import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.tilgang.azure.model.AzuredingsResponse
 import no.nav.sosialhjelp.modia.utils.configureWebClient
 import org.springframework.http.MediaType
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.BodyInserters

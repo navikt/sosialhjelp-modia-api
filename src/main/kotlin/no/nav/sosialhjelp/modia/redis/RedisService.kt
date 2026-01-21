@@ -61,18 +61,26 @@ class RedisServiceImpl(
         requestedClass: Class<out T>,
     ): T? {
         val bytes: ByteArray = getBytes(type, key) ?: return null
-        return try {
+
+        return runCatching {
             sosialhjelpJsonMapper
                 .readValue(bytes, requestedClass)
                 .also { valider(it) }
                 .also { log.debug("Hentet ${requestedClass.simpleName} fra cache, type=${type.name}") } as T
-        } catch (ignored: KotlinInvalidNullException) {
-            log.warn("Fant type=${type.name} i cache, men value var ikke ${requestedClass.simpleName}")
-            null
-        } catch (ignored: DigisosSakTilhorerAnnenBrukerException) {
-            log.warn("DigisosSak i cache tilhører en annen bruker enn brukeren fra token.")
-            null
         }
+            .getOrElse {
+                when (it) {
+                    is KotlinInvalidNullException -> {
+                        log.warn("Fant type=${type.name} i cache, men value var ikke ${requestedClass.simpleName}")
+                        null
+                    }
+                    is DigisosSakTilhorerAnnenBrukerException -> {
+                        log.warn("DigisosSak i cache tilhører en annen bruker enn brukeren fra token.")
+                        null
+                    }
+                    else -> throw it
+                }
+            }
     }
 
     override fun getString(

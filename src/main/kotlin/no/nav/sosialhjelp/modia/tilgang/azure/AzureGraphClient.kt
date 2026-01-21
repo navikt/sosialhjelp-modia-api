@@ -10,7 +10,6 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import org.springframework.context.annotation.Profile
 import no.nav.sosialhjelp.modia.utils.configureWebClient
 import org.springframework.http.HttpHeaders
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody

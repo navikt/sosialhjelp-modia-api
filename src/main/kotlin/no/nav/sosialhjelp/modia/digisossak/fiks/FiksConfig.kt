@@ -5,7 +5,6 @@ import no.nav.sosialhjelp.modia.utils.configureBuilder
 import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.http.codec.json.JacksonJsonDecoder
 import org.springframework.http.codec.json.JacksonJsonEncoder
 import org.springframework.web.reactive.function.client.WebClient
