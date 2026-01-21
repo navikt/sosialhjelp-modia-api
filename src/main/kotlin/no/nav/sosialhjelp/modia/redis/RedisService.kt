@@ -88,13 +88,20 @@ class RedisServiceImpl(
         key: String,
     ): String? {
         val bytes: ByteArray = getBytes(type, key) ?: return null
-        return try {
+
+        return runCatching {
             log.debug("Hentet String fra cache, type=${type.name}")
             String(bytes, StandardCharsets.UTF_8)
-        } catch (ignored: IOException) {
-            log.warn("Fant type=${type.name} i cache, men value var ikke String")
-            null
         }
+            .getOrElse {
+                when(it) {
+                    is IOException -> {
+                        log.warn("Fant type=${type.name} i cache, men value var ikke String")
+                        null
+                    }
+                    else -> throw it
+                }
+            }
     }
 
     override fun set(

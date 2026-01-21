@@ -82,7 +82,6 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(value = [JwtTokenUnauthorizedException::class, JwtTokenMissingException::class])
     fun handleTokenValidationExceptions(
         ex: RuntimeException,
-        request: WebRequest,
     ): ResponseEntity<FrontendErrorMessage> {
         if (ex.message?.contains("Server misconfigured") == true) {
             log.error(ex.message)
@@ -91,7 +90,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(FrontendErrorMessage("unexpected_error", "Noe uventet feilet"))
         }
-        log.info("Bruker er ikke autentisert mot AzureAD (enda). Sender 401 med loginurl. Feilmelding: ${ex.message}")
+        log.warn("Bruker er ikke autentisert mot AzureAD (enda). Sender 401 med loginurl. Feilmelding: ${ex.message}")
         return createUnauthorizedWithLoginUrlResponse(loginurl!!)
     }
 
