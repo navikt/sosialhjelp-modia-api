@@ -63,10 +63,11 @@ sealed class TexasClient(
     suspend fun getTokenXToken(
         target: String,
         userToken: String,
+        identityProvider: IdentityProvider,
     ): String =
         getToken(
             TokenEndpointType.BEHALF_OF,
-            getTokenXParams(target, userToken),
+            getTokenXParams(target, userToken, identityProvider),
         )
 
     private val texasWebClient =
@@ -82,7 +83,8 @@ sealed class TexasClient(
     private fun getTokenXParams(
         target: String,
         userToken: String,
-    ): Map<String, String> = mapOf("identity_provider" to "tokenx", "target" to target, "user_token" to userToken)
+        identityProvider: IdentityProvider,
+    ): Map<String, String> = mapOf("identity_provider" to identityProvider.value, "target" to target, "user_token" to userToken)
 
     protected suspend fun getToken(
         tokenEndpointType: TokenEndpointType,
@@ -175,6 +177,7 @@ enum class IdentityProvider(
     val value: String,
 ) {
     ENTRA_ID("entra_id"),
+    TOKEN_X("token_x"),
 }
 
 data class IntrospectionResponse(

@@ -60,7 +60,9 @@ class TilgangskontrollService(
         method: HttpMethod,
     ) {
         val veilederToken = token.replace(BEARER, "")
-        if (!env.activeProfiles.contains("gcp") && !azureGraphClient.hentInnloggetVeilederSineGrupper(veilederToken).value.any { it.id == clientProperties.veilederGruppeId }) {
+        if (!env.activeProfiles.contains("gcp") &&
+            !azureGraphClient.hentInnloggetVeilederSineGrupper(veilederToken).value.any { it.id == clientProperties.veilederGruppeId }
+        ) {
             throw ManglendeModiaSosialhjelpTilgangException("Veileder er ikke i riktig azure gruppe til å bruke modia sosialhjelp.")
                 .also { auditService.reportToAuditlog("", url, method, Access.DENY) }
         }
