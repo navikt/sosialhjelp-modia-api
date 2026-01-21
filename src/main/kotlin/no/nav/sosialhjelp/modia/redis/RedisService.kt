@@ -119,17 +119,17 @@ class RedisServiceImpl(
     }
 
     override fun getAlleNavEnheter(): List<NavEnhet>? {
-        val bytes: ByteArray? = redisStore.get(RedisKeyType.NORG_CLIENT.name + "_" + ALLE_NAVENHETER_CACHE_KEY)
-        return if (bytes != null) {
-            try {
-                sosialhjelpJsonMapper.readValue(bytes)
-            } catch (ignored: IOException) {
-                log.warn("Fant key=$ALLE_NAVENHETER_CACHE_KEY, men feil oppstod ved deserialisering til List<NavEnhet>")
-                null
+        val bytes: ByteArray = redisStore.get(RedisKeyType.NORG_CLIENT.name + "_" + ALLE_NAVENHETER_CACHE_KEY)
+            ?: return null
+
+        return runCatching { sosialhjelpJsonMapper.readValue(bytes) as List<NavEnhet> }
+            .getOrElse {
+                if (it !is IOException) throw it
+                else {
+                    log.warn("Fant key=$ALLE_NAVENHETER_CACHE_KEY, men feil oppstod ved deserialisering til List<NavEnhet>")
+                    null
+                }
             }
-        } else {
-            null
-        }
     }
 
     private fun getBytes(

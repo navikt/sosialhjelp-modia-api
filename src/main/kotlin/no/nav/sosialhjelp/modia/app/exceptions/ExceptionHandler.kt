@@ -97,7 +97,6 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(value = [MetaDataNotAvailableException::class, IssuerConfigurationException::class])
     fun handleTokenValidationConfigurationExceptions(
         ex: RuntimeException,
-        request: WebRequest,
     ): ResponseEntity<FrontendErrorMessage> {
         log.error("Klarer ikke hente metadata fra discoveryurl eller problemer ved konfigurering av issuer. Feilmelding: ${ex.message}")
         return ResponseEntity
