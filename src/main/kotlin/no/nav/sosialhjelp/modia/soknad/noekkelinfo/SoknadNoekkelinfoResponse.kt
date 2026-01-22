@@ -20,7 +20,6 @@ data class SoknadNoekkelinfoResponse(
     val tidspunktForelopigSvar: LocalDateTime?,
     val papirSoknad: Boolean,
     val kommunenummer: String,
-    val isBroken: Boolean,
 )
 
 data class VideresendtInfo(

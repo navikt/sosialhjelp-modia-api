@@ -10,7 +10,6 @@ import no.nav.sosialhjelp.modia.kommune.KommuneService
 import no.nav.sosialhjelp.modia.kommune.KommunenavnService
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
-import no.nav.sosialhjelp.modia.utils.BrokenSoknad
 import org.springframework.stereotype.Component
 
 @Component
@@ -45,8 +44,7 @@ class NoekkelinfoService(
             videresendtHistorikk = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
             tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt,
             papirSoknad = erPapirSoknad,
-            kommunenummer = digisosSak.kommunenummer,
-            isBroken = digisosSak.originalSoknadNAV?.navEksternRefId?.let { BrokenSoknad.isBrokenSoknad(it) } ?: false,
+            kommunenummer = digisosSak.kommunenummer
         )
     }
 
