@@ -18,7 +18,7 @@ class AuditService(
         access: Access,
     ): Map<String, Any> =
         mutableMapOf(
-            CALL_ID to (MDCUtils.getCallId() ?: ""),
+            CALL_ID to (MDCUtils.getCallId()),
             CONSUMER_ID to SRVSOSIALHJELP_MOD,
             NAVIDENT to tokenUtils.hentNavIdentForInnloggetBruker(),
             BRUKER_FNR to brukerFnr,

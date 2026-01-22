@@ -13,7 +13,7 @@ import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
-import no.nav.sosialhjelp.modia.app.maskinporten.MaskinportenClient
+import no.nav.sosialhjelp.modia.app.maskinporten.MaskinportenClientFss
 import no.nav.sosialhjelp.modia.logging.AuditService
 import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.responses.okDigisossakResponseString
@@ -38,7 +38,7 @@ internal class FiksClientTest {
     private val mockWebServer = MockWebServer()
     private val fiksWebClient = WebClient.create(mockWebServer.url("/").toString())
     private val clientProperties: ClientProperties = mockk(relaxed = true)
-    private val maskinportenClient: MaskinportenClient = mockk()
+    private val maskinportenClient: MaskinportenClientFss = mockk()
     private val auditService: AuditService = mockk()
     private val redisService: RedisService = mockk()
     private val maxRetryAttempts = 2L
