@@ -23,7 +23,6 @@ class FiksConfig(
             .codecs {
                 it.defaultCodecs().jacksonJsonDecoder(JacksonJsonDecoder(sosialhjelpJsonMapper))
                 it.defaultCodecs().jacksonJsonEncoder(JacksonJsonEncoder(sosialhjelpJsonMapper))
-            }
-            .baseUrl(clientProperties.fiksDigisosEndpointUrl)
+            }.baseUrl(clientProperties.fiksDigisosEndpointUrl)
             .build()
 }

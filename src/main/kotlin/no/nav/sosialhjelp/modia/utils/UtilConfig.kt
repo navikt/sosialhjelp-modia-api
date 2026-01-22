@@ -17,8 +17,7 @@ val sosialhjelpJsonMapper: JsonMapper =
         .build()
 
 fun WebClient.Builder.configureBuilder(httpClient: HttpClient = unproxiedHttpClient()): WebClient.Builder =
-    clientConnector( ReactorClientHttpConnector(httpClient))
+    clientConnector(ReactorClientHttpConnector(httpClient))
         .codecs { it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024) }
 
 fun WebClient.Builder.configureWebClient(httpClient: HttpClient = unproxiedHttpClient()): WebClient = configureBuilder(httpClient).build()
-

@@ -79,9 +79,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     }
 
     @ExceptionHandler(value = [JwtTokenUnauthorizedException::class, JwtTokenMissingException::class])
-    fun handleTokenValidationExceptions(
-        ex: RuntimeException,
-    ): ResponseEntity<FrontendErrorMessage> {
+    fun handleTokenValidationExceptions(ex: RuntimeException): ResponseEntity<FrontendErrorMessage> {
         if (ex.message?.contains("Server misconfigured") == true) {
             log.error(ex.message)
             return ResponseEntity
@@ -94,9 +92,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     }
 
     @ExceptionHandler(value = [MetaDataNotAvailableException::class, IssuerConfigurationException::class])
-    fun handleTokenValidationConfigurationExceptions(
-        ex: RuntimeException,
-    ): ResponseEntity<FrontendErrorMessage> {
+    fun handleTokenValidationConfigurationExceptions(ex: RuntimeException): ResponseEntity<FrontendErrorMessage> {
         log.error("Klarer ikke hente metadata fra discoveryurl eller problemer ved konfigurering av issuer. Feilmelding: ${ex.message}")
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
