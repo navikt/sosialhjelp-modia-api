@@ -39,6 +39,7 @@ spec:
         - host: "unleash.nais.io"
         - host: digisos.ekstern.dev.nav.no
         - host: teamdigisos-unleash-api.nav.cloud.nais.io
+        - host: register.geonorge.no
       rules:
         - application: sosialhjelp-mock-alt-api-mock
   ingresses:

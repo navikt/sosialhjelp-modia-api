@@ -54,6 +54,7 @@ spec:
         - host: teamdigisos-unleash-api.nav.cloud.nais.io
         - host: api.fiks.test.ks.no
         - host: pdl-api.dev-fss-pub.nais.io
+        - host: register.geonorge.no
       rules:
         - application: skjermede-personer-pip
           namespace: nom
