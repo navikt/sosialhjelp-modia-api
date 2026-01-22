@@ -44,7 +44,7 @@ class NoekkelinfoService(
             videresendtHistorikk = leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model),
             tidspunktForelopigSvar = model.forelopigSvar?.hendelseTidspunkt,
             papirSoknad = erPapirSoknad,
-            kommunenummer = digisosSak.kommunenummer
+            kommunenummer = digisosSak.kommunenummer,
         )
     }
 
