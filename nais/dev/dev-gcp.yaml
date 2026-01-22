@@ -74,7 +74,7 @@ spec:
     - secret: sosialhjelp-modia-api-unleash-api-token
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "gcp,log-kibana,dev"
+      value: "gcp,log-kibana,dev,log-audit"
     - name: FIKS_DIGISOS_ENDPOINT_URL
       value: "https://api.fiks.test.ks.no"
     - name: NORG_ENDPOINT_URL
