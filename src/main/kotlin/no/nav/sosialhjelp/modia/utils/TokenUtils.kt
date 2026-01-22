@@ -9,7 +9,7 @@ interface TokenUtils {
     fun hentNavIdentForInnloggetBruker(): String
 }
 
-@Profile("!(mock-alt | local)&gcp")
+@Profile("gcp&!mock-alt")
 @Component
 class TokenUtilsImpl : TokenUtils {
     override fun hentNavIdentForInnloggetBruker(): String {
@@ -23,7 +23,7 @@ class TokenUtilsImpl : TokenUtils {
     }
 }
 
-@Profile("(mock-alt | local)")
+@Profile("!gcp|mock-alt")
 @Component
 class MockTokenUtils : TokenUtils {
     override fun hentNavIdentForInnloggetBruker(): String = "Z123456"
