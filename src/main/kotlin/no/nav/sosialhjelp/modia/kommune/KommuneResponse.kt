@@ -8,7 +8,7 @@ data class KommuneResponse(
     val erInnsynMidlertidigDeaktivert: Boolean,
     val erInnsendingEttersendelseDeaktivert: Boolean,
     val erInnsendingEttersendelseMidlertidigDeaktivert: Boolean,
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    @param:JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     val tidspunkt: Date,
     val harNksTilgang: Boolean,
     val behandlingsansvarlig: String?,

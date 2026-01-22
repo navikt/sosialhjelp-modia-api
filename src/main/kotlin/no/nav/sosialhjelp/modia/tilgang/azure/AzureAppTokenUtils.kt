@@ -4,9 +4,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.tilgang.azure.model.AzuredingsResponse
+import no.nav.sosialhjelp.modia.utils.configureWebClient
 import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
@@ -25,12 +25,7 @@ class AzureAppTokenUtilsImpl(
     proxiedHttpClient: HttpClient,
     private val clientProperties: ClientProperties,
 ) : AzureAppTokenUtils {
-    private val azureAppTokenWebClient: WebClient =
-        webClientBuilder
-            .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
-            .codecs {
-                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }.build()
+    private val azureAppTokenWebClient: WebClient = webClientBuilder.configureWebClient(proxiedHttpClient)
 
     override fun hentTokenMedSkjermedePersonerScope(): String =
         runBlocking(Dispatchers.IO) {

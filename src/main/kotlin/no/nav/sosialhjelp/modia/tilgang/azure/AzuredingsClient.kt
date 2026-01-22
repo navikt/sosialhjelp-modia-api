@@ -3,8 +3,8 @@ package no.nav.sosialhjelp.modia.tilgang.azure
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.tilgang.azure.model.AzuredingsResponse
+import no.nav.sosialhjelp.modia.utils.configureWebClient
 import org.springframework.http.MediaType
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
@@ -18,12 +18,7 @@ class AzuredingsClient(
     proxiedHttpClient: HttpClient,
     private val azuredingsWebConfig: AzuredingsWebConfig,
 ) {
-    private val azuredingsWebClient: WebClient =
-        webClientBuilder
-            .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
-            .codecs {
-                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }.build()
+    private val azuredingsWebClient: WebClient = webClientBuilder.configureWebClient(proxiedHttpClient)
 
     suspend fun exchangeToken(
         subjectToken: String,

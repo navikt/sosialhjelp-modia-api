@@ -10,14 +10,14 @@ data class SaksStatusResponse(
     val tittel: String,
     val status: SaksStatus?,
     val vedtak: List<Vedtak>?,
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @param:JsonFormat(pattern = "yyyy-MM-dd")
     val datoOpprettet: LocalDate,
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @param:JsonFormat(pattern = "yyyy-MM-dd")
     val datoAvsluttet: LocalDate?,
     val utbetalinger: List<Utbetaling> = emptyList(),
 ) {
     data class Vedtak(
-        @JsonFormat(pattern = "yyyy-MM-dd")
+        @param:JsonFormat(pattern = "yyyy-MM-dd")
         val vedtakDato: LocalDate,
         val utfall: UtfallVedtak?,
     )

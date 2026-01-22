@@ -7,8 +7,8 @@ data class DokumentasjonkravResponse(
     val referanse: String,
     val sakstittel: String?,
     val status: String,
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @param:JsonFormat(pattern = "yyyy-MM-dd")
     val innsendelsesfrist: LocalDate?,
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @param:JsonFormat(pattern = "yyyy-MM-dd")
     val datoLagtTil: LocalDate?,
 )

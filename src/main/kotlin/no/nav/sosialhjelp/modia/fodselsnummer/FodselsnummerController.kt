@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 class FodselsnummerController(
     private val tilgangskontrollService: TilgangskontrollService,
     private val fodselsnummerService: FodselsnummerService,
-    @Value("\${modia_baseurl}") private val modiaBaseurl: String,
+    @param:Value("\${modia_baseurl}") private val modiaBaseurl: String,
 ) {
     @PostMapping("/fodselsnummer")
     fun setFodselsnummer(

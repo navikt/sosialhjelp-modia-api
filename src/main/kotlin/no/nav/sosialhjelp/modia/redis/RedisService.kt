@@ -50,7 +50,7 @@ interface RedisService {
 @Profile("!no-redis")
 @Component
 class RedisServiceImpl(
-    @Value("\${cache_time_to_live_seconds}") private val cacheTimeToLiveSeconds: Long,
+    @param:Value("\${cache_time_to_live_seconds}") private val cacheTimeToLiveSeconds: Long,
     private val redisStore: RedisStore,
 ) : RedisService {
     override val defaultTimeToLiveSeconds = cacheTimeToLiveSeconds
@@ -61,17 +61,24 @@ class RedisServiceImpl(
         requestedClass: Class<out T>,
     ): T? {
         val bytes: ByteArray = getBytes(type, key) ?: return null
-        return try {
+
+        return runCatching {
             sosialhjelpJsonMapper
                 .readValue(bytes, requestedClass)
                 .also { valider(it) }
                 .also { log.debug("Hentet ${requestedClass.simpleName} fra cache, type=${type.name}") } as T
-        } catch (ignored: KotlinInvalidNullException) {
-            log.warn("Fant type=${type.name} i cache, men value var ikke ${requestedClass.simpleName}")
-            null
-        } catch (ignored: DigisosSakTilhorerAnnenBrukerException) {
-            log.warn("DigisosSak i cache tilhører en annen bruker enn brukeren fra token.")
-            null
+        }.getOrElse {
+            when (it) {
+                is KotlinInvalidNullException -> {
+                    log.warn("Fant type=${type.name} i cache, men value var ikke ${requestedClass.simpleName}")
+                    null
+                }
+                is DigisosSakTilhorerAnnenBrukerException -> {
+                    log.warn("DigisosSak i cache tilhører en annen bruker enn brukeren fra token.")
+                    null
+                }
+                else -> throw it
+            }
         }
     }
 
@@ -80,12 +87,18 @@ class RedisServiceImpl(
         key: String,
     ): String? {
         val bytes: ByteArray = getBytes(type, key) ?: return null
-        return try {
+
+        return runCatching {
             log.debug("Hentet String fra cache, type=${type.name}")
             String(bytes, StandardCharsets.UTF_8)
-        } catch (ignored: IOException) {
-            log.warn("Fant type=${type.name} i cache, men value var ikke String")
-            null
+        }.getOrElse {
+            when (it) {
+                is IOException -> {
+                    log.warn("Fant type=${type.name} i cache, men value var ikke String")
+                    null
+                }
+                else -> throw it
+            }
         }
     }
 
@@ -104,17 +117,19 @@ class RedisServiceImpl(
     }
 
     override fun getAlleNavEnheter(): List<NavEnhet>? {
-        val bytes: ByteArray? = redisStore.get(RedisKeyType.NORG_CLIENT.name + "_" + ALLE_NAVENHETER_CACHE_KEY)
-        return if (bytes != null) {
-            try {
-                sosialhjelpJsonMapper.readValue(bytes)
-            } catch (ignored: IOException) {
-                log.warn("Fant key=$ALLE_NAVENHETER_CACHE_KEY, men feil oppstod ved deserialisering til List<NavEnhet>")
-                null
+        val bytes: ByteArray =
+            redisStore.get(RedisKeyType.NORG_CLIENT.name + "_" + ALLE_NAVENHETER_CACHE_KEY)
+                ?: return null
+
+        return runCatching { sosialhjelpJsonMapper.readValue(bytes) as List<NavEnhet> }
+            .getOrElse {
+                if (it !is IOException) {
+                    throw it
+                } else {
+                    log.warn("Fant key=$ALLE_NAVENHETER_CACHE_KEY, men feil oppstod ved deserialisering til List<NavEnhet>")
+                    null
+                }
             }
-        } else {
-            null
-        }
     }
 
     private fun getBytes(

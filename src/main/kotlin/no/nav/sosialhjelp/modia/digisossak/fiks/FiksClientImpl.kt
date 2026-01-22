@@ -41,9 +41,9 @@ class FiksClientImpl(
     private val maskinportenClient: MaskinportenClient,
     private val auditService: AuditService,
     private val redisService: RedisService,
-    @Value("\${retry_fiks_max_attempts}") private val maxAttempts: Long,
-    @Value("\${retry_fiks_initial_delay}") private val initialDelay: Long,
-    @Value("\${dokument_cache_time_to_live_seconds}") private val documentTTL: Long,
+    @param:Value("\${retry_fiks_max_attempts}") private val maxAttempts: Long,
+    @param:Value("\${retry_fiks_initial_delay}") private val initialDelay: Long,
+    @param:Value("\${dokument_cache_time_to_live_seconds}") private val documentTTL: Long,
 ) : FiksClient {
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
 

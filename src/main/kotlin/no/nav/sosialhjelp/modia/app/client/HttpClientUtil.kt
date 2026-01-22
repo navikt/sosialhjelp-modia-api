@@ -3,10 +3,10 @@ package no.nav.sosialhjelp.modia.app.client
 import io.netty.resolver.DefaultAddressResolverGroup
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.ProxyProvider
-import java.net.URL
+import java.net.URI
 
 fun proxiedHttpClient(proxyUrl: String): HttpClient {
-    val uri = URL(proxyUrl)
+    val uri = URI(proxyUrl).toURL()
 
     return HttpClient
         .create()

@@ -3,21 +3,21 @@ package no.nav.sosialhjelp.modia.app.maskinporten
 import no.nav.sosialhjelp.modia.auth.texas.TexasClient
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.utils.MiljoUtils
+import no.nav.sosialhjelp.modia.utils.configureWebClient
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.netty.http.client.HttpClient
 
 @Configuration
 class MaskinportenClientConfig(
-    @Value("\${maskinporten_clientid}") private val clientId: String,
-    @Value("\${maskinporten_scopes}") private val scopes: String,
-    @Value("\${maskinporten_well_known_url}") private val wellKnownUrl: String,
-    @Value("\${maskinporten_client_jwk}") private val clientJwk: String,
+    @param:Value("\${maskinporten_clientid}") private val clientId: String,
+    @param:Value("\${maskinporten_scopes}") private val scopes: String,
+    @param:Value("\${maskinporten_well_known_url}") private val wellKnownUrl: String,
+    @param:Value("\${maskinporten_client_jwk}") private val clientJwk: String,
     webClientBuilder: WebClient.Builder,
     proxiedHttpClient: HttpClient,
     private val miljoUtils: MiljoUtils,
@@ -42,12 +42,7 @@ class MaskinportenClientConfig(
             miljoUtils,
         )
 
-    private val maskinPortenWebClient: WebClient =
-        webClientBuilder
-            .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
-            .codecs {
-                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }.build()
+    private val maskinPortenWebClient: WebClient = webClientBuilder.configureWebClient(proxiedHttpClient)
 
     private val maskinportenProperties =
         MaskinportenProperties(

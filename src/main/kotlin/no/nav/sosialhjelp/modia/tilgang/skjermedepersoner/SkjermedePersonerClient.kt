@@ -4,7 +4,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
-import no.nav.sosialhjelp.modia.app.client.unproxiedHttpClient
 import no.nav.sosialhjelp.modia.app.exceptions.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.redis.RedisKeyType.SKJERMEDE_PERSONER
@@ -12,11 +11,11 @@ import no.nav.sosialhjelp.modia.redis.RedisService
 import no.nav.sosialhjelp.modia.tilgang.azure.AzuredingsService
 import no.nav.sosialhjelp.modia.tilgang.skjermedepersoner.model.SkjermedePersonerRequest
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
+import no.nav.sosialhjelp.modia.utils.configureWebClient
 import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientRequestException
@@ -38,12 +37,7 @@ class SkjermedePersonerClientImpl(
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
 ) : SkjermedePersonerClient {
-    private val skjermedePersonerWebClient: WebClient =
-        webClientBuilder
-            .clientConnector(ReactorClientHttpConnector(unproxiedHttpClient()))
-            .codecs {
-                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }.build()
+    private val skjermedePersonerWebClient: WebClient = webClientBuilder.configureWebClient()
 
     override fun erPersonSkjermet(
         ident: String,

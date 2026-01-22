@@ -5,7 +5,7 @@ import java.time.LocalDate
 
 data class VilkarUtbetalingResponse(
     val tittel: String,
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @param:JsonFormat(pattern = "yyyy-MM-dd")
     val utbetalingEllerForfall: LocalDate?,
     val status: String,
 )

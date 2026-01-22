@@ -2,7 +2,7 @@ package no.nav.sosialhjelp.modia.kommune.kartverket
 
 import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.typeRef
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import no.nav.sosialhjelp.modia.utils.configureWebClient
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
@@ -12,12 +12,7 @@ class KommunenavnClient(
     webClientBuilder: WebClient.Builder,
     proxiedHttpClient: HttpClient,
 ) {
-    private val kommunenavnWebClient: WebClient =
-        webClientBuilder
-            .clientConnector(ReactorClientHttpConnector(proxiedHttpClient))
-            .codecs {
-                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }.build()
+    private val kommunenavnWebClient: WebClient = webClientBuilder.configureWebClient(proxiedHttpClient)
 
     fun getAll(): KommunenavnProperties =
         kommunenavnWebClient
