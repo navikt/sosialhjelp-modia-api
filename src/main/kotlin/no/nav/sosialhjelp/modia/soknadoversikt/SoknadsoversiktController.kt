@@ -116,19 +116,19 @@ class SoknadsoversiktController(
     fun erPapirSoknad(originalSoknadNAV: OriginalSoknadNAV?): Boolean = originalSoknadNAV == null
 
     fun papirSoknadDato(saken: DigisosSak): LocalDate? {
+        if (!erPapirSoknad(saken.originalSoknadNAV)) {
+            return null
+        }
         val model = eventService.createModel(saken)
-        if (erPapirSoknad(saken.originalSoknadNAV)) {
-            return model.saker
+        return model.saker
+            .takeIf { it.isNotEmpty() }
+            ?.get(0)
+            ?.datoOpprettet
+            ?: model.historikk
                 .takeIf { it.isNotEmpty() }
                 ?.get(0)
-                ?.datoOpprettet
-                ?: model.historikk
-                    .takeIf { it.isNotEmpty() }
-                    ?.get(0)
-                    ?.tidspunkt
-                    ?.toLocalDate()
-        }
-        return null
+                ?.tidspunkt
+                ?.toLocalDate()
     }
 
     companion object {
