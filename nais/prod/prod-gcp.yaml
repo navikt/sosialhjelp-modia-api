@@ -67,8 +67,8 @@ spec:
     limits:
       memory: 1Gi
     requests:
-      cpu: 25m
-      memory: 512Mi
+      cpu: 196m
+      memory: 704Mi
   envFrom:
     - secret: fiks-integrasjon-secret
     - secret: sosialhjelp-modia-api-unleash-api-token
