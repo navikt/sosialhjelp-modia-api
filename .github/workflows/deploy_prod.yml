@@ -16,7 +16,6 @@ on:
         type: choice
         options:
           - 'prod-gcp'
-          - 'prod-fss'
 
 jobs:
   deploy-to-prod:
