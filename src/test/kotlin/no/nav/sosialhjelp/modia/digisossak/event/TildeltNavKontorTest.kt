@@ -1,6 +1,7 @@
 package no.nav.sosialhjelp.modia.digisossak.event
 
 import io.mockk.clearAllMocks
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
@@ -34,15 +35,15 @@ internal class TildeltNavKontorTest {
 
         every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
-        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
+        coEvery { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
         resetHendelser()
     }
 
     @Test
-    fun `tildeltNavKontor skal hente navenhets navn fra Norg`() {
+    suspend fun `tildeltNavKontor skal hente navenhets navn fra Norg`() {
         every { norgClient.hentNavEnhet(NAV_KONTOR)!!.navn } returns enhetNavn
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -73,9 +74,9 @@ internal class TildeltNavKontorTest {
     }
 
     @Test
-    fun `tildeltNavKontor med tom navenhetsnummer skal gi default navenhetsnavn`() {
+    suspend fun `tildeltNavKontor med tom navenhetsnummer skal gi default navenhetsnavn`() {
         every { norgClient.hentNavEnhet("") } returns null
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -106,9 +107,9 @@ internal class TildeltNavKontorTest {
     }
 
     @Test
-    fun `tildeltNavKontor skal gi generell melding hvis NorgClient kaster FiksException`() {
+    suspend fun `tildeltNavKontor skal gi generell melding hvis NorgClient kaster FiksException`() {
         every { norgClient.hentNavEnhet(NAV_KONTOR) } throws NorgException("noe feilet", null)
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -134,10 +135,10 @@ internal class TildeltNavKontorTest {
     }
 
     @Test
-    fun `tildeltNavKontor til samme navKontor som soknad ble sendt til - gir ingen hendelse`() {
+    suspend fun `tildeltNavKontor til samme navKontor som soknad ble sendt til - gir ingen hendelse`() {
         val digisosSak = defaultDigisosSak.copy(tilleggsinformasjon = Tilleggsinformasjon(enhetsnummer = NAV_KONTOR))
         every { norgClient.hentNavEnhet(NAV_KONTOR)!!.navn } returns enhetNavn
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -160,9 +161,9 @@ internal class TildeltNavKontorTest {
     }
 
     @Test
-    fun `flere identiske tildeltNavKontor-hendelser skal kun gi en hendelse i historikk`() {
+    suspend fun `flere identiske tildeltNavKontor-hendelser skal kun gi en hendelse i historikk`() {
         every { norgClient.hentNavEnhet(NAV_KONTOR)!!.navn } returns enhetNavn
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -187,10 +188,10 @@ internal class TildeltNavKontorTest {
     }
 
     @Test
-    fun `tildeltNavKontor til ulike kontor gir like mange hendelser`() {
+    suspend fun `tildeltNavKontor til ulike kontor gir like mange hendelser`() {
         every { norgClient.hentNavEnhet(NAV_KONTOR)!!.navn } returns enhetNavn
         every { norgClient.hentNavEnhet(NAV_KONTOR_2)!!.navn } returns enhetNavn2
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")

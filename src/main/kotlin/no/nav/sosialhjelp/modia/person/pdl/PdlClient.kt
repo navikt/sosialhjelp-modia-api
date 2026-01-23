@@ -3,11 +3,11 @@ package no.nav.sosialhjelp.modia.person.pdl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
-import no.nav.sosialhjelp.modia.app.client.unproxiedHttpClient
 import no.nav.sosialhjelp.modia.app.exceptions.PdlException
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.getCallId
+import no.nav.sosialhjelp.modia.auth.texas.IdentityProvider
+import no.nav.sosialhjelp.modia.auth.texas.TexasClient
 import no.nav.sosialhjelp.modia.logger
-import no.nav.sosialhjelp.modia.tilgang.azure.AzuredingsService
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEHANDLINGSNUMMER_MODIA
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_BEHANDLINGSNUMMER
@@ -23,6 +23,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.bodyToMono
+import reactor.netty.http.client.HttpClient
 
 interface PdlClient {
     fun hentPerson(
@@ -37,12 +38,13 @@ interface PdlClient {
 @Component
 class PdlClientImpl(
     webClientBuilder: WebClient.Builder,
-    private val azuredingsService: AzuredingsService,
+    private val texasClient: TexasClient,
     private val clientProperties: ClientProperties,
+    httpClient: HttpClient,
 ) : PdlClient {
     private val pdlWebClient =
         webClientBuilder
-            .clientConnector(ReactorClientHttpConnector(unproxiedHttpClient()))
+            .clientConnector(ReactorClientHttpConnector(httpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
             }.baseUrl(clientProperties.pdlEndpointUrl)
@@ -59,7 +61,7 @@ class PdlClientImpl(
         val pdlPersonResponse =
             try {
                 runBlocking(Dispatchers.IO) {
-                    val azureAdToken = azuredingsService.exchangeToken(veilederToken, clientProperties.pdlScope)
+                    val azureAdToken = texasClient.getTokenXToken(clientProperties.pdlScope, veilederToken, IdentityProvider.ENTRA_ID)
 
                     pdlWebClient
                         .post()

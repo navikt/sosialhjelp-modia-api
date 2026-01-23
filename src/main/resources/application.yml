@@ -46,44 +46,14 @@ client:
   norg_oppslag_url: ${NORG_OPPSLAG_URL}
   pdl_endpoint_url: ${PDL_ENDPOINT_URL}
   pdl_scope: ${PDL_SCOPE}
-  veileder_gruppe_id: ${VEILEDER_GRUPPE_ID}
-  azure_token_endpoint_url: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
-  azuredings_url: ${AZURE_APP_WELL_KNOWN_URL}
-  azuredings_jwt_audience: ${AZURE_OPENID_CONFIG_ISSUER}
-  azuredings_jwt_client_id: ${AZURE_APP_CLIENT_ID}
-  azuredings_private_jwk: ${AZURE_APP_JWK}
-  azure_client_id: ${AZURE_APP_CLIENT_ID}
-  azure_client_secret: ${AZURE_APP_CLIENT_SECRET}
-  azure_graph_url: ${AZURE_GRAPH_API_URL}
   skjermede_personer_scope: ${SKJERMEDE_PERSONER_SCOPE}
   skjermede_personer_endpoint_url: ${SKJERMEDE_PERSONER_ENDPOINT_URL}
-  unleash_instance_id: ${UNLEASH_INSTANCE_ID}
-  unleash_env: ${UNLEASH_ENV}
-  unleash_server_api_url: ${UNLEASH_SERVER_API_URL}
-  unleash_server_api_token: ${UNLEASH_SERVER_API_TOKEN}
 
 modia_baseurl: ${MODIA_BASEURL}
-
-#Maskinporten
-maskinporten_clientid: ${MASKINPORTEN_CLIENT_ID}
-maskinporten_scopes: ${MASKINPORTEN_SCOPES}
-maskinporten_well_known_url: ${MASKINPORTEN_WELL_KNOWN_URL}
-maskinporten_client_jwk: ${MASKINPORTEN_CLIENT_JWK}
 
 #Token-validering
 no.nav.security.jwt:
   issuer.azuread:
     discoveryurl: ${AZURE_APP_WELL_KNOWN_URL}
     accepted_audience: ${AZURE_APP_CLIENT_ID}
-  client:
-    registration:
-      onbehalfof:
-        token-endpoint-url: https://login.microsoftonline.com/${AZURE_APP_TENANT_ID}/oauth2/v2.0/token
-        grant-type: urn:ietf:params:oauth:grant-type:jwt-bearer
-        scope: https://graph.microsoft.com/.default
-        authentication:
-          client-id: ${AZURE_APP_CLIENT_ID}
-          client-jwk: ${AZURE_APP_JWK}
-          client-auth-method: private_key_jwt
 
-loginurl: ${LOGINURL:http://localhost:8383/sosialhjelp/modia-api/local/cookie} # TODO: må fikses når vi finner ut url i miljø.

@@ -9,7 +9,6 @@ no.nav.security.jwt:
   issuer.azuread:
     discoveryurl: http://localhost:${mock-oauth2-server.port}/azuread/.well-known/openid-configuration
     accepted_audience: someaudience
-    cookie_name: localhost-idtoken
 
 springdoc:
   api-docs:
@@ -23,28 +22,7 @@ client:
   norg_oppslag_url: ${NORG_OPPSLAG_URL:https://norg2-frontend.intern.dev.nav.no/#/startsok?enhetNr=}
   pdl_endpoint_url: ${PDL_ENDPOINT_URL:pdl_endpoint_url}
   pdl_scope: ${PDL_SCOPE:pdl_scope}
-  veileder_gruppe_id: ${VEILEDER_GRUPPE_ID:0000-MOCK-sosialhjelp-modia-veileder}
-  azuredings_jwt_audience: ${AZURE_OPENID_CONFIG_ISSUER:dummyAudience}
-  azuredings_url: ${AZURE_APP_WELL_KNOWN_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/azure-well-known/selvbetjening}
-  azure_token_endpoint_url: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/azuretoken/selvbetjening}
-  azuredings_jwt_client_id: ${AZURE_APP_CLIENT_ID:localhost:teamdigisos:sosialhjelp-dialog-api}
-  azuredings_private_jwk: ${AZURE_APP_JWK:generateRSA}
-  azure_client_id: ${AZURE_APP_CLIENT_ID:azure_client_id}
-  azure_client_secret: ${AZURE_APP_CLIENT_SECRET:azure_client_secret}
-  azure_graph_url: ${AZURE_GRAPH_API_URL:http://127.0.0.1:8989/sosialhjelp/mock-alt-api/azuread/graph}
   skjermede_personer_scope: ${SKJERMEDE_PERSONER_SCOPE:skjermede_personer_scope}
   skjermede_personer_endpoint_url: ${SKJERMEDE_PERSONER_ENDPOINT_URL:skjermede_personer_endpoint_url}
-  unleash_instance_id: "local"
-  unleash_env: "local"
-  unleash_server_api_url: "http://localhost:58888"
-  unleash_server_api_token: "localtoken"
 
 modia_baseurl: ${MODIA_BASEURL:http://localhost:3000/sosialhjelp/modia}
-
-#Maskinporten
-maskinporten_clientid: maskinporten_clientid
-maskinporten_scopes: scopes
-maskinporten_well_known_url: ${MASKINPORTEN_WELL_KNOWN_URL:http://${mock-alt-api-host}:8989/sosialhjelp/mock-alt-api/well-known/maskinporten${mock-alt-api-wellknown-queryparam}}
-maskinporten_client_jwk: generateRSA
-
-loginurl: ${LOGINURL:http://localhost:8383/sosialhjelp/modia-api/local/cookie}
