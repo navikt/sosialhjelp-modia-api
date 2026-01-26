@@ -107,6 +107,23 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
             .body(FrontendErrorMessage("unexpected_error", "Noe uventet feilet"))
     }
 
+    @ExceptionHandler(IllegalStateException::class)
+    fun handleIllegalStateException(
+        ex: IllegalStateException,
+        request: WebRequest,
+    ): ResponseEntity<FrontendErrorMessage> {
+        // Handle "No thread-bound request found" error from async processing
+        if (ex.message?.contains("No thread-bound request found") == true) {
+            log.error("Request context lost during async processing. This should not happen with RequestContextFilter configured.", ex)
+            return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(FrontendErrorMessage("unexpected_error", "Noe uventet feilet"))
+        }
+        // Let other IllegalStateExceptions be handled by the general exception handler
+        throw ex
+    }
+
     private fun createUnauthorizedWithLoginUrlResponse(loginUrl: String): ResponseEntity<FrontendErrorMessage> =
         ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
