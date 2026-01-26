@@ -1,6 +1,5 @@
 package no.nav.sosialhjelp.modia.logging
 
-import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils
 import no.nav.sosialhjelp.modia.utils.Miljo.SRVSOSIALHJELP_MOD
 import no.nav.sosialhjelp.modia.utils.TokenUtils
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component
 class AuditService(
     private val auditLogger: AuditLogger,
     private val tokenUtils: TokenUtils,
-    private val contextHolder: TokenValidationContextHolder,
 ) {
     private fun commonAttributes(
         brukerFnr: String,

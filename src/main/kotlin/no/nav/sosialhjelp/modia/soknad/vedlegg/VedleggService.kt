@@ -17,8 +17,6 @@ import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.DOKUMENTASJONKRAV_UTEN_
 import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.hentSakstittel
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import org.springframework.stereotype.Component
-import org.springframework.web.context.request.RequestContextHolder.getRequestAttributes
-import org.springframework.web.context.request.RequestContextHolder.setRequestAttributes
 import java.time.LocalDateTime
 
 @Component
@@ -43,14 +41,11 @@ class VedleggService(
         digisosSak: DigisosSak,
         model: InternalDigisosSoker,
     ): List<InternalVedlegg> {
-        val requestAttributes = getRequestAttributes()
-
         val alleVedlegg =
             runBlocking(Dispatchers.IO + MDCContext()) {
                 digisosSak.ettersendtInfoNAV
                     ?.ettersendelser
                     ?.flatMapParallel { ettersendelse ->
-                        setRequestAttributes(requestAttributes)
                         val jsonVedleggSpesifikasjon =
                             hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, ettersendelse.vedleggMetadata)
                         jsonVedleggSpesifikasjon.vedlegg

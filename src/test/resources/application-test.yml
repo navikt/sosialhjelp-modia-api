@@ -19,7 +19,10 @@ client:
 
 modia_baseurl: "http://localhost:3000/sosialhjelp/modia"
 
-no.nav.security.jwt:
-  issuer.azuread:
-    discoveryurl: http://localhost:${mock-oauth2-server.port}/azuread/.well-known/openid-configuration
-    accepted_audience: someaudience
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:${mock-oauth2-server.port}/azuread
+          audiences: someaudience

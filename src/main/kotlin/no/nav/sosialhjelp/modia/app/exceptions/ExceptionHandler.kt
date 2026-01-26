@@ -1,14 +1,9 @@
 package no.nav.sosialhjelp.modia.app.exceptions
 
-import no.nav.security.token.support.core.exceptions.IssuerConfigurationException
-import no.nav.security.token.support.core.exceptions.JwtTokenMissingException
-import no.nav.security.token.support.core.exceptions.MetaDataNotAvailableException
-import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
 import no.nav.sosialhjelp.modia.logger
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -58,42 +53,12 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         return ResponseEntity(error, HttpStatus.FORBIDDEN)
     }
 
-    @ExceptionHandler(value = [JwtTokenUnauthorizedException::class, JwtTokenMissingException::class])
-    fun handleTokenValidationExceptions(ex: RuntimeException): ResponseEntity<FrontendErrorMessage> {
-        if (ex.message?.contains("Server misconfigured") == true) {
-            log.error(ex.message)
-            return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(FrontendErrorMessage("unexpected_error", "Noe uventet feilet"))
-        }
-        log.info("Bruker er ikke autentisert mot AzureAD (enda). Sender 401 med loginurl. Feilmelding: ${ex.message}")
+    @ExceptionHandler(AccessDeniedException::class)
+    fun handleAccessDeniedException(ex: AccessDeniedException): ResponseEntity<FrontendErrorMessage> {
+        log.info("Bruker har ikke tilgang. Sender 403. Feilmelding: ${ex.message}")
         return ResponseEntity
-            .status(HttpStatus.UNAUTHORIZED)
-            .body(FrontendErrorMessage("authentication_error", "Bruker er ikke autentisert"))
-    }
-
-    @ExceptionHandler(value = [MetaDataNotAvailableException::class, IssuerConfigurationException::class])
-    fun handleTokenValidationConfigurationExceptions(ex: RuntimeException): ResponseEntity<FrontendErrorMessage> {
-        log.error("Klarer ikke hente metadata fra discoveryurl eller problemer ved konfigurering av issuer. Feilmelding: ${ex.message}")
-        return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(FrontendErrorMessage("unexpected_error", "Noe uventet feilet"))
-    }
-
-    @ExceptionHandler(IllegalStateException::class)
-    fun handleIllegalStateException(ex: IllegalStateException): ResponseEntity<FrontendErrorMessage> {
-        // Handle "No thread-bound request found" error from async processing
-        if (ex.message?.contains("No thread-bound request found") == true) {
-            log.error("Request context lost during async processing. This should not happen with RequestContextFilter configured.", ex)
-        } else {
-            log.error("IllegalStateException occurred: ${ex.message}", ex)
-        }
-        return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(FrontendErrorMessage("unexpected_error", "Noe uventet feilet"))
+            .status(HttpStatus.FORBIDDEN)
+            .body(FrontendErrorMessage("access_denied", "Ingen tilgang"))
     }
 
     companion object {

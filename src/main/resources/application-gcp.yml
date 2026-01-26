@@ -13,6 +13,14 @@ spring:
         enabled: true
   codec:
     max-in-memory-size: 10MB
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AZURE_OPENID_CONFIG_ISSUER}
+          audiences: ${AZURE_APP_CLIENT_ID}
+  reactor:
+    context-propagation: auto
 
 cache_time_to_live_seconds: ${CACHE_TIME_TO_LIVE_SECONDS:100}
 dokument_cache_time_to_live_seconds: ${DOKUMENT_CACHE_TIME_TO_LIVE_SECONDS:1000}

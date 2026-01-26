@@ -1,19 +1,40 @@
 package no.nav.sosialhjelp.modia.app
 
-import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.security.config.Customizer
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.web.SecurityFilterChain
 
 @Profile("!mock-alt")
 @Configuration
-@EnableJwtTokenValidation(
-    ignore = [
-        "org.springframework",
-        "org.springdoc.webmvc.api.OpenApiWebMvcResource",
-        "org.springdoc.webmvc.ui.SwaggerWelcomeWebMvc",
-        "org.springdoc.webmvc.ui.SwaggerConfigResource",
-    ],
-)
+@EnableWebSecurity
+@EnableMethodSecurity
 class SecurityConfig {
-    // JwtTokenValidation er enabled så lenge appen kjører med profil != mock-alt
+    @Bean
+    fun filterChain(http: HttpSecurity): SecurityFilterChain {
+        http
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .csrf { it.disable() }
+            .httpBasic { it.disable() }
+            .formLogin { it.disable() }
+            .authorizeHttpRequests { authorize ->
+                authorize
+                    .requestMatchers(
+                        "/internal/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/v3/api-docs/**",
+                    ).permitAll()
+                    .anyRequest()
+                    .authenticated()
+            }.oauth2ResourceServer { oauth2 ->
+                oauth2.jwt(Customizer.withDefaults())
+            }
+        return http.build()
+    }
 }

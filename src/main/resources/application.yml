@@ -51,9 +51,4 @@ client:
 
 modia_baseurl: ${MODIA_BASEURL}
 
-#Token-validering
-no.nav.security.jwt:
-  issuer.azuread:
-    discoveryurl: ${AZURE_APP_WELL_KNOWN_URL}
-    accepted_audience: ${AZURE_APP_CLIENT_ID}
 

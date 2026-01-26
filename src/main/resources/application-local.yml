@@ -3,12 +3,6 @@ spring:
     redis:
       host: localhost
       port: 6379
-      password:
-
-no.nav.security.jwt:
-  issuer.azuread:
-    discoveryurl: http://localhost:${mock-oauth2-server.port}/azuread/.well-known/openid-configuration
-    accepted_audience: someaudience
 
 springdoc:
   api-docs:

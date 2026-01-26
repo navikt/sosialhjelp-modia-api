@@ -12,8 +12,6 @@ import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.flatMapParallel
 import no.nav.sosialhjelp.modia.logger
 import org.springframework.stereotype.Component
-import org.springframework.web.context.request.RequestContextHolder.getRequestAttributes
-import org.springframework.web.context.request.RequestContextHolder.setRequestAttributes
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -69,31 +67,25 @@ class UtbetalingerService(
     private fun utbetalingerSisteManeder(
         digisosSaker: List<DigisosSak>,
         months: Int,
-    ): List<UtbetalingerResponse> {
-        val requestAttributes = getRequestAttributes()
-
-        return runBlocking(Dispatchers.IO + MDCContext()) {
+    ): List<UtbetalingerResponse> =
+        runBlocking(Dispatchers.IO + MDCContext()) {
             digisosSaker
                 .filter { isDigisosSakNewerThanMonths(it, months) }
                 .flatMapParallel {
-                    setRequestAttributes(requestAttributes)
                     getUtbetalinger(it)
                 }.sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         }
-    }
 
     private fun hentUtbetalingerForIntervall(
         digisosSaker: List<DigisosSak>,
         fom: LocalDate?,
         tom: LocalDate?,
     ): List<UtbetalingerResponse> {
-        val requestAttributes = getRequestAttributes()
         check(!(fom != null && tom != null && fom.isAfter(tom))) { "Fom kan ikke være etter tom" }
 
         return runBlocking(Dispatchers.IO + MDCContext()) {
             digisosSaker
                 .flatMapParallel {
-                    setRequestAttributes(requestAttributes)
                     getUtbetalinger(it, fom, tom)
                 }.sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         }
