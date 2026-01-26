@@ -17,13 +17,11 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.bodyToMono
-import reactor.netty.http.client.HttpClient
 
 interface PdlClient {
     fun hentPerson(
@@ -40,11 +38,9 @@ class PdlClientImpl(
     webClientBuilder: WebClient.Builder,
     private val texasClient: TexasClient,
     private val clientProperties: ClientProperties,
-    httpClient: HttpClient,
 ) : PdlClient {
     private val pdlWebClient =
         webClientBuilder
-            .clientConnector(ReactorClientHttpConnector(httpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
             }.baseUrl(clientProperties.pdlEndpointUrl)

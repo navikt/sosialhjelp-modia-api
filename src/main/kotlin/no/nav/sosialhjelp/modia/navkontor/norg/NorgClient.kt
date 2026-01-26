@@ -13,12 +13,10 @@ import no.nav.sosialhjelp.modia.typeRef
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.context.annotation.Profile
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.reactive.function.client.bodyToMono
-import reactor.netty.http.client.HttpClient
 
 interface NorgClient {
     fun hentNavEnhet(enhetsnr: String): NavEnhet?
@@ -34,11 +32,9 @@ class NorgClientImpl(
     webClientBuilder: WebClient.Builder,
     clientProperties: ClientProperties,
     private val redisService: RedisService,
-    httpClient: HttpClient,
 ) : NorgClient {
     private val norgWebClient =
         webClientBuilder
-            .clientConnector(ReactorClientHttpConnector(httpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
             }.baseUrl(clientProperties.norgEndpointUrl)
@@ -130,7 +126,7 @@ class NorgClientImpl(
 class NorgClientMock : NorgClient {
     private val innsynMap = mutableMapOf<String, NavEnhet>()
 
-    override fun hentNavEnhet(enhetsnr: String): NavEnhet = innsynMap.getOrElse(enhetsnr, { defaultNavEnhet(enhetsnr) })
+    override fun hentNavEnhet(enhetsnr: String): NavEnhet = innsynMap.getOrElse(enhetsnr) { defaultNavEnhet(enhetsnr) }
 
     override fun hentAlleNavEnheter(): List<NavEnhet> =
         listOf(

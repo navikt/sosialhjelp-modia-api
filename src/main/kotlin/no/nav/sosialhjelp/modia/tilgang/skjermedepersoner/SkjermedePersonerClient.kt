@@ -16,13 +16,11 @@ import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientRequestException
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.reactive.function.client.bodyToMono
-import reactor.netty.http.client.HttpClient
 
 interface SkjermedePersonerClient {
     fun erPersonSkjermet(
@@ -38,11 +36,9 @@ class SkjermedePersonerClientImpl(
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
     private val texasClient: TexasClient,
-    httpClient: HttpClient,
 ) : SkjermedePersonerClient {
     private val skjermedePersonerWebClient: WebClient =
         webClientBuilder
-            .clientConnector(ReactorClientHttpConnector(httpClient))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
             }.build()
