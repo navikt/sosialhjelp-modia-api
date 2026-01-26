@@ -12,8 +12,6 @@ import no.nav.sosialhjelp.modia.digisossak.fiks.FiksClient
 import no.nav.sosialhjelp.modia.flatMapParallel
 import no.nav.sosialhjelp.modia.logger
 import org.springframework.stereotype.Component
-import org.springframework.web.context.request.RequestContextHolder.getRequestAttributes
-import org.springframework.web.context.request.RequestContextHolder.setRequestAttributes
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -23,7 +21,7 @@ class UtbetalingerService(
     private val fiksClient: FiksClient,
     private val eventService: EventService,
 ) {
-    fun hentAlleUtbetalinger(
+    suspend fun hentAlleUtbetalinger(
         fnr: String,
         months: Int,
         fom: LocalDate?,
@@ -45,7 +43,7 @@ class UtbetalingerService(
         return utbetalingList
     }
 
-    fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
+    suspend fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
         val utbetalingList = getUtbetalinger(digisosSak).sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         loggMuligeDuplikater(utbetalingList)
         return utbetalingList
@@ -69,31 +67,25 @@ class UtbetalingerService(
     private fun utbetalingerSisteManeder(
         digisosSaker: List<DigisosSak>,
         months: Int,
-    ): List<UtbetalingerResponse> {
-        val requestAttributes = getRequestAttributes()
-
-        return runBlocking(Dispatchers.IO + MDCContext()) {
+    ): List<UtbetalingerResponse> =
+        runBlocking(Dispatchers.IO + MDCContext()) {
             digisosSaker
                 .filter { isDigisosSakNewerThanMonths(it, months) }
                 .flatMapParallel {
-                    setRequestAttributes(requestAttributes)
                     getUtbetalinger(it)
                 }.sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         }
-    }
 
     private fun hentUtbetalingerForIntervall(
         digisosSaker: List<DigisosSak>,
         fom: LocalDate?,
         tom: LocalDate?,
     ): List<UtbetalingerResponse> {
-        val requestAttributes = getRequestAttributes()
         check(!(fom != null && tom != null && fom.isAfter(tom))) { "Fom kan ikke være etter tom" }
 
         return runBlocking(Dispatchers.IO + MDCContext()) {
             digisosSaker
                 .flatMapParallel {
-                    setRequestAttributes(requestAttributes)
                     getUtbetalinger(it, fom, tom)
                 }.sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         }
@@ -128,7 +120,7 @@ class UtbetalingerService(
         return utbetaling.utbetalingsDato?.let { utbetalingsDatoInnenfor } ?: forfallsDatoInnenfor
     }
 
-    private fun getUtbetalinger(digisosSak: DigisosSak): List<UtbetalingerResponse> {
+    private suspend fun getUtbetalinger(digisosSak: DigisosSak): List<UtbetalingerResponse> {
         val model = eventService.createModel(digisosSak)
         val behandlendeNavKontor = model.navKontorHistorikk.lastOrNull()
 
@@ -140,7 +132,7 @@ class UtbetalingerService(
             }
     }
 
-    private fun getUtbetalinger(
+    private suspend fun getUtbetalinger(
         digisosSak: DigisosSak,
         fom: LocalDate?,
         tom: LocalDate?,

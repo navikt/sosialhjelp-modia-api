@@ -17,8 +17,6 @@ import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.DOKUMENTASJONKRAV_UTEN_
 import no.nav.sosialhjelp.modia.soknad.dokumentasjonkrav.hentSakstittel
 import no.nav.sosialhjelp.modia.unixToLocalDateTime
 import org.springframework.stereotype.Component
-import org.springframework.web.context.request.RequestContextHolder.getRequestAttributes
-import org.springframework.web.context.request.RequestContextHolder.setRequestAttributes
 import java.time.LocalDateTime
 
 @Component
@@ -27,7 +25,7 @@ class VedleggService(
     private val eventService: EventService,
     private val soknadVedleggService: SoknadVedleggService,
 ) {
-    fun hentAlleOpplastedeVedlegg(fiksDigisosId: String): List<InternalVedlegg> {
+    suspend fun hentAlleOpplastedeVedlegg(fiksDigisosId: String): List<InternalVedlegg> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
 
@@ -43,14 +41,11 @@ class VedleggService(
         digisosSak: DigisosSak,
         model: InternalDigisosSoker,
     ): List<InternalVedlegg> {
-        val requestAttributes = getRequestAttributes()
-
         val alleVedlegg =
             runBlocking(Dispatchers.IO + MDCContext()) {
                 digisosSak.ettersendtInfoNAV
                     ?.ettersendelser
                     ?.flatMapParallel { ettersendelse ->
-                        setRequestAttributes(requestAttributes)
                         val jsonVedleggSpesifikasjon =
                             hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, ettersendelse.vedleggMetadata)
                         jsonVedleggSpesifikasjon.vedlegg
@@ -123,7 +118,7 @@ class VedleggService(
         return kombinerAlleLikeVedlegg(alleVedlegg)
     }
 
-    private fun hentVedleggSpesifikasjon(
+    private suspend fun hentVedleggSpesifikasjon(
         fnr: String,
         fiksDigisosId: String,
         dokumentlagerId: String,

@@ -2,6 +2,7 @@ package no.nav.sosialhjelp.modia.soknad.vedlegg
 
 import io.mockk.Runs
 import io.mockk.clearAllMocks
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -35,11 +36,11 @@ internal class VedleggControllerTest {
     }
 
     @Test
-    fun `skal mappe fra InternalVedleggList til VedleggResponseList`() {
+    suspend fun `skal mappe fra InternalVedleggList til VedleggResponseList`() {
         val frist = LocalDateTime.now().plusDays(7)
         val datoLagtTil = LocalDateTime.now()
 
-        every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns
+        coEvery { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns
             listOf(
                 InternalVedlegg(dokumenttype, tilleggsinfo, frist, 1, datoLagtTil, LocalDateTime.now()),
             )
@@ -49,7 +50,7 @@ internal class VedleggControllerTest {
         val body = vedleggResponses.body
 
         assertThat(body).isNotNull
-        if (body != null && body.isNotEmpty()) {
+        if (!body.isNullOrEmpty()) {
             assertThat(body).hasSize(1)
 
             assertThat(body[0].type).isEqualTo(dokumenttype)
@@ -60,11 +61,11 @@ internal class VedleggControllerTest {
     }
 
     @Test
-    fun `skal handtere flere vedlegg`() {
+    suspend fun `skal handtere flere vedlegg`() {
         val frist = LocalDateTime.now().plusDays(7)
         val datoLagtTil = LocalDateTime.now()
 
-        every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns
+        coEvery { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns
             listOf(
                 InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil, LocalDateTime.now()),
                 InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil, LocalDateTime.now()),
@@ -75,17 +76,17 @@ internal class VedleggControllerTest {
         val body = vedleggResponses.body
 
         assertThat(body).isNotNull
-        if (body != null && body.isNotEmpty()) {
+        if (!body.isNullOrEmpty()) {
             assertThat(body).hasSize(2)
         }
     }
 
     @Test
-    fun `skal filtrere bort vedlegg med antall filer som er 0`() {
+    suspend fun `skal filtrere bort vedlegg med antall filer som er 0`() {
         val frist = LocalDateTime.now().plusDays(7)
         val datoLagtTil = LocalDateTime.now()
 
-        every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns
+        coEvery { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns
             listOf(
                 InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil, LocalDateTime.now()),
                 InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil, LocalDateTime.now()),
@@ -99,19 +100,19 @@ internal class VedleggControllerTest {
         val body = vedleggResponses.body
 
         assertThat(body).isNotNull
-        if (body != null && body.isNotEmpty()) {
+        if (!body.isNullOrEmpty()) {
             assertThat(body).hasSize(3)
         }
     }
 
     @Test
-    fun `skal sortere pa innsendelsesfrist forst og deretter datoLagtTil`() {
+    suspend fun `skal sortere pa innsendelsesfrist forst og deretter datoLagtTil`() {
         val frist = LocalDateTime.now().plusDays(7)
         val frist2 = LocalDateTime.now().plusDays(6)
         val datoLagtTil = LocalDateTime.now().plusDays(1)
         val datolagttil2 = LocalDateTime.now()
 
-        every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns
+        coEvery { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns
             listOf(
                 InternalVedlegg(dokumenttype, null, frist, 1, datoLagtTil, LocalDateTime.now()),
                 InternalVedlegg(dokumenttype, tilleggsinfo, frist2, 1, datolagttil2, LocalDateTime.now()),
@@ -125,7 +126,7 @@ internal class VedleggControllerTest {
         val body = vedleggResponses.body
 
         assertThat(body).isNotNull
-        if (body != null && body.isNotEmpty()) {
+        if (!body.isNullOrEmpty()) {
             assertThat(body).hasSize(5)
 
             assertThat(body[0].innsendelsesfrist).isEqualTo(frist)
@@ -146,10 +147,10 @@ internal class VedleggControllerTest {
     }
 
     @Test
-    fun `vedlegg med antallFiler lik 0 og ingen datoLagtTil`() {
+    suspend fun `vedlegg med antallFiler lik 0 og ingen datoLagtTil`() {
         val frist = LocalDateTime.now().plusDays(7)
 
-        every { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns
+        coEvery { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns
             listOf(
                 InternalVedlegg(dokumenttype, null, frist, 0, null, LocalDateTime.now()),
             )
@@ -159,7 +160,7 @@ internal class VedleggControllerTest {
         val body = vedleggResponses.body
 
         assertThat(body).isNotNull
-        if (body != null && body.isNotEmpty()) {
+        if (!body.isNullOrEmpty()) {
             assertThat(body).hasSize(1)
 
             assertThat(body[0].type).isEqualTo(dokumenttype)

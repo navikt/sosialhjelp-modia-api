@@ -91,10 +91,6 @@ spec:
       value: "api://dev-gcp.nom.skjermede-personer-pip/.default"
     - name: CACHE_TIME_TO_LIVE_SECONDS
       value: "60"
-    - name: UNLEASH_INSTANCE_ID
-      value: "sosialhjelp-modia-api"
-    - name: UNLEASH_ENV
-      value: "dev-gcp"
     - name: SWAGGER_ENABLED
       value: "true"
     - name: MODIA_BASEURL

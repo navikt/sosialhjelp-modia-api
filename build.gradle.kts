@@ -40,25 +40,17 @@ dependencies {
     implementation(libs.logback)
     implementation(libs.logstash.logback.encoder)
 
+    implementation(libs.jackson.module.kotlin)
+
 //    Auditlogger syslog
     implementation(libs.logback.syslog4j)
     implementation(libs.syslog4j)
 
-//    JWT
-    implementation(libs.java.jwt)
-    implementation(libs.jwks.rsa)
-
 //    Filformat
     implementation(libs.filformat)
 
-//    Token-validation
-    implementation(libs.bundles.token.validation)
-
 //    Springdoc
     implementation(libs.bundles.springdoc)
-
-//    Unleash
-    implementation(libs.unleash)
 
 //    Redis
     implementation(libs.lettuce)
@@ -66,7 +58,7 @@ dependencies {
 //    Test
     testImplementation(libs.spring.boot.test)
     testImplementation(libs.mockk)
-    testImplementation(libs.token.validation.test)
+    testImplementation(libs.mockwebserver)
 }
 
 val githubUser: String by project
