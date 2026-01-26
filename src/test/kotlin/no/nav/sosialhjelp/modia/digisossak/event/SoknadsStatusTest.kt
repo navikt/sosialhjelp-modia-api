@@ -1,6 +1,7 @@
 package no.nav.sosialhjelp.modia.digisossak.event
 
 import io.mockk.clearAllMocks
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
@@ -32,14 +33,14 @@ internal class SoknadsStatusTest {
 
         every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
-        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
+        coEvery { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
         resetHendelser()
     }
 
     @Test
-    fun `soknadsStatus SENDT`() {
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns null
+    suspend fun `soknadsStatus SENDT`() {
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns null
 
         val model = service.createModel(defaultDigisosSak)
 
@@ -54,8 +55,8 @@ internal class SoknadsStatusTest {
     }
 
     @Test
-    fun `soknadsStatus MOTTATT`() {
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    suspend fun `soknadsStatus MOTTATT`() {
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -78,7 +79,7 @@ internal class SoknadsStatusTest {
     }
 
     @Test
-    fun `soknadsStatus MOTTATT papirsoknad`() {
+    suspend fun `soknadsStatus MOTTATT papirsoknad`() {
         val papirsoknadDigisosSak =
             defaultDigisosSak.copy(
                 originalSoknadNAV = null,
@@ -87,7 +88,7 @@ internal class SoknadsStatusTest {
                         enhetsnummer = null,
                     ),
             )
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -110,8 +111,8 @@ internal class SoknadsStatusTest {
     }
 
     @Test
-    fun `soknadsStatus UNDER_BEHANDLING`() {
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    suspend fun `soknadsStatus UNDER_BEHANDLING`() {
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -136,8 +137,8 @@ internal class SoknadsStatusTest {
     }
 
     @Test
-    fun `soknadsStatus FERDIGBEHANDLET`() {
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    suspend fun `soknadsStatus FERDIGBEHANDLET`() {
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")

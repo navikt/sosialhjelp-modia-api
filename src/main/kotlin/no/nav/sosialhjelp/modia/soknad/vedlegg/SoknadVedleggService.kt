@@ -13,7 +13,7 @@ const val VEDLEGG_KREVES_STATUS = "VedleggKreves"
 class SoknadVedleggService(
     private val fiksClient: FiksClient,
 ) {
-    fun hentSoknadVedleggMedStatus(
+    suspend fun hentSoknadVedleggMedStatus(
         digisosSak: DigisosSak,
         status: String,
     ): List<InternalVedlegg> {
@@ -42,7 +42,7 @@ class SoknadVedleggService(
         return kombinerAlleLikeVedlegg(alleVedlegg)
     }
 
-    private fun hentVedleggSpesifikasjon(
+    private suspend fun hentVedleggSpesifikasjon(
         fnr: String,
         fiksDigisosId: String,
         dokumentlagerId: String,

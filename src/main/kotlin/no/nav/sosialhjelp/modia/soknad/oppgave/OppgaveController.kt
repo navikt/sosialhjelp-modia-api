@@ -22,7 +22,7 @@ class OppgaveController(
     private val tilgangskontrollService: TilgangskontrollService,
 ) {
     @PostMapping("/{fiksDigisosId}/oppgaver")
-    fun hentOppgaver(
+    suspend fun hentOppgaver(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident,

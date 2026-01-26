@@ -19,7 +19,7 @@ class NoekkelinfoService(
     private val kommunenavnService: KommunenavnService,
     private val kommuneService: KommuneService,
 ) {
-    fun hentNoekkelInfo(fiksDigisosId: String): SoknadNoekkelinfoResponse {
+    suspend fun hentNoekkelInfo(fiksDigisosId: String): SoknadNoekkelinfoResponse {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
         val kommunenavn = hentBehandlendekommune(digisosSak.kommunenummer)
@@ -48,15 +48,10 @@ class NoekkelinfoService(
         )
     }
 
-    private fun hentBehandlendekommune(kommunenummer: String): String =
+    private suspend fun hentBehandlendekommune(kommunenummer: String): String =
         kommuneService.getBehandlingsanvarligKommune(kommunenummer) ?: kommunenavnService.hentKommunenavnFor(kommunenummer)
 
-    private fun papirSoknad(originalSoknadNav: OriginalSoknadNAV?): Boolean {
-        if (originalSoknadNav == null) {
-            return true
-        }
-        return false
-    }
+    private fun papirSoknad(originalSoknadNav: OriginalSoknadNAV?): Boolean = originalSoknadNav == null
 
     private fun leggTilVideresendtInfoHvisNavKontorHistorikkHarFlereElementer(model: InternalDigisosSoker): List<VideresendtInfo>? =
         if (model.navKontorHistorikk.size > 1) {

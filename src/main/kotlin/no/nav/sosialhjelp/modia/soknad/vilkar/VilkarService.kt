@@ -14,7 +14,7 @@ class VilkarService(
     private val fiksClient: FiksClient,
     private val eventService: EventService,
 ) {
-    fun hentVilkar(fiksDigisosId: String): List<VilkarResponse> {
+    suspend fun hentVilkar(fiksDigisosId: String): List<VilkarResponse> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
         if (model.vilkar.isEmpty()) {
