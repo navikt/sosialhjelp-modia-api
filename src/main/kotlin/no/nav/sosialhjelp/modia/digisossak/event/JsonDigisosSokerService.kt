@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 class JsonDigisosSokerService(
     private val fiksClient: FiksClient,
 ) {
-    fun get(
+    suspend fun get(
         fnr: String,
         digisosId: String,
         digisosSokerMetadata: String?,

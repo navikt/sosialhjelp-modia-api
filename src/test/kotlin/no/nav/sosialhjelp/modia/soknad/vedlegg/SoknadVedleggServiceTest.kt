@@ -1,6 +1,7 @@
 package no.nav.sosialhjelp.modia.soknad.vedlegg
 
 import io.mockk.clearAllMocks
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
@@ -29,18 +30,18 @@ internal class SoknadVedleggServiceTest {
     internal fun setUp() {
         clearAllMocks()
 
-        every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
+        coEvery { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
         every { mockDigisosSak.fiksDigisosId } returns "id"
         every { mockDigisosSak.sokerFnr } returns "fnr"
 
         every { mockJsonVedleggSpesifikasjon.vedlegg } returns emptyList()
 
-        every { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), VEDLEGGMETADATA_SOKNAD_2, any()) } returns
+        coEvery { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), VEDLEGGMETADATA_SOKNAD_2, any()) } returns
             soknadVedleggSpesifikasjonMedStatusKrevesOgLastetOpp
     }
 
     @Test
-    fun `skal hente soknadsvedlegg filtrert pa status for digisosSak`() {
+    suspend fun `skal hente soknadsvedlegg filtrert pa status for digisosSak`() {
         every { mockDigisosSak.originalSoknadNAV } returns originalSoknadMedVedleggKrevesOgLastetOpp
 
         val lastetOppList = service.hentSoknadVedleggMedStatus(mockDigisosSak, LASTET_OPP_STATUS)

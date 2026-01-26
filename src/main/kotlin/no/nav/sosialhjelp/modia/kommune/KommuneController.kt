@@ -22,7 +22,7 @@ class KommuneController(
     private val tilgangskontrollService: TilgangskontrollService,
 ) {
     @PostMapping("/kommuner/{kommunenummer}")
-    fun hentKommuneInfo(
+    suspend fun hentKommuneInfo(
         @PathVariable kommunenummer: String,
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident,

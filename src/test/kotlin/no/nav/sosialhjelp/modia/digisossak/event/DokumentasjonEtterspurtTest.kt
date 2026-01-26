@@ -1,6 +1,7 @@
 package no.nav.sosialhjelp.modia.digisossak.event
 
 import io.mockk.clearAllMocks
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
@@ -30,14 +31,14 @@ internal class DokumentasjonEtterspurtTest {
         clearAllMocks()
         every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
-        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
+        coEvery { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
         resetHendelser()
     }
 
     @Test
-    fun `dokumentliste er satt OG vedtaksbrev er satt - skal gi oppgaver og historikk`() {
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    suspend fun `dokumentliste er satt OG vedtaksbrev er satt - skal gi oppgaver og historikk`() {
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -69,8 +70,8 @@ internal class DokumentasjonEtterspurtTest {
     }
 
     @Test
-    internal fun `dokumentliste er satt OG forvaltningsbrev mangler - skal gi oppgaver men ikke historikk`() {
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    internal suspend fun `dokumentliste er satt OG forvaltningsbrev mangler - skal gi oppgaver men ikke historikk`() {
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -98,8 +99,8 @@ internal class DokumentasjonEtterspurtTest {
     }
 
     @Test
-    fun `dokumentliste er tom OG forvaltningsbrev er satt - skal verken gi oppgaver eller historikk`() {
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    suspend fun `dokumentliste er tom OG forvaltningsbrev er satt - skal verken gi oppgaver eller historikk`() {
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -122,8 +123,8 @@ internal class DokumentasjonEtterspurtTest {
 
     @Disabled("fixme - oppgaver fra søknad ikke inkludert (enda)")
     @Test
-    fun `oppgaver skal hentes fra soknaden dersom det ikke finnes dokumentasjonEtterspurt`() {
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    suspend fun `oppgaver skal hentes fra soknaden dersom det ikke finnes dokumentasjonEtterspurt`() {
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")

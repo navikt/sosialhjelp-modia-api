@@ -21,7 +21,7 @@ class NoekkelinfoController(
     private val tilgangskontrollService: TilgangskontrollService,
 ) {
     @PostMapping("/{fiksDigisosId}/noekkelinfo")
-    fun hentNoekkelInfo(
+    suspend fun hentNoekkelInfo(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
         @RequestBody ident: Ident,

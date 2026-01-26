@@ -6,7 +6,7 @@ import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.app.client.RetryUtils.retryBackoffSpec
-import no.nav.sosialhjelp.modia.app.maskinporten.MaskinportenClient
+import no.nav.sosialhjelp.modia.auth.texas.TexasClient
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksPaths.PATH_ALLE_DIGISOSSAKER
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksPaths.PATH_DIGISOSSAK
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksPaths.PATH_DOKUMENT
@@ -38,12 +38,12 @@ import java.util.UUID
 class FiksClientImpl(
     private val fiksWebClient: WebClient,
     private val clientProperties: ClientProperties,
-    private val maskinportenClient: MaskinportenClient,
     private val auditService: AuditService,
     private val redisService: RedisService,
     @Value("\${retry_fiks_max_attempts}") private val maxAttempts: Long,
     @Value("\${retry_fiks_initial_delay}") private val initialDelay: Long,
     @Value("\${dokument_cache_time_to_live_seconds}") private val documentTTL: Long,
+    private val texasClient: TexasClient,
 ) : FiksClient {
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
 
@@ -57,11 +57,11 @@ class FiksClientImpl(
                 )
             }
 
-    override fun hentDigisosSak(digisosId: String): DigisosSak =
+    override suspend fun hentDigisosSak(digisosId: String): DigisosSak =
         hentDigisosSakFraCache(digisosId)?.also { log.info("Hentet digisosSak=$digisosId fra cache") }
             ?: hentDigisosSakFraFiks(digisosId)
 
-    override fun <T : Any> hentDokument(
+    override suspend fun <T : Any> hentDokument(
         fnr: String,
         digisosId: String,
         dokumentlagerId: String,
@@ -84,7 +84,7 @@ class FiksClientImpl(
     // cache key = "<sessionId>_<digisosId>" eller "<sessionId>_<dokumentlagerId>"
     private fun cacheKeyFor(id: String) = "${RequestUtils.getSosialhjelpModiaSessionId()}_$id"
 
-    private fun hentDigisosSakFraFiks(digisosId: String): DigisosSak {
+    private suspend fun hentDigisosSakFraFiks(digisosId: String): DigisosSak {
         val sporingsId = genererSporingsId()
 
         val digisosSak: DigisosSak =
@@ -94,7 +94,7 @@ class FiksClientImpl(
                 .accept(MediaType.APPLICATION_JSON)
                 .header(IntegrationUtils.HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
                 .header(IntegrationUtils.HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
-                .header(HttpHeaders.AUTHORIZATION, BEARER + maskinportenClient.getToken())
+                .header(HttpHeaders.AUTHORIZATION, BEARER + texasClient.getMaskinportenToken())
                 .retrieve()
                 .bodyToMono<DigisosSak>()
                 .retryWhen(fiksRetry)
@@ -145,7 +145,7 @@ class FiksClientImpl(
         return null
     }
 
-    private fun <T : Any> hentDokumentFraFiks(
+    private suspend fun <T : Any> hentDokumentFraFiks(
         fnr: String,
         digisosId: String,
         dokumentlagerId: String,
@@ -161,7 +161,7 @@ class FiksClientImpl(
                 .accept(MediaType.APPLICATION_JSON)
                 .header(IntegrationUtils.HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
                 .header(IntegrationUtils.HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
-                .header(HttpHeaders.AUTHORIZATION, BEARER + maskinportenClient.getToken())
+                .header(HttpHeaders.AUTHORIZATION, BEARER + texasClient.getMaskinportenToken())
                 .retrieve()
                 .bodyToMono(requestedClass)
                 .retryWhen(fiksRetry)
@@ -191,7 +191,7 @@ class FiksClientImpl(
             }
     }
 
-    override fun hentAlleDigisosSaker(fnr: String): List<DigisosSak> {
+    override suspend fun hentAlleDigisosSaker(fnr: String): List<DigisosSak> {
         val sporingsId = genererSporingsId()
 
         val digisosSaker: List<DigisosSak> =
@@ -201,7 +201,7 @@ class FiksClientImpl(
                 .accept(MediaType.APPLICATION_JSON)
                 .header(IntegrationUtils.HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
                 .header(IntegrationUtils.HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
-                .header(HttpHeaders.AUTHORIZATION, BEARER + maskinportenClient.getToken())
+                .header(HttpHeaders.AUTHORIZATION, BEARER + texasClient.getMaskinportenToken())
                 .body(BodyInserters.fromValue(Fnr(fnr)))
                 .retrieve()
                 .bodyToMono<List<DigisosSak>>()

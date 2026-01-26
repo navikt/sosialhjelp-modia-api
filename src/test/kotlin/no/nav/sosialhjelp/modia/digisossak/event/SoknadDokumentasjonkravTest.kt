@@ -1,6 +1,7 @@
 package no.nav.sosialhjelp.modia.digisossak.event
 
 import io.mockk.clearAllMocks
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
@@ -30,8 +31,8 @@ internal class SoknadDokumentasjonkravTest {
     }
 
     @Test
-    internal fun `skal legge til dokumentasjonkrav fra soknaden`() {
-        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    internal suspend fun `skal legge til dokumentasjonkrav fra soknaden`() {
+        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -42,7 +43,7 @@ internal class SoknadDokumentasjonkravTest {
                         SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3),
                     ),
                 )
-        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns
+        coEvery { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns
             listOf(
                 InternalVedlegg(
                     type = "statsborgerskap",

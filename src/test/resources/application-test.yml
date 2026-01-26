@@ -14,25 +14,12 @@ client:
   fiks_digisos_endpoint_url: 'fiks-digisos.com'
   norg_endpoint_url: 'http://localhost:51234'
   fiks_integrasjonid: "id"
-  fiks_integrasjonid_kommune: "idkom"
   fiks_integrasjonpassord: "pwd"
-  fiks_integrasjonpassord_kommune: "pwdcom"
   pdl_endpoint_url: 'http://localhost:56666'
-  unleash_instance_id: "local"
-  unleash_env: "local"
-  unleash_server_api_url: "http://localhost:58888"
-  unleash_server_api_token: "localtoken"
 
 modia_baseurl: "http://localhost:3000/sosialhjelp/modia"
-
-#Maskinporten
-maskinporten_clientid: clientid
-maskinporten_scopes: scopes
-maskinporten_well_known_url: ${MASKINPORTEN_WELL_KNOWN_URL:https://maskinporten}
-maskinporten_client_jwk: generateRSA
 
 no.nav.security.jwt:
   issuer.azuread:
     discoveryurl: http://localhost:${mock-oauth2-server.port}/azuread/.well-known/openid-configuration
     accepted_audience: someaudience
-    cookie_name: localhost-idtoken
