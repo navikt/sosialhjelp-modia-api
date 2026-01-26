@@ -1,7 +1,6 @@
 package no.nav.sosialhjelp.modia.digisossak.event
 
 import io.mockk.clearAllMocks
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
@@ -27,14 +26,14 @@ internal class DokumentasjonkravTest {
 
         every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
-        coEvery { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
         resetHendelser()
     }
 
     @Test
-    suspend fun `dokumentasjonskrav ETTER utbetaling`() {
-        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    fun `dokumentasjonskrav ETTER utbetaling`() {
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -65,8 +64,8 @@ internal class DokumentasjonkravTest {
     }
 
     @Test
-    suspend fun `dokumentasjonkrav UTEN utbetaling`() {
-        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    fun `dokumentasjonkrav UTEN utbetaling`() {
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -87,8 +86,8 @@ internal class DokumentasjonkravTest {
     }
 
     @Test
-    suspend fun `dokumentasjonkrav FOR utbetaling - skal ikke gi noen dokumentasjonkrav`() {
-        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    fun `dokumentasjonkrav FOR utbetaling - skal ikke gi noen dokumentasjonkrav`() {
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -114,8 +113,8 @@ internal class DokumentasjonkravTest {
     }
 
     @Test
-    suspend fun `dokumentasjonkrav og utbetaling har identiske hendelsestidspunkt`() {
-        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    fun `dokumentasjonkrav og utbetaling har identiske hendelsestidspunkt`() {
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")

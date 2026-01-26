@@ -1,7 +1,6 @@
 package no.nav.sosialhjelp.modia.soknad.noekkelinfo
 
 import io.mockk.clearAllMocks
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sosialhjelp.api.fiks.DigisosSak
@@ -45,16 +44,16 @@ internal class NoekkelinfoServiceTest {
     internal fun setUp() {
         clearAllMocks()
 
-        coEvery { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
+        every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
         every { mockDigisosSak.sistEndret } returns 123456789
         every { mockDigisosSak.kommunenummer } returns kommunenr
         every { kommunenavnService.hentKommunenavnFor(any()) } returns kommunenavn
-        coEvery { kommuneService.getBehandlingsanvarligKommune(any()) } returns kommunenavn
+        every { kommuneService.getBehandlingsanvarligKommune(any()) } returns kommunenavn
         every { mockDigisosSak.originalSoknadNAV } returns null
     }
 
     @Test
-    suspend fun `noekkelinfo ikke videresendt eller forelopig svar`() {
+    fun `noekkelinfo ikke videresendt eller forelopig svar`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -65,7 +64,7 @@ internal class NoekkelinfoServiceTest {
                 NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now().minusDays(7), enhetsnr1, enhetNavn1),
             )
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
         val noekkelinfo = service.hentNoekkelInfo("123")
@@ -83,7 +82,7 @@ internal class NoekkelinfoServiceTest {
     }
 
     @Test
-    suspend fun `noekkelinfo ikke videresendt med med forelopig svar`() {
+    fun `noekkelinfo ikke videresendt med med forelopig svar`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -95,7 +94,7 @@ internal class NoekkelinfoServiceTest {
             )
         model.forelopigSvar = ForelopigSvar(tidspunkt)
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
         val noekkelinfo = service.hentNoekkelInfo("123")
@@ -112,7 +111,7 @@ internal class NoekkelinfoServiceTest {
     }
 
     @Test
-    suspend fun `noekkelinfo videresendt`() {
+    fun `noekkelinfo videresendt`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -124,7 +123,7 @@ internal class NoekkelinfoServiceTest {
                 NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2),
             )
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
         val noekkelinfo = service.hentNoekkelInfo("123")
@@ -141,7 +140,7 @@ internal class NoekkelinfoServiceTest {
     }
 
     @Test
-    suspend fun `noekkelinfo papirsoknad og videresendt`() {
+    fun `noekkelinfo papirsoknad og videresendt`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -153,7 +152,7 @@ internal class NoekkelinfoServiceTest {
                 NavKontorInformasjon(SendingType.VIDERESENDT, LocalDateTime.now().minusDays(4), enhetsnr2, enhetNavn2),
             )
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
         val noekkelinfo = service.hentNoekkelInfo("123")
@@ -170,14 +169,14 @@ internal class NoekkelinfoServiceTest {
     }
 
     @Test
-    suspend fun `noekkelinfo papirsoknad ikke videresendt`() {
+    fun `noekkelinfo papirsoknad ikke videresendt`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", tidspunkt))
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
 
         val noekkelinfo = service.hentNoekkelInfo("123")
@@ -193,14 +192,14 @@ internal class NoekkelinfoServiceTest {
     }
 
     @Test
-    suspend fun `behandlende kommune returneres som kommunenavn hvis satt`() {
+    fun `behandlende kommune returneres som kommunenavn hvis satt`() {
         val model = InternalDigisosSoker()
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", LocalDateTime.now()))
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
-        coEvery { kommuneService.getBehandlingsanvarligKommune(any()) } returns kommunenavn2
+        every { kommuneService.getBehandlingsanvarligKommune(any()) } returns kommunenavn2
 
         val noekkelinfo = service.hentNoekkelInfo("123")
 
@@ -208,14 +207,14 @@ internal class NoekkelinfoServiceTest {
     }
 
     @Test
-    suspend fun `kommunenavn returneres som kommunenavn hvis behandlingsansvarlig ikke satt`() {
+    fun `kommunenavn returneres som kommunenavn hvis behandlingsansvarlig ikke satt`() {
         val model = InternalDigisosSoker()
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", LocalDateTime.now()))
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { mockDigisosSak.digisosSoker } returns null
-        coEvery { kommuneService.getBehandlingsanvarligKommune(any()) } returns null
+        every { kommuneService.getBehandlingsanvarligKommune(any()) } returns null
 
         val noekkelinfo = service.hentNoekkelInfo("123")
 

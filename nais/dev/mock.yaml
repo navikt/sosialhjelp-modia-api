@@ -58,8 +58,12 @@ spec:
       value: "mock-alt,log-kibana,no-redis"
     - name: METADATA_URL
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/well-known/azuread"
+    - name: AZURE_GRAPH_API_URL
+      value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/azuread/graph"
     - name: AZURE_APP_WELL_KNOWN_URL
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/azure-well-known/selvbetjening"
+    - name: AZURE_OPENID_CONFIG_TOKEN_ENDPOINT
+      value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/azuretoken/selvbetjening"
     - name: FIKS_DIGISOS_ENDPOINT_URL
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/fiks"
     - name: NORG_ENDPOINT_URL
@@ -72,5 +76,9 @@ spec:
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/skjermede-personer"
     - name: MASKINPORTEN_WELL_KNOWN_URL
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/well-known/maskinporten"
+    - name: UNLEASH_INSTANCE_ID
+      value: "sosialhjelp-modia-api"
+    - name: UNLEASH_ENV
+      value: "mock"
     - name: MODIA_BASEURL
       value: "https://digisos.ekstern.dev.nav.no/sosialhjelp/modia"

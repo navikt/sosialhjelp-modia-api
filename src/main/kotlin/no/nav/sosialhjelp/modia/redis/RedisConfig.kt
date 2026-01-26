@@ -24,4 +24,16 @@ class RedisConfig {
 
         return RedisClient.create(redisUri)
     }
+
+    @Bean
+    @Profile("!gcp")
+    fun redisClientFss(properties: DataRedisProperties): RedisClient {
+        val redisUri =
+            RedisURI.Builder
+                .redis(properties.host, properties.port)
+                .withPassword(properties.password as CharSequence)
+                .build()
+
+        return RedisClient.create(redisUri)
+    }
 }

@@ -2,8 +2,8 @@ package no.nav.sosialhjelp.modia.utbetalinger
 
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.digisossak.domain.Dokumentasjonkrav
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
@@ -50,10 +50,10 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal returnere emptyList hvis soker ikke har noen digisosSaker`() {
+    fun `hentAlleUtbetalinger skal returnere emptyList hvis soker ikke har noen digisosSaker`() {
         val model = InternalDigisosSoker()
         coEvery { eventService.createModel(any()) } returns model
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns emptyList()
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns emptyList()
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 12, null, null)
 
@@ -61,7 +61,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling`() {
+    fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val tom = LocalDate.now().withDayOfMonth(1).minusDays(1)
@@ -89,7 +89,7 @@ internal class UtbetalingerServiceTest {
         model.navKontorHistorikk.add(NavKontorInformasjon(SendingType.SENDT, LocalDateTime.now(), enhetsnr, enhetsnavn))
 
         coEvery { eventService.createModel(any()) } returns model
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
@@ -109,7 +109,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal returnere response med 2 utbetalinger for 1 maned`() {
+    fun `hentAlleUtbetalinger skal returnere response med 2 utbetalinger for 1 maned`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val utbetalingsdato2 = LocalDate.now().withDayOfMonth(10).minusMonths(1)
 
@@ -154,7 +154,7 @@ internal class UtbetalingerServiceTest {
         )
 
         coEvery { eventService.createModel(any()) } returns model
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
@@ -171,7 +171,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling for 2 maneder`() {
+    fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling for 2 maneder`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(2)
         val utbetalingsdato2 = LocalDate.now().withDayOfMonth(5).minusMonths(1)
 
@@ -216,7 +216,7 @@ internal class UtbetalingerServiceTest {
         )
 
         coEvery { eventService.createModel(any()) } returns model
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
@@ -234,7 +234,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med vilkar`() {
+    fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med vilkar`() {
         val model = InternalDigisosSoker()
         val vilkar =
             Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
@@ -260,7 +260,7 @@ internal class UtbetalingerServiceTest {
         model.utbetalinger.add(utbetaling1)
 
         coEvery { eventService.createModel(any()) } returns model
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
@@ -270,7 +270,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med dokumentasjonkrav`() {
+    fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med dokumentasjonkrav`() {
         val model = InternalDigisosSoker()
         val dokumentasjonkrav =
             Dokumentasjonkrav(
@@ -305,7 +305,7 @@ internal class UtbetalingerServiceTest {
         model.utbetalinger.add(utbetaling1)
 
         coEvery { eventService.createModel(any()) } returns model
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
@@ -314,7 +314,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal returnere utbetalinger for alle digisosSaker`() {
+    fun `hentAlleUtbetalinger skal returnere utbetalinger for alle digisosSaker`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val utbetalingsdato2 = LocalDate.now().withDayOfMonth(10).minusMonths(1)
         val model = InternalDigisosSoker()
@@ -371,7 +371,7 @@ internal class UtbetalingerServiceTest {
         coEvery { mockDigisosSak2.sistEndret } returns ZonedDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli()
         coEvery { eventService.createModel(mockDigisosSak) } returns model
         coEvery { eventService.createModel(mockDigisosSak2) } returns model2
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak, mockDigisosSak2)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak, mockDigisosSak2)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
@@ -390,7 +390,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    internal suspend fun `hentUtbetalingerForDigisosSak skal hente alle utbetalinger for 1 DigisosSak`() {
+    internal fun `hentUtbetalingerForDigisosSak skal hente alle utbetalinger for 1 DigisosSak`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val tom = LocalDate.now().withDayOfMonth(1).minusDays(1)
@@ -416,8 +416,8 @@ internal class UtbetalingerServiceTest {
             ),
         )
 
-        coEvery { eventService.createModel(any()) } returns model
-        coEvery { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
+        every { eventService.createModel(any()) } returns model
+        every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
 
         val response: List<UtbetalingerResponse> = service.hentUtbetalingerForDigisosSak(mockDigisosSak)
 
@@ -436,7 +436,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal filtrere vekk annullerte utbetalinger`() {
+    fun `hentAlleUtbetalinger skal filtrere vekk annullerte utbetalinger`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(2).minusMonths(1)
         val utbetalingsdato2 = LocalDate.now().withDayOfMonth(3).minusMonths(1)
         val utbetalingsdato3 = LocalDate.now().withDayOfMonth(4).minusMonths(1)
@@ -517,7 +517,7 @@ internal class UtbetalingerServiceTest {
         )
 
         coEvery { eventService.createModel(any()) } returns model
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
@@ -537,7 +537,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal filtrere ned til 0 utbetalinger`() {
+    fun `hentAlleUtbetalinger skal filtrere ned til 0 utbetalinger`() {
         val model = InternalDigisosSoker()
         val vilkar =
             Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
@@ -563,7 +563,7 @@ internal class UtbetalingerServiceTest {
         model.utbetalinger.add(utbetaling1)
 
         coEvery { eventService.createModel(any()) } returns model
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 0, null, null)
 
@@ -572,7 +572,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal filtrere bort utbetalinger til gamle saker`() {
+    fun `hentAlleUtbetalinger skal filtrere bort utbetalinger til gamle saker`() {
         val model = InternalDigisosSoker()
         val vilkar =
             Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
@@ -604,7 +604,7 @@ internal class UtbetalingerServiceTest {
                 .minusMonths(5)
                 .toInstant()
                 .toEpochMilli()
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(mockDigisosSak)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, null)
 
@@ -613,7 +613,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere riktig med utbetalingsdato - bare fom er satt`() {
+    fun `skal filtrere riktig med utbetalingsdato - bare fom er satt`() {
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val sistEndretForFom = ZonedDateTime.of(fom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
 
@@ -676,7 +676,7 @@ internal class UtbetalingerServiceTest {
         coEvery { digisosSakForFom.sistEndret } returns sistEndretForFom
         coEvery { eventService.createModel(digisosSakForFom) } returns modelForFom
 
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakForFom)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakForFom)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, fom, null)
 
@@ -686,7 +686,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere riktig med forfallsdato - bare fom er satt`() {
+    fun `skal filtrere riktig med forfallsdato - bare fom er satt`() {
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val sistEndretForFom = ZonedDateTime.of(fom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
 
@@ -749,7 +749,7 @@ internal class UtbetalingerServiceTest {
         coEvery { digisosSakForFom.sistEndret } returns sistEndretForFom
         coEvery { eventService.createModel(digisosSakForFom) } returns modelForFom
 
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakForFom)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakForFom)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, fom, null)
 
@@ -759,7 +759,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere riktig med utbetalingsdato - bare tom er satt`() {
+    fun `skal filtrere riktig med utbetalingsdato - bare tom er satt`() {
         val tom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val sistEndretForFom = ZonedDateTime.of(tom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
 
@@ -822,7 +822,7 @@ internal class UtbetalingerServiceTest {
         coEvery { digisosSakForFom.sistEndret } returns sistEndretForFom
         coEvery { eventService.createModel(digisosSakForFom) } returns modelForTom
 
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakForFom)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakForFom)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, tom)
 
@@ -832,7 +832,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere riktig med forfallsdato - bare tom er satt`() {
+    fun `skal filtrere riktig med forfallsdato - bare tom er satt`() {
         val tom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val sistEndretForFom = ZonedDateTime.of(tom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
 
@@ -895,7 +895,7 @@ internal class UtbetalingerServiceTest {
         coEvery { digisosSakForFom.sistEndret } returns sistEndretForFom
         coEvery { eventService.createModel(digisosSakForFom) } returns modelForTom
 
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakForFom)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakForFom)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, null, tom)
 
@@ -905,7 +905,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere riktig med utbetalingsdato - fom og tom er satt`() {
+    fun `skal filtrere riktig med utbetalingsdato - fom og tom er satt`() {
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val tom = LocalDate.now().withDayOfMonth(1).minusDays(1)
         val sistEndretForFom = ZonedDateTime.of(fom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
@@ -1000,7 +1000,7 @@ internal class UtbetalingerServiceTest {
         coEvery { digisosSakEtterTom.kommunenummer } returns "0001"
         coEvery { eventService.createModel(digisosSakEtterTom) } returns modelEtterTom
 
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakForFom, digisosSakEtterTom)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakForFom, digisosSakEtterTom)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, fom, tom)
 
@@ -1011,7 +1011,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere riktig med forfallsdato - fom og tom er satt`() {
+    fun `skal filtrere riktig med forfallsdato - fom og tom er satt`() {
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val tom = LocalDate.now().withDayOfMonth(1).minusDays(1)
         val sistEndretForFom = ZonedDateTime.of(fom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
@@ -1106,7 +1106,7 @@ internal class UtbetalingerServiceTest {
         coEvery { digisosSakEtterTom.kommunenummer } returns "0001"
         coEvery { eventService.createModel(digisosSakEtterTom) } returns modelEtterTom
 
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakForFom, digisosSakEtterTom)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak, digisosSakForFom, digisosSakEtterTom)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, fom, tom)
 
@@ -1117,7 +1117,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere riktig - fom og tom er samme dag og utbetalingsdato er utenfor intervall`() {
+    fun `skal filtrere riktig - fom og tom er samme dag og utbetalingsdato er utenfor intervall`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(1).plusDays(1)
         val fom = LocalDate.now().withDayOfMonth(1)
         val tom = LocalDate.now().withDayOfMonth(1)
@@ -1153,7 +1153,7 @@ internal class UtbetalingerServiceTest {
         coEvery { digisosSak.sistEndret } returns sistEndret
         coEvery { eventService.createModel(digisosSak) } returns model
 
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak)
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak)
 
         val response: List<UtbetalingerResponse> = service.hentAlleUtbetalinger(fnr, 3, fom, tom)
 
@@ -1195,9 +1195,9 @@ internal class UtbetalingerServiceTest {
         coEvery { digisosSak.kommunenummer } returns "0001"
         coEvery { digisosSak.sistEndret } returns ZonedDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli()
 
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak)
-// AssertJ støtter ikke suspend functions
-        assertThatThrownBy { runBlocking { service.hentAlleUtbetalinger(fnr, 3, fom, fom.minusDays(1)) } }
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak)
+
+        assertThatThrownBy { service.hentAlleUtbetalinger(fnr, 3, fom, fom.minusDays(1)) }
             .isInstanceOf(IllegalStateException::class.java)
     }
 }

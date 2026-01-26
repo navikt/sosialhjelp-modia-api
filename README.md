@@ -1,5 +1,5 @@
 [![Build image](https://github.com/navikt/sosialhjelp-modia-api/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/navikt/sosialhjelp-modia-api/actions/workflows/build.yml)
-[![Deploy til prod-gcp](https://github.com/navikt/sosialhjelp-modia-api/actions/workflows/deploy_prod.yml/badge.svg)](https://github.com/navikt/sosialhjelp-modia-api/actions/workflows/deploy_prod.yml)
+[![Deploy til prod-fss](https://github.com/navikt/sosialhjelp-modia-api/actions/workflows/deploy_prod.yml/badge.svg)](https://github.com/navikt/sosialhjelp-modia-api/actions/workflows/deploy_prod.yml)
 
 # sosialhjelp-modia-api
 Backend-app som skal gi innsyn i sosialhjelp-saker for saksbehandlere ved NKS.
@@ -41,6 +41,7 @@ Kjør `TestApplication.kt` med springprofilene `local,log-console` for integrasj
 - Docker image bygges ved push: `.github/workflows/build.yml`
 - Deploy til dev: `.github/workflows/deploy_dev.yml`
 - Deploy til prod: `.github/workflows/deploy_prod.yml`
+- Redis: Endringer i `redis-config.yml` eller `redisexporter.yml` i andre brancher enn `main` gir autodeploy til dev-fss, og endringer på `main` gir autodeploy til prod-fss.
 
 ## Hvordan komme i gang
 [Felles dokumentasjon for våre backend apper](https://teamdigisos.intern.nav.no/docs/utviklerdokumentasjon/kom%20igang%20med%20utvikling#backend-gradle)

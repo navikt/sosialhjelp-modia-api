@@ -44,6 +44,10 @@ dependencies {
     implementation(libs.logback.syslog4j)
     implementation(libs.syslog4j)
 
+//    JWT
+    implementation(libs.java.jwt)
+    implementation(libs.jwks.rsa)
+
 //    Filformat
     implementation(libs.filformat)
 
@@ -52,6 +56,9 @@ dependencies {
 
 //    Springdoc
     implementation(libs.bundles.springdoc)
+
+//    Unleash
+    implementation(libs.unleash)
 
 //    Redis
     implementation(libs.lettuce)

@@ -10,8 +10,11 @@ micrometerRegistry = "1.15.5"
 prometheus = "0.16.0"
 tokenSupport = "6.0.1"
 logbackSyslog4j = "1.0.0"
+javaJwt = "4.5.0"
+jwksRsa = "0.23.0"
 syslog4j = "0.9.61"
 lettuce = "6.8.0.RELEASE"
+unleash = "11.1.1"
 springdoc = "3.0.1"
 mockk = "1.14.7"
 ktlint = "1.5.0"
@@ -43,6 +46,9 @@ logstash-logback-encoder = { module = "net.logstash.logback:logstash-logback-enc
 logback-syslog4j = { module = "com.papertrailapp:logback-syslog4j", version.ref = "logbackSyslog4j" }
 syslog4j = { module = "org.graylog2:syslog4j", version.ref = "syslog4j" }
 
+java-jwt = { module = "com.auth0:java-jwt", version.ref = "javaJwt" }
+jwks-rsa = { module = "com.auth0:jwks-rsa", version.ref = "jwksRsa" }
+
 filformat = { module = "no.nav.sbl.dialogarena:soknadsosialhjelp-filformat", version.ref = "filformat" }
 
 token-validation = { module = "no.nav.security:token-validation-spring", version.ref = "tokenSupport" }
@@ -51,6 +57,8 @@ token-client = { module = "no.nav.security:token-client-spring", version.ref = "
 
 springdoc-common = { module = "org.springdoc:springdoc-openapi-starter-common", version.ref = "springdoc" }
 springdoc-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+
+unleash = { module = "io.getunleash:unleash-client-java", version.ref = "unleash" }
 
 lettuce = { module = "io.lettuce:lettuce-core", version.ref = "lettuce" }
 

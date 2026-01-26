@@ -1,7 +1,6 @@
 package no.nav.sosialhjelp.modia.soknad.hendelser
 
 import io.mockk.clearMocks
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sosialhjelp.api.fiks.DigisosSak
@@ -39,18 +38,18 @@ internal class HendelseServiceTest {
     fun init() {
         clearMocks(eventService, fiksClient)
 
-        coEvery { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
+        every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
         every { vedleggsService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
         every { mockDigisosSak.ettersendtInfoNAV } returns mockk()
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunktSendt.toInstant(ZoneOffset.UTC).toEpochMilli()
     }
 
     @Test
-    suspend fun `Skal returnere respons med 1 hendelse`() {
+    fun `Skal returnere respons med 1 hendelse`() {
         val model = InternalDigisosSoker()
         model.historikk.add(Hendelse(SOKNAD_SENDT, tittelSendt, tidspunktSendt))
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
         val hendelser = service.hentHendelser("123")
 
@@ -60,7 +59,7 @@ internal class HendelseServiceTest {
     }
 
     @Test
-    suspend fun `Skal returnere respons med flere hendelser`() {
+    fun `Skal returnere respons med flere hendelser`() {
         val model = InternalDigisosSoker()
         model.historikk.addAll(
             listOf(
@@ -70,7 +69,7 @@ internal class HendelseServiceTest {
             ),
         )
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
         val hendelser = service.hentHendelser("123")
 

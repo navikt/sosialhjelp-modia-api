@@ -1,7 +1,6 @@
 package no.nav.sosialhjelp.modia.digisossak.event
 
 import io.mockk.clearAllMocks
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
@@ -27,14 +26,14 @@ internal class UtbetalingTest {
 
         every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
-        coEvery { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
         resetHendelser()
     }
 
     @Test
-    suspend fun `utbetaling ETTER vedtakFattet og saksStatus`() {
-        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    fun `utbetaling ETTER vedtakFattet og saksStatus`() {
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -76,8 +75,8 @@ internal class UtbetalingTest {
     }
 
     @Test
-    suspend fun `utbetaling UTEN vedtakFattet`() {
-        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    fun `utbetaling UTEN vedtakFattet`() {
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -98,8 +97,8 @@ internal class UtbetalingTest {
     }
 
     @Test
-    suspend fun `utbetaling kontonummer settes kun hvis annenMottaker er false`() {
-        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    fun `utbetaling kontonummer settes kun hvis annenMottaker er false`() {
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")

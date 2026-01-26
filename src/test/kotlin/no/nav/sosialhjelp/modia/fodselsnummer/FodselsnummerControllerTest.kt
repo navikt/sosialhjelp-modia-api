@@ -2,17 +2,23 @@ package no.nav.sosialhjelp.modia.fodselsnummer
 
 import io.mockk.clearAllMocks
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
+import no.nav.sosialhjelp.modia.app.exceptions.ManglendeModiaSosialhjelpTilgangException
+import no.nav.sosialhjelp.modia.tilgang.TilgangskontrollService
 import no.nav.sosialhjelp.modia.utils.Ident
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 
 internal class FodselsnummerControllerTest {
+    private val tilgangskontrollService: TilgangskontrollService = mockk()
     private val fodselsnummerService: FodselsnummerService = mockk()
     private val modiaBaseUrl = "http://localhost:3000/sosialhjelp/modia"
-    private val controller = FodselsnummerController(fodselsnummerService, modiaBaseUrl)
+    private val controller = FodselsnummerController(tilgangskontrollService, fodselsnummerService, modiaBaseUrl)
 
     private val ident = Ident("11111111111")
     private val fnrId = "abfcc2e8-9986-48c0-9952-eb6b724df6ce"
@@ -20,6 +26,8 @@ internal class FodselsnummerControllerTest {
     @BeforeEach
     internal fun setUp() {
         clearAllMocks()
+
+        every { tilgangskontrollService.harVeilederTilgangTilTjenesten(any(), any(), any()) } just runs
     }
 
     @Test
@@ -38,6 +46,16 @@ internal class FodselsnummerControllerTest {
         val response = controller.setFodselsnummer("token", Ident(" "))
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `setFodselsnummer - ikke tilgang`() {
+        every {
+            tilgangskontrollService.harVeilederTilgangTilTjenesten(any(), any(), any())
+        } throws ManglendeModiaSosialhjelpTilgangException("veileder har ikke tilgang")
+
+        assertThatExceptionOfType(ManglendeModiaSosialhjelpTilgangException::class.java)
+            .isThrownBy { controller.setFodselsnummer("token", ident) }
     }
 
     @Test

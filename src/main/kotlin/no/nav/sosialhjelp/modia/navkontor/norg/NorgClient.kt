@@ -1,6 +1,7 @@
 package no.nav.sosialhjelp.modia.navkontor.norg
 
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
+import no.nav.sosialhjelp.modia.app.client.unproxiedHttpClient
 import no.nav.sosialhjelp.modia.app.exceptions.NorgException
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.getCallId
 import no.nav.sosialhjelp.modia.logger
@@ -13,6 +14,7 @@ import no.nav.sosialhjelp.modia.typeRef
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.context.annotation.Profile
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
@@ -35,6 +37,7 @@ class NorgClientImpl(
 ) : NorgClient {
     private val norgWebClient =
         webClientBuilder
+            .clientConnector(ReactorClientHttpConnector(unproxiedHttpClient()))
             .codecs {
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
             }.baseUrl(clientProperties.norgEndpointUrl)
@@ -126,7 +129,7 @@ class NorgClientImpl(
 class NorgClientMock : NorgClient {
     private val innsynMap = mutableMapOf<String, NavEnhet>()
 
-    override fun hentNavEnhet(enhetsnr: String): NavEnhet = innsynMap.getOrElse(enhetsnr) { defaultNavEnhet(enhetsnr) }
+    override fun hentNavEnhet(enhetsnr: String): NavEnhet = innsynMap.getOrElse(enhetsnr, { defaultNavEnhet(enhetsnr) })
 
     override fun hentAlleNavEnheter(): List<NavEnhet> =
         listOf(

@@ -15,7 +15,7 @@ class OppgaveService(
     private val eventService: EventService,
     private val vedleggService: VedleggService,
 ) {
-    suspend fun hentOppgaver(fiksDigisosId: String): List<OppgaveResponse> {
+    fun hentOppgaver(fiksDigisosId: String): List<OppgaveResponse> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
 

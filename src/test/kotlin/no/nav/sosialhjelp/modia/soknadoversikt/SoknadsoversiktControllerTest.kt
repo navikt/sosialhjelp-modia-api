@@ -3,7 +3,6 @@ package no.nav.sosialhjelp.modia.soknadoversikt
 import io.mockk.Called
 import io.mockk.Runs
 import io.mockk.clearAllMocks
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -97,37 +96,37 @@ internal class SoknadsoversiktControllerTest {
         every { digisosSak1.sistEndret } returns 0L
         every { digisosSak1.digisosSoker } returns null
         every { digisosSak1.originalSoknadNAV } returns null
-        coEvery { eventService.createModel(digisosSak1) } returns model1
+        every { eventService.createModel(digisosSak1) } returns model1
 
         every { digisosSak2.fiksDigisosId } returns id2
         every { digisosSak2.sistEndret } returns 1000L
         every { digisosSak2.digisosSoker } returns mockk()
         every { digisosSak2.originalSoknadNAV?.timestampSendt } returns System.currentTimeMillis()
-        coEvery { eventService.createModel(digisosSak2) } returns model2
+        every { eventService.createModel(digisosSak2) } returns model2
 
         every { digisosSak3.fiksDigisosId } returns id3
         every { digisosSak3.sistEndret } returns 2000L
         every { digisosSak3.digisosSoker } returns mockk()
         every { digisosSak3.originalSoknadNAV?.timestampSendt } returns System.currentTimeMillis()
-        coEvery { eventService.createModel(digisosSak3) } returns model3
+        every { eventService.createModel(digisosSak3) } returns model3
 
         every { digisosSak4.fiksDigisosId } returns id4
         every { digisosSak4.sistEndret } returns 2000L
         every { digisosSak4.digisosSoker } returns mockk()
         every { digisosSak4.originalSoknadNAV } returns null
-        coEvery { eventService.createModel(digisosSak4) } returns model4
+        every { eventService.createModel(digisosSak4) } returns model4
 
         every { digisosSak5.fiksDigisosId } returns id5
         every { digisosSak5.sistEndret } returns 2000L
         every { digisosSak5.digisosSoker } returns mockk()
         every { digisosSak5.originalSoknadNAV } returns null
-        coEvery { eventService.createModel(digisosSak5) } returns model5
+        every { eventService.createModel(digisosSak5) } returns model5
 
-        coEvery { oppgaveService.hentOppgaver(id1) } returns listOf(oppgaveResponseMock, oppgaveResponseMock) // 2 oppgaver
-        coEvery { oppgaveService.hentOppgaver(id2) } returns listOf(oppgaveResponseMock) // 1 oppgave
-        coEvery { dokumentasjonkravService.hentDokumentasjonkrav(id3) } returns listOf(dokumentasjonkravMock) // 1 oppgave
-        coEvery { dokumentasjonkravService.hentDokumentasjonkrav(id4) } returns listOf(dokumentasjonkravMock) // 1 oppgave
-        coEvery { dokumentasjonkravService.hentDokumentasjonkrav(id5) } returns listOf(dokumentasjonkravMock) // 1 oppgave
+        every { oppgaveService.hentOppgaver(id1) } returns listOf(oppgaveResponseMock, oppgaveResponseMock) // 2 oppgaver
+        every { oppgaveService.hentOppgaver(id2) } returns listOf(oppgaveResponseMock) // 1 oppgave
+        every { dokumentasjonkravService.hentDokumentasjonkrav(id3) } returns listOf(dokumentasjonkravMock) // 1 oppgave
+        every { dokumentasjonkravService.hentDokumentasjonkrav(id4) } returns listOf(dokumentasjonkravMock) // 1 oppgave
+        every { dokumentasjonkravService.hentDokumentasjonkrav(id5) } returns listOf(dokumentasjonkravMock) // 1 oppgave
 
         every { model1.historikk } returns
             mutableListOf(
@@ -222,8 +221,8 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `getSoknader - skal mappe fra DigisosSak til SoknadResponse`() {
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1, digisosSak2)
+    fun `getSoknader - skal mappe fra DigisosSak til SoknadResponse`() {
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1, digisosSak2)
 
         every { model1.status } returns SoknadsStatus.MOTTATT
         every { model2.status } returns SoknadsStatus.UNDER_BEHANDLING
@@ -256,7 +255,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `getSoknadDetaljer - skal mappe fra DigisosSak til SoknadDetaljerResponse`() {
+    fun `getSoknadDetaljer - skal mappe fra DigisosSak til SoknadDetaljerResponse`() {
         val vilkar1 =
             Vilkar(
                 "referanse",
@@ -288,12 +287,12 @@ internal class SoknadsoversiktControllerTest {
                 null,
             )
 
-        coEvery { fiksClient.hentDigisosSak(id1) } returns digisosSak1
-        coEvery { fiksClient.hentDigisosSak(id2) } returns digisosSak2
-        coEvery { fiksClient.hentDigisosSak(id3) } returns digisosSak3
-        coEvery { eventService.createSoknadsoversiktModel(digisosSak1) } returns model1
-        coEvery { eventService.createSoknadsoversiktModel(digisosSak2) } returns model2
-        coEvery { eventService.createSoknadsoversiktModel(digisosSak3) } returns model3
+        every { fiksClient.hentDigisosSak(id1) } returns digisosSak1
+        every { fiksClient.hentDigisosSak(id2) } returns digisosSak2
+        every { fiksClient.hentDigisosSak(id3) } returns digisosSak3
+        every { eventService.createSoknadsoversiktModel(digisosSak1) } returns model1
+        every { eventService.createSoknadsoversiktModel(digisosSak2) } returns model2
+        every { eventService.createSoknadsoversiktModel(digisosSak3) } returns model3
 
         every { model1.status } returns SoknadsStatus.MOTTATT
         every { model2.status } returns SoknadsStatus.UNDER_BEHANDLING
@@ -362,9 +361,9 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `getSoknadDetaljer - hvis model ikke har noen oppgaver, skal ikke oppgaveService kalles`() {
-        coEvery { fiksClient.hentDigisosSak(id1) } returns digisosSak1
-        coEvery { eventService.createSoknadsoversiktModel(digisosSak1) } returns model1
+    fun `getSoknadDetaljer - hvis model ikke har noen oppgaver, skal ikke oppgaveService kalles`() {
+        every { fiksClient.hentDigisosSak(id1) } returns digisosSak1
+        every { eventService.createSoknadsoversiktModel(digisosSak1) } returns model1
 
         every { model1.status } returns SoknadsStatus.MOTTATT
         every { model1.oppgaver } returns mutableListOf()
@@ -384,8 +383,8 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `papirSoknadDato - hvis papirsoknad, ingen sak, soknadsdato (forste element i historikk) valgt`() {
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1)
+    fun `papirSoknadDato - hvis papirsoknad, ingen sak, soknadsdato (forste element i historikk) valgt`() {
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1)
 
         assertThat(digisosSak1).isNotNull
         assertThat(model1).isNotNull
@@ -398,8 +397,8 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `papirSoknadDato - hvis papirosoknad, 1 sak, velg saksdato`() {
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak5)
+    fun `papirSoknadDato - hvis papirosoknad, 1 sak, velg saksdato`() {
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak5)
         assertThat(model5).isNotNull
         assertThat(model5.saker).isNotNull
         assertThat(model5.saker).isNotEmpty
@@ -409,8 +408,8 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `papirSoknadDato - hvis papirsoknad, 2 sak, velg saksdato til sak 1`() {
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak4)
+    fun `papirSoknadDato - hvis papirsoknad, 2 sak, velg saksdato til sak 1`() {
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak4)
         assertThat(model4).isNotNull
         assertThat(model4.saker).isNotNull
         assertThat(model4.saker).isNotEmpty
@@ -421,8 +420,8 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `papirSoknadDato - ikke papirsoknad, 0 sak, returnerer null`() {
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak2)
+    fun `papirSoknadDato - ikke papirsoknad, 0 sak, returnerer null`() {
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak2)
         assertThat(digisosSak2.originalSoknadNAV).isNotNull
         assertThat(model2).isNotNull
         assertThat(model2.saker).isNotNull
@@ -433,8 +432,8 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `papirSoknadDato - ikke papirsoknad, 1 sak, returnerer null`() {
-        coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak3)
+    fun `papirSoknadDato - ikke papirsoknad, 1 sak, returnerer null`() {
+        every { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak3)
 
         assertThat(model3).isNotNull
         assertThat(model3.saker).isNotNull

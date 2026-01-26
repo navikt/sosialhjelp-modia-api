@@ -38,7 +38,7 @@ class SoknadsoversiktController(
     private val tilgangskontrollService: TilgangskontrollService,
 ) {
     @PostMapping("/soknader")
-    suspend fun getSoknader(
+    fun getSoknader(
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
         @RequestBody ident: Ident,
     ): ResponseEntity<List<SoknadResponse>> {
@@ -70,7 +70,7 @@ class SoknadsoversiktController(
     }
 
     @PostMapping("/{fiksDigisosId}/soknadDetaljer")
-    suspend fun getSoknadDetaljer(
+    fun getSoknadDetaljer(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
         @RequestBody ident: Ident,
@@ -91,7 +91,7 @@ class SoknadsoversiktController(
         return ResponseEntity.ok().body(saksDetaljerResponse)
     }
 
-    private suspend fun harOppgaver(
+    private fun harOppgaver(
         model: InternalDigisosSoker,
         fiksDigisosId: String,
     ): Boolean =
@@ -100,7 +100,7 @@ class SoknadsoversiktController(
             else -> oppgaveService.hentOppgaver(fiksDigisosId).isNotEmpty()
         }
 
-    private suspend fun harDokumentasjonkrav(
+    private fun harDokumentasjonkrav(
         model: InternalDigisosSoker,
         fiksDigisosId: String,
     ): Boolean =
@@ -115,7 +115,7 @@ class SoknadsoversiktController(
 
     fun erPapirSoknad(originalSoknadNAV: OriginalSoknadNAV?): Boolean = originalSoknadNAV == null
 
-    suspend fun papirSoknadDato(saken: DigisosSak): LocalDate? {
+    fun papirSoknadDato(saken: DigisosSak): LocalDate? {
         if (!erPapirSoknad(saken.originalSoknadNAV)) {
             return null
         }

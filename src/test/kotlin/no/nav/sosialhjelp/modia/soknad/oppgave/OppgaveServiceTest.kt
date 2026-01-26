@@ -1,7 +1,6 @@
 package no.nav.sosialhjelp.modia.soknad.oppgave
 
 import io.mockk.clearAllMocks
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sosialhjelp.api.fiks.DigisosSak
@@ -45,16 +44,16 @@ internal class OppgaveServiceTest {
     @BeforeEach
     fun init() {
         clearAllMocks()
-        coEvery { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
+        every { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
         every { mockDigisosSak.sokerFnr } returns "fnr"
         every { mockDigisosSak.ettersendtInfoNAV } returns mockEttersendtInfoNAV
     }
 
     @Test
-    suspend fun `Should return emptylist`() {
+    fun `Should return emptylist`() {
         val model = InternalDigisosSoker()
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
 
         val oppgaver = service.hentOppgaver("123")
 
@@ -63,11 +62,11 @@ internal class OppgaveServiceTest {
     }
 
     @Test
-    suspend fun `Should return oppgave`() {
+    fun `Should return oppgave`() {
         val model = InternalDigisosSoker()
         model.oppgaver.add(Oppgave(type, tillegg, frist, tidspunktForKrav, true))
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
 
         val oppgaver = service.hentOppgaver("123")
@@ -79,11 +78,11 @@ internal class OppgaveServiceTest {
     }
 
     @Test
-    suspend fun `Should return oppgave without tilleggsinformasjon`() {
+    fun `Should return oppgave without tilleggsinformasjon`() {
         val model = InternalDigisosSoker()
         model.oppgaver.add(Oppgave(type, null, frist, tidspunktForKrav, true))
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
 
         val oppgaver = service.hentOppgaver("123")
@@ -95,7 +94,7 @@ internal class OppgaveServiceTest {
     }
 
     @Test
-    suspend fun `Should return list of oppgaver sorted by frist`() {
+    fun `Should return list of oppgaver sorted by frist`() {
         val model = InternalDigisosSoker()
         model.oppgaver.addAll(
             listOf(
@@ -106,7 +105,7 @@ internal class OppgaveServiceTest {
             ),
         )
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
 
         val oppgaver = service.hentOppgaver("123")
@@ -131,7 +130,7 @@ internal class OppgaveServiceTest {
     }
 
     @Test
-    suspend fun `skal vise info om oppgaver hvor bruker ikke har lastet opp tilknyttet en oppgave`() {
+    fun `skal vise info om oppgaver hvor bruker ikke har lastet opp tilknyttet en oppgave`() {
         val model = InternalDigisosSoker()
         model.oppgaver.addAll(
             listOf(
@@ -141,7 +140,7 @@ internal class OppgaveServiceTest {
             ),
         )
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns
             listOf(
                 InternalVedlegg(type, tillegg, frist, 1, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1)),
@@ -169,7 +168,7 @@ internal class OppgaveServiceTest {
     //  Hvordan vite hvilken oppgave ett opplastet vedlegg hører til?
     //  Slik det er nå, vil ett vedlegg med som matcher 2 oppgaver knyttes til begge oppgaver.
     @Test
-    internal suspend fun `2 oppgaver med samme type og tillegg - hva skjer med vedlegg som matcher begge`() {
+    internal fun `2 oppgaver med samme type og tillegg - hva skjer med vedlegg som matcher begge`() {
         val model = InternalDigisosSoker()
         model.oppgaver.addAll(
             listOf(
@@ -178,7 +177,7 @@ internal class OppgaveServiceTest {
             ),
         )
 
-        coEvery { eventService.createModel(any()) } returns model
+        every { eventService.createModel(any()) } returns model
         every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns
             listOf(
                 InternalVedlegg(type, tillegg, frist, 2, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1)),

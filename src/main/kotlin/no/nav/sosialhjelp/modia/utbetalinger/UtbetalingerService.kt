@@ -23,7 +23,7 @@ class UtbetalingerService(
     private val fiksClient: FiksClient,
     private val eventService: EventService,
 ) {
-    suspend fun hentAlleUtbetalinger(
+    fun hentAlleUtbetalinger(
         fnr: String,
         months: Int,
         fom: LocalDate?,
@@ -45,7 +45,7 @@ class UtbetalingerService(
         return utbetalingList
     }
 
-    suspend fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
+    fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
         val utbetalingList = getUtbetalinger(digisosSak).sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         loggMuligeDuplikater(utbetalingList)
         return utbetalingList
@@ -128,7 +128,7 @@ class UtbetalingerService(
         return utbetaling.utbetalingsDato?.let { utbetalingsDatoInnenfor } ?: forfallsDatoInnenfor
     }
 
-    private suspend fun getUtbetalinger(digisosSak: DigisosSak): List<UtbetalingerResponse> {
+    private fun getUtbetalinger(digisosSak: DigisosSak): List<UtbetalingerResponse> {
         val model = eventService.createModel(digisosSak)
         val behandlendeNavKontor = model.navKontorHistorikk.lastOrNull()
 
@@ -140,7 +140,7 @@ class UtbetalingerService(
             }
     }
 
-    private suspend fun getUtbetalinger(
+    private fun getUtbetalinger(
         digisosSak: DigisosSak,
         fom: LocalDate?,
         tom: LocalDate?,

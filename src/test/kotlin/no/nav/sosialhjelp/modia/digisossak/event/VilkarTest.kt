@@ -1,7 +1,6 @@
 package no.nav.sosialhjelp.modia.digisossak.event
 
 import io.mockk.clearAllMocks
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
@@ -27,14 +26,14 @@ internal class VilkarTest {
 
         every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
-        coEvery { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
+        every { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
 
         resetHendelser()
     }
 
     @Test
-    suspend fun `vilkar ETTER utbetaling`() {
-        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    fun `vilkar ETTER utbetaling`() {
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -65,8 +64,8 @@ internal class VilkarTest {
     }
 
     @Test
-    suspend fun `vilkar UTEN utbetaling`() {
-        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    fun `vilkar UTEN utbetaling`() {
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -87,8 +86,8 @@ internal class VilkarTest {
     }
 
     @Test
-    suspend fun `vilkar FOR utbetaling - vilkar knyttes ikke til noen utbetaling`() {
-        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    fun `vilkar FOR utbetaling - vilkar knyttes ikke til noen utbetaling`() {
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")
@@ -114,8 +113,8 @@ internal class VilkarTest {
     }
 
     @Test
-    suspend fun `vilkar og utbetaling har samme hendelsestidspunkt`() {
-        coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
+    fun `vilkar og utbetaling har samme hendelsestidspunkt`() {
+        every { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
                 .withVersion("123")

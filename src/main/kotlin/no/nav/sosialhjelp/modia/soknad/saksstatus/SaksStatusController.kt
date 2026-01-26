@@ -22,7 +22,7 @@ class SaksStatusController(
     private val tilgangskontrollService: TilgangskontrollService,
 ) {
     @PostMapping("/{fiksDigisosId}/saksStatus")
-    suspend fun hentSaksStatuser(
+    fun hentSaksStatuser(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident,

@@ -24,7 +24,7 @@ class VedleggController(
     private val tilgangskontrollService: TilgangskontrollService,
 ) {
     @PostMapping("/{fiksDigisosId}/vedlegg")
-    suspend fun hentVedlegg(
+    fun hentVedlegg(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident,

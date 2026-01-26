@@ -21,7 +21,7 @@ class HendelseController(
     private val tilgangskontrollService: TilgangskontrollService,
 ) {
     @PostMapping("/{fiksDigisosId}/hendelser")
-    suspend fun hentHendelser(
+    fun hentHendelser(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident,

@@ -22,7 +22,7 @@ class DokumentasjonkravController(
     private val tilgangskontrollService: TilgangskontrollService,
 ) {
     @PostMapping("/{fiksDigisosId}/dokumentasjonkrav")
-    suspend fun hentOppgaver(
+    fun hentOppgaver(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
         @RequestBody ident: Ident,

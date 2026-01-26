@@ -2,8 +2,6 @@ package no.nav.sosialhjelp.modia.kommune
 
 import io.mockk.Runs
 import io.mockk.clearAllMocks
-import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -41,7 +39,7 @@ internal class KommuneServiceTest {
     }
 
     @Test
-    internal suspend fun `hent KommuneInfo fra cache`() {
+    internal fun `hent KommuneInfo fra cache`() {
         val kommuneInfo: KommuneInfo = sosialhjelpJsonMapper.readValue(kommuneInfoResponseString)
         every { redisService.get<KommuneInfo>(any(), any(), any()) } returns kommuneInfo
 
@@ -49,45 +47,45 @@ internal class KommuneServiceTest {
 
         assertThat(result).isNotNull
         verify(exactly = 1) { redisService.get<KommuneInfo>(any(), any(), any()) }
-        coVerify(exactly = 0) { kommuneInfoClient.getKommuneInfo(any()) }
+        verify(exactly = 0) { kommuneInfoClient.getKommuneInfo(any()) }
         verify(exactly = 0) { redisService.set(any(), any(), any(), any()) }
     }
 
     @Test
-    internal suspend fun `hent KommuneInfo fra client`() {
-        coEvery { kommuneInfoClient.getKommuneInfo(any()) } returns
+    internal fun `hent KommuneInfo fra client`() {
+        every { kommuneInfoClient.getKommuneInfo(any()) } returns
             sosialhjelpJsonMapper.readValue(kommuneInfoResponseString)
 
         val result = service.get(kommuneNr)
 
         assertThat(result).isNotNull
         verify(exactly = 1) { redisService.get<KommuneInfo>(any(), any(), any()) }
-        coVerify(exactly = 1) { kommuneInfoClient.getKommuneInfo(any()) }
+        verify(exactly = 1) { kommuneInfoClient.getKommuneInfo(any()) }
         verify(exactly = 1) { redisService.set(any(), any(), any(), any()) }
     }
 
     @Test
-    suspend fun `behandlingsansvarlig returneres med kommune i kommunenavnet det ikke finnes i kommune info`() {
+    fun `behandlingsansvarlig returneres med kommune i kommunenavnet det ikke finnes i kommune info`() {
         val kommuneInfo = KommuneInfo("", true, true, false, false, null, true, kommunenavnUtenKommuneINavnet)
-        coEvery { kommuneInfoClient.getKommuneInfo(kommuneNr) } returns kommuneInfo
+        every { kommuneInfoClient.getKommuneInfo(kommuneNr) } returns kommuneInfo
 
         val behandlingsansvarlig = service.getBehandlingsanvarligKommune(kommuneNr)
         assertThat(behandlingsansvarlig).isEqualTo("$kommunenavnUtenKommuneINavnet kommune")
     }
 
     @Test
-    suspend fun `behandlingsansvarlig med kommune i kommunenavnet returneres med kommune i navnet`() {
+    fun `behandlingsansvarlig med kommune i kommunenavnet returneres med kommune i navnet`() {
         val kommuneInfo = KommuneInfo("", true, true, false, false, null, true, kommunenavnMedKommuneINavnet)
-        coEvery { kommuneInfoClient.getKommuneInfo(kommuneNr) } returns kommuneInfo
+        every { kommuneInfoClient.getKommuneInfo(kommuneNr) } returns kommuneInfo
 
         val behandlingsansvarlig = service.getBehandlingsanvarligKommune(kommuneNr)
         assertThat(behandlingsansvarlig).isEqualTo(kommunenavnMedKommuneINavnet)
     }
 
     @Test
-    suspend fun `ingen behandlinsansvarlig satt returnerer null`() {
+    fun `ingen behandlinsansvarlig satt returnerer null`() {
         val kommuneInfo = KommuneInfo("", true, true, false, false, null, true, null)
-        coEvery { kommuneInfoClient.getKommuneInfo(kommuneNr) } returns kommuneInfo
+        every { kommuneInfoClient.getKommuneInfo(kommuneNr) } returns kommuneInfo
 
         val behandlingsansvarlig = service.getBehandlingsanvarligKommune(kommuneNr)
         assertThat(behandlingsansvarlig).isNull()

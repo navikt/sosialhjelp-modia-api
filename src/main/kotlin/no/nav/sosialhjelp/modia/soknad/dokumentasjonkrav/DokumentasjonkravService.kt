@@ -15,7 +15,7 @@ class DokumentasjonkravService(
     private val eventService: EventService,
     private val vedleggService: VedleggService,
 ) {
-    suspend fun hentDokumentasjonkrav(fiksDigiosId: String): List<DokumentasjonkravResponse> {
+    fun hentDokumentasjonkrav(fiksDigiosId: String): List<DokumentasjonkravResponse> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigiosId)
         val model = eventService.createModel(digisosSak)
 
