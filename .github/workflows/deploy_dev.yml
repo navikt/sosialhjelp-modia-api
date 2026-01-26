@@ -31,7 +31,7 @@ jobs:
     permissions:
       id-token: write
       contents: write
-    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@v8
+    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@v16
     with:
       cluster-name: ${{ needs.set-cluster.outputs.cluster-name }}
       resource-name: ${{ inputs.config-file-name }}
