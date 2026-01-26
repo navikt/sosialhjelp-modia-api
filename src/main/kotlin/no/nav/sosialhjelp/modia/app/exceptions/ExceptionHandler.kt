@@ -12,7 +12,6 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
 @ControllerAdvice
@@ -84,19 +83,17 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     }
 
     @ExceptionHandler(IllegalStateException::class)
-    fun handleIllegalStateException(
-        ex: IllegalStateException,
-    ): ResponseEntity<FrontendErrorMessage> {
+    fun handleIllegalStateException(ex: IllegalStateException): ResponseEntity<FrontendErrorMessage> {
         // Handle "No thread-bound request found" error from async processing
         if (ex.message?.contains("No thread-bound request found") == true) {
             log.error("Request context lost during async processing. This should not happen with RequestContextFilter configured.", ex)
-            return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(FrontendErrorMessage("unexpected_error", "Noe uventet feilet"))
+        } else {
+            log.error("IllegalStateException occurred: ${ex.message}", ex)
         }
-        // Let other IllegalStateExceptions be handled by the general exception handler
-        throw ex
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(FrontendErrorMessage("unexpected_error", "Noe uventet feilet"))
     }
 
     companion object {
