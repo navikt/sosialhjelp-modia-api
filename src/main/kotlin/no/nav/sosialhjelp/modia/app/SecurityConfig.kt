@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 
-@Profile("!mock-alt")
+@Profile("gcp")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

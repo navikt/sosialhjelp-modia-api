@@ -46,10 +46,9 @@ spec:
     - "https://digisos.ekstern.dev.nav.no/sosialhjelp/modia-api"
   resources:
     limits:
-      cpu: 500m
       memory: 1Gi
     requests:
-      cpu: 10m
+      cpu: 20m
       memory: 512Mi
   envFrom:
     - secret: sosialhjelp-modia-api-unleash-api-token
