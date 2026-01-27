@@ -1,7 +1,7 @@
 package no.nav.sosialhjelp.modia.person.pdl
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.app.exceptions.PdlException
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.getCallId
@@ -24,7 +24,7 @@ import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.bodyToMono
 
 interface PdlClient {
-    fun hentPerson(
+    suspend fun hentPerson(
         ident: String,
         veilederToken: String,
     ): PdlHentPerson?
@@ -48,7 +48,7 @@ class PdlClientImpl(
             .defaultHeader(HEADER_BEHANDLINGSNUMMER, BEHANDLINGSNUMMER_MODIA)
             .build()
 
-    override fun hentPerson(
+    override suspend fun hentPerson(
         ident: String,
         veilederToken: String,
     ): PdlHentPerson? {
@@ -56,9 +56,9 @@ class PdlClientImpl(
 
         val pdlPersonResponse =
             try {
-                runBlocking(Dispatchers.IO) {
-                    val azureAdToken = texasClient.getTokenXToken(clientProperties.pdlScope, veilederToken, IdentityProvider.ENTRA_ID)
+                val azureAdToken = texasClient.getTokenXToken(clientProperties.pdlScope, veilederToken, IdentityProvider.ENTRA_ID)
 
+                withContext(Dispatchers.IO) {
                     pdlWebClient
                         .post()
                         .contentType(APPLICATION_JSON)
@@ -118,7 +118,7 @@ class PdlClientImpl(
 class PdlClientMock : PdlClient {
     private val pdlHentPersonMap = mutableMapOf<String, PdlHentPerson>()
 
-    override fun hentPerson(
+    override suspend fun hentPerson(
         ident: String,
         veilederToken: String,
     ): PdlHentPerson? =

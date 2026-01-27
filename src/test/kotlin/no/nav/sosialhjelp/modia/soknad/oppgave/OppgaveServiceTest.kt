@@ -68,7 +68,7 @@ internal class OppgaveServiceTest {
         model.oppgaver.add(Oppgave(type, tillegg, frist, tidspunktForKrav, true))
 
         coEvery { eventService.createModel(any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
+        coEvery { vedleggService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
 
         val oppgaver = service.hentOppgaver("123")
 
@@ -84,7 +84,7 @@ internal class OppgaveServiceTest {
         model.oppgaver.add(Oppgave(type, null, frist, tidspunktForKrav, true))
 
         coEvery { eventService.createModel(any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
+        coEvery { vedleggService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
 
         val oppgaver = service.hentOppgaver("123")
 
@@ -107,7 +107,7 @@ internal class OppgaveServiceTest {
         )
 
         coEvery { eventService.createModel(any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
+        coEvery { vedleggService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
 
         val oppgaver = service.hentOppgaver("123")
 
@@ -142,7 +142,7 @@ internal class OppgaveServiceTest {
         )
 
         coEvery { eventService.createModel(any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns
+        coEvery { vedleggService.hentEttersendteVedlegg(any(), any()) } returns
             listOf(
                 InternalVedlegg(type, tillegg, frist, 1, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1)),
                 InternalVedlegg(type2, null, frist2, 1, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1)),
@@ -179,7 +179,7 @@ internal class OppgaveServiceTest {
         )
 
         coEvery { eventService.createModel(any()) } returns model
-        every { vedleggService.hentEttersendteVedlegg(any(), any()) } returns
+        coEvery { vedleggService.hentEttersendteVedlegg(any(), any()) } returns
             listOf(
                 InternalVedlegg(type, tillegg, frist, 2, tidspunktEtterKrav, tidspunktEtterKrav.plusDays(1)),
             )

@@ -1,8 +1,5 @@
 package no.nav.sosialhjelp.modia.utbetalinger
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.slf4j.MDCContext
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.digisossak.domain.NavKontorInformasjon
 import no.nav.sosialhjelp.modia.digisossak.domain.Utbetaling
@@ -64,31 +61,27 @@ class UtbetalingerService(
             }
     }
 
-    private fun utbetalingerSisteManeder(
+    private suspend fun utbetalingerSisteManeder(
         digisosSaker: List<DigisosSak>,
         months: Int,
     ): List<UtbetalingerResponse> =
-        runBlocking(Dispatchers.IO + MDCContext()) {
-            digisosSaker
-                .filter { isDigisosSakNewerThanMonths(it, months) }
-                .flatMapParallel {
-                    getUtbetalinger(it)
-                }.sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
-        }
+        digisosSaker
+            .filter { isDigisosSakNewerThanMonths(it, months) }
+            .flatMapParallel {
+                getUtbetalinger(it)
+            }.sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
 
-    private fun hentUtbetalingerForIntervall(
+    private suspend fun hentUtbetalingerForIntervall(
         digisosSaker: List<DigisosSak>,
         fom: LocalDate?,
         tom: LocalDate?,
     ): List<UtbetalingerResponse> {
         check(!(fom != null && tom != null && fom.isAfter(tom))) { "Fom kan ikke være etter tom" }
 
-        return runBlocking(Dispatchers.IO + MDCContext()) {
-            digisosSaker
-                .flatMapParallel {
-                    getUtbetalinger(it, fom, tom)
-                }.sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
-        }
+        return digisosSaker
+            .flatMapParallel {
+                getUtbetalinger(it, fom, tom)
+            }.sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
     }
 
     private fun isDigisosSakNewerThanMonths(
@@ -181,11 +174,13 @@ class UtbetalingerService(
                     "Utbetaling ($referanse) med status=${UtbetalingsStatus.UTBETALT} har ikke utbetalingsDato. Kommune=$kommunenummer",
                 )
             }
+
             status == UtbetalingsStatus.PLANLAGT_UTBETALING && forfallsDato == null -> {
                 log.info(
                     "Utbetaling ($referanse) med status=${UtbetalingsStatus.PLANLAGT_UTBETALING} har ikke forfallsDato. Kommune=$kommunenummer",
                 )
             }
+
             status == UtbetalingsStatus.STOPPET && (forfallsDato == null || utbetalingsDato == null) -> {
                 log.info(
                     "Utbetaling ($referanse) med status=${UtbetalingsStatus.STOPPET} mangler forfallsDato eller utbetalingsDato. Kommune=$kommunenummer",

@@ -91,7 +91,7 @@ internal class SoknadsoversiktControllerTest {
     internal fun setUp() {
         clearAllMocks()
 
-        every { tilgangskontrollService.harTilgang(any(), any(), any(), any()) } just Runs
+        coEvery { tilgangskontrollService.harTilgang(any(), any(), any(), any()) } just Runs
 
         every { digisosSak1.fiksDigisosId } returns id1
         every { digisosSak1.sistEndret } returns 0L

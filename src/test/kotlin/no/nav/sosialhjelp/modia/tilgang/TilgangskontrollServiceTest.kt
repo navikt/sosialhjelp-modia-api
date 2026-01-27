@@ -1,12 +1,14 @@
 package no.nav.sosialhjelp.modia.tilgang
 
 import io.mockk.called
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.slot
 import io.mockk.verify
+import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.modia.app.exceptions.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.logging.AuditService
 import no.nav.sosialhjelp.modia.person.pdl.Adressebeskyttelse
@@ -34,23 +36,23 @@ internal class TilgangskontrollServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        every { pdlClient.hentPerson(fnr, any()) } returns pdlPersonUtenBeskyttelse
-        every { skjermedePersonerClient.erPersonSkjermet(fnr, any()) } returns false
+        coEvery { pdlClient.hentPerson(fnr, any()) } returns pdlPersonUtenBeskyttelse
+        coEvery { skjermedePersonerClient.erPersonSkjermet(fnr, any()) } returns false
         every { auditService.reportToAuditlog(any(), any(), any(), any()) } just runs
     }
 
     @Test
-    internal fun `harTilgang - kaster ingen exception`() {
+    internal suspend fun `harTilgang - kaster ingen exception`() {
         service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST)
         verify { auditService wasNot called }
     }
 
     @Test
-    internal fun `skal strippe bearer-prefiks fra token`() {
+    internal suspend fun `skal strippe bearer-prefiks fra token`() {
         val tokenString = "part1.part2.part3"
         val skjermToken = slot<String>()
 
-        every { skjermedePersonerClient.erPersonSkjermet(fnr, capture(skjermToken)) } returns false
+        coEvery { skjermedePersonerClient.erPersonSkjermet(fnr, capture(skjermToken)) } returns false
 
         service.harTilgang(fnr, "$BEARER$tokenString", "https://url.no/", HttpMethod.POST)
 
@@ -63,9 +65,10 @@ internal class TilgangskontrollServiceTest {
     internal fun `manglende tilgang til kode6`() {
         val kode6 = listOf(Adressebeskyttelse(Gradering.STRENGT_FORTROLIG))
         val personMedKode6 = PdlHentPerson(PdlPerson(kode6, emptyList(), emptyList(), emptyList(), emptyList()))
-        every { pdlClient.hentPerson(any(), any()) } returns personMedKode6
+        coEvery { pdlClient.hentPerson(any(), any()) } returns personMedKode6
 
-        assertThatThrownBy { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) }
+        // AssertJ støtter ikke suspend functions i assertThatThrownBy
+        assertThatThrownBy { runBlocking { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) } }
             .isInstanceOf(ManglendeTilgangException::class.java)
             .hasMessage("Person har addressebeskyttelse.")
     }
@@ -74,9 +77,10 @@ internal class TilgangskontrollServiceTest {
     internal fun `manglende tilgang til kode6 utland`() {
         val kode6 = listOf(Adressebeskyttelse(Gradering.STRENGT_FORTROLIG_UTLAND))
         val personMedKode6 = PdlHentPerson(PdlPerson(kode6, emptyList(), emptyList(), emptyList(), emptyList()))
-        every { pdlClient.hentPerson(any(), any()) } returns personMedKode6
+        coEvery { pdlClient.hentPerson(any(), any()) } returns personMedKode6
 
-        assertThatThrownBy { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) }
+        // AssertJ støtter ikke suspend functions i assertThatThrownBy
+        assertThatThrownBy { runBlocking { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) } }
             .isInstanceOf(ManglendeTilgangException::class.java)
             .hasMessage("Person har addressebeskyttelse.")
     }
@@ -85,18 +89,20 @@ internal class TilgangskontrollServiceTest {
     internal fun `manglende tilgang til kode7`() {
         val kode7 = listOf(Adressebeskyttelse(Gradering.FORTROLIG))
         val personMedKode7 = PdlHentPerson(PdlPerson(kode7, emptyList(), emptyList(), emptyList(), emptyList()))
-        every { pdlClient.hentPerson(any(), any()) } returns personMedKode7
+        coEvery { pdlClient.hentPerson(any(), any()) } returns personMedKode7
 
-        assertThatThrownBy { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) }
+        // AssertJ støtter ikke suspend functions i assertThatThrownBy
+        assertThatThrownBy { runBlocking { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) } }
             .isInstanceOf(ManglendeTilgangException::class.java)
             .hasMessage("Person har addressebeskyttelse.")
     }
 
     @Test
     internal fun `manglende tilgang til egenAnsatt`() {
-        every { skjermedePersonerClient.erPersonSkjermet(any(), any()) } returns true
+        coEvery { skjermedePersonerClient.erPersonSkjermet(any(), any()) } returns true
 
-        assertThatThrownBy { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) }
+        // AssertJ støtter ikke suspend functions i assertThatThrownBy
+        assertThatThrownBy { runBlocking { service.harTilgang(fnr, "token", "https://url.no/", HttpMethod.POST) } }
             .isInstanceOf(ManglendeTilgangException::class.java)
             .hasMessage("Person er skjermet.")
     }

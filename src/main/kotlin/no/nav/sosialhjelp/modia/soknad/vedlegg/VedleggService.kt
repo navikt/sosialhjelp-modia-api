@@ -1,8 +1,5 @@
 package no.nav.sosialhjelp.modia.soknad.vedlegg
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.slf4j.MDCContext
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
@@ -37,47 +34,45 @@ class VedleggService(
         return soknadVedlegg.plus(ettersendteVedlegg).plus(utestaendeOppgaver)
     }
 
-    fun hentEttersendteVedlegg(
+    suspend fun hentEttersendteVedlegg(
         digisosSak: DigisosSak,
         model: InternalDigisosSoker,
     ): List<InternalVedlegg> {
         val alleVedlegg =
-            runBlocking(Dispatchers.IO + MDCContext()) {
-                digisosSak.ettersendtInfoNAV
-                    ?.ettersendelser
-                    ?.flatMapParallel { ettersendelse ->
-                        val jsonVedleggSpesifikasjon =
-                            hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, ettersendelse.vedleggMetadata)
-                        jsonVedleggSpesifikasjon.vedlegg
-                            .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
-                            .map { vedlegg ->
-                                var vedleggtittel = vedlegg.type
-                                var vedleggbeskrivelse = vedlegg.tilleggsinfo
-                                if (vedlegg.hendelseType?.value() == JsonHendelse.Type.DOKUMENTASJONKRAV.value()) {
-                                    val saksreferanse = hentSaksreferanse(vedlegg, ettersendelse, model.dokumentasjonkrav)
-                                    val sakstittel = hentSakstittel(saksreferanse, model.saker)
-                                    vedleggtittel =
-                                        if (sakstittel == DOKUMENTASJONKRAV_UTEN_SAK_TITTEL) {
-                                            "Dokumentasjonskrav for stønaden"
-                                        } else {
-                                            "Dokumentasjonskrav for saken " + sakstittel
-                                        }
-                                    vedleggbeskrivelse = ""
-                                }
-
-                                InternalVedlegg(
-                                    type = vedlegg.type,
-                                    tilleggsinfo = vedlegg.tilleggsinfo,
-                                    tittelForVeileder = vedleggtittel,
-                                    beskrivelseForVeileder = vedleggbeskrivelse,
-                                    innsendelsesfrist = hentInnsendelsesfristFraOppgave(model, vedlegg),
-                                    antallFiler = matchDokumentInfoOgJsonFiler(ettersendelse.vedlegg, vedlegg.filer),
-                                    datoLagtTil = unixToLocalDateTime(ettersendelse.timestampSendt),
-                                    tidspunktLastetOpp = unixToLocalDateTime(ettersendelse.timestampSendt),
-                                )
+            digisosSak.ettersendtInfoNAV
+                ?.ettersendelser
+                ?.flatMapParallel { ettersendelse ->
+                    val jsonVedleggSpesifikasjon =
+                        hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, ettersendelse.vedleggMetadata)
+                    jsonVedleggSpesifikasjon.vedlegg
+                        .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
+                        .map { vedlegg ->
+                            var vedleggtittel = vedlegg.type
+                            var vedleggbeskrivelse = vedlegg.tilleggsinfo
+                            if (vedlegg.hendelseType?.value() == JsonHendelse.Type.DOKUMENTASJONKRAV.value()) {
+                                val saksreferanse = hentSaksreferanse(vedlegg, ettersendelse, model.dokumentasjonkrav)
+                                val sakstittel = hentSakstittel(saksreferanse, model.saker)
+                                vedleggtittel =
+                                    if (sakstittel == DOKUMENTASJONKRAV_UTEN_SAK_TITTEL) {
+                                        "Dokumentasjonskrav for stønaden"
+                                    } else {
+                                        "Dokumentasjonskrav for saken " + sakstittel
+                                    }
+                                vedleggbeskrivelse = ""
                             }
-                    }
-            } ?: emptyList()
+
+                            InternalVedlegg(
+                                type = vedlegg.type,
+                                tilleggsinfo = vedlegg.tilleggsinfo,
+                                tittelForVeileder = vedleggtittel,
+                                beskrivelseForVeileder = vedleggbeskrivelse,
+                                innsendelsesfrist = hentInnsendelsesfristFraOppgave(model, vedlegg),
+                                antallFiler = matchDokumentInfoOgJsonFiler(ettersendelse.vedlegg, vedlegg.filer),
+                                datoLagtTil = unixToLocalDateTime(ettersendelse.timestampSendt),
+                                tidspunktLastetOpp = unixToLocalDateTime(ettersendelse.timestampSendt),
+                            )
+                        }
+                } ?: emptyList()
 
         return kombinerAlleLikeVedlegg(alleVedlegg)
     }

@@ -2,7 +2,7 @@ package no.nav.sosialhjelp.modia.tilgang.skjermedepersoner
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactor.awaitSingle
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.app.exceptions.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.auth.texas.IdentityProvider
@@ -23,7 +23,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import org.springframework.web.reactive.function.client.bodyToMono
 
 interface SkjermedePersonerClient {
-    fun erPersonSkjermet(
+    suspend fun erPersonSkjermet(
         ident: String,
         veilederToken: String,
     ): Boolean
@@ -43,7 +43,7 @@ class SkjermedePersonerClientImpl(
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
             }.build()
 
-    override fun erPersonSkjermet(
+    override suspend fun erPersonSkjermet(
         ident: String,
         veilederToken: String,
     ): Boolean {
@@ -65,20 +65,19 @@ class SkjermedePersonerClientImpl(
         }
     }
 
-    private fun hentSkjermetStatusFraServer(
+    private suspend fun hentSkjermetStatusFraServer(
         ident: String,
         veilederToken: String,
     ): Boolean {
         log.debug("Sjekker om person er skjermet.")
-
+        val azureAdToken =
+            texasClient.getTokenXToken(
+                clientProperties.skjermedePersonerScope,
+                veilederToken,
+                IdentityProvider.ENTRA_ID,
+            )
         val response: String =
-            runBlocking(Dispatchers.IO) {
-                val azureAdToken =
-                    texasClient.getTokenXToken(
-                        clientProperties.skjermedePersonerScope,
-                        veilederToken,
-                        IdentityProvider.ENTRA_ID,
-                    )
+            withContext(Dispatchers.IO) {
                 skjermedePersonerWebClient
                     .post()
                     .uri("${clientProperties.skjermedePersonerEndpointUrl}/skjermet")
@@ -117,7 +116,7 @@ class SkjermedePersonerClientImpl(
 @Profile("test")
 @Component
 class SkjermedePersonerClientMock : SkjermedePersonerClient {
-    override fun erPersonSkjermet(
+    override suspend fun erPersonSkjermet(
         ident: String,
         veilederToken: String,
     ): Boolean = false

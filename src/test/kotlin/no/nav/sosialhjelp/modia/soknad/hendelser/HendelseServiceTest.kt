@@ -40,7 +40,7 @@ internal class HendelseServiceTest {
         clearMocks(eventService, fiksClient)
 
         coEvery { fiksClient.hentDigisosSak(any()) } returns mockDigisosSak
-        every { vedleggsService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
+        coEvery { vedleggsService.hentEttersendteVedlegg(any(), any()) } returns emptyList()
         every { mockDigisosSak.ettersendtInfoNAV } returns mockk()
         every { mockDigisosSak.originalSoknadNAV?.timestampSendt } returns tidspunktSendt.toInstant(ZoneOffset.UTC).toEpochMilli()
     }
