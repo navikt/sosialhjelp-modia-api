@@ -1,22 +1,16 @@
-spring:
-  data:
-    redis:
-      host: localhost
-      port: 6379
-
 springdoc:
   api-docs:
     enabled: true
 
 client:
-  fiks_digisos_endpoint_url: ${FIKS_DIGISOS_ENDPOINT_URL:https://api.fiks.test.ks.no}
-  fiks_integrasjonid: ${INTEGRASJONSID_FIKS}
-  fiks_integrasjonpassord: ${INTEGRASJONPASSORD_FIKS}
-  norg_endpoint_url: ${NORG_ENDPOINT_URL:norg_endpoint_url}
-  norg_oppslag_url: ${NORG_OPPSLAG_URL:https://norg2-frontend.intern.dev.nav.no/#/startsok?enhetNr=}
-  pdl_endpoint_url: ${PDL_ENDPOINT_URL:pdl_endpoint_url}
+  fiks_digisos_endpoint_url: ${FIKS_DIGISOS_ENDPOINT_URL:http://${mock-alt-api-host}:8989/sosialhjelp/mock-alt-api/fiks}
+  fiks_integrasjonid: id
+  fiks_integrasjonpassord: pwd
+  norg_endpoint_url: ${NORG_ENDPOINT_URL:http://${mock-alt-api-host}:8989/sosialhjelp/mock-alt-api/norg_endpoint_url}
+  norg_oppslag_url: ${NORG_OPPSLAG_URL:https://norg2-frontend.ekstern.dev.nav.no/#/startsok?enhetNr=}
+  pdl_endpoint_url: ${PDL_ENDPOINT_URL:http://${mock-alt-api-host}:8989/sosialhjelp/mock-alt-api/pdl_endpoint_url}
   pdl_scope: ${PDL_SCOPE:pdl_scope}
   skjermede_personer_scope: ${SKJERMEDE_PERSONER_SCOPE:skjermede_personer_scope}
-  skjermede_personer_endpoint_url: ${SKJERMEDE_PERSONER_ENDPOINT_URL:skjermede_personer_endpoint_url}
+  skjermede_personer_endpoint_url: ${SKJERMEDE_PERSONER_ENDPOINT_URL:http://${mock-alt-api-host}:8989/sosialhjelp/mock-alt-api/skjermede-personer}
 
 modia_baseurl: ${MODIA_BASEURL:http://localhost:3000/sosialhjelp/modia}

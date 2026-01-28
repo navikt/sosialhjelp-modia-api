@@ -12,7 +12,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoders
 import org.springframework.security.oauth2.jwt.JwtValidators
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 
-@Profile("!mock-alt")
+@Profile("gcp&!mock-alt")
 @Configuration
 class JwtDecoderConfig {
     @Bean

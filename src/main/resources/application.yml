@@ -3,11 +3,6 @@ spring:
     banner-mode: 'off'
   application:
     name: "sosialhjelp-modia-api"
-  data:
-    redis:
-      host: ${REDIS_HOST}
-      port: 6379
-      password: ${REDIS_PASSWORD}
   codec:
     max-in-memory-size: 10MB
 
@@ -50,5 +45,3 @@ client:
   skjermede_personer_endpoint_url: ${SKJERMEDE_PERSONER_ENDPOINT_URL}
 
 modia_baseurl: ${MODIA_BASEURL}
-
-

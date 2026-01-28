@@ -10,13 +10,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 
-@Profile("gcp")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 class SecurityConfig {
     @Bean
-    fun filterChain(http: HttpSecurity): SecurityFilterChain {
+    @Profile("gcp&!mock-alt")
+    fun filterChainGcp(http: HttpSecurity): SecurityFilterChain {
         http
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .csrf { it.disable() }
@@ -34,6 +34,23 @@ class SecurityConfig {
                     .authenticated()
             }.oauth2ResourceServer { oauth2 ->
                 oauth2.jwt(Customizer.withDefaults())
+            }
+        return http.build()
+    }
+
+    @Bean
+    @Profile("local|mock-alt")
+    fun filterChainMock(http: HttpSecurity): SecurityFilterChain {
+        http
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .csrf { it.disable() }
+            .httpBasic { it.disable() }
+            .cors { it.disable() }
+            .formLogin { it.disable() }
+            .authorizeHttpRequests { authorize ->
+                authorize
+                    .anyRequest()
+                    .permitAll()
             }
         return http.build()
     }

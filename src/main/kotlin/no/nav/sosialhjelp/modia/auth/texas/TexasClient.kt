@@ -60,7 +60,7 @@ sealed class TexasClient(
         return response
     }
 
-    suspend fun getTokenXToken(
+    open suspend fun getTokenXToken(
         target: String,
         userToken: String,
         identityProvider: IdentityProvider,
@@ -143,11 +143,17 @@ class TexasClientImpl(
 @Profile("mock-alt", "testcontainers")
 class MockTexasClient(
     texasWebClientBuilder: WebClient.Builder,
-    @param:Value($$"${NAIS_TOKEN_ENDPOINT}")
+    @param:Value($$"${NAIS_TOKEN_ENDPOINT:http://localhost:8081/api/v1/token}")
     private val tokenEndpoint: String,
-    @param:Value($$"${NAIS_TOKEN_EXCHANGE_ENDPOINT}")
+    @param:Value($$"${NAIS_TOKEN_EXCHANGE_ENDPOINT:http://localhost:8081/api/v1/token/exchange}")
     private val tokenXEndpoint: String,
 ) : TexasClient(texasWebClientBuilder, tokenEndpoint, tokenXEndpoint) {
+    override suspend fun getTokenXToken(
+        target: String,
+        userToken: String,
+        identityProvider: IdentityProvider,
+    ): String = "token-x-token"
+
     override suspend fun getMaskinportenToken(): String = "token"
 }
 

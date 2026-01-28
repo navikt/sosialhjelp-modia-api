@@ -15,7 +15,6 @@ Interne henvendelser kan sendes via Slack i kanalen #team_digisos.
 * JDK 17
 * Gradle
 * Spring-boot
-* navikt/token-support
 * Redis (cache)
 
 ### Krav
@@ -25,14 +24,11 @@ Interne henvendelser kan sendes via Slack i kanalen #team_digisos.
 Bygge og kjør tester ved å kjøre: `./gradlew test`
 
 ### Lokal kjøring mot mock-alt
-Kjør `Application.kt` med springprofilene `mock-alt,log-console,no-redis`.\
+Kjør `Application.kt` med springprofilene `mock-alt,log-console,no-redis,local`.\
 
 #### Med redis
 Kjør `Application.kt` med springprofilene `mock-alt,log-console`\
 Sett env-variablene `REDIS_HOST=localhost` og `REDIS_PASSWORD=<lokal_redis_pw>` for å gå mot lokal redis (f.eks bitnami redis docker image)
-
-### Lokal kjøring med integrasjon mot KS
-Kjør `TestApplication.kt` med springprofilene `local,log-console` for integrasjon mot KS sitt testmiljø (lenge siden dette er testet).
 
 ### Github package registry
 - Docker image pushes til github package registry [https://github.com/navikt/sosialhjelp-modia-api/packages/](https://github.com/navikt/sosialhjelp-modia-api/packages/)
