@@ -29,10 +29,6 @@ spec:
     autoInstrumentation:
       enabled: true
       runtime: java
-    logging:
-      destinations:
-        - id: loki
-        - id: elastic
   accessPolicy:
     outbound:
       external:
@@ -42,8 +38,9 @@ spec:
         - host: register.geonorge.no
       rules:
         - application: sosialhjelp-mock-alt-api-mock
-  ingresses:
-    - "https://digisos.ekstern.dev.nav.no/sosialhjelp/modia-api"
+    inbound:
+      rules:
+        - application: sosialhjelp-modia-mock
   resources:
     limits:
       memory: 1Gi
@@ -54,11 +51,7 @@ spec:
     - secret: sosialhjelp-modia-api-unleash-api-token
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "mock-alt,log-kibana,no-redis"
-    - name: METADATA_URL
-      value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/well-known/azuread"
-    - name: AZURE_APP_WELL_KNOWN_URL
-      value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/azure-well-known/selvbetjening"
+      value: "gcp,mock-alt,log-kibana,no-redis"
     - name: FIKS_DIGISOS_ENDPOINT_URL
       value: "http://sosialhjelp-mock-alt-api-mock/sosialhjelp/mock-alt-api/fiks"
     - name: NORG_ENDPOINT_URL
