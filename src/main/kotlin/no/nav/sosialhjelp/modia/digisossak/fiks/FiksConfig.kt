@@ -38,12 +38,12 @@ class FiksConfig(
         val httpClient =
             HttpClient
                 .create(connectionProvider)
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 30000)
                 .doOnConnected { conn ->
                     conn
                         .addHandlerLast(ReadTimeoutHandler(30, TimeUnit.SECONDS))
                         .addHandlerLast(WriteTimeoutHandler(30, TimeUnit.SECONDS))
-                }
+                }.responseTimeout(Duration.ofMinutes(2))
 
         return webClientBuilder
             .clientConnector(ReactorClientHttpConnector(httpClient))
