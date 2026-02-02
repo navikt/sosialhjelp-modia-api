@@ -24,10 +24,13 @@ class FiksConfig(
     @Bean
     fun fiksWebClient(): WebClient {
         val connectionProvider = ConnectionProvider.builder("fiks-connection-pool")
-            .maxConnections(50)
-            .maxIdleTime(Duration.ofSeconds(20))
-            .maxLifeTime(Duration.ofMinutes(5))
-            .evictInBackground(Duration.ofSeconds(30))
+            .maxConnections(100)
+            .maxIdleTime(Duration.ofMinutes(10))
+            .maxLifeTime(Duration.ofMinutes(55))
+            .evictInBackground(Duration.ofMinutes(5))
+            .pendingAcquireTimeout(Duration.ofSeconds(30))
+            .lifo()
+            .metrics(true)
             .build()
 
         val httpClient = HttpClient.create(connectionProvider)
