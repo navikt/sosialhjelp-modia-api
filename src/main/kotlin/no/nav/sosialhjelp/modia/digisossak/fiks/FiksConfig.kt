@@ -23,22 +23,27 @@ class FiksConfig(
 ) {
     @Bean
     fun fiksWebClient(): WebClient {
-        val connectionProvider = ConnectionProvider.builder("fiks-connection-pool")
-            .maxConnections(100)
-            .maxIdleTime(Duration.ofMinutes(10))
-            .maxLifeTime(Duration.ofMinutes(55))
-            .evictInBackground(Duration.ofMinutes(5))
-            .pendingAcquireTimeout(Duration.ofSeconds(30))
-            .lifo()
-            .metrics(true)
-            .build()
+        val connectionProvider =
+            ConnectionProvider
+                .builder("fiks-connection-pool")
+                .maxConnections(100)
+                .maxIdleTime(Duration.ofMinutes(10))
+                .maxLifeTime(Duration.ofMinutes(55))
+                .evictInBackground(Duration.ofMinutes(5))
+                .pendingAcquireTimeout(Duration.ofSeconds(30))
+                .lifo()
+                .metrics(true)
+                .build()
 
-        val httpClient = HttpClient.create(connectionProvider)
-            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000)
-            .doOnConnected { conn ->
-                conn.addHandlerLast(ReadTimeoutHandler(30, TimeUnit.SECONDS))
-                    .addHandlerLast(WriteTimeoutHandler(30, TimeUnit.SECONDS))
-            }
+        val httpClient =
+            HttpClient
+                .create(connectionProvider)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000)
+                .doOnConnected { conn ->
+                    conn
+                        .addHandlerLast(ReadTimeoutHandler(30, TimeUnit.SECONDS))
+                        .addHandlerLast(WriteTimeoutHandler(30, TimeUnit.SECONDS))
+                }
 
         return webClientBuilder
             .clientConnector(ReactorClientHttpConnector(httpClient))
@@ -46,8 +51,7 @@ class FiksConfig(
                 it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
                 it.defaultCodecs().jacksonJsonDecoder(JacksonJsonDecoder(sosialhjelpJsonMapper))
                 it.defaultCodecs().jacksonJsonEncoder(JacksonJsonEncoder(sosialhjelpJsonMapper))
-            }
-            .baseUrl(clientProperties.fiksDigisosEndpointUrl)
+            }.baseUrl(clientProperties.fiksDigisosEndpointUrl)
             .build()
     }
 }
