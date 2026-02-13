@@ -5,7 +5,7 @@ import no.nav.sosialhjelp.api.fiks.exceptions.FiksClientException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksServerException
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
-import no.nav.sosialhjelp.modia.app.client.RetryUtils.retryBackoffSpec
+import no.nav.sosialhjelp.modia.app.client.RetryUtils.retryBackoffSpecWithConnectionErrors
 import no.nav.sosialhjelp.modia.auth.texas.TexasClient
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksPaths.PATH_ALLE_DIGISOSSAKER
 import no.nav.sosialhjelp.modia.digisossak.fiks.FiksPaths.PATH_DIGISOSSAK
@@ -48,7 +48,7 @@ class FiksClientImpl(
     private val baseUrl = clientProperties.fiksDigisosEndpointUrl
 
     private val fiksRetry =
-        retryBackoffSpec(maxAttempts = maxAttempts, initialWaitIntervalMillis = initialDelay)
+        retryBackoffSpecWithConnectionErrors(maxAttempts = maxAttempts, initialWaitIntervalMillis = initialDelay)
             .onRetryExhaustedThrow { spec, retrySignal ->
                 throw FiksServerException(
                     HttpStatus.SERVICE_UNAVAILABLE.value(),
