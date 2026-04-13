@@ -4,18 +4,18 @@ coroutines = "1.10.2"
 spring-boot = "4.0.3"
 logback = "1.5.32"
 logstash = "9.0"
-sosialhjelpCommon = "1.20250120.1009-d88048d"
+sosialhjelpCommon = "1.20260204.1322-0cda8ef"
 filformat = "1.2026.02.04-07.27-7f2f3515bd59"
 micrometerRegistry = "1.16.4"
 prometheus = "0.16.0"
 logbackSyslog4j = "1.0.0"
 syslog4j = "0.9.61"
-lettuce = "7.2.1.RELEASE"
+lettuce = "7.5.1.RELEASE"
 springdoc = "3.0.2"
 mockk = "1.14.9"
 ktlint = "1.5.0"
 micrometerPropagation = "1.2.1"
-jackson = "3.0.4"
+jackson = "3.1.2"
 mockwebserver = "5.3.2"
 
 [libraries]
@@ -82,4 +82,4 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-plugin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 versions = { id = "com.github.ben-manes.versions", version = "0.53.0" }
-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.0.1" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
