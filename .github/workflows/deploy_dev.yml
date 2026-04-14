@@ -16,6 +16,8 @@ jobs:
   set-cluster:
     name: 'Sett cluster basert på config-file'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       cluster-name: ${{ steps.set-cluster-name.outputs.cluster-name }}
     steps:
