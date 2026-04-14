@@ -26,6 +26,13 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
 
+    // TODO Pga sårbarhet - Når Spring boot får ny oppdatering (> 4.0.5) sjekk om dette fortsatt er aktuelt
+    implementation("org.apache.tomcat.embed:tomcat-embed-core") {
+        version {
+            strictly("11.0.21")
+        }
+    }
+
     implementation(libs.bundles.coroutines)
 
     implementation(libs.bundles.spring.boot)
