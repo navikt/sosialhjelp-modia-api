@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Sett cluster basert på config-file
         id: set-cluster-name
-        uses: navikt/sosialhjelp-ci/actions/set-cluster-name@v17
+        uses: navikt/sosialhjelp-ci/actions/set-cluster-name@v18
         with:
           resource-name: ${{ inputs.config-file-name }}
 
@@ -33,7 +33,7 @@ jobs:
     permissions:
       id-token: write
       contents: write
-    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@v17
+    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@v18
     with:
       cluster-name: ${{ needs.set-cluster.outputs.cluster-name }}
       resource-name: ${{ inputs.config-file-name }}
