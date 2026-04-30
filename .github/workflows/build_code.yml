@@ -22,6 +22,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Build kotlin, and run tests/lint
-        uses: navikt/sosialhjelp-ci/actions/build-kotlin@v17
+        uses: navikt/sosialhjelp-ci/actions/build-kotlin@v18
         with:
           java-version: '21'
