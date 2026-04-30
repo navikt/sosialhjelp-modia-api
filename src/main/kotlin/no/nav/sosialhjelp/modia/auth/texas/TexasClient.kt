@@ -119,7 +119,10 @@ sealed class TexasClient(
                 }
 
             when (response) {
-                is TokenResponse.Success -> response.accessToken
+                is TokenResponse.Success -> {
+                    response.accessToken
+                }
+
                 is TokenResponse.Error -> {
                     error(
                         "Feil ved henting av $tokenEndpointType-token fra Texas. Statuscode: ${response.status}. Error: ${response.error}",

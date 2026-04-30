@@ -88,17 +88,23 @@ class SkjermedePersonerClientImpl(
                     .bodyToMono<String>()
                     .onErrorMap { e ->
                         when (e) {
-                            is WebClientResponseException ->
+                            is WebClientResponseException -> {
                                 log.error(
                                     "Skjermede personer - noe feilet. Status: ${e.statusCode}, message: ${e.message}.\n ${e.responseBodyAsString}",
                                     e,
                                 )
-                            is WebClientRequestException ->
+                            }
+
+                            is WebClientRequestException -> {
                                 log.error(
                                     "Skjermede personer - oppkobling feilet. Message: ${e.message}.",
                                     e,
                                 )
-                            else -> log.error("Skjermede personer - noe feilet.", e)
+                            }
+
+                            else -> {
+                                log.error("Skjermede personer - noe feilet.", e)
+                            }
                         }
                         ManglendeTilgangException("Noe feilet ved kall til Skjermede personer: ${e.message}")
                     }.awaitSingle()

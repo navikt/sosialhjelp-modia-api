@@ -53,11 +53,15 @@ fun hentSoknadTittel(
     model: InternalDigisosSoker,
 ): String =
     when (digisosSak.digisosSoker) {
-        null -> SOKNAD_DEFAULT_TITTEL
-        else ->
+        null -> {
+            SOKNAD_DEFAULT_TITTEL
+        }
+
+        else -> {
             model.saker
                 .filter { SaksStatus.FEILREGISTRERT != it.saksStatus }
                 .joinToString { it.tittel ?: SAK_DEFAULT_TITTEL }
+        }
     }
 
 val String.maskerFnr: String

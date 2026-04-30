@@ -133,6 +133,7 @@ class RedisServiceImpl(
             obj is JsonDigisosSoker && obj.additionalProperties.isNotEmpty() -> throw IOException(
                 "JsonDigisosSoker har ukjente properties - må tilhøre ett annet objekt. Cache-value tas ikke i bruk",
             )
+
             obj is JsonVedleggSpesifikasjon && obj.additionalProperties.isNotEmpty() -> throw IOException(
                 "JsonVedleggSpesifikasjon har ukjente properties - må tilhøre ett annet objekt. Cache-value tas ikke i bruk",
             )
