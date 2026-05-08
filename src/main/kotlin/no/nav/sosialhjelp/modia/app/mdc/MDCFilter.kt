@@ -8,7 +8,7 @@ import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.putToMDC
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import java.util.*
+import java.util.UUID
 
 @Component
 class MDCFilter : OncePerRequestFilter() {
@@ -32,7 +32,9 @@ class MDCFilter : OncePerRequestFilter() {
 
     private fun addDigisosId(request: HttpServletRequest) {
         val digisosIdOrNull =
-            request.requestURI.substringAfter(MODIA_BASE_URL).substringBefore("/")
+            request.requestURI
+                .substringAfter(MODIA_BASE_URL)
+                .substringBefore("/")
                 .let { runCatching { UUID.fromString(it) }.getOrNull() }
                 ?: "not found"
 
