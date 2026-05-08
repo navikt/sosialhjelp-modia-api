@@ -4,12 +4,11 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.clearMDC
-import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.generateCallId
-import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.put
-import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
+import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.putToMDC
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
+import java.util.*
 
 @Component
 class MDCFilter : OncePerRequestFilter() {
@@ -18,9 +17,9 @@ class MDCFilter : OncePerRequestFilter() {
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        addCallId(request)
         addDigisosId(request)
-        put(MDCUtils.PATH, request.requestURI)
+        putToMDC(MDCUtils.PATH, request.requestURI)
+        putToMDC(MDCUtils.METHOD, request.method)
 
         try {
             filterChain.doFilter(request, response)
@@ -31,23 +30,13 @@ class MDCFilter : OncePerRequestFilter() {
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean = request.method == HttpMethod.OPTIONS.name()
 
-    private fun addCallId(request: HttpServletRequest) {
-        request
-            .getHeader(HEADER_CALL_ID)
-            ?.let { put(MDCUtils.CALL_ID, it) }
-            ?: put(MDCUtils.CALL_ID, generateCallId())
-    }
-
     private fun addDigisosId(request: HttpServletRequest) {
-        if (request.requestURI.matches(
-                Regex(
-                    "^$MODIA_BASE_URL(.*)/(personinfo|noekkelinfo|soknadDetaljer|saksStatus|oppgaver|dokumentasjonkrav|vilkar|hendelser|vedlegg|utbetalinger)",
-                ),
-            )
-        ) {
-            val digisosId = request.requestURI.substringAfter(MODIA_BASE_URL).substringBefore("/")
-            put(MDCUtils.DIGISOS_ID, digisosId)
-        }
+        val digisosIdOrNull =
+            request.requestURI.substringAfter(MODIA_BASE_URL).substringBefore("/")
+                .let { runCatching { UUID.fromString(it) }.getOrNull() }
+                ?: "not found"
+
+        putToMDC(MDCUtils.DIGISOS_ID, digisosIdOrNull.toString())
     }
 
     companion object {
