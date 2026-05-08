@@ -5,14 +5,13 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.clearMDC
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.putToMDC
-import no.nav.sosialhjelp.modia.logger
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import org.springframework.web.server.CoWebFilter
 import org.springframework.web.server.CoWebFilterChain
 import org.springframework.web.server.ServerWebExchange
-import java.util.*
+import java.util.UUID
 
 @Component
 class MDCFilter : OncePerRequestFilter() {
@@ -51,10 +50,10 @@ class MDCFilter : OncePerRequestFilter() {
 }
 
 @Component
-class MdcCoWebFilter: CoWebFilter() {
+class MdcCoWebFilter : CoWebFilter() {
     override suspend fun filter(
         exchange: ServerWebExchange,
-        chain: CoWebFilterChain
+        chain: CoWebFilterChain,
     ) {
         val request = exchange.request
         val digisosIdOrNull =
@@ -68,9 +67,7 @@ class MdcCoWebFilter: CoWebFilter() {
         putToMDC(MDCUtils.PATH, digisosIdOrNull)
     }
 
-
     companion object {
-        private val logger by logger()
         private const val MODIA_BASE_URL = "/sosialhjelp/modia-api/api/"
     }
 }
