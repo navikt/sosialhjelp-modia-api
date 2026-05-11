@@ -58,7 +58,6 @@ springdoc-common = { module = "org.springdoc:springdoc-openapi-starter-common", 
 springdoc-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
 
 lettuce = { module = "io.lettuce:lettuce-core", version.ref = "lettuce" }
-netty-bom = { module = "io.netty:netty-bom", version.ref = "netty" }
 
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "mockwebserver" }

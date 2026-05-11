@@ -23,9 +23,29 @@ ktlint {
 }
 
 dependencies {
-    // Temporary fix: enforce patched Netty versions until all transitive dependencies pull these in directly.
-    implementation(enforcedPlatform(libs.netty.bom))
-    testImplementation(enforcedPlatform(libs.netty.bom))
+    val nettyVersion = libs.versions.netty.get()
+    constraints {
+        listOf(
+            "netty-buffer",
+            "netty-codec",
+            "netty-codec-http",
+            "netty-codec-http2",
+            "netty-common",
+            "netty-handler",
+            "netty-handler-proxy",
+            "netty-resolver",
+            "netty-resolver-dns",
+            "netty-transport",
+            "netty-transport-native-unix-common"
+        ).forEach { moduleName ->
+            implementation("io.netty:$moduleName:$nettyVersion") {
+                because("Temporary fix for io.netty-family vulnerabilities until upstream versions are updated")
+            }
+            testImplementation("io.netty:$moduleName:$nettyVersion") {
+                because("Temporary fix for io.netty-family vulnerabilities until upstream versions are updated")
+            }
+        }
+    }
 
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
