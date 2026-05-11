@@ -38,11 +38,10 @@ dependencies {
             "netty-transport",
             "netty-transport-native-unix-common"
         ).forEach { moduleName ->
-            implementation("io.netty:$moduleName:$nettyVersion") {
-                because("Temporary fix for io.netty-family vulnerabilities until upstream versions are updated")
-            }
-            testImplementation("io.netty:$moduleName:$nettyVersion") {
-                because("Temporary fix for io.netty-family vulnerabilities until upstream versions are updated")
+            listOf("implementation", "testImplementation").forEach { configurationName ->
+                add(configurationName, "io.netty:$moduleName:$nettyVersion") {
+                    because("Temporary fix for io.netty-family vulnerabilities until upstream versions are updated")
+                }
             }
         }
     }
