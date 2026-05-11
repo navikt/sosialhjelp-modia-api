@@ -36,7 +36,7 @@ dependencies {
             "netty-resolver",
             "netty-resolver-dns",
             "netty-transport",
-            "netty-transport-native-unix-common"
+            "netty-transport-native-unix-common",
         ).forEach { moduleName ->
             listOf("implementation", "testImplementation").forEach { configurationName ->
                 add(configurationName, "io.netty:$moduleName:$nettyVersion") {
