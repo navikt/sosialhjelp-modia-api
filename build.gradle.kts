@@ -23,6 +23,10 @@ ktlint {
 }
 
 dependencies {
+    // Temporary fix: enforce patched Netty versions until all transitive dependencies pull these in directly.
+    implementation(enforcedPlatform(libs.netty.bom))
+    testImplementation(enforcedPlatform(libs.netty.bom))
+
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
 
