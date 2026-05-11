@@ -23,6 +23,29 @@ ktlint {
 }
 
 dependencies {
+    val nettyVersion = libs.versions.netty.get()
+    constraints {
+        listOf(
+            "netty-buffer",
+            "netty-codec",
+            "netty-codec-http",
+            "netty-codec-http2",
+            "netty-common",
+            "netty-handler",
+            "netty-handler-proxy",
+            "netty-resolver",
+            "netty-resolver-dns",
+            "netty-transport",
+            "netty-transport-native-unix-common",
+        ).forEach { moduleName ->
+            listOf("implementation", "testImplementation").forEach { configurationName ->
+                add(configurationName, "io.netty:$moduleName:$nettyVersion") {
+                    because("Temporary fix for io.netty-family vulnerabilities until upstream versions are updated")
+                }
+            }
+        }
+    }
+
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
 
