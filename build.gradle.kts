@@ -25,24 +25,53 @@ ktlint {
 dependencies {
     val nettyVersion = libs.versions.netty.get()
     constraints {
-        listOf(
-            "netty-buffer",
-            "netty-codec",
-            "netty-codec-http",
-            "netty-codec-http2",
-            "netty-common",
-            "netty-handler",
-            "netty-handler-proxy",
-            "netty-resolver",
-            "netty-resolver-dns",
-            "netty-transport",
-            "netty-transport-native-unix-common",
-        ).forEach { moduleName ->
-            listOf("implementation", "testImplementation").forEach { configurationName ->
-                add(configurationName, "io.netty:$moduleName:$nettyVersion") {
-                    because("Temporary fix for io.netty-family vulnerabilities until upstream versions are updated")
-                }
-            }
+        implementation("io.netty:netty-buffer:$nettyVersion") {
+            because("Fix HIGH severity vulnerabilities in io.netty, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-codec:$nettyVersion") {
+            because("Fix HIGH severity vulnerabilities in io.netty, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-codec-base:$nettyVersion") {
+            because("Fix HIGH severity vulnerabilities in io.netty, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-codec-classes-quic:$nettyVersion") {
+            because("Fix HIGH severity vulnerabilities in io.netty, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-codec-compression:$nettyVersion") {
+            because("Fix HIGH severity Lz4FrameDecoder resource exhaustion in io.netty, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-codec-http:$nettyVersion") {
+            because("Fix HIGH severity HttpContentDecompressor DoS and HttpClientCodec desync in io.netty, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-codec-http2:$nettyVersion") {
+            because("Fix HIGH severity HttpContentDecompressor decompression bomb DoS in io.netty, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-codec-http3:$nettyVersion") {
+            because("Fix HIGH severity HTTP/3 QPACK literal unbounded allocation in io.netty, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-common:$nettyVersion") {
+            because("Fix HIGH severity vulnerabilities in io.netty, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-handler:$nettyVersion") {
+            because("Fix HIGH severity vulnerabilities in io.netty, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-handler-proxy:$nettyVersion") {
+            because("Fix HIGH severity vulnerabilities in io.netty, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-resolver:$nettyVersion") {
+            because("Fix HIGH severity vulnerabilities in io.netty, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-resolver-dns:$nettyVersion") {
+            because("Fix HIGH severity vulnerabilities in io.netty, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-transport:$nettyVersion") {
+            because("Fix HIGH severity vulnerabilities in io.netty, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-transport-native-epoll:$nettyVersion") {
+            because("Fix HIGH severity Netty epoll transport half-closed RST DoS, patched in 4.2.13.Final")
+        }
+        implementation("io.netty:netty-transport-native-unix-common:$nettyVersion") {
+            because("Fix HIGH severity vulnerabilities in io.netty, patched in 4.2.13.Final")
         }
     }
 
