@@ -28,8 +28,12 @@ dependencies {
         listOf(
             "netty-buffer",
             "netty-codec",
+            "netty-codec-base",
+            "netty-codec-classes-quic",
+            "netty-codec-compression",
             "netty-codec-http",
             "netty-codec-http2",
+            "netty-codec-http3",
             "netty-common",
             "netty-handler",
             "netty-handler-proxy",
@@ -40,7 +44,7 @@ dependencies {
         ).forEach { moduleName ->
             listOf("implementation", "testImplementation").forEach { configurationName ->
                 add(configurationName, "io.netty:$moduleName:$nettyVersion") {
-                    because("Temporary fix for io.netty-family vulnerabilities until upstream versions are updated")
+                    because("Fix HIGH severity vulnerabilities in io.netty: HttpContentDecompressor decompression bomb DoS, HttpClientCodec response desynchronization, Lz4FrameDecoder resource exhaustion and HTTP/3 QPACK literal unbounded allocation (fixed in 4.2.13.Final)")
                 }
             }
         }
