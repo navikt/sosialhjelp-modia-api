@@ -8,6 +8,9 @@ import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.putToMDC
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
+import org.springframework.web.server.CoWebFilter
+import org.springframework.web.server.CoWebFilterChain
+import org.springframework.web.server.ServerWebExchange
 import java.util.UUID
 
 @Component
@@ -39,6 +42,29 @@ class MDCFilter : OncePerRequestFilter() {
                 ?: "not found"
 
         putToMDC(MDCUtils.DIGISOS_ID, digisosIdOrNull.toString())
+    }
+
+    companion object {
+        private const val MODIA_BASE_URL = "/sosialhjelp/modia-api/api/"
+    }
+}
+
+@Component
+class MdcCoWebFilter : CoWebFilter() {
+    override suspend fun filter(
+        exchange: ServerWebExchange,
+        chain: CoWebFilterChain,
+    ) {
+        val request = exchange.request
+        val digisosIdOrNull =
+            request.uri.path
+                .substringAfter(MODIA_BASE_URL)
+                .substringBefore("/")
+                .let { runCatching { UUID.fromString(it) }.getOrNull() }
+                ?.toString()
+                ?: "not found"
+
+        putToMDC(MDCUtils.PATH, digisosIdOrNull)
     }
 
     companion object {
