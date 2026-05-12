@@ -67,6 +67,9 @@ dependencies {
         implementation("io.netty:netty-transport:$nettyVersion") {
             because("Fix HIGH severity vulnerabilities in io.netty, patched in 4.2.13.Final")
         }
+        implementation("io.netty:netty-transport-native-epoll:$nettyVersion") {
+            because("Fix HIGH severity Netty epoll transport half-closed RST DoS, patched in 4.2.13.Final")
+        }
         implementation("io.netty:netty-transport-native-unix-common:$nettyVersion") {
             because("Fix HIGH severity vulnerabilities in io.netty, patched in 4.2.13.Final")
         }
