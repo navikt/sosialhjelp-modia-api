@@ -21,7 +21,9 @@ class MDCFilter : OncePerRequestFilter() {
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        Companion.logger.info("MDCFilter setting additional context")
+        Companion.logger.info(
+            "Incomint request: ${request.method} ${request.requestURI.substringAfter(MODIA_BASE_URL)}",
+        )
 
         request
             .getHeader(HEADER_CALL_ID)
