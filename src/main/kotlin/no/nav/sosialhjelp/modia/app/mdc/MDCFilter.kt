@@ -22,7 +22,7 @@ class MDCFilter : OncePerRequestFilter() {
         filterChain: FilterChain,
     ) {
         Companion.logger.info(
-            "Incomint request: ${request.method} ${request.requestURI.substringAfter(MODIA_BASE_URL)}",
+            "Incomint request: ${request.method}: ${request.requestURI.substringAfter(MODIA_BASE_URL)}",
         )
 
         request
