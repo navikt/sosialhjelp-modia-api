@@ -7,12 +7,11 @@ import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.clearMDC
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.generateCallId
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.putToMDC
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.setCallId
-import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import java.util.UUID
+import java.util.*
 
 @Component
 class MDCFilter : OncePerRequestFilter() {
@@ -21,10 +20,6 @@ class MDCFilter : OncePerRequestFilter() {
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        Companion.logger.info(
-            "Incomint request: ${request.method}: ${request.requestURI.substringAfter(MODIA_BASE_URL)}",
-        )
-
         request
             .getHeader(HEADER_CALL_ID)
             ?.also { setCallId(it) }
@@ -56,6 +51,5 @@ class MDCFilter : OncePerRequestFilter() {
 
     companion object {
         private const val MODIA_BASE_URL = "/sosialhjelp/modia-api/api/"
-        private val logger by logger()
     }
 }
