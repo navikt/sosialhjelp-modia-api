@@ -12,7 +12,7 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import java.util.*
+import java.util.UUID
 
 @Component
 class MDCFilter : OncePerRequestFilter() {
@@ -23,7 +23,8 @@ class MDCFilter : OncePerRequestFilter() {
     ) {
         Companion.logger.info("MDCFilter setting additional context")
 
-        request.getHeader(HEADER_CALL_ID)
+        request
+            .getHeader(HEADER_CALL_ID)
             ?.also { setCallId(it) }
             ?: setCallId(generateCallId())
 
