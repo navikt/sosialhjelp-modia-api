@@ -3,20 +3,16 @@ package no.nav.sosialhjelp.modia.app.mdc
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import kotlinx.coroutines.slf4j.MDCContext
-import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.clearMDC
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.generateCallId
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.putToMDC
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.setCallId
+import no.nav.sosialhjelp.modia.logger
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import org.springframework.web.server.CoWebFilter
-import org.springframework.web.server.CoWebFilterChain
-import org.springframework.web.server.ServerWebExchange
-import java.util.UUID
+import java.util.*
 
 @Component
 class MDCFilter : OncePerRequestFilter() {
@@ -25,6 +21,12 @@ class MDCFilter : OncePerRequestFilter() {
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
+        Companion.logger.info("MDCFilter setting additional context")
+
+        request.getHeader(HEADER_CALL_ID)
+            ?.also { setCallId(it) }
+            ?: setCallId(generateCallId())
+
         addDigisosId(request)
         putToMDC(MDCUtils.PATH, request.requestURI)
         putToMDC(MDCUtils.METHOD, request.method)
@@ -51,45 +53,6 @@ class MDCFilter : OncePerRequestFilter() {
 
     companion object {
         private const val MODIA_BASE_URL = "/sosialhjelp/modia-api/api/"
-    }
-}
-
-@Component
-class MdcCoWebFilter : CoWebFilter() {
-    override suspend fun filter(
-        exchange: ServerWebExchange,
-        chain: CoWebFilterChain,
-    ) {
-        val request = exchange.request
-
-        request.headers
-            .get(HEADER_CALL_ID)
-            ?.firstOrNull()
-            ?.also { setCallId(it) }
-            ?: setCallId(generateCallId())
-
-        val digisosIdOrNull =
-            request.uri.path
-                .substringAfter(MODIA_BASE_URL)
-                .substringBefore("/")
-                .let { runCatching { UUID.fromString(it) }.getOrNull() }
-                ?.toString()
-                ?: "not found"
-
-        putToMDC(MDCUtils.DIGISOS_ID, digisosIdOrNull)
-        putToMDC(MDCUtils.PATH, request.uri.path)
-        putToMDC(MDCUtils.METHOD, request.method.name())
-
-        try {
-            withContext(MDCContext()) {
-                chain.filter(exchange)
-            }
-        } finally {
-            clearMDC()
-        }
-    }
-
-    companion object {
-        private const val MODIA_BASE_URL = "/sosialhjelp/modia-api/api/"
+        private val logger by logger()
     }
 }
