@@ -3,6 +3,8 @@ package no.nav.sosialhjelp.modia.app.mdc
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import kotlinx.coroutines.slf4j.MDCContext
+import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.clearMDC
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.putToMDC
 import org.springframework.http.HttpMethod
@@ -64,7 +66,17 @@ class MdcCoWebFilter : CoWebFilter() {
                 ?.toString()
                 ?: "not found"
 
-        putToMDC(MDCUtils.PATH, digisosIdOrNull)
+        putToMDC(MDCUtils.DIGISOS_ID, digisosIdOrNull)
+        putToMDC(MDCUtils.PATH, request.uri.path)
+        putToMDC(MDCUtils.METHOD, request.method.name())
+
+        try {
+            withContext(MDCContext()) {
+                chain.filter(exchange)
+            }
+        } finally {
+            clearMDC()
+        }
     }
 
     companion object {
