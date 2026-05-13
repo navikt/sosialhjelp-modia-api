@@ -26,6 +26,7 @@ object MDCUtils {
         MDC.remove(CALL_ID)
         MDC.remove(DIGISOS_ID)
         MDC.remove(PATH)
+        MDC.remove(METHOD)
     }
 
     fun generateCallId(): String {
@@ -33,6 +34,10 @@ object MDCUtils {
         val systemTime = getSystemTime()
 
         return "CallId_${systemTime}_$randomNr"
+    }
+
+    fun setCallId(callId: String) {
+        MDC.put(CALL_ID, callId)
     }
 
     private fun getRandomNumber(): Int = RANDOM.nextInt(Integer.MAX_VALUE)
