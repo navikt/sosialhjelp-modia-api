@@ -11,7 +11,7 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import java.util.*
+import java.util.UUID
 
 @Component
 class MDCFilter : OncePerRequestFilter() {
