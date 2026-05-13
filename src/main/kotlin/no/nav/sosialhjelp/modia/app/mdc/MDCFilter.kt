@@ -3,8 +3,13 @@ package no.nav.sosialhjelp.modia.app.mdc
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import kotlinx.coroutines.slf4j.MDCContext
+import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.clearMDC
+import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.generateCallId
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.putToMDC
+import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.setCallId
+import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
@@ -56,6 +61,13 @@ class MdcCoWebFilter : CoWebFilter() {
         chain: CoWebFilterChain,
     ) {
         val request = exchange.request
+
+        request.headers
+            .get(HEADER_CALL_ID)
+            ?.firstOrNull()
+            ?.also { setCallId(it) }
+            ?: setCallId(generateCallId())
+
         val digisosIdOrNull =
             request.uri.path
                 .substringAfter(MODIA_BASE_URL)
@@ -64,7 +76,17 @@ class MdcCoWebFilter : CoWebFilter() {
                 ?.toString()
                 ?: "not found"
 
-        putToMDC(MDCUtils.PATH, digisosIdOrNull)
+        putToMDC(MDCUtils.DIGISOS_ID, digisosIdOrNull)
+        putToMDC(MDCUtils.PATH, request.uri.path)
+        putToMDC(MDCUtils.METHOD, request.method.name())
+
+        try {
+            withContext(MDCContext()) {
+                chain.filter(exchange)
+            }
+        } finally {
+            clearMDC()
+        }
     }
 
     companion object {
