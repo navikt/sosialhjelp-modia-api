@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestClient
+import org.springframework.web.client.body
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.UUID
@@ -84,7 +85,7 @@ class FiksClientImpl(
                     .header(IntegrationUtils.HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
                     .header("Authorization", BEARER + texasClient.getMaskinportenToken())
                     .retrieve()
-                    .body(DigisosSak::class.java)
+                    .body<DigisosSak>()
                     ?: throw FiksServerException(500, "Fiks - DigisosSak nedlasting feilet!", null)
             }
         } catch (e: HttpClientErrorException) {

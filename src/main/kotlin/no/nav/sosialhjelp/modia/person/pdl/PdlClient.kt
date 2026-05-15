@@ -17,6 +17,7 @@ import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientResponseException
+import org.springframework.web.client.body
 
 interface PdlClient {
     fun hentPerson(
@@ -55,7 +56,7 @@ class PdlClientImpl(
                 .header(HEADER_CALL_ID, getCallId())
                 .body(PdlRequest(query, Variables(ident)))
                 .retrieve()
-                .body(PdlPersonResponse::class.java)
+                .body<PdlPersonResponse>()
         } catch (e: RestClientResponseException) {
             log.error("PDL - ${e.statusCode} ${e.statusText} feil ved henting av navn fra PDL", e)
             throw PdlException(e.message)
@@ -71,7 +72,7 @@ class PdlClientImpl(
             pdlRestClient
                 .options()
                 .retrieve()
-                .body(String::class.java)
+                .body<String>()
         } catch (e: RestClientResponseException) {
             log.error("PDL - ping feilet", e)
             throw e

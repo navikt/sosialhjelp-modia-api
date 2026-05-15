@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestClient
+import org.springframework.web.client.body
 
 @Component
 class KommuneInfoClient(
@@ -31,7 +32,7 @@ class KommuneInfoClient(
             .header(HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
             .header(HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
             .retrieve()
-            .body(KommuneInfo::class.java)
+            .body<KommuneInfo>()
             ?: throw RuntimeException("Noe feil skjedde ved henting av KommuneInfo for kommune=$kommunenummer")
     } catch (e: HttpClientErrorException) {
         log.warn("Fiks - hentKommuneInfoForAlle feilet", e)

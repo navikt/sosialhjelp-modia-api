@@ -16,6 +16,7 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientResponseException
+import org.springframework.web.client.body
 
 interface SkjermedePersonerClient {
     fun erPersonSkjermet(
@@ -75,7 +76,7 @@ class SkjermedePersonerClientImpl(
                 .header(HttpHeaders.AUTHORIZATION, BEARER + azureAdToken)
                 .body(SkjermedePersonerRequest(ident))
                 .retrieve()
-                .body(String::class.java)
+                .body<String>()
                 ?: throw ManglendeTilgangException("Skjermede personer - tom respons")
         } catch (e: RestClientResponseException) {
             log.error(

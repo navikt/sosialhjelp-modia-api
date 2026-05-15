@@ -12,6 +12,7 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientResponseException
+import org.springframework.web.client.body
 
 enum class TokenEndpointType {
     // For kall uten sluttbrukers kontekst
@@ -47,7 +48,7 @@ sealed class TexasClient(
             .contentType(MediaType.APPLICATION_JSON)
             .body(mapOf("token" to token, "identity_provider" to identityProvider.value))
             .retrieve()
-            .body(IntrospectionResponse::class.java)
+            .body<IntrospectionResponse>()
             ?: error("Feil ved introspeksjon av token: tom respons")
 
         if (response.error != null) {

@@ -16,6 +16,7 @@ import org.springframework.core.ParameterizedTypeReference
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientResponseException
+import org.springframework.web.client.body
 
 interface NorgClient {
     fun hentNavEnhet(enhetsnr: String): NavEnhet?
@@ -51,7 +52,7 @@ class NorgClientImpl(
             .uri("/enhet/{enhetsnr}", enhetsnr)
             .header(HEADER_CALL_ID, getCallId())
             .retrieve()
-            .body(NavEnhet::class.java)
+            .body<NavEnhet>()
             ?: throw NorgException("Norg2 - tom respons for enhet $enhetsnr", null)
     } catch (e: RestClientResponseException) {
         log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
@@ -80,7 +81,7 @@ class NorgClientImpl(
             .uri("/kodeverk/EnhetstyperNorg")
             .header(HEADER_CALL_ID, getCallId())
             .retrieve()
-            .body(String::class.java)
+            .body<String>()
     }
 
     private fun lagreNavEnhetListeTilCache(list: List<NavEnhet>) {
