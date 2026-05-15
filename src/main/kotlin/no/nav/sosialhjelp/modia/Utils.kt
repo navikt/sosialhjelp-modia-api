@@ -11,11 +11,8 @@ import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
 import no.nav.sosialhjelp.modia.digisossak.event.SAK_DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.digisossak.event.SOKNAD_DEFAULT_TITTEL
-import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.core.ParameterizedTypeReference
-import java.io.IOException
 import java.sql.Timestamp
 import java.time.Instant
 import java.time.LocalDate
@@ -25,8 +22,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import kotlin.reflect.full.companionObject
-
-inline fun <reified T : Any> typeRef(): ParameterizedTypeReference<T> = object : ParameterizedTypeReference<T>() {}
 
 fun String.toLocalDateTime(): LocalDateTime =
     ZonedDateTime
@@ -68,11 +63,6 @@ fun hentSoknadTittel(
 val String.maskerFnr: String
     get() {
         return this.replace(Regex("""\b[0-9]{11}\b"""), "[FNR]")
-    }
-
-val ErrorMessage.feilmeldingUtenFnr: String?
-    get() {
-        return this.message?.maskerFnr
     }
 
 /**
