@@ -28,12 +28,12 @@ enum class TokenEndpointType {
 sealed class TexasClient(
     private val tokenEndpoint: String,
     private val tokenXEndpoint: String,
-    restClientBuilder: RestClient.Builder,
 ) {
     protected val log by logger()
 
     private val texasRestClient =
-        restClientBuilder
+        RestClient
+            .builder()
             .defaultHeaders { it.contentType = MediaType.APPLICATION_JSON }
             .build()
 
@@ -136,22 +136,20 @@ sealed class TexasClient(
 @Component
 @Profile("!(mock-alt|testcontainers)")
 class TexasClientImpl(
-    restClientBuilder: RestClient.Builder,
     @param:Value("\${NAIS_TOKEN_ENDPOINT}")
     private val tokenEndpoint: String,
     @param:Value("\${NAIS_TOKEN_EXCHANGE_ENDPOINT}")
     private val tokenXEndpoint: String,
-) : TexasClient(tokenEndpoint, tokenXEndpoint, restClientBuilder)
+) : TexasClient(tokenEndpoint, tokenXEndpoint)
 
 @Component
 @Profile("mock-alt", "testcontainers")
 class MockTexasClient(
-    restClientBuilder: RestClient.Builder,
     @param:Value("\${NAIS_TOKEN_ENDPOINT:http://localhost:8081/api/v1/token}")
     private val tokenEndpoint: String,
     @param:Value("\${NAIS_TOKEN_EXCHANGE_ENDPOINT:http://localhost:8081/api/v1/token/exchange}")
     private val tokenXEndpoint: String,
-) : TexasClient(tokenEndpoint, tokenXEndpoint, restClientBuilder) {
+) : TexasClient(tokenEndpoint, tokenXEndpoint) {
     override fun getTokenXToken(
         target: String,
         userToken: String,

@@ -31,12 +31,12 @@ interface PdlClient {
 @Profile("!local")
 @Component
 class PdlClientImpl(
-    restClientBuilder: RestClient.Builder,
     private val texasClient: TexasClient,
     private val clientProperties: ClientProperties,
 ) : PdlClient {
     private val pdlRestClient =
-        restClientBuilder
+        RestClient
+            .builder()
             .baseUrl(clientProperties.pdlEndpointUrl)
             .defaultHeader(HEADER_BEHANDLINGSNUMMER, BEHANDLINGSNUMMER_MODIA)
             .build()

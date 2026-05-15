@@ -29,12 +29,12 @@ interface NorgClient {
 @Profile("!local")
 @Component
 class NorgClientImpl(
-    restClientBuilder: RestClient.Builder,
     clientProperties: ClientProperties,
     private val redisService: RedisService,
 ) : NorgClient {
     private val norgRestClient =
-        restClientBuilder
+        RestClient
+            .builder()
             .baseUrl(clientProperties.norgEndpointUrl)
             .build()
 

@@ -7,10 +7,8 @@ import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.body
 
 @Component
-class KommunenavnClient(
-    restClientBuilder: RestClient.Builder,
-) {
-    private val kommunenavnRestClient = restClientBuilder.build()
+class KommunenavnClient {
+    private val kommunenavnRestClient = RestClient.builder().build()
 
     fun getAll(): KommunenavnProperties =
         try {
