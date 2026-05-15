@@ -12,18 +12,18 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_INTEGRASJON_PASSOR
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.WebClientResponseException
-import org.springframework.web.reactive.function.client.bodyToMono
+import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.HttpServerErrorException
+import org.springframework.web.client.RestClient
 
 @Component
 class KommuneInfoClient(
     private val clientProperties: ClientProperties,
-    private val fiksWebClient: WebClient,
+    private val fiksRestClient: RestClient,
     private val texasClient: TexasClient,
 ) {
-    suspend fun getKommuneInfo(kommunenummer: String): KommuneInfo =
-        fiksWebClient
+    fun getKommuneInfo(kommunenummer: String): KommuneInfo = try {
+        fiksRestClient
             .get()
             .uri(PATH_KOMMUNEINFO, kommunenummer)
             .accept(MediaType.APPLICATION_JSON)
@@ -31,15 +31,15 @@ class KommuneInfoClient(
             .header(HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
             .header(HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
             .retrieve()
-            .bodyToMono<KommuneInfo>()
-            .onErrorMap(WebClientResponseException::class.java) { e ->
-                log.warn("Fiks - hentKommuneInfoForAlle feilet", e)
-                when {
-                    e.statusCode.is4xxClientError -> FiksClientException(e.statusCode.value(), e.message, e)
-                    else -> FiksServerException(e.statusCode.value(), e.message, e)
-                }
-            }.block()
+            .body(KommuneInfo::class.java)
             ?: throw RuntimeException("Noe feil skjedde ved henting av KommuneInfo for kommune=$kommunenummer")
+    } catch (e: HttpClientErrorException) {
+        log.warn("Fiks - hentKommuneInfoForAlle feilet", e)
+        throw FiksClientException(e.statusCode.value(), e.message, e)
+    } catch (e: HttpServerErrorException) {
+        log.warn("Fiks - hentKommuneInfoForAlle feilet", e)
+        throw FiksServerException(e.statusCode.value(), e.message, e)
+    }
 
     companion object {
         private val log by logger()

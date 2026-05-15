@@ -1,29 +1,27 @@
 package no.nav.sosialhjelp.modia.kommune.kartverket
 
 import no.nav.sosialhjelp.modia.logger
-import no.nav.sosialhjelp.modia.typeRef
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.client.RestClient
+import org.springframework.web.client.RestClientResponseException
 
 @Component
 class KommunenavnClient(
-    webClientBuilder: WebClient.Builder,
+    restClientBuilder: RestClient.Builder,
 ) {
-    private val kommunenavnWebClient: WebClient =
-        webClientBuilder
-            .codecs {
-                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }.build()
+    private val kommunenavnRestClient = restClientBuilder.build()
 
-    fun getAll(): KommunenavnProperties =
-        kommunenavnWebClient
+    fun getAll(): KommunenavnProperties = try {
+        kommunenavnRestClient
             .get()
             .uri("https://register.geonorge.no/api/sosi-kodelister/inndelinger/inndelingsbase/kommunenummer.json")
             .retrieve()
-            .bodyToMono(typeRef<KommunenavnProperties>())
-            .doOnError {
-                log.warn("Kartverket - henting av info feilet:", it)
-            }.block()!!
+            .body(KommunenavnProperties::class.java)
+            ?: throw RuntimeException("Kartverket - tom respons ved henting av kommunenavn")
+    } catch (e: RestClientResponseException) {
+        log.warn("Kartverket - henting av info feilet:", e)
+        throw e
+    }
 
     companion object {
         private val log by logger()

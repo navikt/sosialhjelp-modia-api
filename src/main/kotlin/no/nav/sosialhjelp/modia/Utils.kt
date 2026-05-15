@@ -1,8 +1,9 @@
 package no.nav.sosialhjelp.modia
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.slf4j.MDCContext
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.ErrorMessage
@@ -14,7 +15,6 @@ import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.ParameterizedTypeReference
-import org.springframework.web.reactive.function.client.WebClientResponseException
 import java.io.IOException
 import java.sql.Timestamp
 import java.time.Instant
@@ -75,24 +75,17 @@ val ErrorMessage.feilmeldingUtenFnr: String?
         return this.message?.maskerFnr
     }
 
-fun messageUtenFnr(e: WebClientResponseException): String {
-    val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
-    val message = e.message.maskerFnr
-    return "$message - $fiksErrorMessage"
-}
-
-private fun <T : WebClientResponseException> T.toFiksErrorMessage(): ErrorMessage? =
-    try {
-        sosialhjelpJsonMapper.readValue(this.responseBodyAsByteArray, ErrorMessage::class.java)
-    } catch (ignored: IOException) {
-        null
-    }
-
-suspend fun <A, B> Iterable<A>.flatMapParallel(f: suspend (A) -> List<B>): List<B> =
-    coroutineScope {
-        map {
-            async(MDCContext()) {
-                f(it)
+/**
+ * Executes the given function in parallel for each element in the iterable,
+ * using coroutines with MDC context propagation.
+ * 
+ * This is a synchronous function that blocks until all parallel operations complete.
+ */
+fun <A, B> Iterable<A>.flatMapParallel(f: (A) -> List<B>): List<B> =
+    runBlocking(Dispatchers.IO + MDCContext()) {
+        map { element ->
+            async {
+                f(element)
             }
         }.awaitAll().flatten()
     }
