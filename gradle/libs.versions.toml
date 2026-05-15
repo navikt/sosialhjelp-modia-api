@@ -14,7 +14,6 @@ lettuce = "7.5.1.RELEASE"
 springdoc = "3.0.3"
 mockk = "1.14.9"
 ktlint = "1.8.0"
-micrometerPropagation = "1.2.1"
 jackson = "3.1.3"
 mockwebserver = "5.3.2"
 httpclient5 = "5.4.4"
@@ -33,6 +32,7 @@ spring-boot-validation = { module = "org.springframework.boot:spring-boot-starte
 spring-boot-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis", version.ref = "spring-boot" }
 spring-boot-starter-webclient = { module = "org.springframework.boot:spring-boot-starter-webclient", version.ref = "spring-boot" }
 spring-boot-oauth2-resource-server = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server", version.ref = "spring-boot" }
+spring-boot-restclient = { module = "org.springframework.boot:spring-boot-restclient", version.ref = "spring-boot" }
 
 spring-boot-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
 
@@ -41,8 +41,6 @@ jackson-module-kotlin = { module = "tools.jackson.module:jackson-module-kotlin",
 sosialhjelp-common-api = { module = "no.nav.sosialhjelp:sosialhjelp-common-api", version.ref = "sosialhjelpCommon" }
 
 micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "micrometerRegistry" }
-micrometer-context-propagation = { module = "io.micrometer:context-propagation", version.ref = "micrometerPropagation" }
-
 prometheus-common = { module = "io.prometheus:simpleclient_common", version.ref = "prometheus" }
 prometheus-hotspot = { module = "io.prometheus:simpleclient_hotspot", version.ref = "prometheus" }
 
@@ -76,7 +74,7 @@ spring-boot = [
     "spring-boot-oauth2-resource-server"
 ]
 springdoc = ["springdoc-common", "springdoc-webmvc-ui"]
-prometheus = ["prometheus-common", "prometheus-hotspot", "micrometer-context-propagation"]
+prometheus = ["prometheus-common", "prometheus-hotspot"]
 
 coroutines = ["coroutines-core", "coroutines-slf4j"]
 

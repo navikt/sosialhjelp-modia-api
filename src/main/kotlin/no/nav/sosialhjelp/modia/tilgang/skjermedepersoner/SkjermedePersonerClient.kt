@@ -28,11 +28,12 @@ interface SkjermedePersonerClient {
 @Profile("!test")
 @Component
 class SkjermedePersonerClientImpl(
+    restClientBuilder: RestClient.Builder,
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
     private val texasClient: TexasClient,
 ) : SkjermedePersonerClient {
-    private val skjermedePersonerRestClient = RestClient.builder().build()
+    private val skjermedePersonerRestClient = restClientBuilder.clone().build()
 
     override fun erPersonSkjermet(
         ident: String,

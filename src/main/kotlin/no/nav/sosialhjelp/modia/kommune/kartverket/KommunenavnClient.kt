@@ -3,12 +3,14 @@ package no.nav.sosialhjelp.modia.kommune.kartverket
 import no.nav.sosialhjelp.modia.logger
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
-import org.springframework.web.client.RestClientResponseException
+import org.springframework.web.client.RestClientException
 import org.springframework.web.client.body
 
 @Component
-class KommunenavnClient {
-    private val kommunenavnRestClient = RestClient.builder().build()
+class KommunenavnClient(
+    restClientBuilder: RestClient.Builder,
+) {
+    private val kommunenavnRestClient = restClientBuilder.clone().build()
 
     fun getAll(): KommunenavnProperties =
         try {
@@ -18,7 +20,7 @@ class KommunenavnClient {
                 .retrieve()
                 .body<KommunenavnProperties>()
                 ?: throw RuntimeException("Kartverket - tom respons ved henting av kommunenavn")
-        } catch (e: RestClientResponseException) {
+        } catch (e: RestClientException) {
             log.warn("Kartverket - henting av info feilet:", e)
             throw e
         }

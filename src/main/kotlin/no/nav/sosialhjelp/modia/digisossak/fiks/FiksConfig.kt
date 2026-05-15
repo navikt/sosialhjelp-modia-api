@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit
 
 @Configuration
 class FiksConfig(
+    private val restClientBuilder: RestClient.Builder,
     private val clientProperties: ClientProperties,
     @Value("\${retry_fiks_max_attempts}") private val maxAttempts: Int,
     @Value("\${retry_fiks_initial_delay}") private val initialDelay: Long,
@@ -54,8 +55,8 @@ class FiksConfig(
 
         val requestFactory = HttpComponentsClientHttpRequestFactory(httpClient)
 
-        return RestClient
-            .builder()
+        return restClientBuilder
+            .clone()
             .requestFactory(requestFactory)
             .baseUrl(clientProperties.fiksDigisosEndpointUrl)
             .build()

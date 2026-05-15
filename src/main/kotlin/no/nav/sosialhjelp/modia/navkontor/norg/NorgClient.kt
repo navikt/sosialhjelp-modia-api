@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
+import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.body
 
@@ -29,12 +30,13 @@ interface NorgClient {
 @Profile("!local")
 @Component
 class NorgClientImpl(
+    restClientBuilder: RestClient.Builder,
     clientProperties: ClientProperties,
     private val redisService: RedisService,
 ) : NorgClient {
     private val norgRestClient =
-        RestClient
-            .builder()
+        restClientBuilder
+            .clone()
             .baseUrl(clientProperties.norgEndpointUrl)
             .build()
 
@@ -56,8 +58,11 @@ class NorgClientImpl(
                 .retrieve()
                 .body<NavEnhet>()
                 ?: throw NorgException("Norg2 - tom respons for enhet $enhetsnr", null)
-        } catch (e: RestClientResponseException) {
-            log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
+        } catch (e: RestClientException) {
+            when (e) {
+                is RestClientResponseException -> log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
+                else -> log.warn("Norg2 - Noe feilet", e)
+            }
             throw NorgException(e.message, e)
         }.also {
             log.debug("Norg2 - GET enhet $enhetsnr OK")
@@ -73,8 +78,11 @@ class NorgClientImpl(
                 .retrieve()
                 .body(object : ParameterizedTypeReference<List<NavEnhet>>() {})
                 ?: throw NorgException("Norg2 - tom respons for alle enheter", null)
-        } catch (e: RestClientResponseException) {
-            log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
+        } catch (e: RestClientException) {
+            when (e) {
+                is RestClientResponseException -> log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
+                else -> log.warn("Norg2 - Noe feilet", e)
+            }
             throw NorgException(e.message, e)
         }.also { lagreNavEnhetListeTilCache(it) }
 

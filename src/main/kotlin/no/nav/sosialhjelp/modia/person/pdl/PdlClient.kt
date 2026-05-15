@@ -16,6 +16,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
+import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.body
 
@@ -31,12 +32,13 @@ interface PdlClient {
 @Profile("!local")
 @Component
 class PdlClientImpl(
+    restClientBuilder: RestClient.Builder,
     private val texasClient: TexasClient,
     private val clientProperties: ClientProperties,
 ) : PdlClient {
     private val pdlRestClient =
-        RestClient
-            .builder()
+        restClientBuilder
+            .clone()
             .baseUrl(clientProperties.pdlEndpointUrl)
             .defaultHeader(HEADER_BEHANDLINGSNUMMER, BEHANDLINGSNUMMER_MODIA)
             .build()
@@ -59,8 +61,11 @@ class PdlClientImpl(
                     .body(PdlRequest(query, Variables(ident)))
                     .retrieve()
                     .body<PdlPersonResponse>()
-            } catch (e: RestClientResponseException) {
-                log.error("PDL - ${e.statusCode} ${e.statusText} feil ved henting av navn fra PDL", e)
+            } catch (e: RestClientException) {
+                when (e) {
+                    is RestClientResponseException -> log.error("PDL - ${e.statusCode} ${e.statusText} feil ved henting av navn fra PDL", e)
+                    else -> log.error("PDL - feil ved henting av navn fra PDL", e)
+                }
                 throw PdlException(e.message)
             }
 
@@ -75,7 +80,7 @@ class PdlClientImpl(
                 .options()
                 .retrieve()
                 .body<String>()
-        } catch (e: RestClientResponseException) {
+        } catch (e: RestClientException) {
             log.error("PDL - ping feilet", e)
             throw e
         }
