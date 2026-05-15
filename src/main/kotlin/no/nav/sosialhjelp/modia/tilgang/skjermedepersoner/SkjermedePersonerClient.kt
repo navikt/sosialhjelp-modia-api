@@ -2,6 +2,7 @@ package no.nav.sosialhjelp.modia.tilgang.skjermedepersoner
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.slf4j.MDCContext
 import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.app.exceptions.ManglendeTilgangException
@@ -77,7 +78,7 @@ class SkjermedePersonerClientImpl(
                 IdentityProvider.ENTRA_ID,
             )
         val response: String =
-            withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO + MDCContext()) {
                 skjermedePersonerWebClient
                     .post()
                     .uri("${clientProperties.skjermedePersonerEndpointUrl}/skjermet")

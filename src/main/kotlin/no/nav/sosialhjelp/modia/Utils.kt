@@ -3,6 +3,7 @@ package no.nav.sosialhjelp.modia
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.slf4j.MDCContext
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.ErrorMessage
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
@@ -90,7 +91,7 @@ private fun <T : WebClientResponseException> T.toFiksErrorMessage(): ErrorMessag
 suspend fun <A, B> Iterable<A>.flatMapParallel(f: suspend (A) -> List<B>): List<B> =
     coroutineScope {
         map {
-            async {
+            async(MDCContext()) {
                 f(it)
             }
         }.awaitAll().flatten()

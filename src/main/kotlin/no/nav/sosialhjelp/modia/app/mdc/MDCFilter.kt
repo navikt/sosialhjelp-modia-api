@@ -3,6 +3,8 @@ package no.nav.sosialhjelp.modia.app.mdc
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.clearMDC
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.generateCallId
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.putToMDC

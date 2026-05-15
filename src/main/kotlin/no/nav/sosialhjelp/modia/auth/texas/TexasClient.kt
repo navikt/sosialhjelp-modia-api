@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.slf4j.MDCContext
 import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.logger
 import org.springframework.beans.factory.annotation.Value
@@ -90,7 +91,7 @@ sealed class TexasClient(
         tokenEndpointType: TokenEndpointType,
         params: Map<String, String>,
     ): String =
-        withContext(Dispatchers.IO) {
+        withContext(Dispatchers.IO + MDCContext()) {
             val url =
                 when (tokenEndpointType) {
                     TokenEndpointType.M2M -> tokenEndpoint

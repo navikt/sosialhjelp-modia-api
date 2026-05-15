@@ -1,6 +1,7 @@
 package no.nav.sosialhjelp.modia.person.pdl
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.slf4j.MDCContext
 import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.app.exceptions.PdlException
@@ -58,7 +59,7 @@ class PdlClientImpl(
             try {
                 val azureAdToken = texasClient.getTokenXToken(clientProperties.pdlScope, veilederToken, IdentityProvider.ENTRA_ID)
 
-                withContext(Dispatchers.IO) {
+                withContext(Dispatchers.IO + MDCContext()) {
                     pdlWebClient
                         .post()
                         .contentType(APPLICATION_JSON)
