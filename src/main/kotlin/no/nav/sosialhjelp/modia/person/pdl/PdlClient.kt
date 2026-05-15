@@ -68,9 +68,12 @@ class PdlClientImpl(
                 throw PdlException(e.message)
             }
 
+        if (pdlPersonResponse == null) {
+            throw PdlException("PDL returnerte tom respons")
+        }
         checkForPdlApiErrors(pdlPersonResponse)
 
-        return pdlPersonResponse?.data
+        return pdlPersonResponse.data
     }
 
     override fun ping() {
