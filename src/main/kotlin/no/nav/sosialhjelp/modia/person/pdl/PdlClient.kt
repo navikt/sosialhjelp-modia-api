@@ -12,7 +12,6 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_BEHANDLINGSNUMMER
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders.AUTHORIZATION
-import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
