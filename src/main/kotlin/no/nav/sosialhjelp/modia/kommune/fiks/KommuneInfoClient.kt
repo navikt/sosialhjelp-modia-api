@@ -23,24 +23,25 @@ class KommuneInfoClient(
     private val fiksRestClient: RestClient,
     private val texasClient: TexasClient,
 ) {
-    fun getKommuneInfo(kommunenummer: String): KommuneInfo = try {
-        fiksRestClient
-            .get()
-            .uri(PATH_KOMMUNEINFO, kommunenummer)
-            .accept(MediaType.APPLICATION_JSON)
-            .header(AUTHORIZATION, BEARER + texasClient.getMaskinportenToken())
-            .header(HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
-            .header(HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
-            .retrieve()
-            .body<KommuneInfo>()
-            ?: throw RuntimeException("Noe feil skjedde ved henting av KommuneInfo for kommune=$kommunenummer")
-    } catch (e: HttpClientErrorException) {
-        log.warn("Fiks - hentKommuneInfoForAlle feilet", e)
-        throw FiksClientException(e.statusCode.value(), e.message, e)
-    } catch (e: HttpServerErrorException) {
-        log.warn("Fiks - hentKommuneInfoForAlle feilet", e)
-        throw FiksServerException(e.statusCode.value(), e.message, e)
-    }
+    fun getKommuneInfo(kommunenummer: String): KommuneInfo =
+        try {
+            fiksRestClient
+                .get()
+                .uri(PATH_KOMMUNEINFO, kommunenummer)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, BEARER + texasClient.getMaskinportenToken())
+                .header(HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
+                .header(HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
+                .retrieve()
+                .body<KommuneInfo>()
+                ?: throw RuntimeException("Noe feil skjedde ved henting av KommuneInfo for kommune=$kommunenummer")
+        } catch (e: HttpClientErrorException) {
+            log.warn("Fiks - hentKommuneInfoForAlle feilet", e)
+            throw FiksClientException(e.statusCode.value(), e.message, e)
+        } catch (e: HttpServerErrorException) {
+            log.warn("Fiks - hentKommuneInfoForAlle feilet", e)
+            throw FiksServerException(e.statusCode.value(), e.message, e)
+        }
 
     companion object {
         private val log by logger()

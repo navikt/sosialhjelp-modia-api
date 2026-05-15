@@ -78,7 +78,7 @@ val ErrorMessage.feilmeldingUtenFnr: String?
 /**
  * Executes the given function in parallel for each element in the iterable,
  * using coroutines with MDC context propagation.
- * 
+ *
  * This is a synchronous function that blocks until all parallel operations complete.
  */
 fun <A, B> Iterable<A>.flatMapParallel(f: (A) -> List<B>): List<B> =

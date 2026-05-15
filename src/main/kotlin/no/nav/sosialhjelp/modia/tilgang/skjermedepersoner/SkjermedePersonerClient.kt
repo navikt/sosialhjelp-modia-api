@@ -62,32 +62,34 @@ class SkjermedePersonerClientImpl(
         veilederToken: String,
     ): Boolean {
         log.debug("Sjekker om person er skjermet.")
-        val azureAdToken = texasClient.getTokenXToken(
-            clientProperties.skjermedePersonerScope,
-            veilederToken,
-            IdentityProvider.ENTRA_ID,
-        )
-
-        val response: String = try {
-            skjermedePersonerRestClient
-                .post()
-                .uri("${clientProperties.skjermedePersonerEndpointUrl}/skjermet")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, BEARER + azureAdToken)
-                .body(SkjermedePersonerRequest(ident))
-                .retrieve()
-                .body<String>()
-                ?: throw ManglendeTilgangException("Skjermede personer - tom respons")
-        } catch (e: RestClientResponseException) {
-            log.error(
-                "Skjermede personer - noe feilet. Status: ${e.statusCode}, message: ${e.message}.\n ${e.responseBodyAsString}",
-                e,
+        val azureAdToken =
+            texasClient.getTokenXToken(
+                clientProperties.skjermedePersonerScope,
+                veilederToken,
+                IdentityProvider.ENTRA_ID,
             )
-            throw ManglendeTilgangException("Noe feilet ved kall til Skjermede personer: ${e.message}")
-        } catch (e: Exception) {
-            log.error("Skjermede personer - noe feilet.", e)
-            throw ManglendeTilgangException("Noe feilet ved kall til Skjermede personer: ${e.message}")
-        }
+
+        val response: String =
+            try {
+                skjermedePersonerRestClient
+                    .post()
+                    .uri("${clientProperties.skjermedePersonerEndpointUrl}/skjermet")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header(HttpHeaders.AUTHORIZATION, BEARER + azureAdToken)
+                    .body(SkjermedePersonerRequest(ident))
+                    .retrieve()
+                    .body<String>()
+                    ?: throw ManglendeTilgangException("Skjermede personer - tom respons")
+            } catch (e: RestClientResponseException) {
+                log.error(
+                    "Skjermede personer - noe feilet. Status: ${e.statusCode}, message: ${e.message}.\n ${e.responseBodyAsString}",
+                    e,
+                )
+                throw ManglendeTilgangException("Noe feilet ved kall til Skjermede personer: ${e.message}")
+            } catch (e: Exception) {
+                log.error("Skjermede personer - noe feilet.", e)
+                throw ManglendeTilgangException("Noe feilet ved kall til Skjermede personer: ${e.message}")
+            }
 
         log.debug("Person er skjermet = $response")
         return "false" != response

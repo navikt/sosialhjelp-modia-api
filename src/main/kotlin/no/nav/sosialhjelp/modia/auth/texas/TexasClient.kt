@@ -32,9 +32,10 @@ sealed class TexasClient(
 ) {
     protected val log by logger()
 
-    private val texasRestClient = restClientBuilder
-        .defaultHeaders { it.contentType = MediaType.APPLICATION_JSON }
-        .build()
+    private val texasRestClient =
+        restClientBuilder
+            .defaultHeaders { it.contentType = MediaType.APPLICATION_JSON }
+            .build()
 
     open fun getMaskinportenToken(): String = getToken(TokenEndpointType.M2M, maskinportenParams)
 
@@ -42,14 +43,15 @@ sealed class TexasClient(
         token: String,
         identityProvider: IdentityProvider,
     ): IntrospectionResponse {
-        val response: IntrospectionResponse = texasRestClient
-            .post()
-            .uri(tokenEndpoint)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapOf("token" to token, "identity_provider" to identityProvider.value))
-            .retrieve()
-            .body<IntrospectionResponse>()
-            ?: error("Feil ved introspeksjon av token: tom respons")
+        val response: IntrospectionResponse =
+            texasRestClient
+                .post()
+                .uri(tokenEndpoint)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(mapOf("token" to token, "identity_provider" to identityProvider.value))
+                .retrieve()
+                .body<IntrospectionResponse>()
+                ?: error("Feil ved introspeksjon av token: tom respons")
 
         if (response.error != null) {
             log.debug("Feil ved introspeksjon av token: ${response.error}")
@@ -84,35 +86,38 @@ sealed class TexasClient(
         tokenEndpointType: TokenEndpointType,
         params: Map<String, String>,
     ): String {
-        val url = when (tokenEndpointType) {
-            TokenEndpointType.M2M -> tokenEndpoint
-            TokenEndpointType.BEHALF_OF -> tokenXEndpoint
-            TokenEndpointType.INTROSPECTION -> error("Cannot get token for introspection. Use introspectToken instead.")
-        }
+        val url =
+            when (tokenEndpointType) {
+                TokenEndpointType.M2M -> tokenEndpoint
+                TokenEndpointType.BEHALF_OF -> tokenXEndpoint
+                TokenEndpointType.INTROSPECTION -> error("Cannot get token for introspection. Use introspectToken instead.")
+            }
 
-        val response = try {
-            texasRestClient
-                .post()
-                .uri(url)
-                .body(params)
-                .retrieve()
-                .body(TokenResponse.Success::class.java)
-                ?.also {
-                    log.debug("Hentet {}-token fra Texas", tokenEndpointType)
-                }
-                ?: error("Tom respons fra Texas ved henting av $tokenEndpointType-token")
-        } catch (e: RestClientResponseException) {
-            val error = try {
-                e.getResponseBodyAs(TokenErrorResponse::class.java)
-            } catch (ex: Exception) {
-                null
-            } ?: TokenErrorResponse(
-                "Unknown error: ${e.responseBodyAsString}",
-                e.message ?: "No message",
-            )
+        val response =
+            try {
+                texasRestClient
+                    .post()
+                    .uri(url)
+                    .body(params)
+                    .retrieve()
+                    .body(TokenResponse.Success::class.java)
+                    ?.also {
+                        log.debug("Hentet {}-token fra Texas", tokenEndpointType)
+                    }
+                    ?: error("Tom respons fra Texas ved henting av $tokenEndpointType-token")
+            } catch (e: RestClientResponseException) {
+                val error =
+                    try {
+                        e.getResponseBodyAs(TokenErrorResponse::class.java)
+                    } catch (ex: Exception) {
+                        null
+                    } ?: TokenErrorResponse(
+                        "Unknown error: ${e.responseBodyAsString}",
+                        e.message ?: "No message",
+                    )
 
-            TokenResponse.Error(error, e.statusCode)
-        }
+                TokenResponse.Error(error, e.statusCode)
+            }
 
         return when (response) {
             is TokenResponse.Success -> {

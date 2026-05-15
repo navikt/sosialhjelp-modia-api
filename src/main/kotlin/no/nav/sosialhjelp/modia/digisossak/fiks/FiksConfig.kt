@@ -25,30 +25,37 @@ class FiksConfig(
 ) {
     @Bean
     fun fiksRestClient(): RestClient {
-        val connectionManager = PoolingHttpClientConnectionManager().apply {
-            maxTotal = 100
-            defaultMaxPerRoute = 100
-            setDefaultConnectionConfig(
-                ConnectionConfig.custom()
-                    .setConnectTimeout(Timeout.of(30, TimeUnit.SECONDS))
-                    .setSocketTimeout(Timeout.of(30, TimeUnit.SECONDS))
-                    .build()
-            )
-        }
+        val connectionManager =
+            PoolingHttpClientConnectionManager().apply {
+                maxTotal = 100
+                defaultMaxPerRoute = 100
+                setDefaultConnectionConfig(
+                    ConnectionConfig
+                        .custom()
+                        .setConnectTimeout(Timeout.of(30, TimeUnit.SECONDS))
+                        .setSocketTimeout(Timeout.of(30, TimeUnit.SECONDS))
+                        .build(),
+                )
+            }
 
-        val requestConfig = RequestConfig.custom()
-            .setResponseTimeout(Timeout.of(2, TimeUnit.MINUTES))
-            .setConnectionRequestTimeout(Timeout.of(30, TimeUnit.SECONDS))
-            .build()
+        val requestConfig =
+            RequestConfig
+                .custom()
+                .setResponseTimeout(Timeout.of(2, TimeUnit.MINUTES))
+                .setConnectionRequestTimeout(Timeout.of(30, TimeUnit.SECONDS))
+                .build()
 
-        val httpClient = HttpClients.custom()
-            .setConnectionManager(connectionManager)
-            .setDefaultRequestConfig(requestConfig)
-            .build()
+        val httpClient =
+            HttpClients
+                .custom()
+                .setConnectionManager(connectionManager)
+                .setDefaultRequestConfig(requestConfig)
+                .build()
 
         val requestFactory = HttpComponentsClientHttpRequestFactory(httpClient)
 
-        return RestClient.builder()
+        return RestClient
+            .builder()
             .requestFactory(requestFactory)
             .baseUrl(clientProperties.fiksDigisosEndpointUrl)
             .build()
@@ -58,11 +65,12 @@ class FiksConfig(
     fun fiksRetryTemplate(): RetryTemplate {
         val retryPolicy = SimpleRetryPolicy(maxAttempts, mapOf(HttpServerErrorException::class.java to true), true)
 
-        val backOffPolicy = ExponentialBackOffPolicy().apply {
-            initialInterval = initialDelay
-            multiplier = 2.0
-            maxInterval = 10000L
-        }
+        val backOffPolicy =
+            ExponentialBackOffPolicy().apply {
+                initialInterval = initialDelay
+                multiplier = 2.0
+                maxInterval = 10000L
+            }
 
         return RetryTemplate().apply {
             setRetryPolicy(retryPolicy)

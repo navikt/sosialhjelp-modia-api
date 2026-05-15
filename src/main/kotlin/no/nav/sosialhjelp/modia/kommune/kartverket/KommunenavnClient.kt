@@ -12,17 +12,18 @@ class KommunenavnClient(
 ) {
     private val kommunenavnRestClient = restClientBuilder.build()
 
-    fun getAll(): KommunenavnProperties = try {
-        kommunenavnRestClient
-            .get()
-            .uri("https://register.geonorge.no/api/sosi-kodelister/inndelinger/inndelingsbase/kommunenummer.json")
-            .retrieve()
-            .body<KommunenavnProperties>()
-            ?: throw RuntimeException("Kartverket - tom respons ved henting av kommunenavn")
-    } catch (e: RestClientResponseException) {
-        log.warn("Kartverket - henting av info feilet:", e)
-        throw e
-    }
+    fun getAll(): KommunenavnProperties =
+        try {
+            kommunenavnRestClient
+                .get()
+                .uri("https://register.geonorge.no/api/sosi-kodelister/inndelinger/inndelingsbase/kommunenummer.json")
+                .retrieve()
+                .body<KommunenavnProperties>()
+                ?: throw RuntimeException("Kartverket - tom respons ved henting av kommunenavn")
+        } catch (e: RestClientResponseException) {
+            log.warn("Kartverket - henting av info feilet:", e)
+            throw e
+        }
 
     companion object {
         private val log by logger()

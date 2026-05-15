@@ -40,9 +40,11 @@ import java.time.LocalDateTime
 
 internal class FiksClientTest {
     private val mockWebServer = MockWebServer()
-    private val fiksRestClient = RestClient.builder()
-        .baseUrl(mockWebServer.url("/").toString())
-        .build()
+    private val fiksRestClient =
+        RestClient
+            .builder()
+            .baseUrl(mockWebServer.url("/").toString())
+            .build()
     private val clientProperties: ClientProperties = mockk(relaxed = true)
     private val auditService: AuditService = mockk()
     private val redisService: RedisService = mockk()
@@ -50,10 +52,11 @@ internal class FiksClientTest {
     private val maxRetryAttempts = 2
     private val documentTTL = 360L
 
-    private val fiksRetryTemplate = RetryTemplate().apply {
-        setRetryPolicy(SimpleRetryPolicy(maxRetryAttempts + 1, mapOf(HttpServerErrorException::class.java to true), true))
-        setBackOffPolicy(FixedBackOffPolicy().apply { backOffPeriod = 10 }) // Short delay for tests
-    }
+    private val fiksRetryTemplate =
+        RetryTemplate().apply {
+            setRetryPolicy(SimpleRetryPolicy(maxRetryAttempts + 1, mapOf(HttpServerErrorException::class.java to true), true))
+            setBackOffPolicy(FixedBackOffPolicy().apply { backOffPeriod = 10 }) // Short delay for tests
+        }
 
     private val fiksClient =
         FiksClientImpl(

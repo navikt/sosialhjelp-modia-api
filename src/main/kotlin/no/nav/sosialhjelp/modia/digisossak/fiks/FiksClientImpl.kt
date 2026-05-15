@@ -75,29 +75,30 @@ class FiksClientImpl(
     private fun hentDigisosSakFraFiks(digisosId: String): DigisosSak {
         val sporingsId = genererSporingsId()
 
-        val digisosSak: DigisosSak = try {
-            fiksRetryTemplate.execute<DigisosSak, Exception> {
-                fiksRestClient
-                    .get()
-                    .uri(PATH_DIGISOSSAK.plus(sporingsIdQuery), digisosId, sporingsId)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .header(IntegrationUtils.HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
-                    .header(IntegrationUtils.HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
-                    .header("Authorization", BEARER + texasClient.getMaskinportenToken())
-                    .retrieve()
-                    .body<DigisosSak>()
-                    ?: throw FiksServerException(500, "Fiks - DigisosSak nedlasting feilet!", null)
+        val digisosSak: DigisosSak =
+            try {
+                fiksRetryTemplate.execute<DigisosSak, Exception> {
+                    fiksRestClient
+                        .get()
+                        .uri(PATH_DIGISOSSAK.plus(sporingsIdQuery), digisosId, sporingsId)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(IntegrationUtils.HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
+                        .header(IntegrationUtils.HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
+                        .header("Authorization", BEARER + texasClient.getMaskinportenToken())
+                        .retrieve()
+                        .body<DigisosSak>()
+                        ?: throw FiksServerException(500, "Fiks - DigisosSak nedlasting feilet!", null)
+                }
+            } catch (e: HttpClientErrorException) {
+                log.warn("Fiks - hentDigisosSak feilet - ${e.message?.maskerFnr}", e)
+                if (e.statusCode == HttpStatus.NOT_FOUND) {
+                    throw FiksNotFoundException(e.message?.maskerFnr, e)
+                }
+                throw FiksClientException(e.statusCode.value(), e.message?.maskerFnr, e)
+            } catch (e: HttpServerErrorException) {
+                log.warn("Fiks - hentDigisosSak feilet - ${e.message?.maskerFnr}", e)
+                throw FiksServerException(e.statusCode.value(), e.message?.maskerFnr, e)
             }
-        } catch (e: HttpClientErrorException) {
-            log.warn("Fiks - hentDigisosSak feilet - ${e.message?.maskerFnr}", e)
-            if (e.statusCode == HttpStatus.NOT_FOUND) {
-                throw FiksNotFoundException(e.message?.maskerFnr, e)
-            }
-            throw FiksClientException(e.statusCode.value(), e.message?.maskerFnr, e)
-        } catch (e: HttpServerErrorException) {
-            log.warn("Fiks - hentDigisosSak feilet - ${e.message?.maskerFnr}", e)
-            throw FiksServerException(e.statusCode.value(), e.message?.maskerFnr, e)
-        }
 
         if (!isDigisosSakNewerThanMonths(digisosSak, 15)) {
             throw FiksNotFoundException("Fiks - DigisosSak er for gammel!", null)
@@ -141,26 +142,27 @@ class FiksClientImpl(
     ): T {
         val sporingsId = genererSporingsId()
 
-        val dokument = try {
-            fiksRetryTemplate.execute<T, Exception> {
-                fiksRestClient
-                    .get()
-                    .uri(PATH_DOKUMENT.plus(sporingsIdQuery), digisosId, dokumentlagerId, sporingsId)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .header(IntegrationUtils.HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
-                    .header(IntegrationUtils.HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
-                    .header("Authorization", BEARER + texasClient.getMaskinportenToken())
-                    .retrieve()
-                    .body(requestedClass)
-                    ?: throw FiksServerException(500, "Fiks - Dokument nedlasting feilet!", null)
+        val dokument =
+            try {
+                fiksRetryTemplate.execute<T, Exception> {
+                    fiksRestClient
+                        .get()
+                        .uri(PATH_DOKUMENT.plus(sporingsIdQuery), digisosId, dokumentlagerId, sporingsId)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(IntegrationUtils.HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
+                        .header(IntegrationUtils.HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
+                        .header("Authorization", BEARER + texasClient.getMaskinportenToken())
+                        .retrieve()
+                        .body(requestedClass)
+                        ?: throw FiksServerException(500, "Fiks - Dokument nedlasting feilet!", null)
+                }
+            } catch (e: HttpClientErrorException) {
+                log.warn("Fiks - hentDokument feilet - ${e.message?.maskerFnr}", e)
+                throw FiksClientException(e.statusCode.value(), e.message?.maskerFnr, e)
+            } catch (e: HttpServerErrorException) {
+                log.warn("Fiks - hentDokument feilet - ${e.message?.maskerFnr}", e)
+                throw FiksServerException(e.statusCode.value(), e.message?.maskerFnr, e)
             }
-        } catch (e: HttpClientErrorException) {
-            log.warn("Fiks - hentDokument feilet - ${e.message?.maskerFnr}", e)
-            throw FiksClientException(e.statusCode.value(), e.message?.maskerFnr, e)
-        } catch (e: HttpServerErrorException) {
-            log.warn("Fiks - hentDokument feilet - ${e.message?.maskerFnr}", e)
-            throw FiksServerException(e.statusCode.value(), e.message?.maskerFnr, e)
-        }
 
         log.info("Hentet dokument (${requestedClass.simpleName}) fra Fiks, dokumentlagerId $dokumentlagerId")
         return dokument
@@ -178,28 +180,29 @@ class FiksClientImpl(
     override fun hentAlleDigisosSaker(fnr: String): List<DigisosSak> {
         val sporingsId = genererSporingsId()
 
-        val digisosSaker: List<DigisosSak> = try {
-            fiksRetryTemplate.execute<List<DigisosSak>, Exception> {
-                fiksRestClient
-                    .post()
-                    .uri(PATH_ALLE_DIGISOSSAKER.plus(sporingsIdQuery), sporingsId)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(IntegrationUtils.HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
-                    .header(IntegrationUtils.HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
-                    .header("Authorization", BEARER + texasClient.getMaskinportenToken())
-                    .body(Fnr(fnr))
-                    .retrieve()
-                    .body(object : ParameterizedTypeReference<List<DigisosSak>>() {})
-                    ?: throw FiksServerException(500, "Fiks - AlleDigisosSaker nedlasting feilet!", null)
+        val digisosSaker: List<DigisosSak> =
+            try {
+                fiksRetryTemplate.execute<List<DigisosSak>, Exception> {
+                    fiksRestClient
+                        .post()
+                        .uri(PATH_ALLE_DIGISOSSAKER.plus(sporingsIdQuery), sporingsId)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(IntegrationUtils.HEADER_INTEGRASJON_ID, clientProperties.fiksIntegrasjonId)
+                        .header(IntegrationUtils.HEADER_INTEGRASJON_PASSORD, clientProperties.fiksIntegrasjonpassord)
+                        .header("Authorization", BEARER + texasClient.getMaskinportenToken())
+                        .body(Fnr(fnr))
+                        .retrieve()
+                        .body(object : ParameterizedTypeReference<List<DigisosSak>>() {})
+                        ?: throw FiksServerException(500, "Fiks - AlleDigisosSaker nedlasting feilet!", null)
+                }
+            } catch (e: HttpClientErrorException) {
+                log.warn("Fiks - hentAlleDigisosSaker feilet - ${e.message?.maskerFnr}", e)
+                throw FiksClientException(e.statusCode.value(), e.message?.maskerFnr, e)
+            } catch (e: HttpServerErrorException) {
+                log.warn("Fiks - hentAlleDigisosSaker feilet - ${e.message?.maskerFnr}", e)
+                throw FiksServerException(e.statusCode.value(), e.message?.maskerFnr, e)
             }
-        } catch (e: HttpClientErrorException) {
-            log.warn("Fiks - hentAlleDigisosSaker feilet - ${e.message?.maskerFnr}", e)
-            throw FiksClientException(e.statusCode.value(), e.message?.maskerFnr, e)
-        } catch (e: HttpServerErrorException) {
-            log.warn("Fiks - hentAlleDigisosSaker feilet - ${e.message?.maskerFnr}", e)
-            throw FiksServerException(e.statusCode.value(), e.message?.maskerFnr, e)
-        }
 
         log.info("Hentet ${digisosSaker.size} saker fra Fiks (før filter.)")
         return digisosSaker

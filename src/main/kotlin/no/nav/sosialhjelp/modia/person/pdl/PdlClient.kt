@@ -35,10 +35,11 @@ class PdlClientImpl(
     private val texasClient: TexasClient,
     private val clientProperties: ClientProperties,
 ) : PdlClient {
-    private val pdlRestClient = restClientBuilder
-        .baseUrl(clientProperties.pdlEndpointUrl)
-        .defaultHeader(HEADER_BEHANDLINGSNUMMER, BEHANDLINGSNUMMER_MODIA)
-        .build()
+    private val pdlRestClient =
+        restClientBuilder
+            .baseUrl(clientProperties.pdlEndpointUrl)
+            .defaultHeader(HEADER_BEHANDLINGSNUMMER, BEHANDLINGSNUMMER_MODIA)
+            .build()
 
     override fun hentPerson(
         ident: String,
@@ -46,21 +47,22 @@ class PdlClientImpl(
     ): PdlHentPerson? {
         val query = getResourceAsString("/pdl/hentPerson.graphql")
 
-        val pdlPersonResponse = try {
-            val azureAdToken = texasClient.getTokenXToken(clientProperties.pdlScope, veilederToken, IdentityProvider.ENTRA_ID)
+        val pdlPersonResponse =
+            try {
+                val azureAdToken = texasClient.getTokenXToken(clientProperties.pdlScope, veilederToken, IdentityProvider.ENTRA_ID)
 
-            pdlRestClient
-                .post()
-                .contentType(APPLICATION_JSON)
-                .header(AUTHORIZATION, BEARER + azureAdToken)
-                .header(HEADER_CALL_ID, getCallId())
-                .body(PdlRequest(query, Variables(ident)))
-                .retrieve()
-                .body<PdlPersonResponse>()
-        } catch (e: RestClientResponseException) {
-            log.error("PDL - ${e.statusCode} ${e.statusText} feil ved henting av navn fra PDL", e)
-            throw PdlException(e.message)
-        }
+                pdlRestClient
+                    .post()
+                    .contentType(APPLICATION_JSON)
+                    .header(AUTHORIZATION, BEARER + azureAdToken)
+                    .header(HEADER_CALL_ID, getCallId())
+                    .body(PdlRequest(query, Variables(ident)))
+                    .retrieve()
+                    .body<PdlPersonResponse>()
+            } catch (e: RestClientResponseException) {
+                log.error("PDL - ${e.statusCode} ${e.statusText} feil ved henting av navn fra PDL", e)
+                throw PdlException(e.message)
+            }
 
         checkForPdlApiErrors(pdlPersonResponse)
 

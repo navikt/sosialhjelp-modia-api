@@ -33,9 +33,10 @@ class NorgClientImpl(
     clientProperties: ClientProperties,
     private val redisService: RedisService,
 ) : NorgClient {
-    private val norgRestClient = restClientBuilder
-        .baseUrl(clientProperties.norgEndpointUrl)
-        .build()
+    private val norgRestClient =
+        restClientBuilder
+            .baseUrl(clientProperties.norgEndpointUrl)
+            .build()
 
     override fun hentNavEnhet(enhetsnr: String): NavEnhet? {
         if (enhetsnr.isEmpty()) return null
@@ -46,34 +47,36 @@ class NorgClientImpl(
     private fun hentNavEnhetFraCache(enhetsnr: String): NavEnhet? =
         redisService.get(RedisKeyType.NORG_CLIENT, "$NAVENHET_CACHE_KEY_PREFIX$enhetsnr", NavEnhet::class.java)
 
-    private fun hentNavEnhetFraServer(enhetsnr: String): NavEnhet = try {
-        norgRestClient
-            .get()
-            .uri("/enhet/{enhetsnr}", enhetsnr)
-            .header(HEADER_CALL_ID, getCallId())
-            .retrieve()
-            .body<NavEnhet>()
-            ?: throw NorgException("Norg2 - tom respons for enhet $enhetsnr", null)
-    } catch (e: RestClientResponseException) {
-        log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
-        throw NorgException(e.message, e)
-    }.also {
-        log.debug("Norg2 - GET enhet $enhetsnr OK")
-        lagreNavEnhetTilCache(enhetsnr, it)
-    }
+    private fun hentNavEnhetFraServer(enhetsnr: String): NavEnhet =
+        try {
+            norgRestClient
+                .get()
+                .uri("/enhet/{enhetsnr}", enhetsnr)
+                .header(HEADER_CALL_ID, getCallId())
+                .retrieve()
+                .body<NavEnhet>()
+                ?: throw NorgException("Norg2 - tom respons for enhet $enhetsnr", null)
+        } catch (e: RestClientResponseException) {
+            log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
+            throw NorgException(e.message, e)
+        }.also {
+            log.debug("Norg2 - GET enhet $enhetsnr OK")
+            lagreNavEnhetTilCache(enhetsnr, it)
+        }
 
-    override fun hentAlleNavEnheter(): List<NavEnhet> = try {
-        norgRestClient
-            .get()
-            .uri("/enhet?enhetStatusListe=AKTIV")
-            .header(HEADER_CALL_ID, getCallId())
-            .retrieve()
-            .body(object : ParameterizedTypeReference<List<NavEnhet>>() {})
-            ?: throw NorgException("Norg2 - tom respons for alle enheter", null)
-    } catch (e: RestClientResponseException) {
-        log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
-        throw NorgException(e.message, e)
-    }.also { lagreNavEnhetListeTilCache(it) }
+    override fun hentAlleNavEnheter(): List<NavEnhet> =
+        try {
+            norgRestClient
+                .get()
+                .uri("/enhet?enhetStatusListe=AKTIV")
+                .header(HEADER_CALL_ID, getCallId())
+                .retrieve()
+                .body(object : ParameterizedTypeReference<List<NavEnhet>>() {})
+                ?: throw NorgException("Norg2 - tom respons for alle enheter", null)
+        } catch (e: RestClientResponseException) {
+            log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
+            throw NorgException(e.message, e)
+        }.also { lagreNavEnhetListeTilCache(it) }
 
     override fun ping() {
         norgRestClient
