@@ -58,7 +58,6 @@ dependencies {
 //    HTTP Client
     implementation(libs.httpclient5)
     implementation(libs.spring.retry)
-    implementation(libs.spring.boot.restclient)
 
 //    Test
     testImplementation(libs.spring.boot.test)
