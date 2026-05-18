@@ -1,6 +1,7 @@
 package no.nav.sosialhjelp.modia.digisossak.fiks
 
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
+import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.apache.hc.client5.http.config.ConnectionConfig
 import org.apache.hc.client5.http.config.RequestConfig
 import org.apache.hc.client5.http.impl.classic.HttpClients
@@ -17,8 +18,6 @@ import org.springframework.retry.support.RetryTemplate
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestClient
 import java.util.concurrent.TimeUnit
-
-import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 
 @Configuration
 class FiksConfig(
@@ -64,8 +63,7 @@ class FiksConfig(
             .baseUrl(clientProperties.fiksDigisosEndpointUrl)
             .configureMessageConverters { configurer ->
                 configurer.withJsonConverter(JacksonJsonHttpMessageConverter(sosialhjelpJsonMapper))
-            }
-            .build()
+            }.build()
     }
 
     @Bean
