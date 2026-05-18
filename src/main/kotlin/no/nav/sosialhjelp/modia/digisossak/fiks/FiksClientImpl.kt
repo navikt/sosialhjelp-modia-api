@@ -19,7 +19,6 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEARER
 import no.nav.sosialhjelp.modia.utils.RequestUtils
 import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -193,7 +192,7 @@ class FiksClientImpl(
                         .header("Authorization", BEARER + texasClient.getMaskinportenToken())
                         .body(Fnr(fnr))
                         .retrieve()
-                        .body(object : ParameterizedTypeReference<List<DigisosSak>>() {})
+                        .body<List<DigisosSak>>()
                         ?: throw FiksServerException(500, "Fiks - AlleDigisosSaker nedlasting feilet!", null)
                 }
             } catch (e: HttpClientErrorException) {
