@@ -10,12 +10,15 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter
 import org.springframework.retry.backoff.ExponentialBackOffPolicy
 import org.springframework.retry.policy.SimpleRetryPolicy
 import org.springframework.retry.support.RetryTemplate
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestClient
 import java.util.concurrent.TimeUnit
+
+import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 
 @Configuration
 class FiksConfig(
@@ -59,6 +62,9 @@ class FiksConfig(
             .clone()
             .requestFactory(requestFactory)
             .baseUrl(clientProperties.fiksDigisosEndpointUrl)
+            .configureMessageConverters { configurer ->
+                configurer.withJsonConverter(JacksonJsonHttpMessageConverter(sosialhjelpJsonMapper))
+            }
             .build()
     }
 
