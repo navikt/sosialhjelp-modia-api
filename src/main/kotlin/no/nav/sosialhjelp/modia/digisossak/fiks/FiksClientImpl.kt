@@ -192,7 +192,9 @@ class FiksClientImpl(
                         .header("Authorization", BEARER + texasClient.getMaskinportenToken())
                         .body(Fnr(fnr))
                         .retrieve()
-                        .body<List<DigisosSak>>()
+                        .also {
+                            log.info("Svaret fra Fiks. Status: ${it.toBodilessEntity().statusCode}. Innhold: ${it.body<String>()}")
+                        }.body<List<DigisosSak>>()
                         ?: throw FiksServerException(500, "Fiks - AlleDigisosSaker nedlasting feilet!", null)
                 }
             } catch (e: HttpClientErrorException) {
