@@ -41,7 +41,7 @@ internal class KommuneServiceTest {
     }
 
     @Test
-    internal suspend fun `hent KommuneInfo fra cache`() {
+    internal fun `hent KommuneInfo fra cache`() {
         val kommuneInfo: KommuneInfo = sosialhjelpJsonMapper.readValue(kommuneInfoResponseString)
         every { redisService.get<KommuneInfo>(any(), any(), any()) } returns kommuneInfo
 
@@ -54,7 +54,7 @@ internal class KommuneServiceTest {
     }
 
     @Test
-    internal suspend fun `hent KommuneInfo fra client`() {
+    internal fun `hent KommuneInfo fra client`() {
         coEvery { kommuneInfoClient.getKommuneInfo(any()) } returns
             sosialhjelpJsonMapper.readValue(kommuneInfoResponseString)
 
@@ -67,7 +67,7 @@ internal class KommuneServiceTest {
     }
 
     @Test
-    suspend fun `behandlingsansvarlig returneres med kommune i kommunenavnet det ikke finnes i kommune info`() {
+    fun `behandlingsansvarlig returneres med kommune i kommunenavnet det ikke finnes i kommune info`() {
         val kommuneInfo = KommuneInfo("", true, true, false, false, null, true, kommunenavnUtenKommuneINavnet)
         coEvery { kommuneInfoClient.getKommuneInfo(kommuneNr) } returns kommuneInfo
 
@@ -76,7 +76,7 @@ internal class KommuneServiceTest {
     }
 
     @Test
-    suspend fun `behandlingsansvarlig med kommune i kommunenavnet returneres med kommune i navnet`() {
+    fun `behandlingsansvarlig med kommune i kommunenavnet returneres med kommune i navnet`() {
         val kommuneInfo = KommuneInfo("", true, true, false, false, null, true, kommunenavnMedKommuneINavnet)
         coEvery { kommuneInfoClient.getKommuneInfo(kommuneNr) } returns kommuneInfo
 
@@ -85,7 +85,7 @@ internal class KommuneServiceTest {
     }
 
     @Test
-    suspend fun `ingen behandlinsansvarlig satt returnerer null`() {
+    fun `ingen behandlinsansvarlig satt returnerer null`() {
         val kommuneInfo = KommuneInfo("", true, true, false, false, null, true, null)
         coEvery { kommuneInfoClient.getKommuneInfo(kommuneNr) } returns kommuneInfo
 

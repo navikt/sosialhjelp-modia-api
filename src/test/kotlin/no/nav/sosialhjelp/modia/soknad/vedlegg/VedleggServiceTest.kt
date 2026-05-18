@@ -62,7 +62,7 @@ internal class VedleggServiceTest {
     }
 
     @Test
-    suspend fun `skal returnere emptylist hvis soknad har null vedlegg og ingen ettersendelser finnes`() {
+    fun `skal returnere emptylist hvis soknad har null vedlegg og ingen ettersendelser finnes`() {
         val model = InternalDigisosSoker()
 
         coEvery { eventService.createModel(any()) } returns model
@@ -78,7 +78,7 @@ internal class VedleggServiceTest {
     }
 
     @Test
-    suspend fun `skal kun returnere soknadens vedlegg hvis ingen ettersendelser finnes`() {
+    fun `skal kun returnere soknadens vedlegg hvis ingen ettersendelser finnes`() {
         val model = InternalDigisosSoker()
 
         coEvery { eventService.createModel(any()) } returns model
@@ -96,7 +96,7 @@ internal class VedleggServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere vekk vedlegg som ikke er LastetOpp`() {
+    fun `skal filtrere vekk vedlegg som ikke er LastetOpp`() {
         val model = InternalDigisosSoker()
 
         coEvery { eventService.createModel(any()) } returns model
@@ -120,7 +120,7 @@ internal class VedleggServiceTest {
     }
 
     @Test
-    suspend fun `skal kun returne ettersendte vedlegg hvis soknaden ikke har noen vedlegg`() {
+    fun `skal kun returne ettersendte vedlegg hvis soknaden ikke har noen vedlegg`() {
         val model = InternalDigisosSoker()
 
         coEvery { eventService.createModel(any()) } returns model
@@ -146,7 +146,7 @@ internal class VedleggServiceTest {
     }
 
     @Test
-    suspend fun `skal hente alle vedlegg for digisosSak`() {
+    fun `skal hente alle vedlegg for digisosSak`() {
         val model = InternalDigisosSoker()
 
         coEvery { eventService.createModel(any()) } returns model
@@ -183,7 +183,7 @@ internal class VedleggServiceTest {
     }
 
     @Test
-    suspend fun `like filnavn i DokumentInfoList vil resultere i at de returneres for hver JsonFil med samme filnavn`() {
+    fun `like filnavn i DokumentInfoList vil resultere i at de returneres for hver JsonFil med samme filnavn`() {
         val model = InternalDigisosSoker()
 
         coEvery { eventService.createModel(any()) } returns model
@@ -236,7 +236,7 @@ internal class VedleggServiceTest {
     }
 
     @Test
-    suspend fun `skal knytte innsendelsesfrist fra oppgave til vedlegg`() {
+    fun `skal knytte innsendelsesfrist fra oppgave til vedlegg`() {
         val frist = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(14)
         val frist2 = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(21)
         val datoLagtTil = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(2)
@@ -276,7 +276,7 @@ internal class VedleggServiceTest {
     }
 
     @Test
-    internal suspend fun `utestaaende oppgaver skal mappes som manglende vedlegg`() {
+    internal fun `utestaaende oppgaver skal mappes som manglende vedlegg`() {
         val frist = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(14)
         val frist2 = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(21)
         val datoLagtTil = LocalDateTime.ofInstant(tid_soknad, zoneIdOslo).plusDays(2)
