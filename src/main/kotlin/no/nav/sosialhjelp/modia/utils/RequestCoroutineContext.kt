@@ -1,10 +1,10 @@
 package no.nav.sosialhjelp.modia.utils
 
-import kotlin.coroutines.AbstractCoroutineContextElement
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.ThreadContextElement
 import org.springframework.web.context.request.RequestAttributes
 import org.springframework.web.context.request.RequestContextHolder
+import kotlin.coroutines.AbstractCoroutineContextElement
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Coroutine context element that propagates Spring's RequestContextHolder
@@ -21,7 +21,8 @@ import org.springframework.web.context.request.RequestContextHolder
  */
 class RequestCoroutineContext(
     private val requestAttributes: RequestAttributes? = RequestContextHolder.getRequestAttributes(),
-) : ThreadContextElement<RequestAttributes?>, AbstractCoroutineContextElement(Key) {
+) : AbstractCoroutineContextElement(Key),
+    ThreadContextElement<RequestAttributes?> {
     companion object Key : CoroutineContext.Key<RequestCoroutineContext>
 
     override fun updateThreadContext(context: CoroutineContext): RequestAttributes? {
