@@ -3,7 +3,6 @@ package no.nav.sosialhjelp.modia.utbetalinger
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.digisossak.domain.Dokumentasjonkrav
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
@@ -1196,8 +1195,7 @@ internal class UtbetalingerServiceTest {
         coEvery { digisosSak.sistEndret } returns ZonedDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli()
 
         coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak)
-// AssertJ støtter ikke functions
-        assertThatThrownBy { runBlocking { service.hentAlleUtbetalinger(fnr, 3, fom, fom.minusDays(1)) } }
+        assertThatThrownBy { service.hentAlleUtbetalinger(fnr, 3, fom, fom.minusDays(1)) }
             .isInstanceOf(IllegalStateException::class.java)
     }
 }
