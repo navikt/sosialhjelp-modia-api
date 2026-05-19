@@ -41,7 +41,7 @@ internal class SoknadVedleggServiceTest {
     }
 
     @Test
-    fun `skal hente soknadsvedlegg filtrert pa status for digisosSak`() {
+    suspend fun `skal hente soknadsvedlegg filtrert pa status for digisosSak`() {
         every { mockDigisosSak.originalSoknadNAV } returns originalSoknadMedVedleggKrevesOgLastetOpp
 
         val lastetOppList = service.hentSoknadVedleggMedStatus(mockDigisosSak, LASTET_OPP_STATUS)

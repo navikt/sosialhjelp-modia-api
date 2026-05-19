@@ -4,14 +4,18 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.logger
-import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
+import org.springframework.http.HttpStatusCode
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
-import org.springframework.web.client.RestClient
-import org.springframework.web.client.body
+import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.WebClientResponseException
+import org.springframework.web.reactive.function.client.awaitBody
 
 enum class TokenEndpointType {
     // For kall uten sluttbrukers kontekst
@@ -25,32 +29,25 @@ enum class TokenEndpointType {
 }
 
 sealed class TexasClient(
+    texasWebClientBuilder: WebClient.Builder,
     private val tokenEndpoint: String,
     private val tokenXEndpoint: String,
 ) {
     protected val log by logger()
 
-    private val texasRestClient =
-        RestClient
-            .builder()
-            .defaultHeaders { it.contentType = MediaType.APPLICATION_JSON }
-            .build()
+    open suspend fun getMaskinportenToken(): String = getToken(TokenEndpointType.M2M, maskinportenParams)
 
-    open fun getMaskinportenToken(): String = getToken(TokenEndpointType.M2M, maskinportenParams)
-
-    fun introspectToken(
+    suspend fun introspectToken(
         token: String,
         identityProvider: IdentityProvider,
     ): IntrospectionResponse {
         val response: IntrospectionResponse =
-            texasRestClient
+            texasWebClient
                 .post()
-                .uri(tokenEndpoint)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(mapOf("token" to token, "identity_provider" to identityProvider.value))
+                .body(BodyInserters.fromValue(mapOf("token" to token, "identity_provider" to identityProvider.value)))
                 .retrieve()
-                .body<IntrospectionResponse>()
-                ?: error("Feil ved introspeksjon av token: tom respons")
+                .awaitBody()
 
         if (response.error != null) {
             log.debug("Feil ved introspeksjon av token: ${response.error}")
@@ -63,7 +60,7 @@ sealed class TexasClient(
         return response
     }
 
-    open fun getTokenXToken(
+    open suspend fun getTokenXToken(
         target: String,
         userToken: String,
         identityProvider: IdentityProvider,
@@ -73,6 +70,14 @@ sealed class TexasClient(
             getTokenXParams(target, userToken, identityProvider),
         )
 
+    private val texasWebClient =
+        texasWebClientBuilder
+            .defaultHeaders {
+                it.contentType = MediaType.APPLICATION_JSON
+            }.codecs {
+                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+            }.build()
+
     private val maskinportenParams: Map<String, String> = mapOf("identity_provider" to "maskinporten", "target" to "ks:fiks")
 
     private fun getTokenXParams(
@@ -81,76 +86,95 @@ sealed class TexasClient(
         identityProvider: IdentityProvider,
     ): Map<String, String> = mapOf("identity_provider" to identityProvider.value, "target" to target, "user_token" to userToken)
 
-    protected fun getToken(
+    protected suspend fun getToken(
         tokenEndpointType: TokenEndpointType,
         params: Map<String, String>,
-    ): String {
-        val url =
-            when (tokenEndpointType) {
-                TokenEndpointType.M2M -> tokenEndpoint
-                TokenEndpointType.BEHALF_OF -> tokenXEndpoint
-                TokenEndpointType.INTROSPECTION -> error("Cannot get token for introspection. Use introspectToken instead.")
-            }
-
-        return texasRestClient
-            .post()
-            .uri(url)
-            .body(params)
-            .retrieve()
-            .onStatus({ it.isError }) { _, response ->
-                val error =
-                    runCatching {
-                        sosialhjelpJsonMapper.readValue(response.body, TokenErrorResponse::class.java)
-                    }.getOrNull()
-                        ?: TokenErrorResponse(
-                            "unknown_error",
-                            "Status: ${response.statusCode}",
+    ): String =
+        withContext(Dispatchers.IO) {
+            val url =
+                when (tokenEndpointType) {
+                    TokenEndpointType.M2M -> tokenEndpoint
+                    TokenEndpointType.BEHALF_OF -> tokenXEndpoint
+                    TokenEndpointType.INTROSPECTION -> error("Cannot get token for introspection. Use introspectToken instead.")
+                }
+            val response =
+                try {
+                    texasWebClient
+                        .post()
+                        .uri(url)
+                        .bodyValue(params)
+                        .retrieve()
+                        .awaitBody<TokenResponse.Success>()
+                        .also {
+                            log.debug("Hentet {}-token fra Texas", tokenEndpointType)
+                        }
+                } catch (e: WebClientResponseException) {
+                    val error =
+                        e.getResponseBodyAs(TokenErrorResponse::class.java) ?: TokenErrorResponse(
+                            "Unknown error: ${e.responseBodyAsString}",
+                            e.message ?: "No message",
                         )
-                error(
-                    "Feil ved henting av $tokenEndpointType-token fra Texas. Statuscode: ${response.statusCode}. Error: $error",
-                )
-            }.body<TokenResponse>()
-            ?.also {
-                log.debug("Hentet {}-token fra Texas", tokenEndpointType)
-            }?.accessToken
-            ?: error("Tom respons fra Texas ved henting av $tokenEndpointType-token")
-    }
+
+                    TokenResponse.Error(error, e.statusCode)
+                }
+
+            when (response) {
+                is TokenResponse.Success -> {
+                    response.accessToken
+                }
+
+                is TokenResponse.Error -> {
+                    error(
+                        "Feil ved henting av $tokenEndpointType-token fra Texas. Statuscode: ${response.status}. Error: ${response.error}",
+                    )
+                }
+            }
+        }
 }
 
 @Component
 @Profile("!(mock-alt|testcontainers)")
 class TexasClientImpl(
-    @param:Value("\${NAIS_TOKEN_ENDPOINT}")
+    texasWebClientBuilder: WebClient.Builder,
+    @param:Value($$"${NAIS_TOKEN_ENDPOINT}")
     private val tokenEndpoint: String,
-    @param:Value("\${NAIS_TOKEN_EXCHANGE_ENDPOINT}")
+    @param:Value($$"${NAIS_TOKEN_EXCHANGE_ENDPOINT}")
     private val tokenXEndpoint: String,
-) : TexasClient(tokenEndpoint, tokenXEndpoint)
+) : TexasClient(texasWebClientBuilder, tokenEndpoint, tokenXEndpoint)
 
 @Component
 @Profile("mock-alt", "testcontainers")
 class MockTexasClient(
-    @param:Value("\${NAIS_TOKEN_ENDPOINT:http://localhost:8081/api/v1/token}")
+    texasWebClientBuilder: WebClient.Builder,
+    @param:Value($$"${NAIS_TOKEN_ENDPOINT:http://localhost:8081/api/v1/token}")
     private val tokenEndpoint: String,
-    @param:Value("\${NAIS_TOKEN_EXCHANGE_ENDPOINT:http://localhost:8081/api/v1/token/exchange}")
+    @param:Value($$"${NAIS_TOKEN_EXCHANGE_ENDPOINT:http://localhost:8081/api/v1/token/exchange}")
     private val tokenXEndpoint: String,
-) : TexasClient(tokenEndpoint, tokenXEndpoint) {
-    override fun getTokenXToken(
+) : TexasClient(texasWebClientBuilder, tokenEndpoint, tokenXEndpoint) {
+    override suspend fun getTokenXToken(
         target: String,
         userToken: String,
         identityProvider: IdentityProvider,
     ): String = "token-x-token"
 
-    override fun getMaskinportenToken(): String = "token"
+    override suspend fun getMaskinportenToken(): String = "token"
 }
 
-data class TokenResponse(
-    @param:JsonProperty("access_token")
-    val accessToken: String,
-    @param:JsonProperty("expires_in")
-    val expiresInSeconds: Int,
-    @param:JsonProperty("token_type")
-    val tokenType: String,
-)
+sealed class TokenResponse {
+    data class Success(
+        @param:JsonProperty("access_token")
+        val accessToken: String,
+        @param:JsonProperty("expires_in")
+        val expiresInSeconds: Int,
+        @param:JsonProperty("token_type")
+        val tokenType: String,
+    ) : TokenResponse()
+
+    data class Error(
+        val error: TokenErrorResponse,
+        val status: HttpStatusCode,
+    ) : TokenResponse()
+}
 
 data class TokenErrorResponse(
     val error: String,

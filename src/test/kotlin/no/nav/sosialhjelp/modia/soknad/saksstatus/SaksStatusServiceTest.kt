@@ -36,7 +36,7 @@ internal class SaksStatusServiceTest {
     }
 
     @Test
-    fun `Skal returnere emptyList hvis model_saker er null`() {
+    suspend fun `Skal returnere emptyList hvis model_saker er null`() {
         val model = InternalDigisosSoker()
         coEvery { eventService.createModel(any()) } returns model
 
@@ -46,7 +46,7 @@ internal class SaksStatusServiceTest {
     }
 
     @Test
-    fun `Skal returnere response med status = UNDER_BEHANDLING`() {
+    suspend fun `Skal returnere response med status = UNDER_BEHANDLING`() {
         val now = LocalDate.now()
         val model = InternalDigisosSoker()
         model.saker.add(
@@ -74,7 +74,7 @@ internal class SaksStatusServiceTest {
     }
 
     @Test
-    fun `Skal returnere response med status = FERDIGBEHANDLET ved vedtakFattet uavhengig av utfallet til vedtakFattet`() {
+    suspend fun `Skal returnere response med status = FERDIGBEHANDLET ved vedtakFattet uavhengig av utfallet til vedtakFattet`() {
         val now = LocalDate.now()
         val model = InternalDigisosSoker()
         model.saker.add(
@@ -110,7 +110,7 @@ internal class SaksStatusServiceTest {
     }
 
     @Test
-    fun `Skal returnere response med status = FERDIGBEHANDLET og vedtaksfilUrl og DEFAULT_TITTEL`() {
+    suspend fun `Skal returnere response med status = FERDIGBEHANDLET og vedtaksfilUrl og DEFAULT_TITTEL`() {
         val now = LocalDate.now()
         val model = InternalDigisosSoker()
         model.saker.add(
@@ -146,7 +146,7 @@ internal class SaksStatusServiceTest {
     }
 
     @Test
-    fun `Skal returnere response med 2 elementer ved 2 Saker`() {
+    suspend fun `Skal returnere response med 2 elementer ved 2 Saker`() {
         val now = LocalDate.now()
         val model = InternalDigisosSoker()
         model.saker.addAll(

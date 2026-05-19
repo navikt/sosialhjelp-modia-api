@@ -9,15 +9,14 @@ import no.nav.sosialhjelp.modia.redis.NAVENHET_CACHE_KEY_PREFIX
 import no.nav.sosialhjelp.modia.redis.NAVENHET_CACHE_TIME_TO_LIVE_SECONDS
 import no.nav.sosialhjelp.modia.redis.RedisKeyType
 import no.nav.sosialhjelp.modia.redis.RedisService
+import no.nav.sosialhjelp.modia.typeRef
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.context.annotation.Profile
-import org.springframework.core.ParameterizedTypeReference
 import org.springframework.stereotype.Component
-import org.springframework.web.client.RestClient
-import org.springframework.web.client.RestClientException
-import org.springframework.web.client.RestClientResponseException
-import org.springframework.web.client.body
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.WebClientResponseException
+import org.springframework.web.reactive.function.client.bodyToMono
 
 interface NorgClient {
     fun hentNavEnhet(enhetsnr: String): NavEnhet?
@@ -30,14 +29,15 @@ interface NorgClient {
 @Profile("!local")
 @Component
 class NorgClientImpl(
-    restClientBuilder: RestClient.Builder,
+    webClientBuilder: WebClient.Builder,
     clientProperties: ClientProperties,
     private val redisService: RedisService,
 ) : NorgClient {
-    private val norgRestClient =
-        restClientBuilder
-            .clone()
-            .baseUrl(clientProperties.norgEndpointUrl)
+    private val norgWebClient =
+        webClientBuilder
+            .codecs {
+                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+            }.baseUrl(clientProperties.norgEndpointUrl)
             .build()
 
     override fun hentNavEnhet(enhetsnr: String): NavEnhet? {
@@ -50,49 +50,48 @@ class NorgClientImpl(
         redisService.get(RedisKeyType.NORG_CLIENT, "$NAVENHET_CACHE_KEY_PREFIX$enhetsnr", NavEnhet::class.java)
 
     private fun hentNavEnhetFraServer(enhetsnr: String): NavEnhet =
-        try {
-            norgRestClient
-                .get()
-                .uri("/enhet/{enhetsnr}", enhetsnr)
-                .header(HEADER_CALL_ID, getCallId())
-                .retrieve()
-                .body<NavEnhet>()
-                ?: throw NorgException("Norg2 - tom respons for enhet $enhetsnr", null)
-        } catch (e: RestClientException) {
-            when (e) {
-                is RestClientResponseException -> log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
-                else -> log.warn("Norg2 - Noe feilet", e)
+        norgWebClient
+            .get()
+            .uri("/enhet/{enhetsnr}", enhetsnr)
+            .header(HEADER_CALL_ID, getCallId())
+            .retrieve()
+            .bodyToMono<NavEnhet>()
+            .onErrorMap { e ->
+                when (e) {
+                    is WebClientResponseException -> log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
+                    else -> log.warn("Norg2 - Noe feilet", e)
+                }
+                NorgException(e.message, e)
+            }.block()!!
+            .also {
+                log.debug("Norg2 - GET enhet $enhetsnr OK")
+                lagreNavEnhetTilCache(enhetsnr, it)
             }
-            throw NorgException(e.message, e)
-        }.also {
-            log.debug("Norg2 - GET enhet $enhetsnr OK")
-            lagreNavEnhetTilCache(enhetsnr, it)
-        }
 
     override fun hentAlleNavEnheter(): List<NavEnhet> =
-        try {
-            norgRestClient
-                .get()
-                .uri("/enhet?enhetStatusListe=AKTIV")
-                .header(HEADER_CALL_ID, getCallId())
-                .retrieve()
-                .body(object : ParameterizedTypeReference<List<NavEnhet>>() {})
-                ?: throw NorgException("Norg2 - tom respons for alle enheter", null)
-        } catch (e: RestClientException) {
-            when (e) {
-                is RestClientResponseException -> log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
-                else -> log.warn("Norg2 - Noe feilet", e)
-            }
-            throw NorgException(e.message, e)
-        }.also { lagreNavEnhetListeTilCache(it) }
+        norgWebClient
+            .get()
+            .uri("/enhet?enhetStatusListe=AKTIV")
+            .header(HEADER_CALL_ID, getCallId())
+            .retrieve()
+            .bodyToMono(typeRef<List<NavEnhet>>())
+            .onErrorMap { e ->
+                when (e) {
+                    is WebClientResponseException -> log.warn("Norg2 - Noe feilet - ${e.statusCode} ${e.statusText}", e)
+                    else -> log.warn("Norg2 - Noe feilet", e)
+                }
+                NorgException(e.message, e)
+            }.block()!!
+            .also { lagreNavEnhetListeTilCache(it) }
 
     override fun ping() {
-        norgRestClient
+        norgWebClient
             .get()
             .uri("/kodeverk/EnhetstyperNorg")
             .header(HEADER_CALL_ID, getCallId())
             .retrieve()
-            .body<String>()
+            .bodyToMono<String>()
+            .block()
     }
 
     private fun lagreNavEnhetListeTilCache(list: List<NavEnhet>) {

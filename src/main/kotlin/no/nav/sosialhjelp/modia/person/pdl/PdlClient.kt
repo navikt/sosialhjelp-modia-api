@@ -1,5 +1,7 @@
 package no.nav.sosialhjelp.modia.person.pdl
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.app.exceptions.PdlException
 import no.nav.sosialhjelp.modia.app.mdc.MDCUtils.getCallId
@@ -11,16 +13,18 @@ import no.nav.sosialhjelp.modia.utils.IntegrationUtils.BEHANDLINGSNUMMER_MODIA
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_BEHANDLINGSNUMMER
 import no.nav.sosialhjelp.modia.utils.IntegrationUtils.HEADER_CALL_ID
 import org.springframework.context.annotation.Profile
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
-import org.springframework.web.client.RestClient
-import org.springframework.web.client.RestClientException
-import org.springframework.web.client.RestClientResponseException
-import org.springframework.web.client.body
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.WebClientResponseException
+import org.springframework.web.reactive.function.client.awaitBody
+import org.springframework.web.reactive.function.client.bodyToMono
 
 interface PdlClient {
-    fun hentPerson(
+    suspend fun hentPerson(
         ident: String,
         veilederToken: String,
     ): PdlHentPerson?
@@ -31,18 +35,20 @@ interface PdlClient {
 @Profile("!local")
 @Component
 class PdlClientImpl(
-    restClientBuilder: RestClient.Builder,
+    webClientBuilder: WebClient.Builder,
     private val texasClient: TexasClient,
     private val clientProperties: ClientProperties,
 ) : PdlClient {
-    private val pdlRestClient =
-        restClientBuilder
-            .clone()
-            .baseUrl(clientProperties.pdlEndpointUrl)
+    private val pdlWebClient =
+        webClientBuilder
+            .codecs {
+                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+            }.baseUrl(clientProperties.pdlEndpointUrl)
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .defaultHeader(HEADER_BEHANDLINGSNUMMER, BEHANDLINGSNUMMER_MODIA)
             .build()
 
-    override fun hentPerson(
+    override suspend fun hentPerson(
         ident: String,
         veilederToken: String,
     ): PdlHentPerson? {
@@ -52,40 +58,34 @@ class PdlClientImpl(
             try {
                 val azureAdToken = texasClient.getTokenXToken(clientProperties.pdlScope, veilederToken, IdentityProvider.ENTRA_ID)
 
-                pdlRestClient
-                    .post()
-                    .contentType(APPLICATION_JSON)
-                    .header(AUTHORIZATION, BEARER + azureAdToken)
-                    .header(HEADER_CALL_ID, getCallId())
-                    .body(PdlRequest(query, Variables(ident)))
-                    .retrieve()
-                    .body<PdlPersonResponse>()
-            } catch (e: RestClientException) {
-                when (e) {
-                    is RestClientResponseException -> log.error("PDL - ${e.statusCode} ${e.statusText} feil ved henting av navn fra PDL", e)
-                    else -> log.error("PDL - feil ved henting av navn fra PDL", e)
+                withContext(Dispatchers.IO) {
+                    pdlWebClient
+                        .post()
+                        .contentType(APPLICATION_JSON)
+                        .header(AUTHORIZATION, BEARER + azureAdToken)
+                        .header(HEADER_CALL_ID, getCallId())
+                        .bodyValue(PdlRequest(query, Variables(ident)))
+                        .retrieve()
+                        .awaitBody<PdlPersonResponse>()
                 }
+            } catch (e: WebClientResponseException) {
+                log.error("PDL - ${e.statusCode} ${e.statusText} feil ved henting av navn fra PDL", e)
                 throw PdlException(e.message)
             }
 
-        if (pdlPersonResponse == null) {
-            throw PdlException("PDL returnerte tom respons")
-        }
         checkForPdlApiErrors(pdlPersonResponse)
 
         return pdlPersonResponse.data
     }
 
     override fun ping() {
-        try {
-            pdlRestClient
-                .options()
-                .retrieve()
-                .body<String>()
-        } catch (e: RestClientException) {
-            log.error("PDL - ping feilet", e)
-            throw e
-        }
+        pdlWebClient
+            .options()
+            .retrieve()
+            .bodyToMono<String>()
+            .doOnError { e ->
+                log.error("PDL - ping feilet", e)
+            }.block()
     }
 
     @Suppress("SameParameterValue")
@@ -118,7 +118,7 @@ class PdlClientImpl(
 class PdlClientMock : PdlClient {
     private val pdlHentPersonMap = mutableMapOf<String, PdlHentPerson>()
 
-    override fun hentPerson(
+    override suspend fun hentPerson(
         ident: String,
         veilederToken: String,
     ): PdlHentPerson? =

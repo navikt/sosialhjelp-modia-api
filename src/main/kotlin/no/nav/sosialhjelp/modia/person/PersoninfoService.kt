@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 class PersoninfoService(
     private val pdlClient: PdlClient,
 ) {
-    fun hentPersoninfo(
+    suspend fun hentPersoninfo(
         ident: String,
         token: String,
     ): PersoninfoResponse {

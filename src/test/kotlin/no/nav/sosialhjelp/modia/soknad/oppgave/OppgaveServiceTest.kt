@@ -51,7 +51,7 @@ internal class OppgaveServiceTest {
     }
 
     @Test
-    fun `Should return emptylist`() {
+    suspend fun `Should return emptylist`() {
         val model = InternalDigisosSoker()
 
         coEvery { eventService.createModel(any()) } returns model
@@ -63,7 +63,7 @@ internal class OppgaveServiceTest {
     }
 
     @Test
-    fun `Should return oppgave`() {
+    suspend fun `Should return oppgave`() {
         val model = InternalDigisosSoker()
         model.oppgaver.add(Oppgave(type, tillegg, frist, tidspunktForKrav, true))
 
@@ -79,7 +79,7 @@ internal class OppgaveServiceTest {
     }
 
     @Test
-    fun `Should return oppgave without tilleggsinformasjon`() {
+    suspend fun `Should return oppgave without tilleggsinformasjon`() {
         val model = InternalDigisosSoker()
         model.oppgaver.add(Oppgave(type, null, frist, tidspunktForKrav, true))
 
@@ -95,7 +95,7 @@ internal class OppgaveServiceTest {
     }
 
     @Test
-    fun `Should return list of oppgaver sorted by frist`() {
+    suspend fun `Should return list of oppgaver sorted by frist`() {
         val model = InternalDigisosSoker()
         model.oppgaver.addAll(
             listOf(
@@ -131,7 +131,7 @@ internal class OppgaveServiceTest {
     }
 
     @Test
-    fun `skal vise info om oppgaver hvor bruker ikke har lastet opp tilknyttet en oppgave`() {
+    suspend fun `skal vise info om oppgaver hvor bruker ikke har lastet opp tilknyttet en oppgave`() {
         val model = InternalDigisosSoker()
         model.oppgaver.addAll(
             listOf(
@@ -169,7 +169,7 @@ internal class OppgaveServiceTest {
     //  Hvordan vite hvilken oppgave ett opplastet vedlegg hører til?
     //  Slik det er nå, vil ett vedlegg med som matcher 2 oppgaver knyttes til begge oppgaver.
     @Test
-    internal fun `2 oppgaver med samme type og tillegg - hva skjer med vedlegg som matcher begge`() {
+    internal suspend fun `2 oppgaver med samme type og tillegg - hva skjer med vedlegg som matcher begge`() {
         val model = InternalDigisosSoker()
         model.oppgaver.addAll(
             listOf(

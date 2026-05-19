@@ -2,12 +2,14 @@ package no.nav.sosialhjelp.modia.digisossak.fiks
 
 import io.mockk.Runs
 import io.mockk.clearAllMocks
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import io.mockk.verify
+import kotlinx.coroutines.runBlocking
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.exceptions.FiksNotFoundException
@@ -30,43 +32,31 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.retry.backoff.FixedBackOffPolicy
-import org.springframework.retry.policy.SimpleRetryPolicy
-import org.springframework.retry.support.RetryTemplate
-import org.springframework.web.client.HttpServerErrorException
-import org.springframework.web.client.RestClient
+import org.springframework.web.reactive.function.client.WebClient
 import tools.jackson.module.kotlin.readValue
 import java.time.LocalDateTime
 
 internal class FiksClientTest {
     private val mockWebServer = MockWebServer()
-    private val fiksRestClient =
-        RestClient
-            .builder()
-            .baseUrl(mockWebServer.url("/").toString())
-            .build()
+    private val fiksWebClient = WebClient.create(mockWebServer.url("/").toString())
     private val clientProperties: ClientProperties = mockk(relaxed = true)
     private val auditService: AuditService = mockk()
     private val redisService: RedisService = mockk()
     private val texasClient: TexasClient = mockk()
-    private val maxRetryAttempts = 2
+    private val maxRetryAttempts = 2L
+    private val initialDelay = 2L
     private val documentTTL = 360L
-
-    private val fiksRetryTemplate =
-        RetryTemplate().apply {
-            setRetryPolicy(SimpleRetryPolicy(maxRetryAttempts + 1, mapOf(HttpServerErrorException::class.java to true), true))
-            setBackOffPolicy(FixedBackOffPolicy().apply { backOffPeriod = 10 }) // Short delay for tests
-        }
 
     private val fiksClient =
         FiksClientImpl(
-            fiksRestClient = fiksRestClient,
+            fiksWebClient = fiksWebClient,
             clientProperties = clientProperties,
             auditService = auditService,
             redisService = redisService,
+            maxAttempts = maxRetryAttempts,
+            initialDelay = initialDelay,
             documentTTL = documentTTL,
             texasClient = texasClient,
-            fiksRetryTemplate = fiksRetryTemplate,
         )
 
     private val id = "123"
@@ -78,7 +68,7 @@ internal class FiksClientTest {
         mockkObject(RequestUtils)
         every { RequestUtils.getSosialhjelpModiaSessionId() } returns "abcdefghijkl"
 
-        every { texasClient.getMaskinportenToken() } returns "token"
+        coEvery { texasClient.getMaskinportenToken() } returns "token"
         every { auditService.reportFiks(any(), any(), any(), any()) } just Runs
 
         every { redisService.get<Any>(any(), any(), any()) } returns null
@@ -93,7 +83,7 @@ internal class FiksClientTest {
     }
 
     @Test
-    fun `GET hent alle DigisosSaker`() {
+    suspend fun `GET hent alle DigisosSaker`() {
         mockWebServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
@@ -114,7 +104,7 @@ internal class FiksClientTest {
     }
 
     @Test
-    fun `GET hent alle DigisosSaker bortsett fra de eldre enn 15 maneder`() {
+    suspend fun `GET hent alle DigisosSaker bortsett fra de eldre enn 15 maneder`() {
         mockWebServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
@@ -135,7 +125,7 @@ internal class FiksClientTest {
     }
 
     @Test
-    fun `GET eksakt 1 DigisosSak`() {
+    suspend fun `GET eksakt 1 DigisosSak`() {
         mockWebServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
@@ -158,12 +148,13 @@ internal class FiksClientTest {
         )
 
         assertThatExceptionOfType(FiksNotFoundException::class.java)
-            .isThrownBy { fiksClient.hentDigisosSak(id) }
+            // AssertJ støtter ikke suspend functions
+            .isThrownBy { runBlocking { fiksClient.hentDigisosSak(id) } }
     }
 
     @Test
     fun `GET DigisosSak skal bruke retry hvis Fiks gir 5xx-feil`() {
-        repeat(maxRetryAttempts + 1) {
+        repeat(maxRetryAttempts.toInt() + 1) {
             mockWebServer.enqueue(
                 MockResponse()
                     .setResponseCode(500),
@@ -171,12 +162,13 @@ internal class FiksClientTest {
         }
 
         assertThatExceptionOfType(FiksServerException::class.java)
-            .isThrownBy { fiksClient.hentDigisosSak(id) }
+            // AssertJ støtter ikke suspend functions
+            .isThrownBy { runBlocking { fiksClient.hentDigisosSak(id) } }
         assertThat(mockWebServer.requestCount).isEqualTo(maxRetryAttempts + 1)
     }
 
     @Test
-    fun `GET digisosSak fra cache`() {
+    suspend fun `GET digisosSak fra cache`() {
         val digisosSak: DigisosSak = sosialhjelpJsonMapper.readValue(okDigisossakResponseString())
         every { redisService.get(any(), any(), DigisosSak::class.java) } returns digisosSak
 
@@ -188,7 +180,7 @@ internal class FiksClientTest {
     }
 
     @Test
-    fun `GET digisosSak fra cache etter put`() {
+    suspend fun `GET digisosSak fra cache etter put`() {
         mockWebServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
@@ -213,7 +205,7 @@ internal class FiksClientTest {
     }
 
     @Test
-    fun `GET digisosSak fra annen saksbehandler`() {
+    suspend fun `GET digisosSak fra annen saksbehandler`() {
         mockWebServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
@@ -235,7 +227,7 @@ internal class FiksClientTest {
     }
 
     @Test
-    fun `skal ikke bruke cache hvis sessionId er null`() {
+    suspend fun `skal ikke bruke cache hvis sessionId er null`() {
         mockWebServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
@@ -253,7 +245,7 @@ internal class FiksClientTest {
     }
 
     @Test
-    fun `GET dokument`() {
+    suspend fun `GET dokument`() {
         mockWebServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
@@ -267,7 +259,7 @@ internal class FiksClientTest {
     }
 
     @Test
-    fun `GET dokument fra cache`() {
+    suspend fun `GET dokument fra cache`() {
         val jsonDigisosSoker: JsonDigisosSoker = sosialhjelpJsonMapper.readValue(ok_minimal_jsondigisossoker_response_string)
         every { redisService.get(any(), any(), JsonDigisosSoker::class.java) } returns jsonDigisosSoker
 

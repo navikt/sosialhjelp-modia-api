@@ -20,7 +20,7 @@ internal class JsonDigisosSokerServiceTest {
     }
 
     @Test
-    fun `Should gather innsyn data`() {
+    suspend fun `Should gather innsyn data`() {
         val mockJsonDigisosSoker: JsonDigisosSoker = mockk()
 
         coEvery { fiksClient.hentDokument(any(), any(), any(), JsonDigisosSoker::class.java, "abc_123") } returns mockJsonDigisosSoker
@@ -31,14 +31,14 @@ internal class JsonDigisosSokerServiceTest {
     }
 
     @Test
-    fun `Should return null if DigisosSoker is null`() {
+    suspend fun `Should return null if DigisosSoker is null`() {
         val jsonDigisosSoker = jsonDigisosSokerService.get("fnr", "123", null, 123L)
 
         assertThat(jsonDigisosSoker).isNull()
     }
 
     @Test
-    fun `Should use metadata and timestamp as cache key`() {
+    suspend fun `Should use metadata and timestamp as cache key`() {
         val slot = slot<String>()
         coEvery { fiksClient.hentDokument(any(), any(), any(), JsonDigisosSoker::class.java, capture(slot)) } returns mockk()
 

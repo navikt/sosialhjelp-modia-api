@@ -33,7 +33,7 @@ internal class DokumentasjonkravTest {
     }
 
     @Test
-    fun `dokumentasjonskrav ETTER utbetaling`() {
+    suspend fun `dokumentasjonskrav ETTER utbetaling`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -65,7 +65,7 @@ internal class DokumentasjonkravTest {
     }
 
     @Test
-    fun `dokumentasjonkrav UTEN utbetaling`() {
+    suspend fun `dokumentasjonkrav UTEN utbetaling`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -87,7 +87,7 @@ internal class DokumentasjonkravTest {
     }
 
     @Test
-    fun `dokumentasjonkrav FOR utbetaling - skal ikke gi noen dokumentasjonkrav`() {
+    suspend fun `dokumentasjonkrav FOR utbetaling - skal ikke gi noen dokumentasjonkrav`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -114,7 +114,7 @@ internal class DokumentasjonkravTest {
     }
 
     @Test
-    fun `dokumentasjonkrav og utbetaling har identiske hendelsestidspunkt`() {
+    suspend fun `dokumentasjonkrav og utbetaling har identiske hendelsestidspunkt`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)

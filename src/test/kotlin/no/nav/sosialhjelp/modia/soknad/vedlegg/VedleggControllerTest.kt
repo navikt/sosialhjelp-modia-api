@@ -35,7 +35,7 @@ internal class VedleggControllerTest {
     }
 
     @Test
-    fun `skal mappe fra InternalVedleggList til VedleggResponseList`() {
+    suspend fun `skal mappe fra InternalVedleggList til VedleggResponseList`() {
         val frist = LocalDateTime.now().plusDays(7)
         val datoLagtTil = LocalDateTime.now()
 
@@ -60,7 +60,7 @@ internal class VedleggControllerTest {
     }
 
     @Test
-    fun `skal handtere flere vedlegg`() {
+    suspend fun `skal handtere flere vedlegg`() {
         val frist = LocalDateTime.now().plusDays(7)
         val datoLagtTil = LocalDateTime.now()
 
@@ -81,7 +81,7 @@ internal class VedleggControllerTest {
     }
 
     @Test
-    fun `skal filtrere bort vedlegg med antall filer som er 0`() {
+    suspend fun `skal filtrere bort vedlegg med antall filer som er 0`() {
         val frist = LocalDateTime.now().plusDays(7)
         val datoLagtTil = LocalDateTime.now()
 
@@ -105,7 +105,7 @@ internal class VedleggControllerTest {
     }
 
     @Test
-    fun `skal sortere pa innsendelsesfrist forst og deretter datoLagtTil`() {
+    suspend fun `skal sortere pa innsendelsesfrist forst og deretter datoLagtTil`() {
         val frist = LocalDateTime.now().plusDays(7)
         val frist2 = LocalDateTime.now().plusDays(6)
         val datoLagtTil = LocalDateTime.now().plusDays(1)
@@ -146,7 +146,7 @@ internal class VedleggControllerTest {
     }
 
     @Test
-    fun `vedlegg med antallFiler lik 0 og ingen datoLagtTil`() {
+    suspend fun `vedlegg med antallFiler lik 0 og ingen datoLagtTil`() {
         val frist = LocalDateTime.now().plusDays(7)
 
         coEvery { vedleggService.hentAlleOpplastedeVedlegg(any()) } returns

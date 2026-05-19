@@ -33,7 +33,7 @@ internal class UtbetalingTest {
     }
 
     @Test
-    fun `utbetaling ETTER vedtakFattet og saksStatus`() {
+    suspend fun `utbetaling ETTER vedtakFattet og saksStatus`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -76,7 +76,7 @@ internal class UtbetalingTest {
     }
 
     @Test
-    fun `utbetaling UTEN vedtakFattet`() {
+    suspend fun `utbetaling UTEN vedtakFattet`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -98,7 +98,7 @@ internal class UtbetalingTest {
     }
 
     @Test
-    fun `utbetaling kontonummer settes kun hvis annenMottaker er false`() {
+    suspend fun `utbetaling kontonummer settes kun hvis annenMottaker er false`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)

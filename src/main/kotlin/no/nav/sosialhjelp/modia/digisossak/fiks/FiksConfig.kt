@@ -1,85 +1,57 @@
 package no.nav.sosialhjelp.modia.digisossak.fiks
 
+import io.netty.channel.ChannelOption
+import io.netty.handler.timeout.ReadTimeoutHandler
+import io.netty.handler.timeout.WriteTimeoutHandler
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
-import org.apache.hc.client5.http.config.ConnectionConfig
-import org.apache.hc.client5.http.config.RequestConfig
-import org.apache.hc.client5.http.impl.classic.HttpClients
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager
-import org.apache.hc.core5.util.Timeout
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
-import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter
-import org.springframework.retry.backoff.ExponentialBackOffPolicy
-import org.springframework.retry.policy.SimpleRetryPolicy
-import org.springframework.retry.support.RetryTemplate
-import org.springframework.web.client.HttpServerErrorException
-import org.springframework.web.client.RestClient
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.http.codec.json.JacksonJsonDecoder
+import org.springframework.http.codec.json.JacksonJsonEncoder
+import org.springframework.web.reactive.function.client.WebClient
+import reactor.netty.http.client.HttpClient
+import reactor.netty.resources.ConnectionProvider
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 @Configuration
 class FiksConfig(
-    private val restClientBuilder: RestClient.Builder,
+    private val webClientBuilder: WebClient.Builder,
     private val clientProperties: ClientProperties,
-    @Value("\${retry_fiks_max_attempts}") private val maxAttempts: Int,
-    @Value("\${retry_fiks_initial_delay}") private val initialDelay: Long,
 ) {
     @Bean
-    fun fiksRestClient(): RestClient {
-        val connectionManager =
-            PoolingHttpClientConnectionManager().apply {
-                maxTotal = 100
-                defaultMaxPerRoute = 100
-                setDefaultConnectionConfig(
-                    ConnectionConfig
-                        .custom()
-                        .setConnectTimeout(Timeout.of(30, TimeUnit.SECONDS))
-                        .setSocketTimeout(Timeout.of(30, TimeUnit.SECONDS))
-                        .build(),
-                )
-            }
-
-        val requestConfig =
-            RequestConfig
-                .custom()
-                .setResponseTimeout(Timeout.of(2, TimeUnit.MINUTES))
-                .setConnectionRequestTimeout(Timeout.of(30, TimeUnit.SECONDS))
+    fun fiksWebClient(): WebClient {
+        val connectionProvider =
+            ConnectionProvider
+                .builder("fiks-connection-pool")
+                .maxConnections(100)
+                .maxIdleTime(Duration.ofMinutes(10))
+                .maxLifeTime(Duration.ofMinutes(55))
+                .evictInBackground(Duration.ofMinutes(5))
+                .pendingAcquireTimeout(Duration.ofSeconds(30))
+                .lifo()
+                .metrics(true)
                 .build()
 
         val httpClient =
-            HttpClients
-                .custom()
-                .setConnectionManager(connectionManager)
-                .setDefaultRequestConfig(requestConfig)
-                .build()
+            HttpClient
+                .create(connectionProvider)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 30000)
+                .doOnConnected { conn ->
+                    conn
+                        .addHandlerLast(ReadTimeoutHandler(30, TimeUnit.SECONDS))
+                        .addHandlerLast(WriteTimeoutHandler(30, TimeUnit.SECONDS))
+                }.responseTimeout(Duration.ofMinutes(2))
 
-        val requestFactory = HttpComponentsClientHttpRequestFactory(httpClient)
-
-        return restClientBuilder
-            .clone()
-            .requestFactory(requestFactory)
-            .baseUrl(clientProperties.fiksDigisosEndpointUrl)
-            .configureMessageConverters { configurer ->
-                configurer.withJsonConverter(JacksonJsonHttpMessageConverter(sosialhjelpJsonMapper))
-            }.build()
-    }
-
-    @Bean
-    fun fiksRetryTemplate(): RetryTemplate {
-        val retryPolicy = SimpleRetryPolicy(maxAttempts, mapOf(HttpServerErrorException::class.java to true), true)
-
-        val backOffPolicy =
-            ExponentialBackOffPolicy().apply {
-                initialInterval = initialDelay
-                multiplier = 2.0
-                maxInterval = 10000L
-            }
-
-        return RetryTemplate().apply {
-            setRetryPolicy(retryPolicy)
-            setBackOffPolicy(backOffPolicy)
-        }
+        return webClientBuilder
+            .clientConnector(ReactorClientHttpConnector(httpClient))
+            .codecs {
+                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+                it.defaultCodecs().jacksonJsonDecoder(JacksonJsonDecoder(sosialhjelpJsonMapper))
+                it.defaultCodecs().jacksonJsonEncoder(JacksonJsonEncoder(sosialhjelpJsonMapper))
+            }.baseUrl(clientProperties.fiksDigisosEndpointUrl)
+            .build()
     }
 }

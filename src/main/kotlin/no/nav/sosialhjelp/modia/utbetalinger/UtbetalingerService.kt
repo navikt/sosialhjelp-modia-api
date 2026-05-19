@@ -18,7 +18,7 @@ class UtbetalingerService(
     private val fiksClient: FiksClient,
     private val eventService: EventService,
 ) {
-    fun hentAlleUtbetalinger(
+    suspend fun hentAlleUtbetalinger(
         fnr: String,
         months: Int,
         fom: LocalDate?,
@@ -40,7 +40,7 @@ class UtbetalingerService(
         return utbetalingList
     }
 
-    fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
+    suspend fun hentUtbetalingerForDigisosSak(digisosSak: DigisosSak): List<UtbetalingerResponse> {
         val utbetalingList = getUtbetalinger(digisosSak).sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
         loggMuligeDuplikater(utbetalingList)
         return utbetalingList
@@ -61,7 +61,7 @@ class UtbetalingerService(
             }
     }
 
-    private fun utbetalingerSisteManeder(
+    private suspend fun utbetalingerSisteManeder(
         digisosSaker: List<DigisosSak>,
         months: Int,
     ): List<UtbetalingerResponse> =
@@ -71,7 +71,7 @@ class UtbetalingerService(
                 getUtbetalinger(it)
             }.sortedByDescending { it.utbetalingEllerForfallDigisosSoker }
 
-    private fun hentUtbetalingerForIntervall(
+    private suspend fun hentUtbetalingerForIntervall(
         digisosSaker: List<DigisosSak>,
         fom: LocalDate?,
         tom: LocalDate?,
@@ -113,7 +113,7 @@ class UtbetalingerService(
         return utbetaling.utbetalingsDato?.let { utbetalingsDatoInnenfor } ?: forfallsDatoInnenfor
     }
 
-    private fun getUtbetalinger(digisosSak: DigisosSak): List<UtbetalingerResponse> {
+    private suspend fun getUtbetalinger(digisosSak: DigisosSak): List<UtbetalingerResponse> {
         val model = eventService.createModel(digisosSak)
         val behandlendeNavKontor = model.navKontorHistorikk.lastOrNull()
 
@@ -125,7 +125,7 @@ class UtbetalingerService(
             }
     }
 
-    private fun getUtbetalinger(
+    private suspend fun getUtbetalinger(
         digisosSak: DigisosSak,
         fom: LocalDate?,
         tom: LocalDate?,

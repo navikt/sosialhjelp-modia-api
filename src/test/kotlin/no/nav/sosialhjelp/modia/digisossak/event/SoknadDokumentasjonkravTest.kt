@@ -31,7 +31,7 @@ internal class SoknadDokumentasjonkravTest {
     }
 
     @Test
-    internal fun `skal legge til dokumentasjonkrav fra soknaden`() {
+    internal suspend fun `skal legge til dokumentasjonkrav fra soknaden`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)

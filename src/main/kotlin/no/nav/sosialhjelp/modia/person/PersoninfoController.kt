@@ -18,7 +18,7 @@ class PersoninfoController(
     private val tilgangskontrollService: TilgangskontrollService,
 ) {
     @PostMapping("/personinfo")
-    fun hentPersoninfo(
+    suspend fun hentPersoninfo(
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident,
     ): ResponseEntity<PersoninfoResponse> {

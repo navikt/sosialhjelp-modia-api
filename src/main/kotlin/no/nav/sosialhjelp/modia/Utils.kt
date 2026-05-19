@@ -1,18 +1,20 @@
 package no.nav.sosialhjelp.modia
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.slf4j.MDCContext
+import kotlinx.coroutines.coroutineScope
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.ErrorMessage
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
 import no.nav.sosialhjelp.modia.digisossak.event.SAK_DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.digisossak.event.SOKNAD_DEFAULT_TITTEL
+import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.core.ParameterizedTypeReference
+import org.springframework.web.reactive.function.client.WebClientResponseException
+import java.io.IOException
 import java.sql.Timestamp
 import java.time.Instant
 import java.time.LocalDate
@@ -22,6 +24,8 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import kotlin.reflect.full.companionObject
+
+inline fun <reified T : Any> typeRef(): ParameterizedTypeReference<T> = object : ParameterizedTypeReference<T>() {}
 
 fun String.toLocalDateTime(): LocalDateTime =
     ZonedDateTime
@@ -65,17 +69,29 @@ val String.maskerFnr: String
         return this.replace(Regex("""\b[0-9]{11}\b"""), "[FNR]")
     }
 
-/**
- * Executes the given function in parallel for each element in the iterable,
- * using coroutines with MDC context propagation.
- *
- * This is a synchronous function that blocks until all parallel operations complete.
- */
-fun <A, B> Iterable<A>.flatMapParallel(f: (A) -> List<B>): List<B> =
-    runBlocking(Dispatchers.IO + MDCContext()) {
-        map { element ->
+val ErrorMessage.feilmeldingUtenFnr: String?
+    get() {
+        return this.message?.maskerFnr
+    }
+
+fun messageUtenFnr(e: WebClientResponseException): String {
+    val fiksErrorMessage = e.toFiksErrorMessage()?.feilmeldingUtenFnr
+    val message = e.message.maskerFnr
+    return "$message - $fiksErrorMessage"
+}
+
+private fun <T : WebClientResponseException> T.toFiksErrorMessage(): ErrorMessage? =
+    try {
+        sosialhjelpJsonMapper.readValue(this.responseBodyAsByteArray, ErrorMessage::class.java)
+    } catch (ignored: IOException) {
+        null
+    }
+
+suspend fun <A, B> Iterable<A>.flatMapParallel(f: suspend (A) -> List<B>): List<B> =
+    coroutineScope {
+        map {
             async {
-                f(element)
+                f(it)
             }
         }.awaitAll().flatten()
     }

@@ -32,7 +32,7 @@ class EventService(
     private val norgClient: NorgClient,
     private val soknadVedleggService: SoknadVedleggService,
 ) {
-    fun createModel(digisosSak: DigisosSak): InternalDigisosSoker {
+    suspend fun createModel(digisosSak: DigisosSak): InternalDigisosSoker {
         val jsonDigisosSoker: JsonDigisosSoker? =
             jsonDigisosSokerService.get(
                 digisosSak.sokerFnr,
@@ -84,7 +84,7 @@ class EventService(
             ?: "[Kan ikke hente Nav-kontor for enhetsnummer: \"$enhetsnummer]\""
     }
 
-    fun createSoknadsoversiktModel(digisosSak: DigisosSak): InternalDigisosSoker {
+    suspend fun createSoknadsoversiktModel(digisosSak: DigisosSak): InternalDigisosSoker {
         val jsonDigisosSoker: JsonDigisosSoker? =
             jsonDigisosSokerService.get(
                 digisosSak.sokerFnr,
