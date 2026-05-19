@@ -54,7 +54,7 @@ internal class NoekkelinfoServiceTest {
     }
 
     @Test
-    suspend fun `noekkelinfo ikke videresendt eller forelopig svar`() {
+    fun `noekkelinfo ikke videresendt eller forelopig svar`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -83,7 +83,7 @@ internal class NoekkelinfoServiceTest {
     }
 
     @Test
-    suspend fun `noekkelinfo ikke videresendt med med forelopig svar`() {
+    fun `noekkelinfo ikke videresendt med med forelopig svar`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -112,7 +112,7 @@ internal class NoekkelinfoServiceTest {
     }
 
     @Test
-    suspend fun `noekkelinfo videresendt`() {
+    fun `noekkelinfo videresendt`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -141,7 +141,7 @@ internal class NoekkelinfoServiceTest {
     }
 
     @Test
-    suspend fun `noekkelinfo papirsoknad og videresendt`() {
+    fun `noekkelinfo papirsoknad og videresendt`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -170,7 +170,7 @@ internal class NoekkelinfoServiceTest {
     }
 
     @Test
-    suspend fun `noekkelinfo papirsoknad ikke videresendt`() {
+    fun `noekkelinfo papirsoknad ikke videresendt`() {
         val tidspunkt = LocalDateTime.now()
 
         val model = InternalDigisosSoker()
@@ -193,7 +193,7 @@ internal class NoekkelinfoServiceTest {
     }
 
     @Test
-    suspend fun `behandlende kommune returneres som kommunenavn hvis satt`() {
+    fun `behandlende kommune returneres som kommunenavn hvis satt`() {
         val model = InternalDigisosSoker()
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", LocalDateTime.now()))
@@ -208,7 +208,7 @@ internal class NoekkelinfoServiceTest {
     }
 
     @Test
-    suspend fun `kommunenavn returneres som kommunenavn hvis behandlingsansvarlig ikke satt`() {
+    fun `kommunenavn returneres som kommunenavn hvis behandlingsansvarlig ikke satt`() {
         val model = InternalDigisosSoker()
         model.status = MOTTATT
         model.historikk.add(Hendelse(SOKNAD_SENDT, "søknad sendt", LocalDateTime.now()))

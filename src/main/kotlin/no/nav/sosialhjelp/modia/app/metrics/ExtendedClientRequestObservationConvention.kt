@@ -1,9 +1,9 @@
 package no.nav.sosialhjelp.modia.app.metrics
 
 import io.micrometer.common.KeyValues
+import org.springframework.http.client.observation.ClientRequestObservationContext
+import org.springframework.http.client.observation.DefaultClientRequestObservationConvention
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.client.ClientRequestObservationContext
-import org.springframework.web.reactive.function.client.DefaultClientRequestObservationConvention
 
 @Component
 class ExtendedClientRequestObservationConvention : DefaultClientRequestObservationConvention() {

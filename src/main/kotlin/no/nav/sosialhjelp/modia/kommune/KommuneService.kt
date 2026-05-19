@@ -12,7 +12,7 @@ class KommuneService(
     private val kommuneInfoClient: KommuneInfoClient,
     private val redisService: RedisService,
 ) {
-    suspend fun get(kommunenummer: String): KommuneInfo {
+    fun get(kommunenummer: String): KommuneInfo {
         hentFraCache(kommunenummer)?.let { return it }
 
         return kommuneInfoClient
@@ -20,7 +20,7 @@ class KommuneService(
             .also { lagreTilCache(it) }
     }
 
-    suspend fun getBehandlingsanvarligKommune(kommunenummer: String): String? {
+    fun getBehandlingsanvarligKommune(kommunenummer: String): String? {
         val behandlingsansvarlig = get(kommunenummer).behandlingsansvarlig
 
         return if (behandlingsansvarlig != null) leggTilKommuneINavnet(behandlingsansvarlig) else null

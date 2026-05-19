@@ -39,7 +39,7 @@ internal class SoknadsStatusTest {
     }
 
     @Test
-    suspend fun `soknadsStatus SENDT`() {
+    fun `soknadsStatus SENDT`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns null
 
         val model = service.createModel(defaultDigisosSak)
@@ -55,7 +55,7 @@ internal class SoknadsStatusTest {
     }
 
     @Test
-    suspend fun `soknadsStatus MOTTATT`() {
+    fun `soknadsStatus MOTTATT`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -79,7 +79,7 @@ internal class SoknadsStatusTest {
     }
 
     @Test
-    suspend fun `soknadsStatus MOTTATT papirsoknad`() {
+    fun `soknadsStatus MOTTATT papirsoknad`() {
         val papirsoknadDigisosSak =
             defaultDigisosSak.copy(
                 originalSoknadNAV = null,
@@ -111,7 +111,7 @@ internal class SoknadsStatusTest {
     }
 
     @Test
-    suspend fun `soknadsStatus UNDER_BEHANDLING`() {
+    fun `soknadsStatus UNDER_BEHANDLING`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -137,7 +137,7 @@ internal class SoknadsStatusTest {
     }
 
     @Test
-    suspend fun `soknadsStatus FERDIGBEHANDLET`() {
+    fun `soknadsStatus FERDIGBEHANDLET`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
