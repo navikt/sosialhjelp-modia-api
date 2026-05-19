@@ -222,7 +222,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `getSoknader - skal mappe fra DigisosSak til SoknadResponse`() {
+    fun `getSoknader - skal mappe fra DigisosSak til SoknadResponse`() {
         coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1, digisosSak2)
 
         every { model1.status } returns SoknadsStatus.MOTTATT
@@ -256,7 +256,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `getSoknadDetaljer - skal mappe fra DigisosSak til SoknadDetaljerResponse`() {
+    fun `getSoknadDetaljer - skal mappe fra DigisosSak til SoknadDetaljerResponse`() {
         val vilkar1 =
             Vilkar(
                 "referanse",
@@ -362,7 +362,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `getSoknadDetaljer - hvis model ikke har noen oppgaver, skal ikke oppgaveService kalles`() {
+    fun `getSoknadDetaljer - hvis model ikke har noen oppgaver, skal ikke oppgaveService kalles`() {
         coEvery { fiksClient.hentDigisosSak(id1) } returns digisosSak1
         coEvery { eventService.createSoknadsoversiktModel(digisosSak1) } returns model1
 
@@ -384,7 +384,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `papirSoknadDato - hvis papirsoknad, ingen sak, soknadsdato (forste element i historikk) valgt`() {
+    fun `papirSoknadDato - hvis papirsoknad, ingen sak, soknadsdato (forste element i historikk) valgt`() {
         coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak1)
 
         assertThat(digisosSak1).isNotNull
@@ -398,7 +398,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `papirSoknadDato - hvis papirosoknad, 1 sak, velg saksdato`() {
+    fun `papirSoknadDato - hvis papirosoknad, 1 sak, velg saksdato`() {
         coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak5)
         assertThat(model5).isNotNull
         assertThat(model5.saker).isNotNull
@@ -409,7 +409,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `papirSoknadDato - hvis papirsoknad, 2 sak, velg saksdato til sak 1`() {
+    fun `papirSoknadDato - hvis papirsoknad, 2 sak, velg saksdato til sak 1`() {
         coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak4)
         assertThat(model4).isNotNull
         assertThat(model4.saker).isNotNull
@@ -421,7 +421,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `papirSoknadDato - ikke papirsoknad, 0 sak, returnerer null`() {
+    fun `papirSoknadDato - ikke papirsoknad, 0 sak, returnerer null`() {
         coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak2)
         assertThat(digisosSak2.originalSoknadNAV).isNotNull
         assertThat(model2).isNotNull
@@ -433,7 +433,7 @@ internal class SoknadsoversiktControllerTest {
     }
 
     @Test
-    suspend fun `papirSoknadDato - ikke papirsoknad, 1 sak, returnerer null`() {
+    fun `papirSoknadDato - ikke papirsoknad, 1 sak, returnerer null`() {
         coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak3)
 
         assertThat(model3).isNotNull

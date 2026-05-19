@@ -22,7 +22,7 @@ class VedleggService(
     private val eventService: EventService,
     private val soknadVedleggService: SoknadVedleggService,
 ) {
-    suspend fun hentAlleOpplastedeVedlegg(fiksDigisosId: String): List<InternalVedlegg> {
+    fun hentAlleOpplastedeVedlegg(fiksDigisosId: String): List<InternalVedlegg> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
 
@@ -34,7 +34,7 @@ class VedleggService(
         return soknadVedlegg.plus(ettersendteVedlegg).plus(utestaendeOppgaver)
     }
 
-    suspend fun hentEttersendteVedlegg(
+    fun hentEttersendteVedlegg(
         digisosSak: DigisosSak,
         model: InternalDigisosSoker,
     ): List<InternalVedlegg> {
@@ -113,7 +113,7 @@ class VedleggService(
         return kombinerAlleLikeVedlegg(alleVedlegg)
     }
 
-    private suspend fun hentVedleggSpesifikasjon(
+    private fun hentVedleggSpesifikasjon(
         fnr: String,
         fiksDigisosId: String,
         dokumentlagerId: String,

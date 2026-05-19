@@ -20,7 +20,7 @@ class VilkarController(
     private val tilgangskontrollService: TilgangskontrollService,
 ) {
     @PostMapping("/{fiksDigisosId}/vilkar")
-    suspend fun hentOppgaver(
+    fun hentOppgaver(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = HttpHeaders.AUTHORIZATION) token: String,
         @RequestBody ident: Ident,

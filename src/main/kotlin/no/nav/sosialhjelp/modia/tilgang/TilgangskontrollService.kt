@@ -19,7 +19,7 @@ class TilgangskontrollService(
     private val skjermedePersonerClient: SkjermedePersonerClient,
     private val auditService: AuditService,
 ) {
-    suspend fun harTilgang(
+    fun harTilgang(
         brukerIdent: String,
         token: String,
         url: String,
@@ -40,7 +40,7 @@ class TilgangskontrollService(
         }
     }
 
-    private suspend fun hentPersonFraPdl(
+    private fun hentPersonFraPdl(
         brukerIdent: String,
         veilederToken: String,
     ): PdlPerson? =

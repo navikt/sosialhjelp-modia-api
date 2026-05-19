@@ -33,7 +33,7 @@ internal class VilkarTest {
     }
 
     @Test
-    suspend fun `vilkar ETTER utbetaling`() {
+    fun `vilkar ETTER utbetaling`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -65,7 +65,7 @@ internal class VilkarTest {
     }
 
     @Test
-    suspend fun `vilkar UTEN utbetaling`() {
+    fun `vilkar UTEN utbetaling`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -87,7 +87,7 @@ internal class VilkarTest {
     }
 
     @Test
-    suspend fun `vilkar FOR utbetaling - vilkar knyttes ikke til noen utbetaling`() {
+    fun `vilkar FOR utbetaling - vilkar knyttes ikke til noen utbetaling`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -114,7 +114,7 @@ internal class VilkarTest {
     }
 
     @Test
-    suspend fun `vilkar og utbetaling har samme hendelsestidspunkt`() {
+    fun `vilkar og utbetaling har samme hendelsestidspunkt`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)

@@ -46,7 +46,7 @@ internal class HendelseServiceTest {
     }
 
     @Test
-    suspend fun `Skal returnere respons med 1 hendelse`() {
+    fun `Skal returnere respons med 1 hendelse`() {
         val model = InternalDigisosSoker()
         model.historikk.add(Hendelse(SOKNAD_SENDT, tittelSendt, tidspunktSendt))
 
@@ -60,7 +60,7 @@ internal class HendelseServiceTest {
     }
 
     @Test
-    suspend fun `Skal returnere respons med flere hendelser`() {
+    fun `Skal returnere respons med flere hendelser`() {
         val model = InternalDigisosSoker()
         model.historikk.addAll(
             listOf(

@@ -1,8 +1,5 @@
 package no.nav.sosialhjelp.modia.tilgang.skjermedepersoner
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.reactor.awaitSingle
-import kotlinx.coroutines.withContext
 import no.nav.sosialhjelp.modia.app.client.ClientProperties
 import no.nav.sosialhjelp.modia.app.exceptions.ManglendeTilgangException
 import no.nav.sosialhjelp.modia.auth.texas.IdentityProvider
@@ -17,13 +14,12 @@ import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.WebClientRequestException
-import org.springframework.web.reactive.function.client.WebClientResponseException
-import org.springframework.web.reactive.function.client.bodyToMono
+import org.springframework.web.client.RestClient
+import org.springframework.web.client.RestClientResponseException
+import org.springframework.web.client.body
 
 interface SkjermedePersonerClient {
-    suspend fun erPersonSkjermet(
+    fun erPersonSkjermet(
         ident: String,
         veilederToken: String,
     ): Boolean
@@ -32,18 +28,14 @@ interface SkjermedePersonerClient {
 @Profile("!test")
 @Component
 class SkjermedePersonerClientImpl(
-    webClientBuilder: WebClient.Builder,
+    restClientBuilder: RestClient.Builder,
     private val redisService: RedisService,
     private val clientProperties: ClientProperties,
     private val texasClient: TexasClient,
 ) : SkjermedePersonerClient {
-    private val skjermedePersonerWebClient: WebClient =
-        webClientBuilder
-            .codecs {
-                it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-            }.build()
+    private val skjermedePersonerRestClient = restClientBuilder.clone().build()
 
-    override suspend fun erPersonSkjermet(
+    override fun erPersonSkjermet(
         ident: String,
         veilederToken: String,
     ): Boolean {
@@ -65,7 +57,7 @@ class SkjermedePersonerClientImpl(
         }
     }
 
-    private suspend fun hentSkjermetStatusFraServer(
+    private fun hentSkjermetStatusFraServer(
         ident: String,
         veilederToken: String,
     ): Boolean {
@@ -76,38 +68,27 @@ class SkjermedePersonerClientImpl(
                 veilederToken,
                 IdentityProvider.ENTRA_ID,
             )
+
         val response: String =
-            withContext(Dispatchers.IO) {
-                skjermedePersonerWebClient
+            try {
+                skjermedePersonerRestClient
                     .post()
                     .uri("${clientProperties.skjermedePersonerEndpointUrl}/skjermet")
                     .contentType(MediaType.APPLICATION_JSON)
                     .header(HttpHeaders.AUTHORIZATION, BEARER + azureAdToken)
-                    .bodyValue(SkjermedePersonerRequest(ident))
+                    .body(SkjermedePersonerRequest(ident))
                     .retrieve()
-                    .bodyToMono<String>()
-                    .onErrorMap { e ->
-                        when (e) {
-                            is WebClientResponseException -> {
-                                log.error(
-                                    "Skjermede personer - noe feilet. Status: ${e.statusCode}, message: ${e.message}.\n ${e.responseBodyAsString}",
-                                    e,
-                                )
-                            }
-
-                            is WebClientRequestException -> {
-                                log.error(
-                                    "Skjermede personer - oppkobling feilet. Message: ${e.message}.",
-                                    e,
-                                )
-                            }
-
-                            else -> {
-                                log.error("Skjermede personer - noe feilet.", e)
-                            }
-                        }
-                        ManglendeTilgangException("Noe feilet ved kall til Skjermede personer: ${e.message}")
-                    }.awaitSingle()
+                    .body<String>()
+                    ?: throw ManglendeTilgangException("Skjermede personer - tom respons")
+            } catch (e: RestClientResponseException) {
+                log.error(
+                    "Skjermede personer - noe feilet. Status: ${e.statusCode}, message: ${e.message}.\n ${e.responseBodyAsString}",
+                    e,
+                )
+                throw ManglendeTilgangException("Noe feilet ved kall til Skjermede personer: ${e.message}")
+            } catch (e: Exception) {
+                log.error("Skjermede personer - noe feilet.", e)
+                throw ManglendeTilgangException("Noe feilet ved kall til Skjermede personer: ${e.message}")
             }
 
         log.debug("Person er skjermet = $response")
@@ -122,7 +103,7 @@ class SkjermedePersonerClientImpl(
 @Profile("test")
 @Component
 class SkjermedePersonerClientMock : SkjermedePersonerClient {
-    override suspend fun erPersonSkjermet(
+    override fun erPersonSkjermet(
         ident: String,
         veilederToken: String,
     ): Boolean = false

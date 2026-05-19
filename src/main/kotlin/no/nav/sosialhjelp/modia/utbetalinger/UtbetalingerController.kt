@@ -24,7 +24,7 @@ class UtbetalingerController(
     private val tilgangskontrollService: TilgangskontrollService,
 ) {
     @PostMapping("/utbetalinger")
-    suspend fun hentUtbetalinger(
+    fun hentUtbetalinger(
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident,
         @RequestParam(defaultValue = "3") months: Int,
@@ -44,7 +44,7 @@ class UtbetalingerController(
     }
 
     @PostMapping("/{fiksDigisosId}/utbetalinger")
-    suspend fun hentUtbetalingerForDigisosSak(
+    fun hentUtbetalingerForDigisosSak(
         @PathVariable fiksDigisosId: String,
         @RequestHeader(value = AUTHORIZATION) token: String,
         @RequestBody ident: Ident,
