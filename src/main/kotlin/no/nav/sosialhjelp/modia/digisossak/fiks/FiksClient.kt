@@ -3,11 +3,11 @@ package no.nav.sosialhjelp.modia.digisossak.fiks
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 
 interface FiksClient {
-    suspend fun hentDigisosSak(digisosId: String): DigisosSak
+    fun hentDigisosSak(digisosId: String): DigisosSak
 
-    suspend fun hentAlleDigisosSaker(fnr: String): List<DigisosSak>
+    fun hentAlleDigisosSaker(fnr: String): List<DigisosSak>
 
-    suspend fun <T : Any> hentDokument(
+    fun <T : Any> hentDokument(
         fnr: String,
         digisosId: String,
         dokumentlagerId: String,

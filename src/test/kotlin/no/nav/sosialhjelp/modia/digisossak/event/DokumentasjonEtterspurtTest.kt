@@ -37,7 +37,7 @@ internal class DokumentasjonEtterspurtTest {
     }
 
     @Test
-    suspend fun `dokumentliste er satt OG vedtaksbrev er satt - skal gi oppgaver og historikk`() {
+    fun `dokumentliste er satt OG vedtaksbrev er satt - skal gi oppgaver og historikk`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -70,7 +70,7 @@ internal class DokumentasjonEtterspurtTest {
     }
 
     @Test
-    internal suspend fun `dokumentliste er satt OG forvaltningsbrev mangler - skal gi oppgaver men ikke historikk`() {
+    internal fun `dokumentliste er satt OG forvaltningsbrev mangler - skal gi oppgaver men ikke historikk`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -99,7 +99,7 @@ internal class DokumentasjonEtterspurtTest {
     }
 
     @Test
-    suspend fun `dokumentliste er tom OG forvaltningsbrev er satt - skal verken gi oppgaver eller historikk`() {
+    fun `dokumentliste er tom OG forvaltningsbrev er satt - skal verken gi oppgaver eller historikk`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -123,7 +123,7 @@ internal class DokumentasjonEtterspurtTest {
 
     @Disabled("fixme - oppgaver fra søknad ikke inkludert (enda)")
     @Test
-    suspend fun `oppgaver skal hentes fra soknaden dersom det ikke finnes dokumentasjonEtterspurt`() {
+    fun `oppgaver skal hentes fra soknaden dersom det ikke finnes dokumentasjonEtterspurt`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)

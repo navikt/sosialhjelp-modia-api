@@ -20,7 +20,7 @@ class HendelseService(
     private val eventService: EventService,
     private val vedleggService: VedleggService,
 ) {
-    suspend fun hentHendelser(fiksDigisosId: String): List<HendelseResponse> {
+    fun hentHendelser(fiksDigisosId: String): List<HendelseResponse> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
 

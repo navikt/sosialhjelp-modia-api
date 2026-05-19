@@ -13,7 +13,7 @@ class SaksStatusService(
     private val fiksClient: FiksClient,
     private val eventService: EventService,
 ) {
-    suspend fun hentSaksStatuser(fiksDigisosId: String): List<SaksStatusResponse> {
+    fun hentSaksStatuser(fiksDigisosId: String): List<SaksStatusResponse> {
         val digisosSak = fiksClient.hentDigisosSak(fiksDigisosId)
         val model = eventService.createModel(digisosSak)
 

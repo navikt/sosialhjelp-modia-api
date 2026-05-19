@@ -3,7 +3,6 @@ package no.nav.sosialhjelp.modia.utbetalinger
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.modia.digisossak.domain.Dokumentasjonkrav
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
@@ -50,7 +49,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal returnere emptyList hvis soker ikke har noen digisosSaker`() {
+    fun `hentAlleUtbetalinger skal returnere emptyList hvis soker ikke har noen digisosSaker`() {
         val model = InternalDigisosSoker()
         coEvery { eventService.createModel(any()) } returns model
         coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns emptyList()
@@ -61,7 +60,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling`() {
+    fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val tom = LocalDate.now().withDayOfMonth(1).minusDays(1)
@@ -109,7 +108,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal returnere response med 2 utbetalinger for 1 maned`() {
+    fun `hentAlleUtbetalinger skal returnere response med 2 utbetalinger for 1 maned`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val utbetalingsdato2 = LocalDate.now().withDayOfMonth(10).minusMonths(1)
 
@@ -171,7 +170,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling for 2 maneder`() {
+    fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling for 2 maneder`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(2)
         val utbetalingsdato2 = LocalDate.now().withDayOfMonth(5).minusMonths(1)
 
@@ -234,7 +233,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med vilkar`() {
+    fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med vilkar`() {
         val model = InternalDigisosSoker()
         val vilkar =
             Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
@@ -270,7 +269,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med dokumentasjonkrav`() {
+    fun `hentAlleUtbetalinger skal returnere response med 1 utbetaling med dokumentasjonkrav`() {
         val model = InternalDigisosSoker()
         val dokumentasjonkrav =
             Dokumentasjonkrav(
@@ -314,7 +313,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal returnere utbetalinger for alle digisosSaker`() {
+    fun `hentAlleUtbetalinger skal returnere utbetalinger for alle digisosSaker`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val utbetalingsdato2 = LocalDate.now().withDayOfMonth(10).minusMonths(1)
         val model = InternalDigisosSoker()
@@ -390,7 +389,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    internal suspend fun `hentUtbetalingerForDigisosSak skal hente alle utbetalinger for 1 DigisosSak`() {
+    internal fun `hentUtbetalingerForDigisosSak skal hente alle utbetalinger for 1 DigisosSak`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(5).minusMonths(1)
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val tom = LocalDate.now().withDayOfMonth(1).minusDays(1)
@@ -436,7 +435,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal filtrere vekk annullerte utbetalinger`() {
+    fun `hentAlleUtbetalinger skal filtrere vekk annullerte utbetalinger`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(2).minusMonths(1)
         val utbetalingsdato2 = LocalDate.now().withDayOfMonth(3).minusMonths(1)
         val utbetalingsdato3 = LocalDate.now().withDayOfMonth(4).minusMonths(1)
@@ -537,7 +536,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal filtrere ned til 0 utbetalinger`() {
+    fun `hentAlleUtbetalinger skal filtrere ned til 0 utbetalinger`() {
         val model = InternalDigisosSoker()
         val vilkar =
             Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
@@ -572,7 +571,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `hentAlleUtbetalinger skal filtrere bort utbetalinger til gamle saker`() {
+    fun `hentAlleUtbetalinger skal filtrere bort utbetalinger til gamle saker`() {
         val model = InternalDigisosSoker()
         val vilkar =
             Vilkar("vilkar1", "Betale husleie", OppgaveStatus.RELEVANT, LocalDateTime.now(), LocalDateTime.now(), emptyList(), null)
@@ -613,7 +612,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere riktig med utbetalingsdato - bare fom er satt`() {
+    fun `skal filtrere riktig med utbetalingsdato - bare fom er satt`() {
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val sistEndretForFom = ZonedDateTime.of(fom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
 
@@ -686,7 +685,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere riktig med forfallsdato - bare fom er satt`() {
+    fun `skal filtrere riktig med forfallsdato - bare fom er satt`() {
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val sistEndretForFom = ZonedDateTime.of(fom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
 
@@ -759,7 +758,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere riktig med utbetalingsdato - bare tom er satt`() {
+    fun `skal filtrere riktig med utbetalingsdato - bare tom er satt`() {
         val tom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val sistEndretForFom = ZonedDateTime.of(tom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
 
@@ -832,7 +831,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere riktig med forfallsdato - bare tom er satt`() {
+    fun `skal filtrere riktig med forfallsdato - bare tom er satt`() {
         val tom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val sistEndretForFom = ZonedDateTime.of(tom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
 
@@ -905,7 +904,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere riktig med utbetalingsdato - fom og tom er satt`() {
+    fun `skal filtrere riktig med utbetalingsdato - fom og tom er satt`() {
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val tom = LocalDate.now().withDayOfMonth(1).minusDays(1)
         val sistEndretForFom = ZonedDateTime.of(fom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
@@ -1011,7 +1010,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere riktig med forfallsdato - fom og tom er satt`() {
+    fun `skal filtrere riktig med forfallsdato - fom og tom er satt`() {
         val fom = LocalDate.now().withDayOfMonth(1).minusMonths(1)
         val tom = LocalDate.now().withDayOfMonth(1).minusDays(1)
         val sistEndretForFom = ZonedDateTime.of(fom.minusDays(1).atStartOfDay(), ZoneId.systemDefault()).toInstant().toEpochMilli()
@@ -1117,7 +1116,7 @@ internal class UtbetalingerServiceTest {
     }
 
     @Test
-    suspend fun `skal filtrere riktig - fom og tom er samme dag og utbetalingsdato er utenfor intervall`() {
+    fun `skal filtrere riktig - fom og tom er samme dag og utbetalingsdato er utenfor intervall`() {
         val utbetalingsdato = LocalDate.now().withDayOfMonth(1).plusDays(1)
         val fom = LocalDate.now().withDayOfMonth(1)
         val tom = LocalDate.now().withDayOfMonth(1)
@@ -1196,8 +1195,7 @@ internal class UtbetalingerServiceTest {
         coEvery { digisosSak.sistEndret } returns ZonedDateTime.now(ZoneId.of("UTC")).toInstant().toEpochMilli()
 
         coEvery { fiksClient.hentAlleDigisosSaker(any()) } returns listOf(digisosSak)
-// AssertJ støtter ikke suspend functions
-        assertThatThrownBy { runBlocking { service.hentAlleUtbetalinger(fnr, 3, fom, fom.minusDays(1)) } }
+        assertThatThrownBy { service.hentAlleUtbetalinger(fnr, 3, fom, fom.minusDays(1)) }
             .isInstanceOf(IllegalStateException::class.java)
     }
 }

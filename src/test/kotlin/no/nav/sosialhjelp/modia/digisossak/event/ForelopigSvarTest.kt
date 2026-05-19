@@ -34,7 +34,7 @@ internal class ForelopigSvarTest {
     }
 
     @Test
-    suspend fun `ingen forelopigSvar`() {
+    fun `ingen forelopigSvar`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
@@ -54,7 +54,7 @@ internal class ForelopigSvarTest {
     }
 
     @Test
-    suspend fun `forelopigSvar mottatt`() {
+    fun `forelopigSvar mottatt`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
             JsonDigisosSoker()
                 .withAvsender(avsender)
