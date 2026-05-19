@@ -6,11 +6,11 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.slf4j.MDCContext
 import no.nav.sosialhjelp.api.fiks.DigisosSak
-import no.nav.sosialhjelp.api.fiks.ErrorMessage
 import no.nav.sosialhjelp.modia.digisossak.domain.InternalDigisosSoker
 import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
 import no.nav.sosialhjelp.modia.digisossak.event.SAK_DEFAULT_TITTEL
 import no.nav.sosialhjelp.modia.digisossak.event.SOKNAD_DEFAULT_TITTEL
+import no.nav.sosialhjelp.modia.utils.RequestCoroutineContext
 import no.nav.sosialhjelp.modia.utils.SecurityCoroutineContext
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -68,12 +68,12 @@ val String.maskerFnr: String
 
 /**
  * Executes the given function in parallel for each element in the iterable,
- * using coroutines with MDC and Spring Security context propagation.
+ * using coroutines with MDC, Spring Security, and request context propagation.
  *
  * This is a synchronous function that blocks until all parallel operations complete.
  */
 fun <A, B> Iterable<A>.flatMapParallel(f: (A) -> List<B>): List<B> =
-    runBlocking(Dispatchers.IO + MDCContext() + SecurityCoroutineContext()) {
+    runBlocking(Dispatchers.IO + MDCContext() + SecurityCoroutineContext() + RequestCoroutineContext()) {
         map { element ->
             async {
                 f(element)
