@@ -5,13 +5,12 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.sosialhjelp.modia.logger
+import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
-import org.springframework.http.HttpStatusCode
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
-import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.body
 
 enum class TokenEndpointType {
@@ -93,43 +92,28 @@ sealed class TexasClient(
                 TokenEndpointType.INTROSPECTION -> error("Cannot get token for introspection. Use introspectToken instead.")
             }
 
-        val response =
-            try {
-                texasRestClient
-                    .post()
-                    .uri(url)
-                    .body(params)
-                    .retrieve()
-                    .body(TokenResponse.Success::class.java)
-                    ?.also {
-                        log.debug("Hentet {}-token fra Texas", tokenEndpointType)
-                    }
-                    ?: error("Tom respons fra Texas ved henting av $tokenEndpointType-token")
-            } catch (e: RestClientResponseException) {
+        return texasRestClient
+            .post()
+            .uri(url)
+            .body(params)
+            .retrieve()
+            .onStatus({ it.isError }) { _, response ->
                 val error =
-                    try {
-                        e.getResponseBodyAs(TokenErrorResponse::class.java)
-                    } catch (ex: Exception) {
-                        null
-                    } ?: TokenErrorResponse(
-                        "Unknown error: ${e.responseBodyAsString}",
-                        e.message ?: "No message",
-                    )
-
-                TokenResponse.Error(error, e.statusCode)
-            }
-
-        return when (response) {
-            is TokenResponse.Success -> {
-                response.accessToken
-            }
-
-            is TokenResponse.Error -> {
+                    runCatching {
+                        sosialhjelpJsonMapper.readValue(response.body, TokenErrorResponse::class.java)
+                    }.getOrNull()
+                        ?: TokenErrorResponse(
+                            "unknown_error",
+                            "Status: ${response.statusCode}",
+                        )
                 error(
-                    "Feil ved henting av $tokenEndpointType-token fra Texas. Statuscode: ${response.status}. Error: ${response.error}",
+                    "Feil ved henting av $tokenEndpointType-token fra Texas. Statuscode: ${response.statusCode}. Error: $error",
                 )
-            }
-        }
+            }.body<TokenResponse>()
+            ?.also {
+                log.debug("Hentet {}-token fra Texas", tokenEndpointType)
+            }?.accessToken
+            ?: error("Tom respons fra Texas ved henting av $tokenEndpointType-token")
     }
 }
 
@@ -159,21 +143,14 @@ class MockTexasClient(
     override fun getMaskinportenToken(): String = "token"
 }
 
-sealed class TokenResponse {
-    data class Success(
-        @param:JsonProperty("access_token")
-        val accessToken: String,
-        @param:JsonProperty("expires_in")
-        val expiresInSeconds: Int,
-        @param:JsonProperty("token_type")
-        val tokenType: String,
-    ) : TokenResponse()
-
-    data class Error(
-        val error: TokenErrorResponse,
-        val status: HttpStatusCode,
-    ) : TokenResponse()
-}
+data class TokenResponse(
+    @param:JsonProperty("access_token")
+    val accessToken: String,
+    @param:JsonProperty("expires_in")
+    val expiresInSeconds: Int,
+    @param:JsonProperty("token_type")
+    val tokenType: String,
+)
 
 data class TokenErrorResponse(
     val error: String,
