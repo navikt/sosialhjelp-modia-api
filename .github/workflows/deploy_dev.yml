@@ -11,6 +11,12 @@ on:
         options:
           - 'dev-gcp'
           - 'mock'
+  workflow_call:
+    inputs:
+      config-file-name:
+        description: 'Config-fil som skal deployes'
+        required: true
+        type: string
 
 jobs:
   set-cluster:
