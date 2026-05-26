@@ -1,10 +1,10 @@
 [versions]
 kotlin = "2.3.21"
-coroutines = "1.10.2"
+coroutines = "1.11.0"
 spring-boot = "4.0.6"
 logback = "1.5.32"
 logstash = "9.0"
-sosialhjelpCommon = "1.20260204.1322-0cda8ef"
+sosialhjelpCommon = "1.20260512.1419-f4bad13"
 filformat = "1.2026.02.04-07.27-7f2f3515bd59"
 micrometerRegistry = "1.16.5"
 prometheus = "0.16.0"
@@ -16,7 +16,7 @@ mockk = "1.14.9"
 ktlint = "1.8.0"
 jackson = "3.1.3"
 mockwebserver = "5.3.2"
-httpclient5 = "5.4.4"
+httpclient5 = "5.6.1"
 springRetry = "2.0.11"
 
 [libraries]
