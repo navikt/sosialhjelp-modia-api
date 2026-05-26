@@ -24,7 +24,9 @@ ktlint {
 
 dependencies {
     implementation("org.apache.tomcat.embed:tomcat-embed-core:11.0.22") {
-        because("Security override for CVE-2026-41293 / GHSA-r29c-68gh-xp6x: HTTP/2 request headers not validated in Apache Tomcat <= 11.0.21")
+        because(
+            "Security override for CVE-2026-41293 / GHSA-r29c-68gh-xp6x: HTTP/2 request headers not validated in Apache Tomcat <= 11.0.21",
+        )
     }
 
     implementation(kotlin("stdlib"))
