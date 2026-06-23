@@ -9,7 +9,7 @@ class AudienceValidator(
     private val audiences: List<String>,
 ) : OAuth2TokenValidator<Jwt> {
     override fun validate(jwt: Jwt): OAuth2TokenValidatorResult {
-        val tokenAudiences = jwt.audience
+        val tokenAudiences = jwt.audience ?: emptyList()
 
         return if (tokenAudiences.any { it in audiences }) {
             OAuth2TokenValidatorResult.success()
