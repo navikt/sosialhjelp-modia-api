@@ -64,6 +64,28 @@ dependencies {
     testImplementation(libs.spring.boot.test)
     testImplementation(libs.mockk)
     testImplementation(libs.mockwebserver)
+
+    constraints {
+        implementation("io.netty:netty-handler") {
+            version { require("4.2.15.Final") }
+            because(
+                "CVE-2026-44249 (IPv6 subnet filter bypass, CVSS 8.1), " +
+                    "CVE-2026-45416 (SNI handler memory DoS), " +
+                    "CVE-2026-50010 (hostname verification bypass, CVSS 7.5) – " +
+                    "all fixed in 4.2.15.Final; handled here because netty-handler is a " +
+                    "transitive dependency of lettuce-core and has no direct upgrade path via lettuce",
+            )
+        }
+        implementation("io.netty:netty-resolver-dns") {
+            version { require("4.2.15.Final") }
+            because(
+                "CVE-2026-47691 (DNS cache poisoning via insufficient NS record bailiwick validation, CVSS 8.7), " +
+                    "CVE-2026-45674 (DNS cache poisoning via missing CNAME bailiwick checks, CVSS 8.7) – " +
+                    "all fixed in 4.2.15.Final; handled here because netty-resolver-dns is a " +
+                    "transitive dependency of lettuce-core and has no direct upgrade path via lettuce",
+            )
+        }
+    }
 }
 
 val githubUser: String? by project
