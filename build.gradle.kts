@@ -42,6 +42,8 @@ dependencies {
     implementation(libs.logstash.logback.encoder)
 
     implementation(libs.jackson.module.kotlin)
+    runtimeOnly(libs.fasterxml.jackson.module.kotlin.compat) // satisfies springdoc's @ConditionalOnClass(KotlinModule) check for Kotlin nullability → required fields
+    implementation(enforcedPlatform(libs.fasterxml.bom))
 
 //    Auditlogger syslog
     implementation(libs.logback.syslog4j)
