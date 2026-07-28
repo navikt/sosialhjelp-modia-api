@@ -2,7 +2,7 @@
 kotlin = "2.4.10"
 coroutines = "1.11.0"
 spring-boot = "4.1.0"
-logback = "1.5.38"
+logback = "1.6.0"
 logstash = "9.0"
 sosialhjelpCommon = "1.20260512.1419-f4bad13"
 filformat = "1.2026.05.27-22.23-05302aad4dc3"
@@ -83,5 +83,5 @@ coroutines = ["coroutines-core", "coroutines-slf4j"]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-plugin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
-versions = { id = "com.github.ben-manes.versions", version = "0.54.0" }
+versions = { id = "com.github.ben-manes.versions", version = "0.56.0" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
