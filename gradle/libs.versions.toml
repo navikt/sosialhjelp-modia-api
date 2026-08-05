@@ -19,6 +19,7 @@ fasterxml_jackson = "2.22.1"
 mockwebserver = "5.4.0"
 httpclient5 = "5.6.2"
 springRetry = "2.0.13"
+netty = "4.2.16.Final"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -31,6 +32,8 @@ spring-boot-validation = { module = "org.springframework.boot:spring-boot-starte
 spring-boot-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis", version.ref = "spring-boot" }
 spring-boot-oauth2-resource-server = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server", version.ref = "spring-boot" }
 spring-boot-restclient = { module = "org.springframework.boot:spring-boot-restclient", version.ref = "spring-boot" }
+
+netty-bom = { module = "io.netty:netty-bom", version.ref = "netty" }
 
 spring-boot-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
 
