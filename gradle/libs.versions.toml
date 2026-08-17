@@ -2,7 +2,7 @@
 kotlin = "2.4.10"
 coroutines = "1.11.0"
 spring-boot = "4.1.0"
-logback = "1.6.1"
+logback = "1.6.2"
 logstash = "9.0"
 sosialhjelpCommon = "1.20260512.1419-f4bad13"
 filformat = "1.2026.05.27-22.23-05302aad4dc3"
@@ -17,9 +17,9 @@ ktlint = "1.8.0"
 jackson = "3.2.1"
 fasterxml_jackson = "2.22.1"
 mockwebserver = "5.4.0"
-httpclient5 = "5.6.2"
+httpclient5 = "5.6.4"
 springRetry = "2.0.13"
-netty = "4.2.16.Final"
+netty = "4.2.17.Final"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
