@@ -30,6 +30,15 @@ ktlint {
 
 dependencies {
 
+    // Kritisk sårbarhet CVE-2026-65905
+    constraints {
+        implementation("org.apache.tomcat.embed:tomcat-embed-core") {
+            version {
+                strictly("11.0.25")
+            }
+        }
+    }
+
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
 
