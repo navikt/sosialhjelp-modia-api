@@ -5,7 +5,7 @@ spring-boot = "4.1.1"
 logback = "1.6.3"
 logstash = "9.0"
 sosialhjelpCommon = "1.20260512.1419-f4bad13"
-filformat = "1.2026.05.27-22.23-05302aad4dc3"
+filformat = "1.20260909.60"
 micrometerRegistry = "1.17.1"
 prometheus = "0.16.0"
 logbackSyslog4j = "1.0.0"
@@ -86,5 +86,5 @@ coroutines = ["coroutines-core", "coroutines-slf4j"]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-plugin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
-versions = { id = "com.github.ben-manes.versions", version = "0.61.0" }
+versions = { id = "com.github.ben-manes.versions", version = "0.62.0" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
