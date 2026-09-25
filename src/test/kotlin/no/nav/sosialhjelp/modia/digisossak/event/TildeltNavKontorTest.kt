@@ -4,7 +4,6 @@ import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.Tilleggsinformasjon
 import no.nav.sosialhjelp.modia.app.exceptions.NorgException
 import no.nav.sosialhjelp.modia.digisossak.domain.SendingType
@@ -36,23 +35,19 @@ internal class TildeltNavKontorTest {
         every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
         coEvery { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
-
-        resetHendelser()
     }
 
     @Test
     fun `tildeltNavKontor skal hente navenhets navn fra Norg`() {
         every { norgClient.hentNavEnhet(NAV_KONTOR)!!.navn } returns enhetNavn
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        TILDELT_NAV_KONTOR.copy(hendelsestidspunkt = tidspunkt_2),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 
@@ -77,15 +72,13 @@ internal class TildeltNavKontorTest {
     fun `tildeltNavKontor med tom navenhetsnummer skal gi default navenhetsnavn`() {
         every { norgClient.hentNavEnhet("") } returns null
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        TILDELT_EMPTY_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        TILDELT_EMPTY_NAV_KONTOR.copy(hendelsestidspunkt = tidspunkt_2),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 
@@ -110,15 +103,13 @@ internal class TildeltNavKontorTest {
     fun `tildeltNavKontor skal gi generell melding hvis NorgClient kaster FiksException`() {
         every { norgClient.hentNavEnhet(NAV_KONTOR) } throws NorgException("noe feilet", null)
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        TILDELT_NAV_KONTOR.copy(hendelsestidspunkt = tidspunkt_2),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 
@@ -139,15 +130,13 @@ internal class TildeltNavKontorTest {
         val digisosSak = defaultDigisosSak.copy(tilleggsinformasjon = Tilleggsinformasjon(enhetsnummer = NAV_KONTOR))
         every { norgClient.hentNavEnhet(NAV_KONTOR)!!.navn } returns enhetNavn
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        TILDELT_NAV_KONTOR.copy(hendelsestidspunkt = tidspunkt_2),
                     ),
-                )
+            )
 
         val model = service.createModel(digisosSak)
 
@@ -164,16 +153,14 @@ internal class TildeltNavKontorTest {
     fun `flere identiske tildeltNavKontor-hendelser skal kun gi en hendelse i historikk`() {
         every { norgClient.hentNavEnhet(NAV_KONTOR)!!.navn } returns enhetNavn
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2),
-                        TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_3),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        TILDELT_NAV_KONTOR.copy(hendelsestidspunkt = tidspunkt_2),
+                        TILDELT_NAV_KONTOR.copy(hendelsestidspunkt = tidspunkt_3),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 
@@ -192,16 +179,14 @@ internal class TildeltNavKontorTest {
         every { norgClient.hentNavEnhet(NAV_KONTOR)!!.navn } returns enhetNavn
         every { norgClient.hentNavEnhet(NAV_KONTOR_2)!!.navn } returns enhetNavn2
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        TILDELT_NAV_KONTOR.withHendelsestidspunkt(tidspunkt_2),
-                        TILDELT_NAV_KONTOR_2.withHendelsestidspunkt(tidspunkt_3),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        TILDELT_NAV_KONTOR.copy(hendelsestidspunkt = tidspunkt_2),
+                        TILDELT_NAV_KONTOR_2.copy(hendelsestidspunkt = tidspunkt_3),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 

@@ -14,15 +14,15 @@ fun InternalDigisosSoker.apply(hendelse: JsonUtbetaling) {
             referanse = hendelse.utbetalingsreferanse,
             status =
                 UtbetalingsStatus.valueOf(
-                    hendelse.status?.value()
-                        ?: JsonUtbetaling.Status.PLANLAGT_UTBETALING.value(),
+                    hendelse.status?.name
+                        ?: JsonUtbetaling.Status.PLANLAGT_UTBETALING.name,
                 ),
             belop = BigDecimal.valueOf(hendelse.belop ?: 0.0),
             beskrivelse = hendelse.beskrivelse,
-            forfallsDato = if (hendelse.forfallsdato == null) null else hendelse.forfallsdato.toLocalDate(),
-            utbetalingsDato = if (hendelse.utbetalingsdato == null) null else hendelse.utbetalingsdato.toLocalDate(),
-            fom = if (hendelse.fom == null) null else hendelse.fom.toLocalDate(),
-            tom = if (hendelse.tom == null) null else hendelse.tom.toLocalDate(),
+            forfallsDato = hendelse.forfallsdato?.toLocalDate(),
+            utbetalingsDato = hendelse.utbetalingsdato?.toLocalDate(),
+            fom = hendelse.fom?.toLocalDate(),
+            tom = hendelse.tom?.toLocalDate(),
             mottaker = hendelse.mottaker,
             annenMottaker = isAnnenMottaker(hendelse),
             kontonummer = if (isAnnenMottaker(hendelse)) null else hendelse.kontonummer,
@@ -42,4 +42,4 @@ fun InternalDigisosSoker.apply(hendelse: JsonUtbetaling) {
     utbetalinger.add(utbetaling)
 }
 
-private fun isAnnenMottaker(hendelse: JsonUtbetaling) = hendelse.annenMottaker == null || hendelse.annenMottaker
+private fun isAnnenMottaker(hendelse: JsonUtbetaling) = hendelse.annenMottaker == true
