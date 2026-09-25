@@ -4,7 +4,6 @@ import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.Tilleggsinformasjon
 import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.digisossak.event.Titler.SOKNAD_FERDIGBEHANDLET
@@ -34,8 +33,6 @@ internal class SoknadsStatusTest {
         every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
         coEvery { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
-
-        resetHendelser()
     }
 
     @Test
@@ -57,14 +54,12 @@ internal class SoknadsStatusTest {
     @Test
     fun `soknadsStatus MOTTATT`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 
@@ -89,14 +84,12 @@ internal class SoknadsStatusTest {
                     ),
             )
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
                     ),
-                )
+            )
 
         val model = service.createModel(papirsoknadDigisosSak)
 
@@ -113,15 +106,13 @@ internal class SoknadsStatusTest {
     @Test
     fun `soknadsStatus UNDER_BEHANDLING`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 
@@ -139,16 +130,14 @@ internal class SoknadsStatusTest {
     @Test
     fun `soknadsStatus FERDIGBEHANDLET`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        SOKNADS_STATUS_FERDIGBEHANDLET.withHendelsestidspunkt(tidspunkt_3),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
+                        SOKNADS_STATUS_FERDIGBEHANDLET.copy(hendelsestidspunkt = tidspunkt_3),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 

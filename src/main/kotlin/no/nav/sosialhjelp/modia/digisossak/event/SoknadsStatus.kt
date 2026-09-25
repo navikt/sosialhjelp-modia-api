@@ -19,7 +19,6 @@ fun InternalDigisosSoker.apply(hendelse: JsonSoknadsStatus) {
             JsonSoknadsStatus.Status.UNDER_BEHANDLING -> SOKNAD_UNDER_BEHANDLING
             JsonSoknadsStatus.Status.FERDIGBEHANDLET -> SOKNAD_FERDIGBEHANDLET
             JsonSoknadsStatus.Status.BEHANDLES_IKKE -> SOKNAD_BEHANDLES_IKKE
-            else -> throw RuntimeException("Statustype ${hendelse.status.value()} mangler mapping")
         }
 
     val beskrivelse: String? =

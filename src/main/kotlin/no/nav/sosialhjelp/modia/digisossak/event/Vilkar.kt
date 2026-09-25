@@ -20,7 +20,7 @@ fun InternalDigisosSoker.apply(hendelse: JsonVilkar) {
             referanse = hendelse.vilkarreferanse,
             beskrivelse = hendelse.beskrivelse,
             saksreferanse = hendelse.saksreferanse,
-            status = OppgaveStatus.valueOf(hendelse.status.value()),
+            status = hendelse.status?.let { OppgaveStatus.valueOf(it.name) } ?: error("Ugyldig status for vilkår: null"),
             datoLagtTil = hendelse.hendelsestidspunkt.toLocalDateTime(),
             datoSistEndret = hendelse.hendelsestidspunkt.toLocalDateTime(),
             utbetalingsReferanse = hendelse.utbetalingsreferanse,
@@ -78,5 +78,5 @@ private fun Vilkar.oppdaterFelter(hendelse: JsonVilkar) {
     beskrivelse = hendelse.beskrivelse
     utbetalingsReferanse = hendelse.utbetalingsreferanse
     saksreferanse = hendelse.saksreferanse
-    status = OppgaveStatus.valueOf(hendelse.status.value())
+    status = hendelse.status?.let { OppgaveStatus.valueOf(it.name) } ?: error("Ugyldig status for vilkår: null")
 }

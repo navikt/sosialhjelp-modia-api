@@ -4,7 +4,6 @@ import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.digisossak.event.Titler.FORELOPIG_SVAR
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
@@ -29,21 +28,17 @@ internal class ForelopigSvarTest {
         every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
         coEvery { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
-
-        resetHendelser()
     }
 
     @Test
     fun `ingen forelopigSvar`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 
@@ -56,15 +51,13 @@ internal class ForelopigSvarTest {
     @Test
     fun `forelopigSvar mottatt`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        FORELOPIGSVAR.withHendelsestidspunkt(tidspunkt_2),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        FORELOPIGSVAR.copy(hendelsestidspunkt = tidspunkt_2),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 
