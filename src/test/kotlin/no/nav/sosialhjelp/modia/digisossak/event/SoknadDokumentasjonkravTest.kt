@@ -18,7 +18,7 @@ internal class SoknadDokumentasjonkravTest {
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
 
-    private val service = EventService(jsonDigisosSokerService, norgClient, soknadVedleggService)
+    private val service = EventService(jsonDigisosSokerService, norgClient, soknadVedleggService, mockk(relaxed = true))
 
     @BeforeEach
     fun init() {

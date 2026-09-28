@@ -22,13 +22,12 @@ class SoknadVedleggService(
         val jsonVedleggSpesifikasjon =
             hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, originalSoknadNAV.vedleggMetadata)
 
-        if (jsonVedleggSpesifikasjon.vedlegg.isNullOrEmpty()) {
+        if (jsonVedleggSpesifikasjon.vedlegg.isEmpty()) {
             return emptyList()
         }
 
         val alleVedlegg =
             jsonVedleggSpesifikasjon.vedlegg
-                .orEmpty()
                 .filter { vedlegg -> vedlegg.status == status }
                 .map { vedlegg ->
                     InternalVedlegg(

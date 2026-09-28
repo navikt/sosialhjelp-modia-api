@@ -31,6 +31,7 @@ class EventService(
     private val jsonDigisosSokerService: JsonDigisosSokerService,
     private val norgClient: NorgClient,
     private val soknadVedleggService: SoknadVedleggService,
+    private val hendelseFoldService: HendelseFoldService,
 ) {
     fun createModel(digisosSak: DigisosSak): InternalDigisosSoker {
         val jsonDigisosSoker: JsonDigisosSoker? =
@@ -40,6 +41,17 @@ class EventService(
                 digisosSak.digisosSoker?.metadata,
                 digisosSak.digisosSoker?.timestampSistOppdatert,
             )
+        val model = parseOld(digisosSak, jsonDigisosSoker)
+
+        foldHendelser(digisosSak, jsonDigisosSoker, model)
+
+        return model
+    }
+
+    private fun parseOld(
+        digisosSak: DigisosSak,
+        jsonDigisosSoker: JsonDigisosSoker?,
+    ): InternalDigisosSoker {
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
 
         val model = InternalDigisosSoker()
@@ -74,8 +86,15 @@ class EventService(
         ) {
             model.applySoknadKrav(digisosSak, soknadVedleggService, timestampSendt!!)
         }
-
         return model
+    }
+
+    private fun foldHendelser(
+        digisosSak: DigisosSak,
+        jsonDigisosSoker: JsonDigisosSoker?,
+        model: InternalDigisosSoker,
+    ) {
+        hendelseFoldService.foldAsync(digisosSak, jsonDigisosSoker, model)
     }
 
     private fun getNavenhetsnavnOrDefault(enhetsnummer: String): String {
