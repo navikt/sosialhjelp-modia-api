@@ -23,7 +23,7 @@ internal class TildeltNavKontorTest {
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
 
-    private val service = EventService(jsonDigisosSokerService, norgClient, soknadVedleggService)
+    private val service = EventService(jsonDigisosSokerService, norgClient, soknadVedleggService, mockk(relaxed = true))
 
     private val enhetNavn = "Nav Holmenkollen"
     private val enhetNavn2 = "Nav Longyearbyen"

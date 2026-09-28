@@ -50,6 +50,9 @@ dependencies {
     implementation(platform(libs.netty.bom))
 
     implementation(libs.sosialhjelp.common.api)
+    implementation(libs.sosialhjelp.digisos.hendelser)
+    implementation(libs.filformat.kmp)
+    implementation(libs.kotlinx.datetime)
 
 //    Micrometer/prometheus
     implementation(libs.bundles.prometheus)
