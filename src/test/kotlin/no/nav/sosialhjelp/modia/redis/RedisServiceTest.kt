@@ -47,4 +47,13 @@ internal class RedisServiceTest {
         val digisosSak = service.get(RedisKeyType.SKJERMEDE_PERSONER, "key", DigisosSak::class.java)
         assertThat(digisosSak).isNull()
     }
+
+    @Test
+    internal fun `store gir ukjent felt`() {
+        every { redisStore.get(any()) } returns okDigisossakResponseString().replace("{", "{\"ukjent\":true,").toByteArray()
+
+        val digisosSak = service.get(RedisKeyType.FIKS_CLIENT, "key", DigisosSak::class.java)
+
+        assertThat(digisosSak).isNull()
+    }
 }

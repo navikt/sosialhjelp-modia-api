@@ -22,16 +22,17 @@ class SoknadVedleggService(
         val jsonVedleggSpesifikasjon =
             hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, originalSoknadNAV.vedleggMetadata)
 
-        if (jsonVedleggSpesifikasjon.vedlegg.isEmpty()) {
+        if (jsonVedleggSpesifikasjon.vedlegg.isNullOrEmpty()) {
             return emptyList()
         }
 
         val alleVedlegg =
             jsonVedleggSpesifikasjon.vedlegg
+                .orEmpty()
                 .filter { vedlegg -> vedlegg.status == status }
                 .map { vedlegg ->
                     InternalVedlegg(
-                        type = vedlegg.type,
+                        type = vedlegg.type ?: error("Vedlegg mangler type"),
                         tilleggsinfo = vedlegg.tilleggsinfo,
                         innsendelsesfrist = null,
                         antallFiler = matchDokumentInfoOgJsonFiler(originalSoknadNAV.vedlegg, vedlegg.filer),

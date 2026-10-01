@@ -45,11 +45,12 @@ class VedleggService(
                     val jsonVedleggSpesifikasjon =
                         hentVedleggSpesifikasjon(digisosSak.sokerFnr, digisosSak.fiksDigisosId, ettersendelse.vedleggMetadata)
                     jsonVedleggSpesifikasjon.vedlegg
+                        .orEmpty()
                         .filter { vedlegg -> LASTET_OPP_STATUS == vedlegg.status }
                         .map { vedlegg ->
                             var vedleggtittel = vedlegg.type
                             var vedleggbeskrivelse = vedlegg.tilleggsinfo
-                            if (vedlegg.hendelseType?.value() == JsonHendelse.Type.DOKUMENTASJONKRAV.value()) {
+                            if (vedlegg.hendelseType?.name == JsonHendelse.Type.DOKUMENTASJONKRAV.name) {
                                 val saksreferanse = hentSaksreferanse(vedlegg, ettersendelse, model.dokumentasjonkrav)
                                 val sakstittel = hentSakstittel(saksreferanse, model.saker)
                                 vedleggtittel =
@@ -62,7 +63,7 @@ class VedleggService(
                             }
 
                             InternalVedlegg(
-                                type = vedlegg.type,
+                                type = vedlegg.type ?: error("Vedlegg mangler type"),
                                 tilleggsinfo = vedlegg.tilleggsinfo,
                                 tittelForVeileder = vedleggtittel,
                                 beskrivelseForVeileder = vedleggbeskrivelse,

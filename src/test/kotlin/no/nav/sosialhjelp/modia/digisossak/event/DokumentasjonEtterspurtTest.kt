@@ -4,7 +4,6 @@ import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
 import no.nav.sosialhjelp.modia.digisossak.event.Titler.DOKUMENTASJONSKRAV
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
@@ -32,23 +31,19 @@ internal class DokumentasjonEtterspurtTest {
         every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
         coEvery { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
-
-        resetHendelser()
     }
 
     @Test
     fun `dokumentliste er satt OG vedtaksbrev er satt - skal gi oppgaver og historikk`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        DOKUMENTASJONETTERSPURT.withHendelsestidspunkt(tidspunkt_3),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
+                        DOKUMENTASJONETTERSPURT.copy(hendelsestidspunkt = tidspunkt_3),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 
@@ -72,16 +67,14 @@ internal class DokumentasjonEtterspurtTest {
     @Test
     internal fun `dokumentliste er satt OG forvaltningsbrev mangler - skal gi oppgaver men ikke historikk`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        DOKUMENTASJONETTERSPURT_UTEN_FORVALTNINGSBREV.withHendelsestidspunkt(tidspunkt_3),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
+                        DOKUMENTASJONETTERSPURT_UTEN_FORVALTNINGSBREV.copy(hendelsestidspunkt = tidspunkt_3),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 
@@ -101,16 +94,14 @@ internal class DokumentasjonEtterspurtTest {
     @Test
     fun `dokumentliste er tom OG forvaltningsbrev er satt - skal verken gi oppgaver eller historikk`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        DOKUMENTASJONETTERSPURT_TOM_DOKUMENT_LISTE.withHendelsestidspunkt(tidspunkt_3),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
+                        DOKUMENTASJONETTERSPURT_TOM_DOKUMENT_LISTE.copy(hendelsestidspunkt = tidspunkt_3),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 
@@ -125,15 +116,13 @@ internal class DokumentasjonEtterspurtTest {
     @Test
     fun `oppgaver skal hentes fra soknaden dersom det ikke finnes dokumentasjonEtterspurt`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 

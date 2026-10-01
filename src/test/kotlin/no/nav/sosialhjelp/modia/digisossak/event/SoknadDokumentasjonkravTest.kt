@@ -4,7 +4,6 @@ import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.modia.navkontor.norg.NorgClient
 import no.nav.sosialhjelp.modia.soknad.vedlegg.InternalVedlegg
 import no.nav.sosialhjelp.modia.soknad.vedlegg.SoknadVedleggService
@@ -26,23 +25,19 @@ internal class SoknadDokumentasjonkravTest {
         clearAllMocks()
 
         every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
-
-        resetHendelser()
     }
 
     @Test
     internal fun `skal legge til dokumentasjonkrav fra soknaden`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
+                        SAK1_SAKS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_3),
                     ),
-                )
+            )
         coEvery { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns
             listOf(
                 InternalVedlegg(
