@@ -82,21 +82,20 @@ internal class SoknadVedleggServiceTest {
             )
 
         private val soknadVedleggSpesifikasjonMedStatusKrevesOgLastetOpp =
-            JsonVedleggSpesifikasjon()
-                .withVedlegg(
+            JsonVedleggSpesifikasjon(
+                vedlegg =
                     listOf(
-                        JsonVedlegg()
-                            .withFiler(
-                                listOf(
-                                    JsonFiler().withFilnavn(SOKNAD_FILNAVN_1).withSha512("1234fasd"),
-                                ),
-                            ).withStatus(LASTET_OPP_STATUS)
-                            .withType(DOKUMENTTYPE),
-                        JsonVedlegg()
-                            .withFiler(listOf())
-                            .withStatus("VedleggKreves")
-                            .withType(DOKUMENTTYPE_2),
+                        JsonVedlegg(
+                            filer = listOf(JsonFiler(filnavn = SOKNAD_FILNAVN_1, sha512 = "1234fasd")),
+                            status = LASTET_OPP_STATUS,
+                            type = DOKUMENTTYPE,
+                        ),
+                        JsonVedlegg(
+                            filer = listOf(),
+                            status = "VedleggKreves",
+                            type = DOKUMENTTYPE_2,
+                        ),
                     ),
-                )
+            )
     }
 }

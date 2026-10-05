@@ -190,27 +190,29 @@ internal class VedleggServiceTest {
         coEvery { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_soknad_1, any()) } returns
             mockJsonVedleggSpesifikasjon
         coEvery { fiksClient.hentDokument<JsonVedleggSpesifikasjon>(any(), any(), vedleggMetadata_ettersendelse_5, any()) } returns
-            JsonVedleggSpesifikasjon()
-                .withVedlegg(
+            JsonVedleggSpesifikasjon(
+                vedlegg =
                     listOf(
-                        JsonVedlegg()
-                            .withFiler(
+                        JsonVedlegg(
+                            filer =
                                 listOf(
-                                    JsonFiler().withFilnavn(ettersendelse_filnavn_1).withSha512("1231231"),
-                                    JsonFiler().withFilnavn(ettersendelse_filnavn_2).withSha512("adfgbjn"),
+                                    JsonFiler(filnavn = ettersendelse_filnavn_1, sha512 = "1231231"),
+                                    JsonFiler(filnavn = ettersendelse_filnavn_2, sha512 = "adfgbjn"),
                                 ),
-                            ).withStatus(LASTET_OPP_STATUS)
-                            .withType(dokumenttype_3),
-                        JsonVedlegg()
-                            .withFiler(
+                            status = LASTET_OPP_STATUS,
+                            type = dokumenttype_3,
+                        ),
+                        JsonVedlegg(
+                            filer =
                                 listOf(
-                                    JsonFiler().withFilnavn(ettersendelse_filnavn_2).withSha512("aasdcx"),
-                                    JsonFiler().withFilnavn(ettersendelse_filnavn_4).withSha512("qweqqa"),
+                                    JsonFiler(filnavn = ettersendelse_filnavn_2, sha512 = "aasdcx"),
+                                    JsonFiler(filnavn = ettersendelse_filnavn_4, sha512 = "qweqqa"),
                                 ),
-                            ).withStatus(LASTET_OPP_STATUS)
-                            .withType(dokumenttype_4),
+                            status = LASTET_OPP_STATUS,
+                            type = dokumenttype_4,
+                        ),
                     ),
-                )
+            )
         every { mockDigisosSak.ettersendtInfoNAV?.ettersendelser } returns
             listOf(
                 Ettersendelse(
@@ -411,106 +413,94 @@ internal class VedleggServiceTest {
             )
 
         private val soknadVedleggSpesifikasjon =
-            JsonVedleggSpesifikasjon()
-                .withVedlegg(
+            JsonVedleggSpesifikasjon(
+                vedlegg =
                     listOf(
-                        JsonVedlegg()
-                            .withFiler(
-                                listOf(
-                                    JsonFiler().withFilnavn(soknad_filnavn_1).withSha512("1234fasd"),
-                                ),
-                            ).withStatus(LASTET_OPP_STATUS)
-                            .withType(dokumenttype),
-                        JsonVedlegg()
-                            .withFiler(
-                                listOf(
-                                    JsonFiler().withFilnavn(soknad_filnavn_2).withSha512("sfg234"),
-                                ),
-                            ).withStatus(LASTET_OPP_STATUS)
-                            .withType(dokumenttype_2),
+                        JsonVedlegg(
+                            filer = listOf(JsonFiler(filnavn = soknad_filnavn_1, sha512 = "1234fasd")),
+                            status = LASTET_OPP_STATUS,
+                            type = dokumenttype,
+                        ),
+                        JsonVedlegg(
+                            filer = listOf(JsonFiler(filnavn = soknad_filnavn_2, sha512 = "sfg234")),
+                            status = LASTET_OPP_STATUS,
+                            type = dokumenttype_2,
+                        ),
                     ),
-                )
+            )
 
         private val soknadVedleggSpesifikasjonMedStatusKrevesOgLastetOpp =
-            JsonVedleggSpesifikasjon()
-                .withVedlegg(
+            JsonVedleggSpesifikasjon(
+                vedlegg =
                     listOf(
-                        JsonVedlegg()
-                            .withFiler(
-                                listOf(
-                                    JsonFiler().withFilnavn(soknad_filnavn_1).withSha512("1234fasd"),
-                                ),
-                            ).withStatus(LASTET_OPP_STATUS)
-                            .withType(dokumenttype),
-                        JsonVedlegg()
-                            .withFiler(listOf())
-                            .withStatus("VedleggKreves")
-                            .withType(dokumenttype_2),
+                        JsonVedlegg(
+                            filer = listOf(JsonFiler(filnavn = soknad_filnavn_1, sha512 = "1234fasd")),
+                            status = LASTET_OPP_STATUS,
+                            type = dokumenttype,
+                        ),
+                        JsonVedlegg(
+                            filer = listOf(),
+                            status = "VedleggKreves",
+                            type = dokumenttype_2,
+                        ),
                     ),
-                )
+            )
 
         private val ettersendteVedleggSpesifikasjon_1 =
-            JsonVedleggSpesifikasjon()
-                .withVedlegg(
+            JsonVedleggSpesifikasjon(
+                vedlegg =
                     listOf(
-                        JsonVedlegg()
-                            .withFiler(
-                                listOf(
-                                    JsonFiler().withFilnavn(ettersendelse_filnavn_1).withSha512("g25b3"),
-                                ),
-                            ).withStatus(LASTET_OPP_STATUS)
-                            .withType(dokumenttype_3),
-                        JsonVedlegg()
-                            .withFiler(
-                                listOf(
-                                    JsonFiler().withFilnavn(ettersendelse_filnavn_2).withSha512("4avc65a8"),
-                                ),
-                            ).withStatus(LASTET_OPP_STATUS)
-                            .withType(dokumenttype_4),
+                        JsonVedlegg(
+                            filer = listOf(JsonFiler(filnavn = ettersendelse_filnavn_1, sha512 = "g25b3")),
+                            status = LASTET_OPP_STATUS,
+                            type = dokumenttype_3,
+                        ),
+                        JsonVedlegg(
+                            filer = listOf(JsonFiler(filnavn = ettersendelse_filnavn_2, sha512 = "4avc65a8")),
+                            status = LASTET_OPP_STATUS,
+                            type = dokumenttype_4,
+                        ),
                     ),
-                )
+            )
 
         private val ettersendteVedleggSpesifikasjon_2 =
-            JsonVedleggSpesifikasjon()
-                .withVedlegg(
+            JsonVedleggSpesifikasjon(
+                vedlegg =
                     listOf(
-                        JsonVedlegg()
-                            .withFiler(
+                        JsonVedlegg(
+                            filer =
                                 listOf(
-                                    JsonFiler().withFilnavn(ettersendelse_filnavn_3).withSha512("aadsfwr"),
-                                    JsonFiler().withFilnavn(ettersendelse_filnavn_4).withSha512("uiuusss"),
+                                    JsonFiler(filnavn = ettersendelse_filnavn_3, sha512 = "aadsfwr"),
+                                    JsonFiler(filnavn = ettersendelse_filnavn_4, sha512 = "uiuusss"),
                                 ),
-                            ).withStatus(LASTET_OPP_STATUS)
-                            .withType(dokumenttype_3),
+                            status = LASTET_OPP_STATUS,
+                            type = dokumenttype_3,
+                        ),
                     ),
-                )
+            )
 
         private val ettersendteVedleggSpesifikasjon_3 =
-            JsonVedleggSpesifikasjon()
-                .withVedlegg(
+            JsonVedleggSpesifikasjon(
+                vedlegg =
                     listOf(
-                        JsonVedlegg()
-                            .withFiler(
-                                listOf(
-                                    JsonFiler().withFilnavn(ettersendelse_filnavn_3).withSha512("aadsfwr"),
-                                ),
-                            ).withStatus("VedleggAlleredeSendt")
-                            .withType(dokumenttype_3),
+                        JsonVedlegg(
+                            filer = listOf(JsonFiler(filnavn = ettersendelse_filnavn_3, sha512 = "aadsfwr")),
+                            status = "VedleggAlleredeSendt",
+                            type = dokumenttype_3,
+                        ),
                     ),
-                )
+            )
 
         private val ettersendteVedleggSpesifikasjon_4 =
-            JsonVedleggSpesifikasjon()
-                .withVedlegg(
+            JsonVedleggSpesifikasjon(
+                vedlegg =
                     listOf(
-                        JsonVedlegg()
-                            .withFiler(
-                                listOf(
-                                    JsonFiler().withFilnavn(ettersendelse_filnavn_4).withSha512("1231231"),
-                                ),
-                            ).withStatus(LASTET_OPP_STATUS)
-                            .withType(dokumenttype_3),
+                        JsonVedlegg(
+                            filer = listOf(JsonFiler(filnavn = ettersendelse_filnavn_4, sha512 = "1231231")),
+                            status = LASTET_OPP_STATUS,
+                            type = dokumenttype_3,
+                        ),
                     ),
-                )
+            )
     }
 }

@@ -4,7 +4,6 @@ import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.Tilleggsinformasjon
 import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
 import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
@@ -35,8 +34,6 @@ internal class EventServiceTest {
         every { norgClient.hentNavEnhet(ENHETSNR)!!.navn } returns ENHETSNAVN
 
         coEvery { soknadVedleggService.hentSoknadVedleggMedStatus(any(), VEDLEGG_KREVES_STATUS) } returns emptyList()
-
-        resetHendelser()
     }
 
     /* Test-caser:
@@ -93,16 +90,14 @@ internal class EventServiceTest {
         @Test
         fun `saksStatus UTEN vedtakFattet`() {
             coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-                JsonDigisosSoker()
-                    .withAvsender(avsender)
-                    .withVersion("123")
-                    .withHendelser(
+                baseJsonDigisosSoker.copy(
+                    hendelser =
                         listOf(
-                            SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                            SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                            SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3),
+                            SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                            SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
+                            SAK1_SAKS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_3),
                         ),
-                    )
+                )
 
             val model = service.createModel(defaultDigisosSak)
 
@@ -127,16 +122,14 @@ internal class EventServiceTest {
         @Test
         fun `saksStatus UTEN tittel eller status`() {
             coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-                JsonDigisosSoker()
-                    .withAvsender(avsender)
-                    .withVersion("123")
-                    .withHendelser(
+                baseJsonDigisosSoker.copy(
+                    hendelser =
                         listOf(
-                            SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                            SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                            SAK1_UTEN_SAKS_STATUS_ELLER_TITTEL.withHendelsestidspunkt(tidspunkt_3),
+                            SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                            SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
+                            SAK1_UTEN_SAKS_STATUS_ELLER_TITTEL.copy(hendelsestidspunkt = tidspunkt_3),
                         ),
-                    )
+                )
 
             val model = service.createModel(defaultDigisosSak)
 
@@ -161,17 +154,15 @@ internal class EventServiceTest {
         @Test
         fun `saksStatus FOER vedtakFattet`() {
             coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-                JsonDigisosSoker()
-                    .withAvsender(avsender)
-                    .withVersion("123")
-                    .withHendelser(
+                baseJsonDigisosSoker.copy(
+                    hendelser =
                         listOf(
-                            SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                            SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                            SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3),
-                            SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_4),
+                            SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                            SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
+                            SAK1_SAKS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_3),
+                            SAK1_VEDTAK_FATTET_INNVILGET.copy(hendelsestidspunkt = tidspunkt_4),
                         ),
-                    )
+                )
 
             val model = service.createModel(defaultDigisosSak)
 
@@ -199,16 +190,14 @@ internal class EventServiceTest {
         @Test
         fun `vedtakFattet UTEN saksStatus`() {
             coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-                JsonDigisosSoker()
-                    .withAvsender(avsender)
-                    .withVersion("123")
-                    .withHendelser(
+                baseJsonDigisosSoker.copy(
+                    hendelser =
                         listOf(
-                            SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                            SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                            SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3),
+                            SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                            SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
+                            SAK1_VEDTAK_FATTET_INNVILGET.copy(hendelsestidspunkt = tidspunkt_3),
                         ),
-                    )
+                )
 
             val model = service.createModel(defaultDigisosSak)
 
@@ -236,17 +225,15 @@ internal class EventServiceTest {
         @Test
         fun `vedtakFattet FOER saksStatus`() {
             coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-                JsonDigisosSoker()
-                    .withAvsender(avsender)
-                    .withVersion("123")
-                    .withHendelser(
+                baseJsonDigisosSoker.copy(
+                    hendelser =
                         listOf(
-                            SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                            SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                            SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_3),
-                            SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_4),
+                            SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                            SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
+                            SAK1_VEDTAK_FATTET_INNVILGET.copy(hendelsestidspunkt = tidspunkt_3),
+                            SAK1_SAKS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_4),
                         ),
-                    )
+                )
 
             val model = service.createModel(defaultDigisosSak)
 
@@ -275,18 +262,16 @@ internal class EventServiceTest {
         @Test
         fun `saksStatus med 2 vedtakFattet`() {
             coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-                JsonDigisosSoker()
-                    .withAvsender(avsender)
-                    .withVersion("123")
-                    .withHendelser(
+                baseJsonDigisosSoker.copy(
+                    hendelser =
                         listOf(
-                            SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                            SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                            SAK1_SAKS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_3),
-                            SAK1_VEDTAK_FATTET_INNVILGET.withHendelsestidspunkt(tidspunkt_4),
-                            SAK1_VEDTAK_FATTET_AVSLATT.withHendelsestidspunkt(tidspunkt_5),
+                            SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                            SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
+                            SAK1_SAKS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_3),
+                            SAK1_VEDTAK_FATTET_INNVILGET.copy(hendelsestidspunkt = tidspunkt_4),
+                            SAK1_VEDTAK_FATTET_AVSLATT.copy(hendelsestidspunkt = tidspunkt_5),
                         ),
-                    )
+                )
 
             val model = service.createModel(defaultDigisosSak)
 
@@ -311,17 +296,15 @@ internal class EventServiceTest {
         @Test
         fun `saksStatus uten tittel eller status med vedtakFattet uten utfall`() {
             coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-                JsonDigisosSoker()
-                    .withAvsender(avsender)
-                    .withVersion("123")
-                    .withHendelser(
+                baseJsonDigisosSoker.copy(
+                    hendelser =
                         listOf(
-                            SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                            SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                            SAK1_UTEN_SAKS_STATUS_ELLER_TITTEL.withHendelsestidspunkt(tidspunkt_3),
-                            SAK1_VEDTAK_FATTET_UTEN_UTFALL.withHendelsestidspunkt(tidspunkt_4),
+                            SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                            SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
+                            SAK1_UTEN_SAKS_STATUS_ELLER_TITTEL.copy(hendelsestidspunkt = tidspunkt_3),
+                            SAK1_VEDTAK_FATTET_UTEN_UTFALL.copy(hendelsestidspunkt = tidspunkt_4),
                         ),
-                    )
+                )
 
             val model = service.createModel(defaultDigisosSak)
 
@@ -349,16 +332,14 @@ internal class EventServiceTest {
     @Test
     fun `forelopigSvar skal gi historikk`() {
         coEvery { jsonDigisosSokerService.get(any(), any(), any(), any()) } returns
-            JsonDigisosSoker()
-                .withAvsender(avsender)
-                .withVersion("123")
-                .withHendelser(
+            baseJsonDigisosSoker.copy(
+                hendelser =
                     listOf(
-                        SOKNADS_STATUS_MOTTATT.withHendelsestidspunkt(tidspunkt_1),
-                        SOKNADS_STATUS_UNDERBEHANDLING.withHendelsestidspunkt(tidspunkt_2),
-                        FORELOPIGSVAR.withHendelsestidspunkt(tidspunkt_3),
+                        SOKNADS_STATUS_MOTTATT.copy(hendelsestidspunkt = tidspunkt_1),
+                        SOKNADS_STATUS_UNDERBEHANDLING.copy(hendelsestidspunkt = tidspunkt_2),
+                        FORELOPIGSVAR.copy(hendelsestidspunkt = tidspunkt_3),
                     ),
-                )
+            )
 
         val model = service.createModel(defaultDigisosSak)
 
