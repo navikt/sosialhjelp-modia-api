@@ -105,10 +105,21 @@ class HendelseFoldService(
     ): Set<String> =
         buildSet {
             if (oldModel.status.name != soknad.status.name) add("status")
-            if (oldModel.saker.map { it.referanse to it.saksStatus?.name }.sortedBy { it.first } !=
-                soknad.saker.map { it.referanse to it.saksStatus?.name }.sortedBy { it.first }
-            ) {
-                add("saker")
+            val oldSaker = oldModel.saker.associateBy { it.referanse }
+            val foldedSaker = soknad.saker.associateBy { it.referanse }
+            // Old model creates a "default" sak for vedtak without saksreferanse. New model puts them in vedtakUtenSak.
+            oldSaker.keys
+                .filterNot { it in foldedSaker }
+                .forEach { add(if (it == "default" && soknad.vedtakUtenSak.isNotEmpty()) "saker.default" else "saker.manglerINy") }
+            foldedSaker.keys.filterNot { it in oldSaker }.forEach { referanse ->
+                add(if (foldedSaker.getValue(referanse).erSyntetisk()) "saker.syntetisk" else "saker.manglerIGammel")
+            }
+            oldSaker.keys.intersect(foldedSaker.keys).forEach { referanse ->
+                if ((oldSaker.getValue(referanse).saksStatus?.name ?: "UNDER_BEHANDLING") !=
+                    (foldedSaker.getValue(referanse).saksStatus?.name ?: "UNDER_BEHANDLING")
+                ) {
+                    add("saker.status")
+                }
             }
             if (oldModel.saker
                     .flatMap { it.vedtak }
@@ -147,16 +158,14 @@ class HendelseFoldService(
                 add("oppgaver")
             }
             if (oldModel.vilkar.map { it.referanse to it.status.name }.sortedBy { it.first } !=
-                soknad.saker
-                    .flatMap { it.vilkar }
+                (soknad.saker.flatMap { it.vilkar } + soknad.vilkarUtenSak)
                     .map { it.referanse to it.status.name }
                     .sortedBy { it.first }
             ) {
                 add("vilkar")
             }
             if (oldModel.dokumentasjonkrav.map { it.dokumentasjonkravId to it.status?.name }.sortedBy { it.first } !=
-                soknad.saker
-                    .flatMap { it.dokumentasjonkrav }
+                (soknad.saker.flatMap { it.dokumentasjonkrav } + soknad.dokumentasjonkravUtenSak)
                     .map { it.referanse to it.status.name }
                     .sortedBy { it.first }
             ) {
@@ -165,6 +174,10 @@ class HendelseFoldService(
             if ((oldModel.forelopigSvar != null) != (soknad.forelopigSvar != null)) add("forelopigSvar")
             if (oldModel.soknadsmottaker?.navEnhetsnummer != soknad.mottaker?.enhetsnummer) add("soknadsmottaker")
         }
+
+    // A sak the library creates only because a vilkår or dokumentasjonkrav references it. The old model has no equivalent.
+    private fun no.nav.sosialhjelp.digisos.hendelser.domain.Sak.erSyntetisk(): Boolean =
+        saksStatus == null && tittel == null && vedtak.isEmpty() && utbetalinger.isEmpty()
 
     companion object {
         private val log by logger()
