@@ -1,11 +1,14 @@
 [versions]
 kotlin = "2.4.20"
 coroutines = "1.11.0"
+kotlinxDatetime = "0.6.2"
 spring-boot = "4.1.1"
 logback = "1.6.4"
 logstash = "9.0"
 sosialhjelpCommon = "1.20260512.1419-f4bad13"
+sosialhjelpHendelser = "2.1.0"
 filformat = "1.20260917.61"
+filformatKmp = "1.20260909.60"
 micrometerRegistry = "1.17.1"
 prometheus = "0.16.0"
 logbackSyslog4j = "1.0.0"
@@ -24,6 +27,7 @@ netty = "4.2.18.Final"
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-slf4j = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j", version.ref = "coroutines" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 
 spring-boot-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
 spring-boot-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
@@ -42,6 +46,8 @@ fasterxml_jackson-module-kotlin-compat = { module = "com.fasterxml.jackson.modul
 fasterxml_bom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "fasterxml_jackson" }
 
 sosialhjelp-common-api = { module = "no.nav.sosialhjelp:sosialhjelp-common-api", version.ref = "sosialhjelpCommon" }
+sosialhjelp-digisos-hendelser = { module = "no.nav.sosialhjelp:digisos-hendelser", version.ref = "sosialhjelpHendelser" }
+filformat-kmp = { module = "no.nav.sosialhjelp.filformat:soknadsosialhjelp-filformat-kmp", version.ref = "filformatKmp" }
 
 micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "micrometerRegistry" }
 prometheus-common = { module = "io.prometheus:simpleclient_common", version.ref = "prometheus" }

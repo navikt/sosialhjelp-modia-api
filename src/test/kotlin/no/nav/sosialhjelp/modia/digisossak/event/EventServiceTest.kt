@@ -4,6 +4,7 @@ import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import no.nav.sosialhjelp.api.fiks.Tilleggsinformasjon
 import no.nav.sosialhjelp.modia.digisossak.domain.SaksStatus
 import no.nav.sosialhjelp.modia.digisossak.domain.SoknadsStatus
@@ -24,8 +25,9 @@ internal class EventServiceTest {
     private val jsonDigisosSokerService: JsonDigisosSokerService = mockk()
     private val norgClient: NorgClient = mockk()
     private val soknadVedleggService: SoknadVedleggService = mockk()
+    private val hendelseFoldService: HendelseFoldService = mockk(relaxed = true)
 
-    private val service = EventService(jsonDigisosSokerService, norgClient, soknadVedleggService)
+    private val service = EventService(jsonDigisosSokerService, norgClient, soknadVedleggService, hendelseFoldService)
 
     @BeforeEach
     fun init() {
@@ -72,6 +74,7 @@ internal class EventServiceTest {
         assertThat(
             model.historikk[0].beskrivelse,
         ).isEqualTo("Søknaden med vedlegg er sendt til [Kan ikke hente Nav-kontor uten enhetsnummer].")
+        verify { hendelseFoldService.foldAsync(digisosSak, null, model) }
     }
 
     @Test
