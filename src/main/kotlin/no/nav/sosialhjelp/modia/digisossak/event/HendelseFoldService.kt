@@ -67,7 +67,7 @@ class HendelseFoldService(
                                 mottakerEnhetsnummer = digisosSak.tilleggsinformasjon?.enhetsnummer,
                                 mottakerEnhetsnavn = null,
                             ),
-                            vedleggProvider,
+                            paakrevdeVedleggProvider = vedleggProvider,
                         )
 
                     val differences = differences(oldModel, result.soknad)
@@ -77,7 +77,9 @@ class HendelseFoldService(
                             "result",
                             if (differences.isEmpty()) "match" else "mismatch",
                         ).increment()
-                    differences.forEach { meterRegistry.counter("hendelser_fold_field_diff_total", "path", it).increment() }
+                    differences.forEach {
+                        meterRegistry.counter("hendelser_fold_field_diff_total", "path", it).increment()
+                    }
 
                     if (differences.isNotEmpty()) {
                         log.info(
@@ -112,10 +114,12 @@ class HendelseFoldService(
                     .flatMap { it.vedtak }
                     .map { it.utfall?.name to it.datoFattet.toString() }
                     .sortedBy { it.toString() } !=
-                (soknad.saker.flatMap { it.vedtak } + soknad.vedtakUtenSak).map { it.utfall?.name to it.dato?.toString() }.sortedBy {
-                    it
-                        .toString()
-                }
+                (soknad.saker.flatMap { it.vedtak } + soknad.vedtakUtenSak)
+                    .map { it.utfall?.name to it.dato?.toString() }
+                    .sortedBy {
+                        it
+                            .toString()
+                    }
             ) {
                 add("vedtak")
             }
@@ -128,7 +132,9 @@ class HendelseFoldService(
             ) {
                 add("utbetalinger")
             }
-            if (oldModel.oppgaver.map { Triple(it.tittel, it.tilleggsinfo, it.erFraInnsyn) }.sortedBy { it.toString() } !=
+            if (oldModel.oppgaver
+                    .map { Triple(it.tittel, it.tilleggsinfo, it.erFraInnsyn) }
+                    .sortedBy { it.toString() } !=
                 soknad.dokumentasjonEtterspurt
                     .map {
                         Triple(

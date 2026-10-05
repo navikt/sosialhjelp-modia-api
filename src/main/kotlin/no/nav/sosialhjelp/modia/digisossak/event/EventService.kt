@@ -43,7 +43,7 @@ class EventService(
             )
         val model = parseOld(digisosSak, jsonDigisosSoker)
 
-        foldHendelser(digisosSak, jsonDigisosSoker, model)
+        hendelseFoldService.foldAsync(digisosSak, jsonDigisosSoker, model)
 
         return model
     }
@@ -87,14 +87,6 @@ class EventService(
             model.applySoknadKrav(digisosSak, soknadVedleggService, timestampSendt!!)
         }
         return model
-    }
-
-    private fun foldHendelser(
-        digisosSak: DigisosSak,
-        jsonDigisosSoker: JsonDigisosSoker?,
-        model: InternalDigisosSoker,
-    ) {
-        hendelseFoldService.foldAsync(digisosSak, jsonDigisosSoker, model)
     }
 
     private fun getNavenhetsnavnOrDefault(enhetsnummer: String): String {
