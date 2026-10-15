@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.4.21"
 coroutines = "1.11.0"
-kotlinxDatetime = "0.6.2"
+kotlinxDatetime = "0.8.0"
 spring-boot = "4.1.1"
 logback = "1.6.5"
 logstash = "9.0"
@@ -92,5 +92,5 @@ coroutines = ["coroutines-core", "coroutines-slf4j"]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-plugin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
-versions = { id = "com.github.ben-manes.versions", version = "0.64.0" }
+versions = { id = "com.github.ben-manes.versions", version = "0.65.0" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
