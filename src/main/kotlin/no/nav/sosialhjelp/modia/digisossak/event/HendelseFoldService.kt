@@ -2,7 +2,6 @@ package no.nav.sosialhjelp.modia.digisossak.event
 
 import io.micrometer.core.instrument.MeterRegistry
 import kotlinx.coroutines.CancellationException
-import kotlinx.datetime.Instant
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.digisos.hendelser.fold.SoknadMetadata
@@ -18,6 +17,8 @@ import no.nav.sosialhjelp.modia.utils.sosialhjelpJsonMapper
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.task.AsyncTaskExecutor
 import org.springframework.stereotype.Component
+import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 @Component
 class HendelseFoldService(
@@ -60,7 +61,13 @@ class HendelseFoldService(
                                 sistEndret = Instant.fromEpochMilliseconds(digisosSak.sistEndret),
                                 timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt?.let(Instant::fromEpochMilliseconds),
                                 navEksternRefId = digisosSak.originalSoknadNAV?.navEksternRefId,
-                                originalSoknadDokumentlagerId = digisosSak.originalSoknadNAV?.soknadDokument?.dokumentlagerDokumentId,
+                                originalSoknadDokumentlagerId =
+                                    digisosSak.originalSoknadNAV?.soknadDokument?.dokumentlagerDokumentId?.let {
+                                        Uuid
+                                            .parse(
+                                                it,
+                                            )
+                                    },
                                 vedleggMetadataDokumentlagerId = digisosSak.originalSoknadNAV?.vedleggMetadata,
                                 fagsystemNavn = null,
                                 fagsystemVersjon = null,
