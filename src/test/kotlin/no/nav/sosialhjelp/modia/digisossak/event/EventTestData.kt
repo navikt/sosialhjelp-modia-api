@@ -23,6 +23,7 @@ import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
 import no.nav.sosialhjelp.api.fiks.Tilleggsinformasjon
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.UUID
 
 const val DOKUMENTLAGER_ID_1 = "1"
 const val DOKUMENTLAGER_ID_2 = "2"
@@ -220,7 +221,7 @@ val defaultDigisosSak =
                 soknadDokument =
                     DokumentInfo(
                         filnavn = "soknad.json",
-                        dokumentlagerDokumentId = "soknaddokumentlagerid",
+                        dokumentlagerDokumentId = UUID.randomUUID().toString(),
                         storrelse = 99L,
                     ),
                 vedlegg = emptyList(),
