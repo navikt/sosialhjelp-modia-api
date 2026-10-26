@@ -2,7 +2,7 @@
 kotlin = "2.4.21"
 coroutines = "1.11.0"
 kotlinxDatetime = "0.8.0"
-spring-boot = "4.1.1"
+spring-boot = "4.1.2"
 logback = "1.6.5"
 logstash = "9.0"
 sosialhjelpCommon = "1.20260512.1419-f4bad13"
